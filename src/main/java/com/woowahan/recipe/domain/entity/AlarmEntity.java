@@ -26,6 +26,6 @@ public class AlarmEntity extends BaseEntity {
     private Long fromUser;
 
     @ManyToOne
-    @Column(name = "target_user_id")
+    @JoinColumn(name = "target_user_id")
     private UserEntity targetUser;
 }
