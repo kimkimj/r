@@ -17,7 +17,8 @@ public class UserEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @Column(name = "user_id")
+    private Long id;
 
     // Foreign Key
     @OneToOne
