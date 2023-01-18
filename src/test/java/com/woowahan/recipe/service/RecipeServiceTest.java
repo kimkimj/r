@@ -1,6 +1,6 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.RecipeCreateReqDto;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateReqDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.entity.RecipeEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
