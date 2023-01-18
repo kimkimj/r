@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,13 +24,22 @@ public class UserEntity extends BaseEntity {
     @Column(name = "user_id")
     private Long id;
 
+    // Foreign Key
+    @OneToOne
+    @JoinColumn(name="cart_id")
+    private CartEntity cartEntity;
+
+    @OneToMany(mappedBy = "user")
+    private List<OrderEntity> orders = new ArrayList<>();
+
     @NotBlank
-    private String userName;
+    private String userName; // 유저아이디
 
     @NotBlank
     private String password;
 
-    private String name;
+    @NotBlank
+    private String name; // 유저이름
 
     @NotBlank
     private String address;
@@ -37,14 +48,10 @@ public class UserEntity extends BaseEntity {
     @NotBlank
     private String email;
 
+    @NotBlank
     private String phoneNum;
 
     private UserRole userRole;
 
     private Date birth;
-
-    // Foreign Key
-    @OneToOne
-    @JoinColumn(name="cartId")
-    private CartEntity cartEntity;
 }
