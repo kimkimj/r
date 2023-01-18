@@ -1,4 +1,4 @@
-package com.woowahan.recipe.domain.dto.item;
+package com.woowahan.recipe.domain.dto.itemDto;
 
 import com.woowahan.recipe.domain.entity.ItemEntity;
 import lombok.AllArgsConstructor;
