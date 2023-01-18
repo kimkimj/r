@@ -12,8 +12,8 @@ public class ItemCreateReqDto {
 
     private String itemImagePath;
     private String itemName;
-    private int itemPrice;
-    private int itemStock;
+    private Integer itemPrice;
+    private Integer itemStock;
 
     public ItemEntity toEntity() {
         return ItemEntity.builder()
