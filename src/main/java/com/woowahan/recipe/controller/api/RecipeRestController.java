@@ -1,13 +1,14 @@
+
 package com.woowahan.recipe.controller.api;
 
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateReqDto;
 import com.woowahan.recipe.domain.dto.Response;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.service.RecipeService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
@@ -20,5 +21,12 @@ public class RecipeRestController {
     public Response<RecipeFindResDto> findRecipe(@PathVariable Long id){
         RecipeFindResDto recipeFindResDto = recipeService.findRecipe(id);
         return Response.success(recipeFindResDto);
+    }
+
+    @PostMapping("")
+    public Response<RecipeCreateResDto> createRecipe(@RequestBody RecipeCreateReqDto recipeCreateReqDto, Authentication authentication) {
+        String userName = authentication.getName();
+        RecipeCreateResDto recipeCreateResDto = recipeService.createRecipe(recipeCreateReqDto, userName);
+        return Response.success(recipeCreateResDto);
     }
 }

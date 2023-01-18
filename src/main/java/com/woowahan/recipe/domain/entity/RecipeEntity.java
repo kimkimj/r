@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Getter
@@ -28,12 +30,22 @@ public class RecipeEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private UserEntity user_id;
+    private UserEntity user;
+
+//    @OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+//    @OrderBy("id asc") // 리뷰 정렬
+//    private List<ReviewEntity> reivews;
+    /*@OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OrderBy("id asc") // 리뷰 정렬
+    private List<ReviewEntity> reivews;*/
+
+    @OneToMany(mappedBy = "recipe")
+    private List<ItemEntity> items = new ArrayList<>();
 
     public static RecipeFindResDto from(RecipeEntity recipeEntity) {
         return new RecipeFindResDto(
                 recipeEntity.getId(), recipeEntity.recipe_title, recipeEntity.recipe_body
-                ,recipeEntity.user_id.getNickname(), recipeEntity.getRecipe_like(), recipeEntity.getRecipe_view()
+                ,recipeEntity.user.getUserName(), recipeEntity.getRecipe_like(), recipeEntity.getRecipe_view()
         );
     }
 }
