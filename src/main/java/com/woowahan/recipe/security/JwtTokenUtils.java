@@ -10,9 +10,9 @@ import java.util.Date;
 @Component
 public class JwtTokenUtils {
 
-    public static String createToken(String username, String secretKey, long expiredTimeMs) {
+    public static String createToken(String userName, String secretKey, long expiredTimeMs) {
         Claims claims = Jwts.claims();
-        claims.put("username", username);
+        claims.put("userName", userName);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -31,8 +31,7 @@ public class JwtTokenUtils {
         return expiration.before(new Date());
     }
 
-    public String getUsername(String token, String secretKey) {
-        return extractClaims(token, secretKey).get("username", String.class);
+    public String getUserName(String token, String secretKey) {
+        return extractClaims(token, secretKey).get("userName", String.class);
     }
-
 }

@@ -42,7 +42,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        String userName = jwtTokenUtils.getUsername(token, secretKey);
+        String userName = jwtTokenUtils.getUserName(token, secretKey);
 
         // 통과
         UsernamePasswordAuthenticationToken authenticationToken =
