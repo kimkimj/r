@@ -22,7 +22,7 @@ public class UserEntity extends BaseEntity {
 
     // Foreign Key
     @OneToOne
-    @JoinColumn(name="cartId")
+    @JoinColumn(name="cart_id")
     private CartEntity cartEntity;
 
     private String userName;
