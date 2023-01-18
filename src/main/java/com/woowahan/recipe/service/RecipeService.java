@@ -40,7 +40,7 @@ public class RecipeService {
     public RecipeCreateResDto createRecipe(@RequestParam RecipeCreateReqDto recipeCreateReqDto , String userName) {
         RecipeEntity recipeEntity = createEntity(recipeCreateReqDto,userName);
         RecipeEntity saveRecipe = recipeRepository.save(recipeEntity);
-        return new RecipeCreateResDto(saveRecipe.getRecipe_title(),saveRecipe.getRecipe_body(),saveRecipe.getUser_id().getUserName());
+        return new RecipeCreateResDto(saveRecipe.getRecipe_title(),saveRecipe.getRecipe_body(),saveRecipe.getUser().getUserName());
     }
 
     /**
@@ -53,7 +53,7 @@ public class RecipeService {
         RecipeEntity recipeEntity = RecipeEntity.builder()
                 .recipe_title(recipeCreateReqDto.getRecipe_title())
                 .recipe_body(recipeCreateReqDto.getRecipe_body())
-                .user_id(userRepository.findByUserName(userName).orElseThrow(() -> new NoSuchElementException("레시피 등록 : 유저 ID 가져올 때 에러"))) // 현재 로그인된 userName으로 userEntity 저장
+                .user(userRepository.findByUserName(userName).orElseThrow(() -> new NoSuchElementException("레시피 등록 : 유저 ID 가져올 때 에러"))) // 현재 로그인된 userName으로 userEntity 저장
                 .build();
         return recipeEntity;
     }

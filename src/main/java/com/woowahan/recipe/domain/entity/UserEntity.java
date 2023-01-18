@@ -20,11 +20,11 @@ public class UserEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long id;
+    private Long userId;
 
     // Foreign Key
     @OneToOne
-    @JoinColumn(name="cartId")
+    @JoinColumn(name="cart_id")
     private CartEntity cartEntity;
 
     @OneToMany(mappedBy = "user")
