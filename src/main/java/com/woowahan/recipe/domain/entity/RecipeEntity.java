@@ -30,10 +30,14 @@ public class RecipeEntity extends BaseEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user_id;
 
+//    @OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+//    @OrderBy("id asc") // 리뷰 정렬
+//    private List<ReviewEntity> reivews;
+
     public static RecipeFindResDto from(RecipeEntity recipeEntity) {
         return new RecipeFindResDto(
                 recipeEntity.getId(), recipeEntity.recipe_title, recipeEntity.recipe_body
-                ,recipeEntity.user_id.getNickname(), recipeEntity.getRecipe_like(), recipeEntity.getRecipe_view()
+                ,recipeEntity.user_id.getUserName(), recipeEntity.getRecipe_like(), recipeEntity.getRecipe_view()
         );
     }
 }
