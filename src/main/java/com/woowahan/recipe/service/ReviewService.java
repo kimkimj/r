@@ -26,7 +26,7 @@ public class ReviewService {
 
     // User가 존재하는지 확인한다
     private UserEntity validateUser(String username) {
-        UserEntity user = userRepository.findByUsername(username)
+        UserEntity user = userRepository.findByUserName(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
         return user;
     }
@@ -76,7 +76,7 @@ public class ReviewService {
         RecipeEntity recipe = validateRecipe(recipeId);
 
         //리뷰 작성자와 유저가 동일한지 확인
-        if (!recipe.getUserId().getUserName().equals(username)) {
+        if (!recipe.getUser().getUserName().equals(username)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
         }
 
@@ -109,7 +109,7 @@ public class ReviewService {
        RecipeEntity recipe = validateRecipe(recipeId);
 
        //리뷰 작성자와 유저가 동일한지 확인
-       if (!recipe.getUserId().getUserName().equals(username)) {
+       if (!recipe.getUser().getUserName().equals(username)) {
            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
        }
 
