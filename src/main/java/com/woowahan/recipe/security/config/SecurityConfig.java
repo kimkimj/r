@@ -6,9 +6,6 @@ import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.security.JwtTokenFilter;
 import com.woowahan.recipe.security.JwtTokenUtils;
 import com.woowahan.recipe.security.exception.JwtExceptionFilter;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +22,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.woowahan.recipe.exception.ErrorCode.INVALID_PERMISSION;
@@ -45,12 +45,15 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .csrf().disable()
                 .cors().and()
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers(HttpMethod.GET).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users/join", "/api/users/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
-                        .requestMatchers(HttpMethod.PUT).authenticated()
-                        .requestMatchers(HttpMethod.DELETE).authenticated())
+                .authorizeHttpRequests()
+                .antMatchers(HttpMethod.GET, "/api/v1/posts/my, /api/v1/alarms").authenticated()
+                .antMatchers(HttpMethod.GET).permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/users/join", "/api/v1/users/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/users/**/role/change").hasRole("ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
+                .antMatchers(HttpMethod.PUT).authenticated()
+                .antMatchers(HttpMethod.DELETE).authenticated()
+                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

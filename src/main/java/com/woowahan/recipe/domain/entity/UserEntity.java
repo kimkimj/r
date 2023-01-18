@@ -1,12 +1,14 @@
 package com.woowahan.recipe.domain.entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,6 +26,9 @@ public class UserEntity extends BaseEntity {
     @OneToOne
     @JoinColumn(name="cart_id")
     private CartEntity cartEntity;
+
+    @OneToMany(mappedBy = "user")
+    private List<OrderEntity> orders = new ArrayList<>();
 
     private String userName;
     private String password;

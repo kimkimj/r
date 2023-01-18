@@ -1,21 +1,26 @@
 package com.woowahan.recipe.domain.entity;
 
-import jakarta.persistence.*;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class RecipeEntity extends BaseEntity{
+public class RecipeEntity extends BaseEntity {
 
     @Id
     @Column(name = "recipe_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long recipeId;
+    private Long id;
     private String recipe_title;
     private String recipe_body;
 
@@ -25,5 +30,22 @@ public class RecipeEntity extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private UserEntity userId;
+    private UserEntity user;
+
+//    @OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+//    @OrderBy("id asc") // 리뷰 정렬
+//    private List<ReviewEntity> reivews;
+    /*@OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OrderBy("id asc") // 리뷰 정렬
+    private List<ReviewEntity> reivews;*/
+
+    @OneToMany(mappedBy = "recipe")
+    private List<ItemEntity> items = new ArrayList<>();
+
+    public static RecipeFindResDto from(RecipeEntity recipeEntity) {
+        return new RecipeFindResDto(
+                recipeEntity.getId(), recipeEntity.recipe_title, recipeEntity.recipe_body
+                ,recipeEntity.user.getUserName(), recipeEntity.getRecipe_like(), recipeEntity.getRecipe_view()
+        );
+    }
 }
