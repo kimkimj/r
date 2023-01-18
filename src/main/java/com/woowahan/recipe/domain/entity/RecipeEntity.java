@@ -30,9 +30,9 @@ public class RecipeEntity extends BaseEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user_id;
 
-//    @OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-//    @OrderBy("id asc") // 리뷰 정렬
-//    private List<ReviewEntity> reivews;
+    @OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OrderBy("id asc") // 리뷰 정렬
+    private List<ReviewEntity> reivews;
 
     public static RecipeFindResDto from(RecipeEntity recipeEntity) {
         return new RecipeFindResDto(
