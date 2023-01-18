@@ -11,19 +11,21 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LikeEntity extends BaseEntity {
+public class AlarmEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "like_id")
+    @Column(name = "alarm_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "alarm_type")
+    private AlarmType alarmType;
 
-    // TODO: 2023-01-17 RecipeEntity 생성 후 주석 해제
+    @Column(name = "from_user_id")
+    private Long fromUser;
+
     @ManyToOne
-    @JoinColumn(name = "recipe_id")
-    private RecipeEntity recipe;
+    @JoinColumn(name = "target_user_id")
+    private UserEntity targetUser;
 }
