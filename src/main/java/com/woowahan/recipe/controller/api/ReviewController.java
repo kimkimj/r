@@ -1,4 +1,4 @@
-package com.woowahan.recipe.controller;
+package com.woowahan.recipe.controller.api;
 
 import com.woowahan.recipe.domain.dto.reviewDto.CreateReviewRequest;
 import com.woowahan.recipe.domain.dto.reviewDto.CreateReviewResponse;
@@ -11,7 +11,7 @@ import org.springframework.security.core.Authentication;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/recipes")
+@RequestMapping("/api/v1/recipes")
 public class ReviewController {
     private final ReviewService reviewServce;
 
