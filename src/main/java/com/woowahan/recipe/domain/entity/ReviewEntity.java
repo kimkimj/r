@@ -5,14 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.User;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewEntity {
+public class ReviewEntity extends BaseEntity{
     @Id
     @Column(name="review_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,5 +26,9 @@ public class ReviewEntity {
     private RecipeEntity recipe;
 
     private String review_comment;
+
+    public void update(String review_comment) {
+        this.review_comment = review_comment;
+    }
 
 }
