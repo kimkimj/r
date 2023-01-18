@@ -10,6 +10,6 @@ public class TestController {
 
     @GetMapping
     public void test() {
-        System.out.println("test 1:40pm");
+        System.out.println("test 1:59pm");
     }
 }
