@@ -22,8 +22,8 @@ public class ItemEntity {
 
     private String itemImagePath;
     private String itemName;
-    private String itemPrice;
-    private String itemStock;
+    private Integer itemPrice;
+    private Integer itemStock;
 
 
     //필요한지 불확실
