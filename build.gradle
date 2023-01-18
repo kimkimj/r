@@ -27,14 +27,10 @@ dependencies {
     implementation "io.springfox:springfox-boot-starter:3.0.0"
     implementation "io.springfox:springfox-swagger-ui:3.0.0"
 
-
-
+    // spring security
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
-    // Jdk 13으로 버전업 되면서 Java EE 가 빠져서 발생하는 문제 다수 발행
-    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
-    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
-    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

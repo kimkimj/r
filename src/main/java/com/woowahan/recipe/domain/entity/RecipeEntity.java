@@ -1,11 +1,12 @@
 package com.woowahan.recipe.domain.entity;
 
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Builder
 @Getter
