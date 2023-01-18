@@ -64,7 +64,7 @@ public class ReviewService {
         // 알람 울리도록 저장
         // alarm entity로 바꾼 후 alarm repository에 저장
 
-        return new CreateReviewResponse(review.getReviewId(), user.getNickname(), review.getReview_comment());
+        return new CreateReviewResponse(review.getReviewId(), user.getName(), review.getReview_comment());
     }
 
     // 리뷰 수정
@@ -97,7 +97,7 @@ public class ReviewService {
         // alarm entity로 바꾼 후 alarm repository에 저장
         //alarmRepository.save();
 
-        return new CreateReviewResponse(savedReview.getReviewId(), user.getNickname(), savedReview.getReview_comment());
+        return new CreateReviewResponse(savedReview.getReviewId(), user.getName(), savedReview.getReview_comment());
     }
 
     // 리뷰 단건 삭제
