@@ -32,7 +32,7 @@ public class ItemService {
     //[중복 로직] 관리자 권한 확인
     public void validateAdmin(UserEntity user) {
         if(user.getUserRole() != HEAD && user.getUserRole() != ADMIN) {
-            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+            throw new AppException(ErrorCode.ROLE_FORBIDDEN, ErrorCode.ROLE_FORBIDDEN.getMessage());
         }
     }
     //[중복 로직] item 존재 확인 + 가져오기
@@ -46,6 +46,17 @@ public class ItemService {
      */
     public Page<ItemListResDto> findAllItem(Pageable pageable) {
         Page<ItemEntity> items = itemRepository.findAll(pageable);
+        return items.map(ItemListResDto::from);
+    }
+
+    /**
+     * 재료 페이지에서 재료 검색
+     */
+    public Page<ItemListResDto> searchItem(String keyword, Pageable pageable) {
+        Page<ItemEntity> items = itemRepository.findByItemNameContaining(keyword, pageable);
+        if(items.getSize() == 0) {
+            throw new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage());
+        }
         return items.map(ItemListResDto::from);
     }
 
