@@ -26,6 +26,9 @@ public class ItemEntity {
     private Integer itemPrice;
     private Integer itemStock;
 
+    @ManyToOne
+    @JoinColumn(name = "recipe_id")
+    private RecipeEntity recipe;
 
     //필요한지 불확실
 //    @OneToMany

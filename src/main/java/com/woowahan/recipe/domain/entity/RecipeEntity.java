@@ -32,13 +32,13 @@ public class RecipeEntity extends BaseEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-//    @OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-//    @OrderBy("id asc") // 리뷰 정렬
-//    private List<ReviewEntity> reivews;
-    /*@OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+ /* 리뷰 개발
+    @Builder.Default
+    @OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 리뷰 정렬
-    private List<ReviewEntity> reivews;*/
-
+    private List<ReviewEntity> reivews;
+*/
+    @Builder.Default
     @OneToMany(mappedBy = "recipe")
     private List<ItemEntity> items = new ArrayList<>();
 

@@ -31,7 +31,7 @@ class RecipeServiceTest {
     private final Long user_id = 15L;
     private final String userName = "bjw";
     private final UserEntity userEntity = UserEntity.builder()
-            .userId(user_id)
+            .id(user_id)
             .userName(userName)
             .build();
 

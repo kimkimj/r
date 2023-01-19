@@ -24,7 +24,7 @@ public class OrderCreateResDto {
         return OrderCreateResDto.builder()
                 .orderNumber(order.getOrderNumber())
                 .receiveUserName(order.getUser().getUserName())
-                .phoneNum(order.getUser().getPhoneNumber())
+                .phoneNum(order.getUser().getPhoneNum())
                 .address(order.getUser().getAddress())
                 .build();
     }

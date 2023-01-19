@@ -1,11 +1,13 @@
 package com.woowahan.recipe.domain.entity;
 
+import com.woowahan.recipe.domain.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +22,7 @@ public class UserEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long userId;
+    private Long id;
 
     // Foreign Key
     @OneToOne
@@ -30,16 +32,26 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<OrderEntity> orders = new ArrayList<>();
 
-    private String userName;
+    @NotBlank
+    private String userName; // 유저아이디
+
+    @NotBlank
     private String password;
 
-    @Column(unique = true)
-    private String nickname;
+    @NotBlank
+    private String name; // 유저이름
+
+    @NotBlank
     private String address;
 
     @Column(unique = true)
+    @NotBlank
     private String email;
-    private String phoneNumber;
-    private String userRole;
+
+    @NotBlank
+    private String phoneNum;
+
+    private UserRole userRole;
+
     private Date birth;
 }
