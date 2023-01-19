@@ -10,9 +10,10 @@ import javax.validation.constraints.NotNull;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@NotBlank
 @NotNull
-public class RecipeCreateReqDto {
+@NotBlank
+public class RecipeUpdateReqDto {
+
     private String recipe_title;
     private String recipe_body;
 }
