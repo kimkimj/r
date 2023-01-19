@@ -55,8 +55,8 @@ class RecipeServiceTest {
     private final Long id = 1L;
     private final String title = "유부초밥";
     private final String body = "이렇게";
-    private final Long like = 10L;
-    private final Long view = 12L;
+    private final int like = 10;
+    private final int view = 12;
     private final RecipeEntity recipeEntity = RecipeEntity.builder()
             .id(id)
             .recipe_title(title)
@@ -78,6 +78,14 @@ class RecipeServiceTest {
         RecipeFindResDto recipeFindResDto = recipeService.findRecipe(id);
         assertThat(recipeFindResDto.getRecipe_title()).isEqualTo("유부초밥");
         assertThat(recipeFindResDto.getUserName()).isEqualTo("bjw");
+    }
+
+    @Test
+    void 레시피_ID_단건_조회_조회수_오르는지() {
+
+        when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
+        RecipeFindResDto recipeFindResDto = recipeService.findRecipe(id);
+        assertThat(recipeFindResDto.getRecipe_view()).isEqualTo(13);
     }
 
     @Test

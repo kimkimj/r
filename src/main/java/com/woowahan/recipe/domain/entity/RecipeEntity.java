@@ -23,9 +23,11 @@ public class RecipeEntity extends BaseEntity {
     private Long id;
     private String recipe_title;
     private String recipe_body;
-
-    private Long recipe_like;
-    private Long recipe_view;
+    // 조회수의 기본 값을 0으로 지정, null 불가 처리 -> null 불가능하니까 int형으로
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int recipe_like;
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int recipe_view;
     private String recipe_image_path;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,10 +1,6 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateReqDto;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateReqDto;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateResDto;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateResDto;
+import com.woowahan.recipe.domain.dto.recipeDto.*;
 import com.woowahan.recipe.domain.entity.RecipeEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
@@ -12,6 +8,7 @@ import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
@@ -65,6 +62,16 @@ public class RecipeService {
         recipeRepository.saveAndFlush(recipe);
         return new RecipeUpdateResDto(recipe.getId(),recipe.getRecipe_title(), recipe.getRecipe_body(),
                 recipe.getUser().getUserName(),recipe.getLastModifiedDate());
+    }
+
+    /**
+     * 조회수 증가
+     * @param id
+     * @return
+     */
+    @Transactional
+    public int updateView(Long id) {
+        return recipeRepository.updateView(id);
     }
 
     /**
