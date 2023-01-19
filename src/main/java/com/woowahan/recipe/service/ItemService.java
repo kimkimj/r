@@ -1,5 +1,6 @@
 package com.woowahan.recipe.service;
 
+import com.woowahan.recipe.domain.dto.itemDto.ItemListResDto;
 import com.woowahan.recipe.domain.dto.itemDto.*;
 import com.woowahan.recipe.domain.entity.ItemEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
@@ -8,7 +9,8 @@ import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.ItemRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import static com.woowahan.recipe.domain.UserRole.ADMIN;
@@ -37,6 +39,14 @@ public class ItemService {
     public ItemEntity validateItem(Long itemId) {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage()));
+    }
+
+    /**
+     * 재료 전체 조회
+     */
+    public Page<ItemListResDto> findAllItem(Pageable pageable) {
+        Page<ItemEntity> items = itemRepository.findAll(pageable);
+        return items.map(ItemListResDto::from);
     }
 
     /**
