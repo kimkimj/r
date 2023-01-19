@@ -1,8 +1,10 @@
 package com.woowahan.recipe.service;
 
+import com.woowahan.recipe.domain.UserRole;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateResponse;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewDeleteResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
 import com.woowahan.recipe.domain.entity.RecipeEntity;
 import com.woowahan.recipe.domain.entity.ReviewEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
@@ -13,7 +15,10 @@ import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.ReviewRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -107,18 +112,37 @@ public class ReviewService {
        // 레시피가 존재하는지 확인
        RecipeEntity recipe = validateRecipe(recipeId);
 
-       //리뷰 작성자와 유저가 동일한지 확인
-       if (!recipe.getUser().getUserName().equals(username)) {
+       //관리자거나 리뷰 작성자와 유저가 동일한지 확인
+       if (user.getUserRole() == UserRole.HEAD || user.getUserRole() == UserRole.ADMIN ||
+       !recipe.getUser().getUserName().equals(username)) {
            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
        }
 
        // soft delete
        reviewRepository.deleteById(reviewId);
-       return new ReviewDeleteResponse(reviewId);
+       return new ReviewDeleteResponse(reviewId, "댓글 삭제 완료");
    }
 
-   /*public ReviewListResponse findAll(Long recipeId) {
-        Page<ReviewEntity>
-   }*/
+/*
+    public ReviewListResponse findAllReviewsByRecipe(Long recipeId) {
+        // 레시피가 존재하는지 확인
+        /*RecipeEntity recipe = validateRecipe(recipeId);
+
+        List<ReviewEntity> list = reviewRepository.findAllByRecipe(recipe);
+        List<PostGetResponse> postListResponse = list.map(lists -> PostGetResponse.builder()
+                        .id(lists.getPostId())
+                        .title(lists.getTitle())
+                        .body(lists.getBody())
+                        .userName(lists.getUser().getUsername())
+                        .createdAt(lists.getCreatedAt())
+                        .lastModifiedAt(lists.getLastModifiedAt())
+                        .build())
+                .toList();
+
+        return PostListResponse.builder()
+                .list(postListResponse)
+                .build();
+    }*/
+
 
 }
