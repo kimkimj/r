@@ -13,8 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import static com.woowahan.recipe.domain.UserRole.ADMIN;
-import static com.woowahan.recipe.domain.UserRole.HEAD;
+import static com.woowahan.recipe.domain.UserRole.*;
 
 
 @RequiredArgsConstructor
@@ -29,9 +28,9 @@ public class ItemService {
         return userRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
     }
-    //[중복 로직] 관리자 권한 확인
+    //[중복 로직] 관리자/판매자 권한 확인
     public void validateAdmin(UserEntity user) {
-        if(user.getUserRole() != HEAD && user.getUserRole() != ADMIN) {
+        if(user.getUserRole() == USER) {
             throw new AppException(ErrorCode.ROLE_FORBIDDEN, ErrorCode.ROLE_FORBIDDEN.getMessage());
         }
     }
@@ -65,7 +64,7 @@ public class ItemService {
      */
     public ItemCreateResDto createItem(ItemCreateReqDto ReqDto, String userName) {
         UserEntity user = validateUser(userName); //user 존재 확인
-        validateAdmin(user); //관리자 권한 확인
+        validateAdmin(user); //관리자,판매자 권한 확인
         ItemEntity item = ReqDto.toEntity();
         ItemEntity savedItem = itemRepository.save(item);
         return ItemCreateResDto.from(savedItem);
@@ -76,7 +75,7 @@ public class ItemService {
      */
     public ItemUpdateResDto updateItem(Long id, ItemUpdateReqDto ReqDto, String userName) {
         UserEntity user = validateUser(userName); //user 존재 확인+가져오기
-        validateAdmin(user); //관리자 권한 확인
+        validateAdmin(user); //관리자,판매자 권한 확인
         ItemEntity item = validateItem(id); //item 존재 확인+가져오기
 
         item.update(ReqDto.getItemImagePath(), ReqDto.getItemName(), ReqDto.getItemPrice(), ReqDto.getItemStock());
@@ -91,7 +90,7 @@ public class ItemService {
      */
     public ItemDeleteResDto deleteItem(Long id, String userName) {
         UserEntity user = validateUser(userName); //user 존재 확인+가져오기
-        validateAdmin(user); //관리자 권한 확인
+        validateAdmin(user); //관리자,판매자 권한 확인
         ItemEntity item = validateItem(id); //item 존재 확인+가져오기
 
         itemRepository.delete(item);
