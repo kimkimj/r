@@ -46,6 +46,16 @@ public class RecipeEntity extends BaseEntity {
         return new RecipeFindResDto(
                 recipeEntity.getId(), recipeEntity.recipe_title, recipeEntity.recipe_body
                 ,recipeEntity.user.getUserName(), recipeEntity.getRecipe_like(), recipeEntity.getRecipe_view()
+                ,recipeEntity.getCreatedDate(),recipeEntity.getLastModifiedDate()
         );
+    }
+
+    // 레시피 수정을위한 set메서드    * 이미지 추가 예정
+    public void setRecipe_title(String recipe_title) {
+        this.recipe_title = recipe_title;
+    }
+
+    public void setRecipe_body(String recipe_body) {
+        this.recipe_body = recipe_body;
     }
 }
