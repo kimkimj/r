@@ -39,7 +39,7 @@ public class ItemService {
     // item 존재 확인 + 가져오기
     public ItemEntity validateItem(Long itemId) {
         return itemRepository.findById(itemId)
-                .orElseThrow(() -> new AppException(ErrorCode.Item_NOT_FOUND, ErrorCode.Item_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage()));
     }
 
     /**
