@@ -6,11 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -18,6 +19,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE user_entity SET deleted = true WHERE user_id = ?")
+@Where(clause = "deleted = false")
 public class UserEntity extends BaseEntity {
 
     @Id
@@ -57,4 +60,7 @@ public class UserEntity extends BaseEntity {
 
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="Asia/Seoul")
     private String birth;
+
+    // soft delete: 삭제 여부 기본값 false
+    private boolean deleted = Boolean.FALSE;
 }

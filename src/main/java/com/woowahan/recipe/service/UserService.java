@@ -1,5 +1,7 @@
 package com.woowahan.recipe.service;
 
+import com.woowahan.recipe.domain.UserRole;
+import com.woowahan.recipe.domain.dto.userDto.UserDeleteDto;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinResDto;
 import com.woowahan.recipe.domain.dto.userDto.UserResponse;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +71,7 @@ public class UserService {
     }
 
     /**
-     * 회원 정보 조회 - One Person
+     * 회원정보 조회 - One Person
      */
     public UserResponse findUser(Long id) {
 
@@ -77,5 +80,24 @@ public class UserService {
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
 
         return UserResponse.toUserResponse(user);
+    }
+
+    /**
+     * 회원 삭제
+     */
+    @Transactional
+    public UserDeleteDto deleteUser(Long id, String userName) {
+
+        // 찾고자 하는 회원의 고유번호 id가 없는 경우
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        // 본인인 경우, 유저의 ROLE이 ADMIN이면 삭제가 가능하도록
+        if(!user.getUserName().equals(userName) && user.getUserRole().equals(UserRole.USER)) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        }
+
+        userRepository.delete(user);
+        return new UserDeleteDto(id, "회원 삭제가 완료되었습니다.");
     }
 }

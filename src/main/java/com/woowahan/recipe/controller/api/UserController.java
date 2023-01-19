@@ -4,6 +4,7 @@ import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.userDto.*;
 import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -40,5 +41,14 @@ public class UserController {
     public Response<UserResponse> findUser(@PathVariable Long id) {
         UserResponse userResponse = userService.findUser(id);
         return Response.success(userResponse);
+    }
+
+    /**
+     * 회원정보 삭제 - soft Delete 이용
+     */
+    @DeleteMapping("/{id}")
+    public Response<UserDeleteDto> deleteUser(@PathVariable Long id, Authentication authentication) {
+        UserDeleteDto userDeleteDto = userService.deleteUser(id, authentication.getName());
+        return Response.success(userDeleteDto);
     }
 }
