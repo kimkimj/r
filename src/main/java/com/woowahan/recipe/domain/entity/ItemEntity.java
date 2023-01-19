@@ -53,9 +53,9 @@ public class ItemEntity {
     public void decreaseStock(int quantity) {
          int restStock = this.itemStock -= quantity;
          if (restStock < 0) {
-             throw new NotEnoughStockException("재고가 부족합니다.");
+             throw new NotEnoughStockException("재고 수량이 없습니다.");
          }
-        this.itemStock -= quantity;
+        this.itemStock = restStock;
     }
 
 
