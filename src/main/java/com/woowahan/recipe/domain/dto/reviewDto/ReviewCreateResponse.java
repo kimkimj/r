@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 // @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateReviewResponse {
+public class ReviewCreateResponse {
     private Long reivew_id;
     private String nickname;
     private String comment;
