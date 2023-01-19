@@ -1,9 +1,6 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.itemDto.ItemCreateReqDto;
-import com.woowahan.recipe.domain.dto.itemDto.ItemCreateResDto;
-import com.woowahan.recipe.domain.dto.itemDto.ItemUpdateReqDto;
-import com.woowahan.recipe.domain.dto.itemDto.ItemUpdateResDto;
+import com.woowahan.recipe.domain.dto.itemDto.*;
 import com.woowahan.recipe.domain.entity.ItemEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
@@ -36,7 +33,7 @@ public class ItemService {
             throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
         }
     }
-    // item 존재 확인 + 가져오기
+    //[중복 로직] item 존재 확인 + 가져오기
     public ItemEntity validateItem(Long itemId) {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage()));
@@ -66,5 +63,17 @@ public class ItemService {
         itemRepository.flush();
         return ItemUpdateResDto.from(savedItem);
 
+    }
+
+    /**
+     * 재료 삭제(관리자)
+     */
+    public ItemDeleteResDto deleteItem(Long id, String userName) {
+        UserEntity user = validateUser(userName); //user 존재 확인+가져오기
+        validateAdmin(user); //관리자 권한 확인
+        ItemEntity item = validateItem(id); //item 존재 확인+가져오기
+
+        itemRepository.delete(item);
+        return ItemDeleteResDto.from(id);
     }
 }
