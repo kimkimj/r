@@ -2,7 +2,6 @@ package com.woowahan.recipe.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.core.annotation.Order;
@@ -18,10 +17,13 @@ public class AspectOrder {
         @Around("com.woowahan.recipe.aop.PointCuts.all()")
         public Object doLog(ProceedingJoinPoint joinPoint) throws Throwable {
             long startTime = System.currentTimeMillis();
-            Signature result = joinPoint.getSignature();
-            long endTime = System.currentTimeMillis();
-            log.info("[logging] {} ({}ms)", result, endTime-startTime);
-            return joinPoint.proceed();
+            log.info("[logging START] {}", joinPoint.getSignature());
+            try {
+                return joinPoint.proceed();
+            } finally {
+                long endTime = System.currentTimeMillis();
+                log.info("[logging END] {} ({}ms)", joinPoint.getSignature(), endTime-startTime);
+            }
         }
     }
 
