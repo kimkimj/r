@@ -1,6 +1,7 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.reviewDto.CreateReviewRequest;
+import com.woowahan.recipe.domain.UserRole;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
 import com.woowahan.recipe.domain.entity.CartEntity;
 import com.woowahan.recipe.domain.entity.RecipeEntity;
 import com.woowahan.recipe.domain.entity.ReviewEntity;
@@ -14,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 
@@ -23,9 +23,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ReviewServiceTest {
-    /*
-
     ReviewService reviewService;
+    RecipeService recipeService;
 
     ReviewRepository reviewRepository = mock(ReviewRepository.class);
     UserRepository userRepository = mock(UserRepository.class);
@@ -35,27 +34,31 @@ public class ReviewServiceTest {
     // 카트 엔티티 생성
     CartEntity cart = new CartEntity();
 
-    //유저 엔티티 생성
-    private final Long userId = 15l;
+    /*유저 엔티티 생성
+    private final Long userId = 1l;
     private String userName = "sugaboy";
-    private final String nickanme = "백종원";
     private String password = "1234";
     private String address = "서울시";
     private String email = "jongwon@gmail.com";
     private String phoneNumber = "010-1234-5678";
-    private String userRole = "USER";
     private Date birth = new Date(2023, 01, 28);
     private final UserEntity userEntity = UserEntity.builder()
-            .userId(userId)
+            .id(userId)
             .userName(userName)
-            .nickname(nickanme)
             .password(password)
             .address(address)
             .email(email)
-            .phoneNumber(phoneNumber)
-            .userRole(userRole)
+            .phoneNum(phoneNumber)
+            .userRole(UserRole.USER)
             .birth(birth)
             .cartEntity(cart)
+            .build();
+     */
+    private final Long user_id = 1L;
+    private String userName = "백종원";
+    private final UserEntity userEntity = UserEntity.builder()
+            .id(user_id)
+            .userName(userName)
             .build();
 
     // 레시피엔티티 생성
@@ -65,10 +68,10 @@ public class ReviewServiceTest {
     private final Long like = 10l;
     private final Long view = 12l;
     private final RecipeEntity recipeEntity = RecipeEntity.builder()
-            .recipeId(recipeId)
+            .id(recipeId)
             .recipe_title(title)
             .recipe_body(body)
-            .userId(userEntity)
+            .user(userEntity)
             .recipe_like(like)
             .recipe_view(view)
             .build();
@@ -86,6 +89,7 @@ public class ReviewServiceTest {
 
     @BeforeEach
     void beforEach() {
+        recipeService = new RecipeService(recipeRepository,userRepository);
         reviewService = new ReviewService(userRepository, recipeRepository, reviewRepository, alarmRepository);
     }
 
@@ -93,16 +97,13 @@ public class ReviewServiceTest {
     @DisplayName("Create review: success")
     void create_review_success() {
 
-        when(userRepository.findByUsername(userName))
-                .thenReturn(Optional.of(userEntity));
-        when(recipeRepository.save(any()))
-                .thenReturn(recipeEntity);
-        when(reviewRepository.save(any()))
-                .thenReturn(reviewEntity);
+        when(userRepository.findByUserName(userName)).thenReturn(Optional.of(userEntity));
+        when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(recipeEntity));
+        when(reviewRepository.save(any())).thenReturn(reviewEntity);
 
         Assertions.assertDoesNotThrow(() -> reviewService.createReview(
-                recipeId, new CreateReviewRequest(review_comment), userName));
+                recipeId, new ReviewCreateRequest(review_comment), userName));
     }
-    */
+
 }
 
