@@ -3,6 +3,6 @@ package com.woowahan.recipe.domain.dto.reviewDto;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class DeleteReviewResponse {
+public class ReviewDeleteResponse {
    private Long reviewId;
 }
