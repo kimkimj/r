@@ -4,6 +4,10 @@ import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.itemDto.*;
 import com.woowahan.recipe.service.ItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +18,15 @@ import org.springframework.web.bind.annotation.*;
 public class ItemRestController {
 
     private final ItemService itemService;
+
+    /**
+     * 재료 전체 조회
+     */
+    @GetMapping
+    public Response<Page<ItemListResDto>> findAllItem(@PageableDefault(size = 50, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return Response.success(itemService.findAllItem(pageable));
+    }
+
 
     /**
      * 재료 등록(관리자)
@@ -39,6 +52,4 @@ public class ItemRestController {
     public Response<ItemDeleteResDto> deleteItem(@PathVariable Long id, Authentication authentication) {
         return Response.success(itemService.deleteItem(id, authentication.getName()));
     }
-
-
 }
