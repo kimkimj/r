@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,6 +16,8 @@ public class RecipeFindResDto {
     private String recipe_title;
     private String recipe_body;
     private String userName;
-    private Long recipe_like;
-    private Long recipe_view;
+    private int recipe_like;
+    private int recipe_view;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastModifiedAt;
 }

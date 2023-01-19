@@ -1,0 +1,103 @@
+package com.woowahan.recipe.service;
+
+import com.woowahan.recipe.domain.UserRole;
+import com.woowahan.recipe.domain.dto.userDto.UserDeleteDto;
+import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
+import com.woowahan.recipe.domain.dto.userDto.UserJoinResDto;
+import com.woowahan.recipe.domain.dto.userDto.UserResponse;
+import com.woowahan.recipe.domain.entity.UserEntity;
+import com.woowahan.recipe.exception.AppException;
+import com.woowahan.recipe.exception.ErrorCode;
+import com.woowahan.recipe.exception.ErrorResult;
+import com.woowahan.recipe.repository.UserRepository;
+import com.woowahan.recipe.security.JwtTokenUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class UserService {
+
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder encoder;
+
+    @Value("${jwt.token.secret}")
+    private String secretKey;
+
+    private long expiredTimeMs = 60 * 60 * 1000; // 토큰 유효시간: 1시간
+
+    public UserJoinResDto join(UserJoinReqDto userJoinReqDto) {
+
+        // userName(ID) 중복확인
+        userRepository.findByUserName(userJoinReqDto.getUserName())
+                .ifPresent(user -> {
+                    throw new AppException(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage());
+                });
+
+        // email 중복확인
+        userRepository.findByEmail(userJoinReqDto.getEmail())
+                .ifPresent(user -> {
+                    throw new AppException(ErrorCode.DUPLICATED_EMAIL, ErrorCode.DUPLICATED_EMAIL.getMessage());
+                });
+
+        UserEntity savedUser = userRepository.save(userJoinReqDto.toEntity(
+                encoder.encode(userJoinReqDto.getPassword())));
+
+        return new UserJoinResDto(savedUser.getUserName(), String.format("%s님의 회원가입이 완료되었습니다.", savedUser.getUserName()));
+
+        // 위 코드 다른 로직
+        /*UserJoinResDto dto = userRepository.save(userJoinReqDto.toEntity(
+                encoder.encode(userJoinReqDto.getPassword()))) // userEntity 객체 (이미 정보를 담고있다)
+                .toUserJoinResDto("님의 회원가입이 완료되었습니다.");
+
+        return dto;*/
+    }
+
+    public String login(String userName, String password) {
+
+        // userName(ID)가 없는 경우
+        UserEntity user = userRepository.findByUserName(userName)
+                .orElseThrow(() -> new AppException(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage()));
+
+        // password가 맞지 않는 경우
+        if(!encoder.matches(password, user.getPassword())) { // 날것과 DB(복호화된 패스워드)를 비교
+            throw new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
+        }
+
+        return JwtTokenUtils.createToken(userName, secretKey, expiredTimeMs);
+    }
+
+    /**
+     * 회원정보 조회 - One Person
+     */
+    public UserResponse findUser(Long id) {
+
+        // 찾고자 하는 회원의 id가 없는 경우
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        return UserResponse.toUserResponse(user);
+    }
+
+    /**
+     * 회원 삭제
+     */
+    @Transactional
+    public UserDeleteDto deleteUser(Long id, String userName) {
+
+        // 찾고자 하는 회원의 고유번호 id가 없는 경우
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        // 본인인 경우, 유저의 ROLE이 ADMIN이면 삭제가 가능하도록
+        if(!user.getUserName().equals(userName) && user.getUserRole().equals(UserRole.USER)) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        }
+
+        userRepository.delete(user);
+        return new UserDeleteDto(id, "회원 삭제가 완료되었습니다.");
+    }
+}

@@ -23,22 +23,24 @@ public class RecipeEntity extends BaseEntity {
     private Long id;
     private String recipe_title;
     private String recipe_body;
-
-    private Long recipe_like;
-    private Long recipe_view;
+    // 조회수의 기본 값을 0으로 지정, null 불가 처리 -> null 불가능하니까 int형으로
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int recipe_like;
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int recipe_view;
     private String recipe_image_path;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-//    @OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-//    @OrderBy("id asc") // 리뷰 정렬
-//    private List<ReviewEntity> reivews;
-    /*@OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+ /* 리뷰 개발
+    @Builder.Default
+    @OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 리뷰 정렬
-    private List<ReviewEntity> reivews;*/
-
+    private List<ReviewEntity> reivews;
+*/
+    @Builder.Default
     @OneToMany(mappedBy = "recipe")
     private List<ItemEntity> items = new ArrayList<>();
 
@@ -46,6 +48,16 @@ public class RecipeEntity extends BaseEntity {
         return new RecipeFindResDto(
                 recipeEntity.getId(), recipeEntity.recipe_title, recipeEntity.recipe_body
                 ,recipeEntity.user.getUserName(), recipeEntity.getRecipe_like(), recipeEntity.getRecipe_view()
+                ,recipeEntity.getCreatedDate(),recipeEntity.getLastModifiedDate()
         );
+    }
+
+    // 레시피 수정을위한 set메서드    * 이미지 추가 예정
+    public void setRecipe_title(String recipe_title) {
+        this.recipe_title = recipe_title;
+    }
+
+    public void setRecipe_body(String recipe_body) {
+        this.recipe_body = recipe_body;
     }
 }

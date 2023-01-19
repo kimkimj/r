@@ -22,15 +22,20 @@ public class DeliveryEntity {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
-    public void addOrder(OrderEntity order) {
+    public DeliveryEntity(String address, DeliveryStatus deliveryStatus) {
+        this.address = address;
+        this.deliveryStatus = deliveryStatus;
+    }
+
+    public void setOrder(OrderEntity order) {
         this.order = order;
     }
 
-    public void addDelivery(UserEntity user) {
-        this.address = user.getAddress();
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public void changeStatus(DeliveryStatus deliveryStatus) {
+    public void setDeliveryStatus(DeliveryStatus deliveryStatus) {
         this.deliveryStatus = deliveryStatus;
     }
 }

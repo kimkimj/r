@@ -10,7 +10,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CreateReviewRequest {
+public class ReviewCreateRequest {
     private String comment;
 
     public ReviewEntity toEntity(UserEntity user, RecipeEntity recipe, String content) {

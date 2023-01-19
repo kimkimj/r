@@ -35,6 +35,13 @@ public class ItemEntity {
 //    @JoinColumn(name = "recipe_id")
 //    private List<RecipeEntity> recipeList;
 
+    public void update(String itemImagePath, String itemName, Integer itemPrice, Integer itemStock) {
+        this.itemImagePath = itemImagePath;
+        this.itemName = itemName;
+        this.itemPrice = itemPrice;
+        this.itemStock = itemStock;
+    }
+
     /* 연관관계 메서드 */
     public void addItem() {};
 
@@ -46,9 +53,9 @@ public class ItemEntity {
     public void decreaseStock(int quantity) {
          int restStock = this.itemStock -= quantity;
          if (restStock < 0) {
-             throw new NotEnoughStockException("재고가 부족합니다.");
+             throw new NotEnoughStockException("재고 수량이 없습니다.");
          }
-        this.itemStock -= quantity;
+        this.itemStock = restStock;
     }
 
 
