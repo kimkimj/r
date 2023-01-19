@@ -1,5 +1,6 @@
 package com.woowahan.recipe.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.woowahan.recipe.domain.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,5 +55,6 @@ public class UserEntity extends BaseEntity {
 
     private UserRole userRole;
 
-    private Date birth;
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="Asia/Seoul")
+    private String birth;
 }

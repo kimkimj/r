@@ -4,10 +4,7 @@ import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.userDto.*;
 import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -34,5 +31,14 @@ public class UserController {
         return Response.success(new UserLoginResDto(token));
     }
 
-    // TODO: 2023-01-19 회원정보 변경, 탈퇴 구현
+    // TODO: 2023-01-19 회원정보 조회, 수정, 삭제 구현
+
+    /**
+     * 회원정보 조회
+     */
+    @GetMapping("/{id}")
+    public Response<UserResponse> findUser(@PathVariable Long id) {
+        UserResponse userResponse = userService.findUser(id);
+        return Response.success(userResponse);
+    }
 }
