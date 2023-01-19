@@ -46,7 +46,7 @@ public class OrderEntity extends BaseEntity{
     /* 연관관계 메서드 */
     public void addUser(UserEntity user) {
         this.user = user;
-        user.getOrders().add(this);
+//        user.getOrders().add(this);
     }
 
     public void addOrderItem(OrderItemEntity orderItem) {
@@ -56,10 +56,21 @@ public class OrderEntity extends BaseEntity{
 
     public void addDelivery(DeliveryEntity delivery) {
         this.delivery = delivery;
-        delivery.addOrder(this);
+        delivery.setOrder(this);
     }
 
     /* 생성 메서드 */
+    // 개별 주문
+    public static OrderEntity createOrder(UserEntity user, DeliveryEntity delivery, OrderItemEntity orderItem) {
+        OrderEntity order = new OrderEntity();
+        order.addUser(user);
+        order.addDelivery(delivery);
+        order.addOrderItem(orderItem);
+        order.orderStatus = OrderStatus.ORDER;
+        return order;
+    }
+
+    // 장바구니 주문
     public static OrderEntity createOrder(UserEntity user, DeliveryEntity delivery, OrderItemEntity... orderItems) {
         OrderEntity order = new OrderEntity();
         order.addUser(user);
@@ -90,6 +101,14 @@ public class OrderEntity extends BaseEntity{
             totalPrice += orderItem.getTotalPrice();
         }
         return totalPrice;
+    }
+
+    public int getTotalCounts() {
+        int totalCount = 0;
+        for (OrderItemEntity orderItem : orderItems) {
+            totalCount += orderItem.getCount();
+        }
+        return totalCount;
     }
 
 
