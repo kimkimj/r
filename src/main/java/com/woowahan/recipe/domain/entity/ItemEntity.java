@@ -35,6 +35,13 @@ public class ItemEntity {
 //    @JoinColumn(name = "recipe_id")
 //    private List<RecipeEntity> recipeList;
 
+    public void update(String itemImagePath, String itemName, Integer itemPrice, Integer itemStock) {
+        this.itemImagePath = itemImagePath;
+        this.itemName = itemName;
+        this.itemPrice = itemPrice;
+        this.itemStock = itemStock;
+    }
+
     /* 연관관계 메서드 */
     public void addItem() {};
 
