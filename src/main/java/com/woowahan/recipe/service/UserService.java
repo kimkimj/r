@@ -3,6 +3,7 @@ package com.woowahan.recipe.service;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinResDto;
 import com.woowahan.recipe.domain.entity.UserEntity;
+import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.exception.ErrorResult;
 import com.woowahan.recipe.repository.UserRepository;
@@ -29,13 +30,13 @@ public class UserService {
         // userName(ID) 중복확인
         userRepository.findByUserName(userJoinReqDto.getUserName())
                 .ifPresent(user -> {
-                    throw new ErrorResult(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage());
+                    throw new AppException(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage());
                 });
 
         // email 중복확인
         userRepository.findByEmail(userJoinReqDto.getEmail())
                 .ifPresent(user -> {
-                    throw new ErrorResult(ErrorCode.DUPLICATED_EMAIL, ErrorCode.DUPLICATED_EMAIL.getMessage());
+                    throw new AppException(ErrorCode.DUPLICATED_EMAIL, ErrorCode.DUPLICATED_EMAIL.getMessage());
                 });
 
         UserEntity savedUser = userRepository.save(userJoinReqDto.toEntity(
@@ -55,11 +56,11 @@ public class UserService {
 
         // userName(ID)가 없는 경우
         UserEntity user = userRepository.findByUserName(userName)
-                .orElseThrow(() -> new ErrorResult(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage()));
+                .orElseThrow(() -> new AppException(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage()));
 
         // password가 맞지 않는 경우
         if(!encoder.matches(password, user.getPassword())) { // 날것과 DB(복호화된 패스워드)를 비교
-            throw new ErrorResult(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
+            throw new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
         }
 
         return JwtTokenUtils.createToken(userName, secretKey, expiredTimeMs);

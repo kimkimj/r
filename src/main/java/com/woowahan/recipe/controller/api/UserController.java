@@ -33,4 +33,6 @@ public class UserController {
         String token = userService.login(userLoginReqDto.getUserName(), userLoginReqDto.getPassword());
         return Response.success(new UserLoginResDto(token));
     }
+
+    // TODO: 2023-01-19 회원정보 변경, 탈퇴 구현
 }
