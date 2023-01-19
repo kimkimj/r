@@ -1,10 +1,7 @@
 package com.woowahan.recipe.controller.api;
 
 import com.woowahan.recipe.domain.dto.Response;
-import com.woowahan.recipe.domain.dto.itemDto.ItemCreateReqDto;
-import com.woowahan.recipe.domain.dto.itemDto.ItemCreateResDto;
-import com.woowahan.recipe.domain.dto.itemDto.ItemUpdateReqDto;
-import com.woowahan.recipe.domain.dto.itemDto.ItemUpdateResDto;
+import com.woowahan.recipe.domain.dto.itemDto.*;
 import com.woowahan.recipe.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -35,8 +32,13 @@ public class ItemRestController {
         return Response.success(itemService.updateItem(id, itemUpdateReqDto, authentication.getName()));
     }
 
-
-
+    /**
+     * 재료 삭제(관리자)
+     */
+    @DeleteMapping("/{id}")
+    public Response<ItemDeleteResDto> deleteItem(@PathVariable Long id, Authentication authentication) {
+        return Response.success(itemService.deleteItem(id, authentication.getName()));
+    }
 
 
 }
