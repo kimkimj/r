@@ -40,7 +40,7 @@ public class UserJoinReqDto {
 //    private UserRole userRole;
 
     @NotBlank(message = "생년월일을 입력해주세요.")
-    private Date birth;
+    private String birth;
 
     // UserJoinReqeust가 User로 변환되는 로직
     // 정보에 필요한 폼들이 다 들어가야 한다.

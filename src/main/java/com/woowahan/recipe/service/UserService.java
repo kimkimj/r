@@ -2,6 +2,7 @@ package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinResDto;
+import com.woowahan.recipe.domain.dto.userDto.UserResponse;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
@@ -64,5 +65,17 @@ public class UserService {
         }
 
         return JwtTokenUtils.createToken(userName, secretKey, expiredTimeMs);
+    }
+
+    /**
+     * 회원 정보 조회 - One Person
+     */
+    public UserResponse findUser(Long id) {
+
+        // 찾고자 하는 회원의 id가 없는 경우
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        return UserResponse.toUserResponse(user);
     }
 }
