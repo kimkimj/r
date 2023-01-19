@@ -42,8 +42,8 @@ class RecipeRestControllerTest {
                 .recipe_title("유부초밥")
                 .recipe_body("이렇게")
                 .userName("bjw")
-                .recipe_like(10L)
-                .recipe_view(12L)
+                .recipe_like(10)
+                .recipe_view(12)
                 .build();
         //when
         when(recipeService.findRecipe(any())).thenReturn(recipeFindResDto);
