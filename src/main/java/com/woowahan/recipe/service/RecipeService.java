@@ -21,8 +21,7 @@ public class RecipeService {
     private final UserRepository userRepository;
 
     /**
-     * ID로 레시피 단건조회
-     *
+     * TODO: 2023-01-17 ID로 레시피 단건조회
      * @param recipe_id
      * @return recipeFindResDto
      */
@@ -33,8 +32,7 @@ public class RecipeService {
     }
 
     /**
-     * 레시피 작성
-     *
+     * TODO: 2023-01-18 레시피 작성
      * @param recipeCreateReqDto
      * @param userName
      * @return
@@ -47,8 +45,7 @@ public class RecipeService {
     }
 
     /**
-     * 레시피 수정
-     *
+     * TODO: 2023-01-19 레시피 수정
      * @param recipeUpdateReqDto
      * @param recipeId
      * @param userName
@@ -65,7 +62,21 @@ public class RecipeService {
     }
 
     /**
-     * 조회수 증가
+     * TODO : 2023-01-20 레시피 삭제
+     * @param recipeId
+     * @param userName
+     * @return
+     */
+    public RecipeResponse deleteRecipe(Long recipeId,String userName) {
+        RecipeEntity recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND,ErrorCode.RECIPE_NOT_FOUND.getMessage()));
+        validateUserName(userName, recipe); // 동일 유저 검증
+        recipeRepository.deleteById(recipeId);
+
+        return new RecipeResponse("레시피를 삭제했습니다.",recipeId);
+    }
+
+    /**
+     * TODO: 2023-01-19 조회수 증가
      * @param id
      * @return
      */
@@ -75,8 +86,7 @@ public class RecipeService {
     }
 
     /**
-     * 레시피 작성 엔티티 생성
-     *
+     * TODO: 2023-01-18 레시피 작성 엔티티 생성
      * @param recipeCreateReqDto
      * @param userName
      * @return
@@ -92,8 +102,7 @@ public class RecipeService {
     }
 
     /**
-     * 레시피와 로그인한 유저가 같은지 검증
-     *
+     * TODO: 2023-01-19 레시피와 로그인한 유저가 같은지 검증
      * @param userName
      * @param recipeEntity
      */

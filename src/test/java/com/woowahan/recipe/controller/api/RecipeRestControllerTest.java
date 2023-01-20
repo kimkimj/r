@@ -109,4 +109,21 @@ class RecipeRestControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
+
+    @Test
+    @WithMockUser
+    void 레시피_삭제_성공() throws Exception{
+        //given
+        RecipeResponse recipeResponse = new RecipeResponse("레시피를 삭제했습니다.",1L);
+        //when
+        when(recipeService.deleteRecipe(any(),any())).thenReturn(recipeResponse);
+
+        //then
+        mockMvc.perform(delete("/api/v1/recipes/1")
+                        .with(csrf()))
+                .andExpect(jsonPath("$.result.message").exists())
+                .andExpect(jsonPath("$.result.id").exists())
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 }
