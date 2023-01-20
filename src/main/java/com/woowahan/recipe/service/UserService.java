@@ -8,7 +8,6 @@ import com.woowahan.recipe.domain.dto.userDto.UserResponse;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
-import com.woowahan.recipe.exception.ErrorResult;
 import com.woowahan.recipe.repository.UserRepository;
 import com.woowahan.recipe.security.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
@@ -92,8 +91,9 @@ public class UserService {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
 
-        // 본인인 경우, 유저의 ROLE이 ADMIN이면 삭제가 가능하도록
-        if(!user.getUserName().equals(userName) && user.getUserRole().equals(UserRole.USER)) {
+        // 1. 본인인 경우 삭제가 가능하도록
+        // 2. 유저의 ROLE이 ADMIN이면 삭제가 가능하도록
+        if(!user.getUserName().equals(userName) && user.getUserRole().equals(UserRole.ADMIN)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
         }
 
