@@ -19,8 +19,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE user_entity SET deleted = true WHERE user_id = ?")
-@Where(clause = "deleted = false")
+@SQLDelete(sql = "UPDATE user_entity SET deleted_date = current_timestamp WHERE user_id = ?")
+@Where(clause = "deleted_date is NULL")
 public class UserEntity extends BaseEntity {
 
     @Id
@@ -60,7 +60,4 @@ public class UserEntity extends BaseEntity {
 
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="Asia/Seoul")
     private String birth;
-
-    // soft delete: 삭제 여부 기본값 false
-    private boolean deleted = Boolean.FALSE;
 }
