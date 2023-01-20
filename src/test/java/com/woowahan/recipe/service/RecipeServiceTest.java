@@ -9,6 +9,10 @@ import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.Optional;
@@ -79,6 +83,15 @@ class RecipeServiceTest {
 
     @Test
     @WithMockUser
+    void 레시피_마이피드_실패_유저가올린_게시물이없는경우() {
+        PageRequest pageRequest = PageRequest.of(0, 20, Sort.by("createdAt"));
+        String userName3 = "messi";
+        AppException appException = assertThrows(AppException.class, () -> recipeService.myRecipes(pageRequest, userName3));
+        assertThat(appException.getErrorCode()).isEqualTo(ErrorCode.RECIPE_NOT_FOUND);
+    }
+
+    @Test
+    @WithMockUser
     void 레시피_등록_성공() {
 
         when(userRepository.findByUserName(userName)).thenReturn(Optional.of(userEntity));
@@ -110,7 +123,7 @@ class RecipeServiceTest {
         AppException appException = assertThrows(AppException.class, () -> {
             recipeService.updateRecipe(recipeUpdateReqDto, id, userName2);
         });
-        assertEquals(ErrorCode.INVALID_PERMISSION,appException.getErrorCode());
+        assertEquals(ErrorCode.INVALID_PERMISSION, appException.getErrorCode());
     }
 
     @Test

@@ -82,7 +82,7 @@ class RecipeRestControllerTest {
         verify(recipeService).findAllRecipes(pageableArgumentCaptor.capture());
         PageRequest pageRequest = (PageRequest) pageableArgumentCaptor.getValue();
 
-        assertThat(pageRequest.withSort(Sort.by("createdAt","DESC")).getSort()).isEqualTo(Sort.by("createdAt","DESC"));
+        assertThat(pageRequest.withSort(Sort.by("createdAt", "DESC")).getSort()).isEqualTo(Sort.by("createdAt", "DESC"));
         assertThat(pageRequest.getPageSize()).isEqualTo(20);
     }
 
@@ -136,11 +136,11 @@ class RecipeRestControllerTest {
 
     @Test
     @WithMockUser
-    void 레시피_삭제_성공() throws Exception{
+    void 레시피_삭제_성공() throws Exception {
         //given
-        RecipeResponse recipeResponse = new RecipeResponse("레시피를 삭제했습니다.",1L);
+        RecipeResponse recipeResponse = new RecipeResponse("레시피를 삭제했습니다.", 1L);
         //when
-        when(recipeService.deleteRecipe(any(),any())).thenReturn(recipeResponse);
+        when(recipeService.deleteRecipe(any(), any())).thenReturn(recipeResponse);
 
         //then
         mockMvc.perform(delete("/api/v1/recipes/1")
