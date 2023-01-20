@@ -1,14 +1,14 @@
 package com.woowahan.recipe.controller.api;
 
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.*;
 import com.woowahan.recipe.domain.dto.Response;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewDeleteResponse;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
 import com.woowahan.recipe.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,6 +16,14 @@ import org.springframework.security.core.Authentication;
 public class ReviewController {
     private final ReviewService reviewService;
 
+    @GetMapping("/{recipeId}/reviews")
+    public Response<ReviewListResponse> getAllReviews(@PathVariable Long recipeId) {
+            ReviewListResponse reviews = reviewService.findAllReviews(recipeId);
+            //log.info("포스트 리스트 조회 성공");
+            return Response.success(reviews);
+    }
+
+    @PostMapping("/{recipeId}/reviews")
     public Response<ReviewCreateResponse> createReview(@PathVariable Long recipeId,
                                                      @RequestBody ReviewCreateRequest reviewCreateRequest,
                                                      Authentication authentication) {
@@ -23,7 +31,7 @@ public class ReviewController {
         return Response.success(reviewCreateResponse);
     }
 
-    @PutMapping("/{id}/reviews/{reviewId}")
+    @PutMapping("/{recipeId}/reviews/{reviewId}")
     public Response<ReviewCreateResponse> updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId,
                                                        @RequestBody ReviewCreateRequest reviewCreateRequest,
                                                        Authentication authentication) {
@@ -31,7 +39,7 @@ public class ReviewController {
         return Response.success(reviewCreateResponse);
     }
 
-    @DeleteMapping ("/{id}/reviews/{reviewId}")
+    @DeleteMapping ("/{recipeId}/reviews/{reviewId}")
     public Response<ReviewDeleteResponse> deleteReview(@PathVariable Long recipeId, @PathVariable Long reviewId,
                                                        Authentication authentication) {
         ReviewDeleteResponse reviewDeleteResponse = reviewService.deleteReview(recipeId, reviewId, authentication.getName());
