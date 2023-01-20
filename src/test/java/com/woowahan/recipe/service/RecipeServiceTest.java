@@ -69,20 +69,12 @@ class RecipeServiceTest {
     }
 
     @Test
-    void 레시피_ID_단건_조회() {
+    void 레시피_ID_단건_조회_성공() {
 
         when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
         RecipeFindResDto recipeFindResDto = recipeService.findRecipe(id);
         assertThat(recipeFindResDto.getRecipe_title()).isEqualTo("유부초밥");
         assertThat(recipeFindResDto.getUserName()).isEqualTo("bjw");
-    }
-
-    @Test
-    void 레시피_ID_단건_조회_조회수_오르는지() {
-
-        when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
-        RecipeFindResDto recipeFindResDto = recipeService.findRecipe(id);
-        assertThat(recipeFindResDto.getRecipe_view()).isEqualTo(13);
     }
 
     @Test

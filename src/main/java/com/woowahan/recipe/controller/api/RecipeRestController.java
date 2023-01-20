@@ -5,6 +5,10 @@ import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
 import com.woowahan.recipe.service.RecipeService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +29,17 @@ public class RecipeRestController {
         recipeService.updateView(id);
         RecipeFindResDto recipeFindResDto = recipeService.findRecipe(id);
         return Response.success(recipeFindResDto);
+    }
+
+    /**
+     * TODO: 2023-01-20 레시피 전체 조회 api
+     * @param pageable
+     * @return
+     */
+    @GetMapping
+    public Response<Page<RecipePageResDto>> findAllRecipes(
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return Response.success(recipeService.findAllRecipes(pageable));
     }
 
     /**
