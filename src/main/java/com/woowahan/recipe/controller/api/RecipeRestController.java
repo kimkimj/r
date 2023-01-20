@@ -15,6 +15,11 @@ public class RecipeRestController {
 
     private final RecipeService recipeService;
 
+    /**
+     * TODO: 2023-01-17 레시피 단건 조회 api
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public Response<RecipeFindResDto> findRecipe(@PathVariable Long id) {
         recipeService.updateView(id);
@@ -22,6 +27,12 @@ public class RecipeRestController {
         return Response.success(recipeFindResDto);
     }
 
+    /**
+     * TODO: 2023-01-18 레시피 작성 api
+     * @param recipeCreateReqDto
+     * @param authentication
+     * @return
+     */
     @PostMapping("")
     public Response<RecipeResponse> createRecipe(@RequestBody RecipeCreateReqDto recipeCreateReqDto, Authentication authentication) {
         String userName = authentication.getName();
@@ -29,6 +40,13 @@ public class RecipeRestController {
         return Response.success(new RecipeResponse("레시피를 등록했습니다.", recipeCreateResDto.getRecipe_id()));
     }
 
+    /**
+     * TODO: 2023-01-19 레시피 수정 api
+     * @param recipeUpdateReqDto
+     * @param id
+     * @param authentication
+     * @return
+     */
     @PutMapping("/{id}")
     public Response<RecipeResponse> updateRecipe(@RequestBody RecipeUpdateReqDto recipeUpdateReqDto, @PathVariable Long id, Authentication authentication) {
         String userName = authentication.getName();
@@ -36,4 +54,16 @@ public class RecipeRestController {
         return Response.success(new RecipeResponse("레시피를 수정했습니다.", recipeUpdateResDto.getRecipe_id()));
     }
 
+    /**
+     * TODO : 2023-01-20 레시피 삭제 api
+     * @param id
+     * @param authentication
+     * @return
+     */
+    @DeleteMapping("/{id}")
+    public Response<RecipeResponse> deleteRecipe(@PathVariable Long id, Authentication authentication) {
+        String userName = authentication.getName();
+        RecipeResponse recipeResponse = recipeService.deleteRecipe(id, userName);
+        return Response.success(recipeResponse);
+    }
 }

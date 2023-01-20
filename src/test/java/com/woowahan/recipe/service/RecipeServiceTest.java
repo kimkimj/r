@@ -1,9 +1,6 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateReqDto;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateReqDto;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateResDto;
+import com.woowahan.recipe.domain.dto.recipeDto.*;
 import com.woowahan.recipe.domain.entity.RecipeEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
@@ -122,5 +119,15 @@ class RecipeServiceTest {
             recipeService.updateRecipe(recipeUpdateReqDto, id, userName2);
         });
         assertEquals(ErrorCode.INVALID_PERMISSION,appException.getErrorCode());
+    }
+
+    @Test
+    @WithMockUser
+    void 레시피_삭제_성공() {
+
+        when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
+        when(userRepository.findByUserName(userName)).thenReturn(Optional.of(userEntity));
+        assertDoesNotThrow(() -> recipeService.deleteRecipe(id, userName));
+
     }
 }
