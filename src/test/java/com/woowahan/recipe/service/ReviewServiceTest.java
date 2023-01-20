@@ -1,8 +1,6 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateResponse;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewDeleteResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.*;
 import com.woowahan.recipe.domain.entity.RecipeEntity;
 import com.woowahan.recipe.domain.entity.ReviewEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
@@ -13,7 +11,14 @@ import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.ReviewRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import org.junit.jupiter.api.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,8 +59,8 @@ public class ReviewServiceTest {
     private final Long recipeId = 1l;
     private final String title = "유부초밥";
     private final String body = "이렇게";
-    private final Long like = 10l;
-    private final Long view = 12l;
+    private final int like = 10;
+    private final int view = 12;
     private final RecipeEntity recipe = RecipeEntity.builder()
             .id(recipeId)
             .recipe_title(title)
@@ -212,10 +217,27 @@ public class ReviewServiceTest {
         }
     }
 
-    @Nested
-    @DisplayName("리뷰 전체 조회")
-    class findAllReview {
 
+    // TODO: 전체 조회 service 테스트
+    @Test
+    @DisplayName("리뷰 전체 조회")
+    void findAll_review_success() {
+
+        ReviewEntity review2 = ReviewEntity.builder()
+                .recipe(recipe)
+                .review_comment("comment1")
+                .build();
+
+        given(recipeRepository.findById(recipeId)).willReturn(Optional.of(recipe));
+        given(reviewRepository.findById(reviewId)).willReturn(Optional.of(review));
+        given(reviewRepository.findById(review2.getReviewId())).willReturn(Optional.of(review2));
+
+        PageRequest pageable = PageRequest.of(0, 20, Sort.Direction.DESC,"createdDate");
+        Page<ReviewEntity> reviews= new PageImpl<>(List.of(review, review2));
+
+        given(reviewRepository.findAllByRecipe(recipe, pageable)).willReturn(reviews);
+
+        //ReviewListResponse reviewList = reviewService.findAllReviews(recipeId);
     }
 
 }

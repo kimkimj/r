@@ -1,13 +1,8 @@
 package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.UserRole;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateResponse;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewDeleteResponse;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
-import com.woowahan.recipe.domain.entity.RecipeEntity;
-import com.woowahan.recipe.domain.entity.ReviewEntity;
-import com.woowahan.recipe.domain.entity.UserEntity;
+import com.woowahan.recipe.domain.dto.reviewDto.*;
+import com.woowahan.recipe.domain.entity.*;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.AlarmRepository;
@@ -16,6 +11,9 @@ import com.woowahan.recipe.repository.ReviewRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -98,8 +96,13 @@ public class ReviewService {
         ReviewEntity savedReview = reviewRepository.save(review);
 
         // 알람 울리도록 저장
-        // alarm entity로 바꾼 후 alarm repository에 저장
-        //alarmRepository.save();
+        AlarmEntity alarm = AlarmEntity.builder()
+                .alarmType(AlarmType.NEW_REVIEW_ON_RECIPE)
+                .fromUser(user.getId())
+                .targetUser(recipe.getUser())
+                .build();
+
+        alarmRepository.save(alarm);
 
         return new ReviewCreateResponse(savedReview.getReviewId(), user.getName(), savedReview.getReview_comment());
     }
@@ -123,26 +126,27 @@ public class ReviewService {
        return new ReviewDeleteResponse(reviewId, "댓글 삭제 완료");
    }
 
-/*
-    public ReviewListResponse findAllReviewsByRecipe(Long recipeId) {
+    public ReviewListResponse findAllReviews(Long recipeId) {
         // 레시피가 존재하는지 확인
-        /*RecipeEntity recipe = validateRecipe(recipeId);
+        RecipeEntity recipe = validateRecipe(recipeId);
 
-        List<ReviewEntity> list = reviewRepository.findAllByRecipe(recipe);
-        List<PostGetResponse> postListResponse = list.map(lists -> PostGetResponse.builder()
-                        .id(lists.getPostId())
-                        .title(lists.getTitle())
-                        .body(lists.getBody())
-                        .userName(lists.getUser().getUsername())
-                        .createdAt(lists.getCreatedAt())
-                        .lastModifiedAt(lists.getLastModifiedAt())
+        // 20개씩 만들어진 순으로 정렬
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("createdDate"));
+
+        Page<ReviewEntity> reviews = reviewRepository.findAllByRecipe(recipe, pageable);
+        // List<ReviewGetResponse> reviewList = reviews.map(ReviewGetResponse::toReviewGetResponse).toList();
+
+        List<ReviewGetResponse> reviewList = reviews.map(review -> ReviewGetResponse.builder()
+                        .reviewId(review.getReviewId())
+                        .username(review.getUser().getUserName())
+                        .review_comment(review.getReview_comment())
+                        .createdDate(review.getCreatedDate())
+                        .last_modified(review.getLastModifiedDate())
                         .build())
                 .toList();
 
-        return PostListResponse.builder()
-                .list(postListResponse)
+        return ReviewListResponse.builder()
+                .content(reviewList)
                 .build();
-    }*/
-
-
+    }
 }
