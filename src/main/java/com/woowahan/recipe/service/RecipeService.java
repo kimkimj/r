@@ -7,11 +7,15 @@ import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -29,6 +33,18 @@ public class RecipeService {
         Optional<RecipeEntity> optRecipe = recipeRepository.findById(recipe_id);
         RecipeFindResDto recipeFindResDto = RecipeEntity.from(optRecipe.get());
         return recipeFindResDto;
+    }
+
+    /**
+     * TODO : 2023-01-20 레시피 전체 조회
+     * @param pageable
+     * @return
+     */
+    public Page<RecipePageResDto> findAllRecipes(Pageable pageable){
+        Page<RecipeEntity> recipeEntities = recipeRepository.findAll(pageable);
+        return new PageImpl<>(recipeEntities.stream()
+                .map(RecipeEntity::toResponse)
+                .collect(Collectors.toList()));
     }
 
     /**
