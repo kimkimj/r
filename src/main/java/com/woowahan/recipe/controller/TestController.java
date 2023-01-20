@@ -1,15 +1,16 @@
 package com.woowahan.recipe.controller;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/api/v1/test")
+@Controller
 public class TestController {
 
-    @GetMapping
-    public void test() {
-        System.out.println("test 2:15pm");
+    @GetMapping("test")
+    public String testPage(Model model) {
+        model.addAttribute("test", "test message");
+        return "/test";
     }
+
 }
