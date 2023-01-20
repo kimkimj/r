@@ -32,8 +32,6 @@ public class UserController {
         return Response.success(new UserLoginResDto(token));
     }
 
-    // TODO: 2023-01-19 회원정보 조회, 수정, 삭제 구현
-
     /**
      * 회원정보 조회
      */
@@ -41,6 +39,17 @@ public class UserController {
     public Response<UserResponse> findUser(@PathVariable Long id) {
         UserResponse userResponse = userService.findUser(id);
         return Response.success(userResponse);
+    }
+
+    /**
+     * 회원정보 수정
+     * UserUpdateDto를 만들어 쓰고자 했지만
+     * UserResponse에 원하는 정보들이 들어있어서 UserResponse로 진행
+     */
+    @PutMapping("/{id}")
+    public Response<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserResponse userResponse, Authentication authentication) {
+        UserResponse userUpdResponse = userService.updateUser(id, userResponse, authentication.getName());
+        return Response.success(userUpdResponse);
     }
 
     /**

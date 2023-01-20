@@ -60,4 +60,15 @@ public class UserEntity extends BaseEntity {
 
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="Asia/Seoul")
     private String birth;
+
+    public void updateUser(String userName, String password, String name,
+                           String address, String email, String phoneNum, String birth) {
+        this.userName = userName;
+        this.password = password;
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.phoneNum = phoneNum;
+        this.birth = birth;
+    }
 }
