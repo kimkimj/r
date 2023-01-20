@@ -105,3 +105,5 @@
 - Gitlab Repository URL: https://gitlab.com/th42500/woowahan_recipe_team10.git
 - Team Notion URL : https://www.notion.so/23-01-13-23-02-16-12ddd64750ad46a0b1547e64ab6fbf5c
 - Swagger URL**:http://ec2-43-201-26-38.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
+
+![image-20230120130859895](./assets/image-20230120130859895.png)
