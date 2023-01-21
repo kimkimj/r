@@ -7,11 +7,15 @@ import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -21,7 +25,7 @@ public class RecipeService {
     private final UserRepository userRepository;
 
     /**
-     * ID로 레시피 단건조회
+     * TODO: 2023-01-17 ID로 레시피 단건조회
      *
      * @param recipe_id
      * @return recipeFindResDto
@@ -33,7 +37,35 @@ public class RecipeService {
     }
 
     /**
-     * 레시피 작성
+     * TODO : 2023-01-20 레시피 전체 조회
+     *
+     * @param pageable
+     * @return
+     */
+    public Page<RecipePageResDto> findAllRecipes(Pageable pageable) {
+        Page<RecipeEntity> recipeEntities = recipeRepository.findAll(pageable);
+        return new PageImpl<>(recipeEntities.stream()
+                .map(RecipeEntity::toResponse)
+                .collect(Collectors.toList()));
+    }
+
+    /**
+     * TODO : 2023-01-20 레시피 마이피드
+     * @param pageable
+     * @param userName
+     * @return
+     */
+    public Page<RecipePageResDto> myRecipes(Pageable pageable, String userName) {
+        recipeRepository.findByUserName(userName).orElseThrow(
+                () -> new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage()));
+        Page<RecipeEntity> recipeEntities = recipeRepository.findRecipeEntitiesByUserName(userName, pageable);
+        return new PageImpl<>(recipeEntities.stream()
+                .map(RecipeEntity::toResponse)
+                .collect(Collectors.toList()));
+    }
+
+    /**
+     * TODO: 2023-01-18 레시피 작성
      *
      * @param recipeCreateReqDto
      * @param userName
@@ -47,7 +79,7 @@ public class RecipeService {
     }
 
     /**
-     * 레시피 수정
+     * TODO: 2023-01-19 레시피 수정
      *
      * @param recipeUpdateReqDto
      * @param recipeId
@@ -55,17 +87,33 @@ public class RecipeService {
      * @return
      */
     public RecipeUpdateResDto updateRecipe(@RequestParam RecipeUpdateReqDto recipeUpdateReqDto, Long recipeId, String userName) {
-        RecipeEntity recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND,ErrorCode.RECIPE_NOT_FOUND.getMessage()));
+        RecipeEntity recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage()));
         validateUserName(userName, recipe); // 동일 유저인지 검증
         recipe.setRecipe_title(recipeUpdateReqDto.getRecipe_title());
         recipe.setRecipe_body(recipeUpdateReqDto.getRecipe_body());
         recipeRepository.saveAndFlush(recipe);
-        return new RecipeUpdateResDto(recipe.getId(),recipe.getRecipe_title(), recipe.getRecipe_body(),
-                recipe.getUser().getUserName(),recipe.getLastModifiedDate());
+        return new RecipeUpdateResDto(recipe.getId(), recipe.getRecipe_title(), recipe.getRecipe_body(),
+                recipe.getUser().getUserName(), recipe.getLastModifiedDate());
     }
 
     /**
-     * 조회수 증가
+     * TODO : 2023-01-20 레시피 삭제
+     *
+     * @param recipeId
+     * @param userName
+     * @return
+     */
+    public RecipeResponse deleteRecipe(Long recipeId, String userName) {
+        RecipeEntity recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage()));
+        validateUserName(userName, recipe); // 동일 유저 검증
+        recipeRepository.deleteById(recipeId);
+
+        return new RecipeResponse("레시피를 삭제했습니다.", recipeId);
+    }
+
+    /**
+     * TODO: 2023-01-19 조회수 증가
+     *
      * @param id
      * @return
      */
@@ -75,7 +123,7 @@ public class RecipeService {
     }
 
     /**
-     * 레시피 작성 엔티티 생성
+     * TODO: 2023-01-18 레시피 작성 엔티티 생성
      *
      * @param recipeCreateReqDto
      * @param userName
@@ -92,7 +140,7 @@ public class RecipeService {
     }
 
     /**
-     * 레시피와 로그인한 유저가 같은지 검증
+     * TODO: 2023-01-19 레시피와 로그인한 유저가 같은지 검증
      *
      * @param userName
      * @param recipeEntity

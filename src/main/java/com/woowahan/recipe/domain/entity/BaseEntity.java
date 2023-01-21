@@ -19,7 +19,6 @@ public class BaseEntity {
     private LocalDateTime createdDate; // 생성일
 
     @LastModifiedDate
-    @Column
     private LocalDateTime lastModifiedDate; // 수정일
 
     private LocalDateTime deletedDate; // 삭제일

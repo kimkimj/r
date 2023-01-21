@@ -1,6 +1,7 @@
 package com.woowahan.recipe.domain.entity;
 
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipePageResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -59,5 +60,16 @@ public class RecipeEntity extends BaseEntity {
 
     public void setRecipe_body(String recipe_body) {
         this.recipe_body = recipe_body;
+    }
+
+    public RecipePageResDto toResponse() {
+        return RecipePageResDto.builder()
+                .recipe_id(this.id)
+                .recipe_title(this.recipe_title)
+                .userName(this.user.getUserName())
+                .recipe_view(this.recipe_view)
+                .recipe_like(this.recipe_like)
+//                .thumbnail_image_path(this.recipe_image_path) 썸네일 추가시
+                .build();
     }
 }

@@ -1,8 +1,8 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateReqDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateReqDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateReqDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateResDto;
 import com.woowahan.recipe.domain.entity.RecipeEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
@@ -12,6 +12,8 @@ import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.Optional;
@@ -72,7 +74,7 @@ class RecipeServiceTest {
     }
 
     @Test
-    void 레시피_ID_단건_조회() {
+    void 레시피_ID_단건_조회_성공() {
 
         when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
         RecipeFindResDto recipeFindResDto = recipeService.findRecipe(id);
@@ -81,11 +83,12 @@ class RecipeServiceTest {
     }
 
     @Test
-    void 레시피_ID_단건_조회_조회수_오르는지() {
-
-        when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
-        RecipeFindResDto recipeFindResDto = recipeService.findRecipe(id);
-        assertThat(recipeFindResDto.getRecipe_view()).isEqualTo(13);
+    @WithMockUser
+    void 레시피_마이피드_실패_유저가올린_게시물이없는경우() {
+        PageRequest pageRequest = PageRequest.of(0, 20, Sort.by("createdAt"));
+        String userName3 = "messi";
+        AppException appException = assertThrows(AppException.class, () -> recipeService.myRecipes(pageRequest, userName3));
+        assertThat(appException.getErrorCode()).isEqualTo(ErrorCode.RECIPE_NOT_FOUND);
     }
 
     @Test
@@ -121,6 +124,16 @@ class RecipeServiceTest {
         AppException appException = assertThrows(AppException.class, () -> {
             recipeService.updateRecipe(recipeUpdateReqDto, id, userName2);
         });
-        assertEquals(ErrorCode.INVALID_PERMISSION,appException.getErrorCode());
+        assertEquals(ErrorCode.INVALID_PERMISSION, appException.getErrorCode());
+    }
+
+    @Test
+    @WithMockUser
+    void 레시피_삭제_성공() {
+
+        when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
+        when(userRepository.findByUserName(userName)).thenReturn(Optional.of(userEntity));
+        assertDoesNotThrow(() -> recipeService.deleteRecipe(id, userName));
+
     }
 }
