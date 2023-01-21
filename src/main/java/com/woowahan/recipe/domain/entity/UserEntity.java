@@ -61,6 +61,10 @@ public class UserEntity extends BaseEntity {
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="Asia/Seoul")
     private String birth;
 
+    @OneToOne
+    @Column(name = "seller_id")
+    SellerEntity seller;
+
     // soft delete: 삭제 여부 기본값 false
     private boolean deleted = Boolean.FALSE;
 }
