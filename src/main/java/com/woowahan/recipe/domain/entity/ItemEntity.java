@@ -39,11 +39,12 @@ public class ItemEntity {
 //    @JoinColumn(name = "recipe_id")
 //    private List<RecipeEntity> recipeList;
 
-    public void update(String itemImagePath, String itemName, Integer itemPrice, Integer itemStock) {
+    public void update(String itemImagePath, String itemName, Integer itemPrice, Integer itemStock, SellerEntity seller) {
         this.itemImagePath = itemImagePath;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.itemStock = itemStock;
+        this.seller = seller;
     }
 
     /* 연관관계 메서드 */
@@ -62,5 +63,8 @@ public class ItemEntity {
         this.itemStock = restStock;
     }
 
-
+    // item 등록 시 해당 상품을 판매하는 판매자 등록
+    public void createSeller(SellerEntity seller) {
+        this.seller = seller;
+    }
 }
