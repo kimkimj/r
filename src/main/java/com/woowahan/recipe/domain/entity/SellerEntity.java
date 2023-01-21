@@ -14,8 +14,8 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE seller_entity SET deleted = true WHERE user_id = ?")
-@Where(clause = "deleted = false")
+@SQLDelete(sql = "UPDATE seller_entity SET deleted_date = current_timestamp WHERE seller_id = ?")
+@Where(clause = "deleted_date is NULL")
 public class SellerEntity extends BaseEntity {
 
     @Id
@@ -29,8 +29,8 @@ public class SellerEntity extends BaseEntity {
     @Column(name = "seller_site")
     private String sellerUrl;  // 사업자 홈페이지 주소
 
-    @OneToOne(mappedBy = "seller_entity")
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @OneToOne
+    @JoinColumn(name = "user_id")
     UserEntity user;
 
 }
