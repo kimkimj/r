@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface SellerRepository extends JpaRepository {
+public interface SellerRepository extends JpaRepository<SellerEntity, Long> {
 
    Optional<SellerEntity> findByUser(UserEntity user);
 }
