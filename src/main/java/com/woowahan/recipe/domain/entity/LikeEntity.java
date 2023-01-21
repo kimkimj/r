@@ -23,7 +23,6 @@ public class LikeEntity extends BaseEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    // TODO: 2023-01-17 RecipeEntity 생성 후 주석 해제
     @ManyToOne
     @JoinColumn(name = "recipe_id")
     private RecipeEntity recipe;
