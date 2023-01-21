@@ -30,6 +30,10 @@ public class ItemEntity {
     @JoinColumn(name = "recipe_id")
     private RecipeEntity recipe;
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private SellerEntity seller;
+
     //필요한지 불확실
 //    @OneToMany
 //    @JoinColumn(name = "recipe_id")
