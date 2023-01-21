@@ -1,19 +1,20 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.itemDto.ItemListResDto;
 import com.woowahan.recipe.domain.dto.itemDto.*;
 import com.woowahan.recipe.domain.entity.ItemEntity;
+import com.woowahan.recipe.domain.entity.SellerEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.ItemRepository;
+import com.woowahan.recipe.repository.SellerRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import static com.woowahan.recipe.domain.UserRole.*;
+import static com.woowahan.recipe.domain.UserRole.ADMIN;
 
 
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ import static com.woowahan.recipe.domain.UserRole.*;
 public class ItemService {
 
     private final UserRepository userRepository;
+    private final SellerRepository sellerRepository;
     private final ItemRepository itemRepository;
 
     //[중복 로직] user 존재 확인 + 가져오기
@@ -29,11 +31,17 @@ public class ItemService {
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
     }
     //[중복 로직] 관리자/판매자 권한 확인
-    public void validateAdmin(UserEntity user) {
-        if(user.getUserRole() == USER) {
+    public SellerEntity validateAdmin(UserEntity user) {
+        // 관리자인지 확인
+        if(!user.getUserRole().equals(ADMIN)) {
             throw new AppException(ErrorCode.ROLE_FORBIDDEN, ErrorCode.ROLE_FORBIDDEN.getMessage());
+        } else {
+            // Seller인지 확인
+            return sellerRepository.findByUser(user)
+                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_FORBIDDEN, ErrorCode.ROLE_FORBIDDEN.getMessage()));
         }
     }
+
     //[중복 로직] item 존재 확인 + 가져오기
     public ItemEntity validateItem(Long itemId) {
         return itemRepository.findById(itemId)
@@ -64,8 +72,9 @@ public class ItemService {
      */
     public ItemCreateResDto createItem(ItemCreateReqDto ReqDto, String userName) {
         UserEntity user = validateUser(userName); //user 존재 확인
-        validateAdmin(user); //관리자,판매자 권한 확인
+        SellerEntity seller = validateAdmin(user); //관리자,판매자 권한 확인
         ItemEntity item = ReqDto.toEntity();
+        item.createSeller(seller);  // 해당 item을 판매하는 판매자 등록
         ItemEntity savedItem = itemRepository.save(item);
         return ItemCreateResDto.from(savedItem);
     }
@@ -75,13 +84,16 @@ public class ItemService {
      */
     public ItemUpdateResDto updateItem(Long id, ItemUpdateReqDto ReqDto, String userName) {
         UserEntity user = validateUser(userName); //user 존재 확인+가져오기
-        validateAdmin(user); //관리자,판매자 권한 확인
-        ItemEntity item = validateItem(id); //item 존재 확인+가져오기
+        SellerEntity seller = validateAdmin(user); //관리자,판매자 권한 확인
+        ItemEntity item = validateItem(id); //item 존재 확인 +가져오기
+        if(!item.getSeller().equals(seller)) {  // 현재 수정하고자 하는 item을 등록한 판매자와 로그인한 회원이 동일한지
+            throw new AppException(ErrorCode.ROLE_FORBIDDEN, ErrorCode.ROLE_FORBIDDEN.getMessage());
+        }
 
-        item.update(ReqDto.getItemImagePath(), ReqDto.getItemName(), ReqDto.getItemPrice(), ReqDto.getItemStock());
-        ItemEntity savedItem = itemRepository.save(item);
+        item.update(ReqDto.getItemImagePath(), ReqDto.getItemName(), ReqDto.getItemPrice(), ReqDto.getItemStock(), seller);
+//        ItemEntity savedItem = itemRepository.save(item);
         itemRepository.flush();
-        return ItemUpdateResDto.from(savedItem);
+        return ItemUpdateResDto.from(item);
 
     }
 
@@ -90,10 +102,20 @@ public class ItemService {
      */
     public ItemDeleteResDto deleteItem(Long id, String userName) {
         UserEntity user = validateUser(userName); //user 존재 확인+가져오기
-        validateAdmin(user); //관리자,판매자 권한 확인
+        SellerEntity seller = validateAdmin(user); //관리자,판매자 권한 확인
         ItemEntity item = validateItem(id); //item 존재 확인+가져오기
+        if(!item.getSeller().equals(seller)) {  // 현재 수정하고자 하는 item을 등록한 판매자와 로그인한 회원이 동일한지
+            throw new AppException(ErrorCode.ROLE_FORBIDDEN, ErrorCode.ROLE_FORBIDDEN.getMessage());
+        }
 
         itemRepository.delete(item);
         return ItemDeleteResDto.from(id);
     }
+
+    /*
+     * Refactoring
+     * date : 2023-01-22
+     * author : 이소영
+     * desc : 관리자 또는 판매자인지 확인하는 권한 예외(401Error)는 추후 SpringSecurity에서 처리하도록 Refactoring 예정
+     */
 }
