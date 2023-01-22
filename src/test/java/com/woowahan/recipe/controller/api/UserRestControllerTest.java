@@ -1,10 +1,7 @@
 package com.woowahan.recipe.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
-import com.woowahan.recipe.domain.dto.userDto.UserJoinResDto;
-import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
-import com.woowahan.recipe.domain.dto.userDto.UserLoginResDto;
+import com.woowahan.recipe.domain.dto.userDto.*;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.service.UserService;
@@ -26,8 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserController.class)
-class UserControllerTest {
+@WebMvcTest(UserRestController.class)
+class UserRestControllerTest {
 
     @Autowired
     MockMvc mockMvc;
