@@ -3,6 +3,8 @@ package com.woowahan.recipe.controller.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinResDto;
+import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
+import com.woowahan.recipe.domain.dto.userDto.UserLoginResDto;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.service.UserService;
@@ -103,6 +105,68 @@ class UserControllerTest {
                             .content(objectMapper.writeValueAsBytes(userJoinReqDto)))
                     .andDo(print())
                     .andExpect(status().is(ErrorCode.DUPLICATED_EMAIL.getHttpStatus().value()));
+        }
+    }
+
+    @Nested
+    @DisplayName("로그인 테스트")
+    class Login {
+
+        // given
+        UserLoginReqDto userLoginReqDto = new UserLoginReqDto("user", "1234");
+
+        @Test
+        @WithMockUser
+        void 로그인_성공() throws Exception {
+
+            UserLoginResDto userLoginResDto = new UserLoginResDto("jwt");
+
+            // when
+            when(userService.login(any(), any()))
+                    .thenReturn(userLoginResDto.getJwt());
+            // then
+            mockMvc.perform(post("/api/v1/users/login")
+                            .with(csrf())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsBytes(userLoginReqDto)))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.resultCode").exists())
+                    .andExpect(jsonPath("$.result.jwt").exists());
+        }
+
+        @Test
+        @WithMockUser
+        void 로그인_실패_아이디없음() throws Exception {
+
+            // when
+            when(userService.login(any(), any()))
+                    .thenThrow(new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.DUPLICATED_USER_NAME.getMessage()));
+
+            // then
+            mockMvc.perform(post("/api/v1/users/login")
+                            .with(csrf())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsBytes(userLoginReqDto)))
+                    .andDo(print())
+                    .andExpect(status().is(ErrorCode.USERNAME_NOT_FOUND.getHttpStatus().value()));
+        }
+
+        @Test
+        @WithMockUser
+        void 로그인_실패_비밀번호다름() throws Exception {
+
+            // when
+            when(userService.login(any(), any()))
+                    .thenThrow(new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage()));
+
+            // then
+            mockMvc.perform(post("/api/v1/users/login")
+                            .with(csrf())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsBytes(userLoginReqDto)))
+                    .andDo(print())
+                    .andExpect(status().is(ErrorCode.INVALID_PASSWORD.getHttpStatus().value()));
         }
     }
 }
