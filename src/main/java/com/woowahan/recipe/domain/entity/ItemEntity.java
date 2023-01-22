@@ -19,7 +19,7 @@ public class ItemEntity {
     @Id
     @Column(name = "item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     private String itemImagePath;
     private String itemName;

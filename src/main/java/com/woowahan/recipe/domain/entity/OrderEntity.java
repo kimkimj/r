@@ -1,5 +1,6 @@
 package com.woowahan.recipe.domain.entity;
 
+import com.woowahan.recipe.exception.AppException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.woowahan.recipe.exception.ErrorCode.NOT_ENOUGH_STOCK;
 
 @Entity
 @Getter
@@ -66,6 +69,7 @@ public class OrderEntity extends BaseEntity{
         order.addUser(user);
         order.addDelivery(delivery);
         order.addOrderItem(orderItem);
+        order.orderNumber = UUID.randomUUID().toString();
         order.orderStatus = OrderStatus.ORDER;
         return order;
     }
@@ -86,7 +90,7 @@ public class OrderEntity extends BaseEntity{
     /* 비지니스 로직 */
     public void cancel() {
         if (delivery.getDeliveryStatus().equals(DeliveryStatus.COMP)) {
-            throw new RuntimeException("이미 배송이 완료되어 주문 취소가 불가능 합니다.");
+            throw new AppException(NOT_ENOUGH_STOCK, NOT_ENOUGH_STOCK.getMessage());
         }
 
         this.orderStatus = OrderStatus.CANCEL;
