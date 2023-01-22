@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -164,6 +164,59 @@ class UserRestControllerTest {
                             .content(objectMapper.writeValueAsBytes(userLoginReqDto)))
                     .andDo(print())
                     .andExpect(status().is(ErrorCode.INVALID_PASSWORD.getHttpStatus().value()));
+        }
+    }
+
+    @Nested
+    @DisplayName("회원정보 조회 테스트")
+    class FindUser {
+
+        // given
+        UserResponse userResponse = UserResponse.builder()
+                .userName("user")
+                .password("1234")
+                .name("user")
+                .address("서울시")
+                .email("user@gmail.com")
+                .phoneNum("01012345678")
+                .birth("20220919")
+                .build();
+
+        @Test
+        @WithMockUser
+        void 회원조회_성공() throws Exception {
+
+            // when
+            when(userService.findUser(any()))
+                    .thenReturn(userResponse);
+
+            // then
+            mockMvc.perform(get("/api/v1/users/1")
+                            .with(csrf()))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.result.userName").exists())
+                    .andExpect(jsonPath("$.result.password").exists())
+                    .andExpect(jsonPath("$.result.name").exists())
+                    .andExpect(jsonPath("$.result.address").exists())
+                    .andExpect(jsonPath("$.result.email").exists())
+                    .andExpect(jsonPath("$.result.phoneNum").exists())
+                    .andExpect(jsonPath("$.result.birth").exists());
+        }
+
+        @Test
+        @WithMockUser
+        void 회원조회_실패_아이디없음() throws Exception {
+
+            // when
+            when(userService.findUser(any()))
+                    .thenThrow(new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+            // then
+            mockMvc.perform(get("/api/v1/users/1")
+                            .with(csrf()))
+                    .andDo(print())
+                    .andExpect(status().is(ErrorCode.USERNAME_NOT_FOUND.getHttpStatus().value()));
         }
     }
 }
