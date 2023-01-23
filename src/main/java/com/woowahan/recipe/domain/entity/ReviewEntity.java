@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -12,6 +14,8 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Where(clause = "deleted_date is null")
+@SQLDelete(sql = "UPDATE review_entity SET deleted_date = now() WHERE review_id = ?")
 public class ReviewEntity extends BaseEntity{
     @Id
     @Column(name="review_id")

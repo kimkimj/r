@@ -8,33 +8,34 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
 @Entity
-public class ItemEntity {
+public class ItemEntity extends BaseEntity{
 
     @Id
     @Column(name = "item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
+    //이미지가 없을 경우 기본이미지를 어떻게 넣어줄지 ? e.g) 이미지 준비중 입니다
     private String itemImagePath;
+    @NotBlank
     private String itemName;
+    @NotBlank
     private Integer itemPrice;
+    @NotBlank
     private Integer itemStock;
 
     @ManyToOne
     @JoinColumn(name = "recipe_id")
     private RecipeEntity recipe;
 
-    //필요한지 불확실
-//    @OneToMany
-//    @JoinColumn(name = "recipe_id")
-//    private List<RecipeEntity> recipeList;
-
+    /* 아이템 수정 */
     public void update(String itemImagePath, String itemName, Integer itemPrice, Integer itemStock) {
         this.itemImagePath = itemImagePath;
         this.itemName = itemName;

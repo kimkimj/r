@@ -7,8 +7,10 @@ import com.woowahan.recipe.domain.entity.ReviewEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class ReviewCreateRequest {
     private String comment;

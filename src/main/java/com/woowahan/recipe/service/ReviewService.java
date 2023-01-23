@@ -115,14 +115,17 @@ public class ReviewService {
        // 레시피가 존재하는지 확인
        RecipeEntity recipe = validateRecipe(recipeId);
 
+       // 리뷰가 존재하는지 확인
+       ReviewEntity review = validateReview(reviewId);
+
        //관리자거나 리뷰 작성자와 유저가 동일한지 확인
-       if (user.getUserRole() == UserRole.HEAD || user.getUserRole() == UserRole.ADMIN ||
-       !recipe.getUser().getUserName().equals(username)) {
+       if (!review.getUser().getUserName().equals(username)
+               && (user.getUserRole() != UserRole.ADMIN ||user.getUserRole() != UserRole.HEAD)) {
            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
        }
 
        // soft delete
-       reviewRepository.deleteById(reviewId);
+       reviewRepository.delete(review);
        return new ReviewDeleteResponse(reviewId, "댓글 삭제 완료");
    }
 
@@ -134,8 +137,8 @@ public class ReviewService {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("createdDate"));
 
         Page<ReviewEntity> reviews = reviewRepository.findAllByRecipe(recipe, pageable);
-        // List<ReviewGetResponse> reviewList = reviews.map(ReviewGetResponse::toReviewGetResponse).toList();
-
+        List<ReviewGetResponse> reviewList = reviews.map(ReviewGetResponse::toReviewGetResponse).toList();
+        /*
         List<ReviewGetResponse> reviewList = reviews.map(review -> ReviewGetResponse.builder()
                         .reviewId(review.getReviewId())
                         .username(review.getUser().getUserName())
@@ -143,7 +146,7 @@ public class ReviewService {
                         .createdDate(review.getCreatedDate())
                         .last_modified(review.getLastModifiedDate())
                         .build())
-                .toList();
+                .toList();*/
 
         return ReviewListResponse.builder()
                 .content(reviewList)

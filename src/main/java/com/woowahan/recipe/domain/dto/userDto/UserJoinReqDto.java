@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserJoinReqDto {
