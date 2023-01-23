@@ -157,6 +157,7 @@ class ItemRestControllerTest {
     @WithMockUser
     void 아이템_전체조회_성공() throws Exception {
 
+        /* when */
         mockMvc.perform(get("/api/v1/items")
                         .param("page", "0")
                         .param("size", "50")
@@ -168,6 +169,7 @@ class ItemRestControllerTest {
         verify(itemService).findAllItem(pageableCaptor.capture());
         PageRequest pageable = (PageRequest) pageableCaptor.getValue();
 
+        /* then */
         assertEquals(0, pageable.getPageNumber());
         assertEquals(50, pageable.getPageSize());
         assertEquals(Sort.by("createdAt", "desc"), pageable.withSort(Sort.by("createdAt", "desc")).getSort());
