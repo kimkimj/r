@@ -2,8 +2,9 @@ package com.woowahan.recipe.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
+import com.woowahan.recipe.fixture.TestInfoFixture;
 import com.woowahan.recipe.service.RecipeService;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,8 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -28,6 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(RecipeRestController.class)
+@WithMockUser(username = "testUser")
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)  // 언더로 표시한 부분 공백 표시
 class RecipeRestControllerTest {
 
     @Autowired
@@ -40,7 +44,6 @@ class RecipeRestControllerTest {
     ObjectMapper objectMapper;
 
     @Test
-    @WithMockUser
     void 레시피_ID_단건_조회() throws Exception {
         //given
         RecipeFindResDto recipeFindResDto = RecipeFindResDto.builder()
@@ -69,7 +72,6 @@ class RecipeRestControllerTest {
     }
 
     @Test
-    @WithMockUser
     void 레시피_전체_조회_성공() throws Exception {
         //given
         //when
@@ -87,7 +89,6 @@ class RecipeRestControllerTest {
     }
 
     @Test
-    @WithMockUser
     void 레시피_등록_성공() throws Exception {
         //given
         RecipeCreateReqDto request = new RecipeCreateReqDto("hi", "hello");
@@ -111,7 +112,6 @@ class RecipeRestControllerTest {
     }
 
     @Test
-    @WithMockUser
     void 레시피_수정_성공() throws Exception {
         //given
         RecipeUpdateReqDto recipeUpdateReqDto = new RecipeUpdateReqDto("수정제목", "수정내용");
@@ -135,7 +135,6 @@ class RecipeRestControllerTest {
     }
 
     @Test
-    @WithMockUser
     void 레시피_삭제_성공() throws Exception {
         //given
         RecipeResponse recipeResponse = new RecipeResponse("레시피를 삭제했습니다.", 1L);
@@ -149,5 +148,47 @@ class RecipeRestControllerTest {
                 .andExpect(jsonPath("$.result.id").exists())
                 .andExpect(status().isOk())
                 .andDo(print());
+    }
+
+    @Nested
+    @DisplayName("좋아요 테스트")
+    class LikeTest {
+
+        @Test
+        @DisplayName("좋아요 누르기 테스트")
+        void pushLikeTest() throws Exception {
+            // given
+            Long recipeId = TestInfoFixture.get().getRecipeId();
+            String userName = TestInfoFixture.get().getUserName();
+            String pushLikesMessage = "좋아요를 눌렀습니다.";
+
+            // when
+            given(recipeService.pushLikes(recipeId, userName)).willReturn(pushLikesMessage);
+
+            // then
+            mockMvc.perform(post(String.format("/api/v1/recipes/{id}/likes"), recipeId)
+                    .with(csrf()))
+                    .andDo(print())
+                    .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                    .andExpect(jsonPath("$.result").value("좋아요를 눌렀습니다."));
+        }
+
+        @Test
+        @DisplayName("좋아요 취소 테스트")
+        void cancelLikeTest() throws Exception {
+            // given
+            Long recipeId = TestInfoFixture.get().getRecipeId();
+            String userName = TestInfoFixture.get().getUserName();
+
+            // when
+            given(recipeService.pushLikes(recipeId, userName)).willReturn("좋아요를 취소합니다.");
+
+            // then
+            mockMvc.perform(post(String.format("/api/v1/recipes/{id}/likes"), recipeId)
+                    .with(csrf()))
+                    .andDo(print())
+                    .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                    .andExpect(jsonPath("$.result").value("좋아요를 취소합니다."));
+        }
     }
 }
