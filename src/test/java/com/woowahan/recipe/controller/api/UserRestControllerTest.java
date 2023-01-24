@@ -219,4 +219,118 @@ class UserRestControllerTest {
                     .andExpect(status().is(ErrorCode.USERNAME_NOT_FOUND.getHttpStatus().value()));
         }
     }
+
+    @Nested
+    @DisplayName("회원정보 수정 테스트")
+    class UpdateUser {
+
+        // given
+        UserResponse userResponse = UserResponse.builder()
+                .userName("user")
+                .password("1234")
+                .name("user")
+                .address("서울시")
+                .email("user@gmail.com")
+                .phoneNum("01012345678")
+                .birth("20220919")
+                .build();
+
+        @Test
+        @WithMockUser
+        void 회원수정_성공() throws Exception {
+
+            // when
+            when(userService.updateUser(any(), any(), any()))
+                    .thenReturn(userResponse);
+
+            // then
+            mockMvc.perform(put("/api/v1/users/1")
+                            .with(csrf())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsBytes(userResponse)))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.resultCode").exists());
+        }
+
+        @Test
+        @WithMockUser
+        void 회원수정_실패_아이디없음() throws Exception {
+
+            // when
+            when(userService.updateUser(any(), any(), any()))
+                    .thenThrow(new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+            // then
+            mockMvc.perform(put("/api/v1/users/1")
+                            .with(csrf())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsBytes(userResponse)))
+                    .andExpect(status().is(ErrorCode.USERNAME_NOT_FOUND.getHttpStatus().value()))
+                    .andDo(print());
+        }
+
+        @Test
+        @WithMockUser
+        void 회원수정_실패_이메일중복() throws Exception {
+
+            // when
+            when(userService.updateUser(any(), any(), any()))
+                    .thenThrow(new AppException(ErrorCode.DUPLICATED_EMAIL, ErrorCode.DUPLICATED_EMAIL.getMessage()));
+
+            // then
+            mockMvc.perform(put("/api/v1/users/1")
+                            .with(csrf())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsBytes(userResponse)))
+                    .andExpect(status().is(ErrorCode.DUPLICATED_EMAIL.getHttpStatus().value()))
+                    .andDo(print());
+        }
+    }
+
+    @Nested
+    @DisplayName("회원정보 삭제 테스트")
+    class DeleteUser {
+
+        // given
+        UserDeleteDto userDeleteDto = UserDeleteDto.builder()
+                .id(1L)
+                .message("회원 삭제가 완료되었습니다.")
+                .build();
+
+        @Test
+        @WithMockUser
+        void 회원삭제_성공() throws Exception {
+
+            // when
+            when(userService.deleteUser(any(), any()))
+                    .thenReturn(userDeleteDto);
+
+            // then
+            mockMvc.perform(put("/api/v1/users/1")
+                            .with(csrf())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsBytes(userDeleteDto)))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.resultCode").exists());
+        }
+
+        @Test
+        @WithMockUser
+        void 회원수정_실패_유저없음() throws Exception {
+
+            // when
+            when(userService.deleteUser(any(), any()))
+                    .thenThrow(new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+            // then
+            mockMvc.perform(delete("/api/v1/users/1")
+                            .with(csrf())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsBytes(userDeleteDto)))
+                    .andExpect(status().is(ErrorCode.USERNAME_NOT_FOUND.getHttpStatus().value()))
+                    .andDo(print());
+        }
+    }
 }
