@@ -10,6 +10,7 @@ import com.woowahan.recipe.repository.LikeRepository;
 import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class RecipeService {
@@ -64,7 +66,6 @@ public class RecipeService {
      * @return Page<RecipePageResDto>
      * @description 레시피 마이피드
      **/
-    // FIXME: 2023-01-24 userName을 통해 현재 존재하는 회원인지 확인하는 로직 필요 (validateUserName 추가 요청)
     public Page<RecipePageResDto> myRecipes(Pageable pageable, String userName) {
         recipeRepository.findByUserName(userName).orElseThrow(
                 () -> new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage()));
@@ -82,7 +83,6 @@ public class RecipeService {
      * @return RecipeCreateResDto
      * @description 레시피 작성
     **/
-    // FIXME: 2023-01-24 userName을 통해 현재 로그인한 회원이 존재하는 회원인지 확인하는 로직 필요 (validateUserName 추가 요청)
     public RecipeCreateResDto createRecipe(@RequestParam RecipeCreateReqDto recipeCreateReqDto, String userName) {
         RecipeEntity recipeEntity = createRecipeEntity(recipeCreateReqDto, userName);
         RecipeEntity saveRecipe = recipeRepository.save(recipeEntity);
@@ -99,7 +99,6 @@ public class RecipeService {
      * @return RecipeUpdateResDto
      * @description 레시피 수정
     **/
-    // FIXME: 2023-01-24 userName을 통해 현재 로그인한 회원이 존재하는 회원인지 확인하는 로직 필요 (validateUserName 추가 요청)
     public RecipeUpdateResDto updateRecipe(@RequestParam RecipeUpdateReqDto recipeUpdateReqDto, Long recipeId, String userName) {
         RecipeEntity recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage()));
         validateWriterAndUserName(userName, recipe); // 동일 유저인지 검증
@@ -119,7 +118,6 @@ public class RecipeService {
      * @return RecipeResponse
      * @description 레시피 삭제
     **/
-    // FIXME: 2023-01-24 userName을 통해 현재 로그인한 회원이 존재하는 회원인지 확인하는 로직 필요 (validateUserName 추가 요청)
     public RecipeResponse deleteRecipe(Long recipeId, String userName) {
         RecipeEntity recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage()));
         validateWriterAndUserName(userName, recipe); // 동일 유저 검증
@@ -135,7 +133,6 @@ public class RecipeService {
      * @return int
      * @description 조회수 증가
     **/
-    // FIXME: 2023-01-24 recipeId를 통해 현재 존재하는 recipe인지 확인하는 로직 필요 (validateUserName 추가 요청)
     public int updateView(Long id) {
         return recipeRepository.updateView(id);
     }
