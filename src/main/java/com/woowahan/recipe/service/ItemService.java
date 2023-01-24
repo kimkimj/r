@@ -53,10 +53,18 @@ public class ItemService {
      */
     public Page<ItemListResDto> searchItem(String keyword, Pageable pageable) {
         Page<ItemEntity> items = itemRepository.findByItemNameContaining(keyword, pageable);
-        if(items.getSize() == 0) {
+        if(items.getSize() == 0) { //재료 검색시 키워드에 맞는 재료가 없으면 에러메세지 출력 -> 나중에 프론트에서 다시 처리 해줘야 할 듯
             throw new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage());
         }
         return items.map(ItemListResDto::from);
+    }
+
+    /**
+     * 재료 상세 조회 (단건 조회)
+     */
+    public ItemDetailResDto findItem(Long id) {
+        ItemEntity item = validateItem(id);
+        return ItemDetailResDto.from(item);
     }
 
     /**

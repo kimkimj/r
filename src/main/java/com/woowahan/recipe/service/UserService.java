@@ -1,14 +1,10 @@
 package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.UserRole;
-import com.woowahan.recipe.domain.dto.userDto.UserDeleteDto;
-import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
-import com.woowahan.recipe.domain.dto.userDto.UserJoinResDto;
-import com.woowahan.recipe.domain.dto.userDto.UserResponse;
+import com.woowahan.recipe.domain.dto.userDto.*;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
-import com.woowahan.recipe.exception.ErrorResult;
 import com.woowahan.recipe.repository.UserRepository;
 import com.woowahan.recipe.security.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +56,7 @@ public class UserService {
 
         // userName(ID)가 없는 경우
         UserEntity user = userRepository.findByUserName(userName)
-                .orElseThrow(() -> new AppException(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage()));
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
 
         // password가 맞지 않는 경우
         if(!encoder.matches(password, user.getPassword())) { // 날것과 DB(복호화된 패스워드)를 비교
@@ -82,6 +78,47 @@ public class UserService {
         return UserResponse.toUserResponse(user);
     }
 
+    // TODO: 2023-01-21 회원가입 수정에 비밀번호 로직 변경
+    /**
+     * 회원정보 수정
+     */
+    @Transactional // 이 메서드를 종료할 경우 수정된 정보가 commit 또는 rollback이 되도록 설정
+    public UserResponse updateUser(Long id, UserResponse userResponse, String userName) {
+
+        // 고유 식별 번호(id)가 없는 경우
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        // ID(userName)가 없는 경우
+        userRepository.findByUserName(userName)
+                .orElseThrow(() -> new AppException(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage()));
+
+        // TODO: 2023-01-24 생각해봐야 할 사항 - 애초에 ID는 수정이 되면 안된다.
+        // 회원가입과 동일하게 정보 수정시에도 ID(userName)이 중복되지 않게 처리
+        userRepository.findByUserName(userResponse.getUserName())
+                .ifPresent(userEntity -> {
+                    throw new AppException(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage());
+                });
+
+        // 회원가입과 동일하게 정보 수정시에도 email이 중복되지 않게 처리
+        userRepository.findByEmail(userResponse.getEmail())
+                .ifPresent(userEntity -> {
+                    throw new AppException(ErrorCode.DUPLICATED_EMAIL, ErrorCode.DUPLICATED_EMAIL.getMessage());
+                });
+
+        // 본인인 경우 수정 가능, ROLE이 ADMIN이면 수정 가능
+        if(!user.getUserName().equals(userName) && user.getUserRole().equals(UserRole.ADMIN)) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        }
+
+        user.updateUser(userResponse.getUserName(), userResponse.getPassword(), userResponse.getName(),
+                        userResponse.getAddress(),userResponse.getEmail(), userResponse.getPhoneNum(), userResponse.getBirth());
+
+        userRepository.save(user);
+
+        return UserResponse.toUserResponse(user);
+    }
+
     /**
      * 회원 삭제
      */
@@ -92,8 +129,8 @@ public class UserService {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
 
-        // 본인인 경우, 유저의 ROLE이 ADMIN이면 삭제가 가능하도록
-        if(!user.getUserName().equals(userName) && user.getUserRole().equals(UserRole.USER)) {
+        // 본인인 경우 삭제 가능, ROLE이 ADMIN이면 삭제 가능
+        if(!user.getUserName().equals(userName) && user.getUserRole().equals(UserRole.ADMIN)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
         }
 

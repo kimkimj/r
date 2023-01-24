@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors().and()
                 .authorizeHttpRequests()
-                .antMatchers(HttpMethod.GET, "/api/v1/posts/my, /api/v1/alarms").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/v1/recipes/my, /api/v1/alarms").authenticated()
                 .antMatchers(HttpMethod.GET).permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/users/join", "/api/v1/users/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/users/**/role/change").hasRole("ROLE_ADMIN")

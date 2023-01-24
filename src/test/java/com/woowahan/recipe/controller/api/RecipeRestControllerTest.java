@@ -4,16 +4,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
 import com.woowahan.recipe.service.RecipeService;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -60,6 +66,24 @@ class RecipeRestControllerTest {
                 .andExpect(jsonPath("$.result.recipe_view").exists())
                 .andExpect(status().isOk())
                 .andDo(print());
+    }
+
+    @Test
+    @WithMockUser
+    void 레시피_전체_조회_성공() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(get("/api/v1/recipes")
+                        .param("size", "20")
+                        .param("sort", "createdAt, DESC"))
+                .andExpect(status().isOk());
+        ArgumentCaptor<Pageable> pageableArgumentCaptor = ArgumentCaptor.forClass(Pageable.class);
+        verify(recipeService).findAllRecipes(pageableArgumentCaptor.capture());
+        PageRequest pageRequest = (PageRequest) pageableArgumentCaptor.getValue();
+
+        assertThat(pageRequest.withSort(Sort.by("createdAt", "DESC")).getSort()).isEqualTo(Sort.by("createdAt", "DESC"));
+        assertThat(pageRequest.getPageSize()).isEqualTo(20);
     }
 
     @Test
@@ -112,11 +136,11 @@ class RecipeRestControllerTest {
 
     @Test
     @WithMockUser
-    void 레시피_삭제_성공() throws Exception{
+    void 레시피_삭제_성공() throws Exception {
         //given
-        RecipeResponse recipeResponse = new RecipeResponse("레시피를 삭제했습니다.",1L);
+        RecipeResponse recipeResponse = new RecipeResponse("레시피를 삭제했습니다.", 1L);
         //when
-        when(recipeService.deleteRecipe(any(),any())).thenReturn(recipeResponse);
+        when(recipeService.deleteRecipe(any(), any())).thenReturn(recipeResponse);
 
         //then
         mockMvc.perform(delete("/api/v1/recipes/1")

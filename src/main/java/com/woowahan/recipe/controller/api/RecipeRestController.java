@@ -5,6 +5,10 @@ import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
 import com.woowahan.recipe.service.RecipeService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +21,7 @@ public class RecipeRestController {
 
     /**
      * TODO: 2023-01-17 레시피 단건 조회 api
+     *
      * @param id
      * @return
      */
@@ -28,7 +33,34 @@ public class RecipeRestController {
     }
 
     /**
+     * TODO: 2023-01-20 레시피 전체 조회 api
+     *
+     * @param pageable
+     * @return
+     */
+    @GetMapping
+    public Response<Page<RecipePageResDto>> findAllRecipes(
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return Response.success(recipeService.findAllRecipes(pageable));
+    }
+
+    /**
+     * TODO: 2023-01-20 레시피 마이피드 api
+     *
+     * @param authentication
+     * @param pageable
+     * @return
+     */
+    @GetMapping("/my")
+    public Response<Page<RecipePageResDto>> myRecipes(Authentication authentication,
+                                                      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        String userName = authentication.getName();
+        return Response.success(recipeService.myRecipes(pageable, userName));
+    }
+
+    /**
      * TODO: 2023-01-18 레시피 작성 api
+     *
      * @param recipeCreateReqDto
      * @param authentication
      * @return
@@ -42,6 +74,7 @@ public class RecipeRestController {
 
     /**
      * TODO: 2023-01-19 레시피 수정 api
+     *
      * @param recipeUpdateReqDto
      * @param id
      * @param authentication
@@ -56,6 +89,7 @@ public class RecipeRestController {
 
     /**
      * TODO : 2023-01-20 레시피 삭제 api
+     *
      * @param id
      * @param authentication
      * @return

@@ -4,7 +4,6 @@ import com.woowahan.recipe.domain.dto.reviewDto.*;
 import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.service.ReviewService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 
