@@ -3,6 +3,7 @@ package com.woowahan.recipe.service;
 import com.woowahan.recipe.domain.UserRole;
 import com.woowahan.recipe.domain.dto.reviewDto.*;
 import com.woowahan.recipe.domain.entity.*;
+import com.woowahan.recipe.event.AlarmEvent;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.AlarmRepository;
@@ -10,6 +11,7 @@ import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.ReviewRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +27,7 @@ public class ReviewService {
     private final RecipeRepository recipeRepository;
     private final ReviewRepository reviewRepository;
     private final AlarmRepository alarmRepository;
+    private final ApplicationEventPublisher publisher;
 
     // User가 존재하는지 확인한다
     private UserEntity validateUser(String username) {
@@ -63,8 +66,10 @@ public class ReviewService {
         // 리뷰 저장
         ReviewEntity review = reviewRepository.save(reviewCreateRequest.toEntity(user, recipe, reviewCreateRequest.getComment()));
 
-        // 알람 울리도록 저장
-        // alarm entity로 바꾼 후 alarm repository에 저장
+        // 리뷰 작성자와 레시피 작성자가 일치하지 않다면 알람 등록
+        if(!user.equals(recipe.getUser())) {
+            publisher.publishEvent(AlarmEvent.of(AlarmType.NEW_REVIEW_ON_RECIPE, user, recipe.getUser()));
+        }
 
         return new ReviewCreateResponse(review.getReviewId(), user.getName(), review.getReview_comment());
     }
