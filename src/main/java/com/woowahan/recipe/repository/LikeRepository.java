@@ -11,4 +11,6 @@ import java.util.Optional;
 @Repository
 public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
     Optional<LikeEntity> findByUserAndRecipe(UserEntity user, RecipeEntity recipe);
+
+    Integer countByRecipe(RecipeEntity recipe);
 }

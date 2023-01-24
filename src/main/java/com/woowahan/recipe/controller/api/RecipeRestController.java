@@ -120,4 +120,11 @@ public class RecipeRestController {
         String pushLikesMessage = recipeService.pushLikes(id, userName);
         return Response.success(pushLikesMessage);
     }
+
+    @GetMapping("/{id}/likes")
+    public Response<Integer> countLikes(@PathVariable Long id, Authentication authentication) {
+        String userName = authentication.getName();
+        Integer likeCnt = recipeService.countLikes(id, userName);
+        return Response.success(likeCnt);
+    }
 }

@@ -147,10 +147,7 @@ public class RecipeService {
     **/
     public String pushLikes(Long id, String userName) {
         UserEntity user = validateUserName(userName);
-        RecipeEntity recipe = recipeRepository.findById(id)
-                .orElseThrow(() -> {
-                    throw new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage());
-                });
+        RecipeEntity recipe = validateRecipe(id);
         Optional<LikeEntity> optLike= likeRepository.findByUserAndRecipe(user, recipe);
         if(optLike.isPresent()) {
             likeRepository.delete(optLike.get());
@@ -159,6 +156,20 @@ public class RecipeService {
             likeRepository.save(LikeEntity.of(user, recipe));
             return "좋아요를 눌렀습니다.";
         }
+    }
+
+    /**
+     * @author 이소영
+     * @param id
+     * @param userName
+     * @date 2023-01-24
+     * @return Integer
+     * @description 좋아요 개수를 반환
+    **/
+    public Integer countLikes(Long id, String userName) {
+        RecipeEntity recipe = validateRecipe(id);
+        Integer likeCnt = likeRepository.countByRecipe(recipe);
+        return likeCnt;
     }
 
     /**
@@ -194,6 +205,18 @@ public class RecipeService {
         return user;
     }
 
+    /**
+     * @author 이소영
+     * @param id
+     * @date 2023-01-25
+     * @return RecipeEntity
+     * @description recipeId를 이용하여 현재 조회하고자 하는 레시피가 존재하는지 검증 (공통로직)
+    **/
+    private RecipeEntity validateRecipe(Long id) {
+        return recipeRepository.findById(id).orElseThrow(() -> {
+            throw new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage());
+        });
+    }
     /**
      * @author 김응준
      * @param userName
