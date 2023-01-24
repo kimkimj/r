@@ -1,9 +1,11 @@
 package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.dto.recipeDto.*;
+import com.woowahan.recipe.domain.entity.AlarmType;
 import com.woowahan.recipe.domain.entity.LikeEntity;
 import com.woowahan.recipe.domain.entity.RecipeEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
+import com.woowahan.recipe.event.AlarmEvent;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.LikeRepository;
@@ -11,6 +13,7 @@ import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +33,7 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+    private final ApplicationEventPublisher publisher;
 
     /**
      * @author 김응준
@@ -154,6 +158,9 @@ public class RecipeService {
             return "좋아요를 취소합니다.";
         }else {
             likeRepository.save(LikeEntity.of(user, recipe));
+            if(!user.equals(recipe.getUser())) {  // 현재 좋아요를 누른 사람과 레시피 작성자가 일치하지 않는 경우
+                publisher.publishEvent(AlarmEvent.of(AlarmType.NEW_REVIEW_ON_RECIPE, user, recipe.getUser()));
+            }
             return "좋아요를 눌렀습니다.";
         }
     }
