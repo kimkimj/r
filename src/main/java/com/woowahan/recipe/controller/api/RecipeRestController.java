@@ -20,11 +20,12 @@ public class RecipeRestController {
     private final RecipeService recipeService;
 
     /**
-     * TODO: 2023-01-17 레시피 단건 조회 api
-     *
+     * @author 김응준
      * @param id
-     * @return
-     */
+     * @date 2023-01-17
+     * @return Response<RecipeFindResDto>
+     * @description 레시피 단건 조회 api
+    **/
     @GetMapping("/{id}")
     public Response<RecipeFindResDto> findRecipe(@PathVariable Long id) {
         recipeService.updateView(id);
@@ -33,11 +34,12 @@ public class RecipeRestController {
     }
 
     /**
-     * TODO: 2023-01-20 레시피 전체 조회 api
-     *
+     * @author 김응준
      * @param pageable
-     * @return
-     */
+     * @date 2023-01-20
+     * @return Response<Page<RecipePageResDto>>
+     * @description 레시피 전체 조회 api
+    **/
     @GetMapping
     public Response<Page<RecipePageResDto>> findAllRecipes(
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -45,12 +47,13 @@ public class RecipeRestController {
     }
 
     /**
-     * TODO: 2023-01-20 레시피 마이피드 api
-     *
+     * @author 김응준
      * @param authentication
      * @param pageable
-     * @return
-     */
+     * @date 2023-01-20
+     * @return Response<Page<RecipePageResDto>>
+     * @description 레시피 마이피드 api
+    **/
     @GetMapping("/my")
     public Response<Page<RecipePageResDto>> myRecipes(Authentication authentication,
                                                       @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -59,12 +62,13 @@ public class RecipeRestController {
     }
 
     /**
-     * TODO: 2023-01-18 레시피 작성 api
-     *
+     * @author 김응준
      * @param recipeCreateReqDto
      * @param authentication
-     * @return
-     */
+     * @date 2023-01-18
+     * @return Response<RecipeResponse>
+     * @description 레시피 작성 api
+    **/
     @PostMapping("")
     public Response<RecipeResponse> createRecipe(@RequestBody RecipeCreateReqDto recipeCreateReqDto, Authentication authentication) {
         String userName = authentication.getName();
@@ -73,13 +77,14 @@ public class RecipeRestController {
     }
 
     /**
-     * TODO: 2023-01-19 레시피 수정 api
-     *
+     * @author 김응준
      * @param recipeUpdateReqDto
      * @param id
      * @param authentication
-     * @return
-     */
+     * @date 2023-01-19
+     * @return Response<RecipeResponse>
+     * @description 레시피 수정 api
+    **/
     @PutMapping("/{id}")
     public Response<RecipeResponse> updateRecipe(@RequestBody RecipeUpdateReqDto recipeUpdateReqDto, @PathVariable Long id, Authentication authentication) {
         String userName = authentication.getName();
@@ -88,16 +93,31 @@ public class RecipeRestController {
     }
 
     /**
-     * TODO : 2023-01-20 레시피 삭제 api
-     *
+     * @author 김응준
      * @param id
      * @param authentication
-     * @return
-     */
+     * @date 2023-01-20
+     * @return Response<RecipeResponse>
+     * @description 레시피 삭제 api
+    **/
     @DeleteMapping("/{id}")
     public Response<RecipeResponse> deleteRecipe(@PathVariable Long id, Authentication authentication) {
         String userName = authentication.getName();
         RecipeResponse recipeResponse = recipeService.deleteRecipe(id, userName);
         return Response.success(recipeResponse);
+    }
+
+    /**
+     * @author 이소영
+     * @param authentication
+     * @date 2023-01-24
+     * @return Response<String>
+     * @description 좋아요 누르기 api
+    **/
+    @PostMapping("/{id}/likes")
+    public Response<String> pushLikes(@PathVariable Long id, Authentication authentication) {
+        String userName = authentication.getName();
+        String pushLikesMessage = recipeService.pushLikes(id, userName);
+        return Response.success(pushLikesMessage);
     }
 }
