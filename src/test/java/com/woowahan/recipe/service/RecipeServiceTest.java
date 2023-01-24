@@ -1,17 +1,23 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.recipeDto.*;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateReqDto;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateReqDto;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateResDto;
+import com.woowahan.recipe.domain.entity.LikeEntity;
 import com.woowahan.recipe.domain.entity.RecipeEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
+import com.woowahan.recipe.fixture.LikeEntityFixture;
+import com.woowahan.recipe.repository.LikeRepository;
 import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.test.context.support.WithMockUser;
 
@@ -20,15 +26,16 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+@WithMockUser
 class RecipeServiceTest {
 
     RecipeService recipeService;
 
     RecipeRepository recipeRepository = mock(RecipeRepository.class);
     UserRepository userRepository = mock(UserRepository.class);
+    LikeRepository likeRepository = mock(LikeRepository.class);
 
     /**
      * 유저엔티티 생성
@@ -69,7 +76,7 @@ class RecipeServiceTest {
 
     @BeforeEach
     void beforeEach() {
-        recipeService = new RecipeService(recipeRepository, userRepository);
+        recipeService = new RecipeService(recipeRepository, userRepository, likeRepository);
     }
 
     @Test
@@ -82,7 +89,6 @@ class RecipeServiceTest {
     }
 
     @Test
-    @WithMockUser
     void 레시피_마이피드_실패_유저가올린_게시물이없는경우() {
         PageRequest pageRequest = PageRequest.of(0, 20, Sort.by("createdAt"));
         String userName3 = "messi";
@@ -91,7 +97,6 @@ class RecipeServiceTest {
     }
 
     @Test
-    @WithMockUser
     void 레시피_등록_성공() {
 
         when(userRepository.findByUserName(userName)).thenReturn(Optional.of(userEntity));
@@ -103,7 +108,6 @@ class RecipeServiceTest {
     }
 
     @Test
-    @WithMockUser
     void 레시피_수정_성공() {
 
         RecipeUpdateReqDto recipeUpdateReqDto = new RecipeUpdateReqDto("수정제목", "수정내용");
@@ -115,7 +119,6 @@ class RecipeServiceTest {
     }
 
     @Test
-    @WithMockUser
     void 레시피_수정_실패_다른유저가_시도한경우() {
 
         RecipeUpdateReqDto recipeUpdateReqDto = new RecipeUpdateReqDto("수정제목", "수정내용");
@@ -127,12 +130,45 @@ class RecipeServiceTest {
     }
 
     @Test
-    @WithMockUser
     void 레시피_삭제_성공() {
 
         when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
         when(userRepository.findByUserName(userName)).thenReturn(Optional.of(userEntity));
         assertDoesNotThrow(() -> recipeService.deleteRecipe(id, userName));
 
+    }
+
+    @Nested
+    @DisplayName("좋아요 기능 테스트")
+    class LikeTest {
+        @Test
+        @DisplayName("좋아요 등록")
+        void pushLikeTest() {
+            // given
+            when(userRepository.findByUserName(userName)).thenReturn(Optional.of(userEntity));
+            when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
+            when(likeRepository.findByUserAndRecipe(userEntity, recipeEntity)).thenReturn(Optional.empty());
+
+            // when
+            String message = recipeService.pushLikes(id, userName);
+
+            // then
+            assertEquals( "좋아요를 눌렀습니다.", message);
+            verify(likeRepository, atLeastOnce()).save(any(LikeEntity.class));  // LikeRepository의 save()가 최소 한번 호출됐는지 검증
+        }
+
+        @Test
+        @DisplayName("좋아요 취소")
+        void cancelLikeTest() {
+            LikeEntity likeEntity = LikeEntityFixture.get(userEntity, recipeEntity);
+
+            when(userRepository.findByUserName(userName)).thenReturn(Optional.of(userEntity));
+            when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
+            when(likeRepository.findByUserAndRecipe(userEntity, recipeEntity)).thenReturn(Optional.of(likeEntity));
+
+            String message = recipeService.pushLikes(id, userName);
+            assertEquals( "좋아요를 취소합니다.", message);
+            verify(likeRepository, atLeastOnce()).delete(likeEntity);  // LikeRepository의 delete()가 최소 한번 호출됐는지 검증
+        }
     }
 }
