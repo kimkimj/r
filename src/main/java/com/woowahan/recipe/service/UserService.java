@@ -137,4 +137,16 @@ public class UserService {
         userRepository.delete(user);
         return new UserDeleteDto(id, "회원 삭제가 완료되었습니다.");
     }
+
+    /**
+     * 마이페이지 - 회원정보 조회
+     */
+    public UserResponse findMyPageMe(Long id) {
+
+        // 찾고자 하는 회원의 id가 없는 경우
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        return UserResponse.toUserResponse(user);
+    }
 }

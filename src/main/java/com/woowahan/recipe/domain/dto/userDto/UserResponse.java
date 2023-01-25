@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponse {
-    private Long id;
+//    private Long id;
     private String userName;
     private String password;
     private String name;
@@ -25,7 +25,7 @@ public class UserResponse {
 
     public static UserResponse toUserResponse(UserEntity user) {
         return UserResponse.builder()
-                .id(user.getId())
+//                .id(user.getId())
                 .userName(user.getUserName())
                 .password(user.getPassword())
                 .name(user.getName())
