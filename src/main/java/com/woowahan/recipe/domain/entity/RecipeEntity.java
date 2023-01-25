@@ -1,6 +1,7 @@
 package com.woowahan.recipe.domain.entity;
 
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipePageResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,14 +22,14 @@ public class RecipeEntity extends BaseEntity {
     @Column(name = "recipe_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String recipe_title;
-    private String recipe_body;
+    private String recipeTitle;
+    private String recipeBody;
     // 조회수의 기본 값을 0으로 지정, null 불가 처리 -> null 불가능하니까 int형으로
     @Column(columnDefinition = "integer default 0", nullable = false)
-    private int recipe_like;
+    private int recipeLike;
     @Column(columnDefinition = "integer default 0", nullable = false)
-    private int recipe_view;
-    private String recipe_image_path;
+    private int recipeView;
+    private String recipeImagePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -46,18 +47,31 @@ public class RecipeEntity extends BaseEntity {
 
     public static RecipeFindResDto from(RecipeEntity recipeEntity) {
         return new RecipeFindResDto(
-                recipeEntity.getId(), recipeEntity.recipe_title, recipeEntity.recipe_body
-                ,recipeEntity.user.getUserName(), recipeEntity.getRecipe_like(), recipeEntity.getRecipe_view()
+                recipeEntity.getId(), recipeEntity.recipeTitle, recipeEntity.recipeBody
+                ,recipeEntity.user.getUserName(), recipeEntity.getRecipeLike(), recipeEntity.getRecipeView()
                 ,recipeEntity.getCreatedDate(),recipeEntity.getLastModifiedDate()
         );
     }
 
     // 레시피 수정을위한 set메서드    * 이미지 추가 예정
-    public void setRecipe_title(String recipe_title) {
-        this.recipe_title = recipe_title;
+    public void setRecipeTitle(String recipe_title) {
+        this.recipeTitle = recipe_title;
     }
 
-    public void setRecipe_body(String recipe_body) {
-        this.recipe_body = recipe_body;
+    public void setRecipeBody(String recipe_body) {
+        this.recipeBody = recipe_body;
+    }
+
+    public RecipePageResDto toResponse() {
+        return RecipePageResDto.builder()
+                .recipeId(this.id)
+                .recipeTitle(this.recipeTitle)
+                .userName(this.user.getUserName())
+                .recipeView(this.recipeView)
+                .recipeLike(this.recipeLike)
+                .createdDate(this.getCreatedDate())
+                .lastModifiedDate(this.getLastModifiedDate())
+//                .thumbnailImagePath(this.recipe_image_path) 썸네일 추가시
+                .build();
     }
 }

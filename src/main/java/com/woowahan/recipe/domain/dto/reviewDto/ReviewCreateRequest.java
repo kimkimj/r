@@ -7,8 +7,10 @@ import com.woowahan.recipe.domain.entity.ReviewEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class ReviewCreateRequest {
     private String comment;
@@ -16,7 +18,7 @@ public class ReviewCreateRequest {
     public ReviewEntity toEntity(UserEntity user, RecipeEntity recipe, String content) {
         return ReviewEntity.builder()
                 .user(user)
-                .review_comment(content)
+                .reviewComment(content)
                 .recipe(recipe)
                 .build();
     }

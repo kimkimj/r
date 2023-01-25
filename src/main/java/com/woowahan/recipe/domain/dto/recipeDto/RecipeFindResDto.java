@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 public class RecipeFindResDto {
-    private Long recipe_id;
-    private String recipe_title;
-    private String recipe_body;
+    private Long recipeId;
+    private String recipeTitle;
+    private String recipeBody;
     private String userName;
-    private int recipe_like;
-    private int recipe_view;
-    private LocalDateTime createdAt;
-    private LocalDateTime lastModifiedAt;
+    private int recipeLike;
+    private int recipeView;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
 }
