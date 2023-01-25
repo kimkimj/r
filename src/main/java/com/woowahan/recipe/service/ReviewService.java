@@ -1,6 +1,7 @@
 package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.UserRole;
+import com.woowahan.recipe.domain.dto.itemDto.ItemListResDto;
 import com.woowahan.recipe.domain.dto.reviewDto.*;
 import com.woowahan.recipe.domain.entity.*;
 import com.woowahan.recipe.event.AlarmEvent;
@@ -134,27 +135,16 @@ public class ReviewService {
        return new ReviewDeleteResponse(reviewId, "댓글 삭제 완료");
    }
 
-    public ReviewListResponse findAllReviews(Long recipeId) {
+   // 리뷰 전체 조회
+    public Page<ReviewListResponse> findAllReviews(Long recipeId, Pageable pageable) {
         // 레시피가 존재하는지 확인
         RecipeEntity recipe = validateRecipe(recipeId);
 
         // 20개씩 만들어진 순으로 정렬
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("createdDate"));
+        pageable = PageRequest.of(0, 20, Sort.by("createdDate"));
 
         Page<ReviewEntity> reviews = reviewRepository.findAllByRecipe(recipe, pageable);
-        List<ReviewGetResponse> reviewList = reviews.map(ReviewGetResponse::toReviewGetResponse).toList();
-        /*
-        List<ReviewGetResponse> reviewList = reviews.map(review -> ReviewGetResponse.builder()
-                        .reviewId(review.getReviewId())
-                        .username(review.getUser().getUserName())
-                        .review_comment(review.getReview_comment())
-                        .createdDate(review.getCreatedDate())
-                        .last_modified(review.getLastModifiedDate())
-                        .build())
-                .toList();*/
-
-        return ReviewListResponse.builder()
-                .content(reviewList)
-                .build();
+        return reviews.map(ReviewListResponse::toList);
     }
+
 }

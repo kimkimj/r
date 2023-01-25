@@ -5,6 +5,7 @@ import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 
@@ -17,8 +18,8 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping("/{recipeId}/reviews")
-    public Response<ReviewListResponse> getAllReviews(@PathVariable Long recipeId) {
-            ReviewListResponse reviews = reviewService.findAllReviews(recipeId);
+    public Response<Page<ReviewListResponse>> getAllReviews(@PathVariable Long recipeId, Pageable pageable) {
+            Page<ReviewListResponse> reviews = reviewService.findAllReviews(recipeId, pageable);
             //log.info("포스트 리스트 조회 성공");
             return Response.success(reviews);
     }
