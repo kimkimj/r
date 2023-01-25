@@ -38,7 +38,7 @@ dependencies {
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
-    testImplementation 'com.h2database:h2:2.1.214'
+    testImplementation 'com.h2database:h2:1.4.200'
 
     // lombok
     compileOnly 'org.projectlombok:lombok'
