@@ -40,9 +40,9 @@ public class RecipeRestController {
      * @return Response<Page<RecipePageResDto>>
      * @description 레시피 전체 조회 api
     **/
-    @GetMapping
+    @GetMapping("/list")
     public Response<Page<RecipePageResDto>> findAllRecipes(
-            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return Response.success(recipeService.findAllRecipes(pageable));
     }
 
@@ -56,7 +56,7 @@ public class RecipeRestController {
     **/
     @GetMapping("/my")
     public Response<Page<RecipePageResDto>> myRecipes(Authentication authentication,
-                                                      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+                                                      @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         String userName = authentication.getName();
         return Response.success(recipeService.myRecipes(pageable, userName));
     }

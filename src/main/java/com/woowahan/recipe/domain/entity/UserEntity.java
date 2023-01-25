@@ -71,4 +71,14 @@ public class UserEntity extends BaseEntity {
         this.phoneNum = phoneNum;
         this.birth = birth;
     }
+
+    public void updateMyPage(String password, String name, String address,
+                             String email, String phoneNum, String birth) {
+        this.password = password;
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.phoneNum = phoneNum;
+        this.birth = birth;
+    }
 }

@@ -137,4 +137,47 @@ public class UserService {
         userRepository.delete(user);
         return new UserDeleteDto(id, "회원 삭제가 완료되었습니다.");
     }
+
+    /**
+     * 마이페이지 - 회원정보 조회
+     */
+    public UserResponse findMyPage(Long id) {
+
+        // 찾고자 하는 회원의 id가 없는 경우
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        return UserResponse.toUserResponse(user);
+    }
+
+    /**
+     * 마이페이지 - 회원정보 수정
+     */
+    @Transactional
+    public UserUpdateDto updateMyPage(Long id, UserUpdateDto userUpdateDto, String userName) {
+
+        // 고유 식별 번호(id)가 없는 경우
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        // 애초에 ID는 수정이 되면 안되기 때문에 ID(userName) 중복체크 필요없음
+
+        // 회원가입과 동일하게 정보 수정시에도 email이 중복되지 않게 처리
+        userRepository.findByEmail(userUpdateDto.getEmail())
+                .ifPresent(userEntity -> {
+                    throw new AppException(ErrorCode.DUPLICATED_EMAIL, ErrorCode.DUPLICATED_EMAIL.getMessage());
+                });
+
+        // 본인인 경우 수정 가능, ROLE이 ADMIN이면 수정 가능
+        if (!user.getUserName().equals(userName) && user.getUserRole().equals(UserRole.ADMIN)) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        }
+
+        user.updateMyPage(userUpdateDto.getPassword(), userUpdateDto.getName(), userUpdateDto.getAddress(),
+                userUpdateDto.getEmail(), userUpdateDto.getPhoneNum(), userUpdateDto.getBirth());
+
+        userRepository.save(user);
+
+        return UserUpdateDto.toUserUpdateDto(user);
+    }
 }

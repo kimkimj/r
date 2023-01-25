@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -36,6 +37,7 @@ class RecipeServiceTest {
     RecipeRepository recipeRepository = mock(RecipeRepository.class);
     UserRepository userRepository = mock(UserRepository.class);
     LikeRepository likeRepository = mock(LikeRepository.class);
+    ApplicationEventPublisher publisher = mock(ApplicationEventPublisher.class);
 
     /**
      * 유저엔티티 생성
@@ -76,7 +78,7 @@ class RecipeServiceTest {
 
     @BeforeEach
     void beforeEach() {
-        recipeService = new RecipeService(recipeRepository, userRepository, likeRepository);
+        recipeService = new RecipeService(recipeRepository, userRepository, likeRepository, publisher);
     }
 
     @Test
@@ -90,7 +92,7 @@ class RecipeServiceTest {
 
     @Test
     void 레시피_마이피드_실패_유저가올린_게시물이없는경우() {
-        PageRequest pageRequest = PageRequest.of(0, 20, Sort.by("createdAt"));
+        PageRequest pageRequest = PageRequest.of(0, 20, Sort.by("createdDate"));
         String userName3 = "messi";
         AppException appException = assertThrows(AppException.class, () -> recipeService.myRecipes(pageRequest, userName3));
         assertThat(appException.getErrorCode()).isEqualTo(ErrorCode.RECIPE_NOT_FOUND);

@@ -1,9 +1,11 @@
 package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.dto.recipeDto.*;
+import com.woowahan.recipe.domain.entity.AlarmType;
 import com.woowahan.recipe.domain.entity.LikeEntity;
 import com.woowahan.recipe.domain.entity.RecipeEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
+import com.woowahan.recipe.event.AlarmEvent;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.LikeRepository;
@@ -11,6 +13,7 @@ import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +33,7 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+    private final ApplicationEventPublisher publisher;
 
     /**
      * @author 김응준
@@ -144,6 +148,7 @@ public class RecipeService {
      * @date 2023-01-24
      * @return String
      * @description 좋아요를 처음 눌렀다면 "좋아요를 눌렀습니다.", 좋아요를 이미 누른 상태라면 "좋아요를 취소합니다." 반환
+     *              좋아요를 눌렀을 때 레시피 작성자와 좋아요를 누른 회원이 다르다면 NEW_LIKE_ON_RECIPE 알람 등록
     **/
     public String pushLikes(Long id, String userName) {
         UserEntity user = validateUserName(userName);
@@ -154,6 +159,9 @@ public class RecipeService {
             return "좋아요를 취소합니다.";
         }else {
             likeRepository.save(LikeEntity.of(user, recipe));
+            if(!user.equals(recipe.getUser())) {  // 현재 좋아요를 누른 사람과 레시피 작성자가 일치하지 않다면 알람 등록
+                publisher.publishEvent(AlarmEvent.of(AlarmType.NEW_LIKE_ON_RECIPE, user, recipe.getUser(), recipe));
+            }
             return "좋아요를 눌렀습니다.";
         }
     }
