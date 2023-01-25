@@ -4,7 +4,7 @@
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 
-<h2>전체 학생 리스트</h2>
+<h2>전체 레시피 리스트</h2>
 <div> 전체 레시피 수 : <span : th:text="${#lists.size(allRecipes)}"></span></div>
 <div>
     <button type="button" th:onclick="|location.href='@{/create}'|">레시피 등록</button>
