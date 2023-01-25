@@ -18,6 +18,6 @@ public class RecipeFindResDto {
     private String userName;
     private int recipe_like;
     private int recipe_view;
-    private LocalDateTime createdAt;
-    private LocalDateTime lastModifiedAt;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
 }
