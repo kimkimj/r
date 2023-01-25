@@ -37,7 +37,7 @@ public class RecipeController {
         }
         model.addAttribute("recipeCreateReqDto", new RecipeCreateReqDto());
         recipeService.createRecipe(form, authentication.getName());
-        return "redirect:/";
+        return "redirect:/list";
     }
 
     @GetMapping("/update")
@@ -53,7 +53,7 @@ public class RecipeController {
         }
         model.addAttribute("recipeUpdateReqDto", new RecipeUpdateReqDto());
         recipeService.updateRecipe(form, recipeId, authentication.getName());
-        return "redirect:/";
+        return "redirect:/list";
     }
 
     @GetMapping("/list")
