@@ -7,7 +7,6 @@ import com.woowahan.recipe.domain.entity.ReviewEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
-import com.woowahan.recipe.repository.AlarmRepository;
 import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.ReviewRepository;
 import com.woowahan.recipe.repository.UserRepository;
@@ -29,7 +28,6 @@ public class ReviewServiceTest {
     ReviewRepository reviewRepository = mock(ReviewRepository.class);
     UserRepository userRepository = mock(UserRepository.class);
     RecipeRepository recipeRepository = mock(RecipeRepository.class);
-    AlarmRepository alarmRepository = mock(AlarmRepository.class);
     ApplicationEventPublisher publisher = mock(ApplicationEventPublisher.class);
 
     private final Long userId = 1L;
@@ -78,7 +76,7 @@ public class ReviewServiceTest {
 
     @BeforeEach
     void beforEach() {
-        reviewService = new ReviewService(userRepository, recipeRepository, reviewRepository, alarmRepository, publisher);
+        reviewService = new ReviewService(userRepository, recipeRepository, reviewRepository, publisher);
     }
 
     @Nested
