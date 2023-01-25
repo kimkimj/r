@@ -11,6 +11,7 @@ import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.ReviewRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import org.junit.jupiter.api.*;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +35,7 @@ public class ReviewServiceTest {
     UserRepository userRepository = mock(UserRepository.class);
     RecipeRepository recipeRepository = mock(RecipeRepository.class);
     AlarmRepository alarmRepository = mock(AlarmRepository.class);
+    ApplicationEventPublisher publisher;
 
     private final Long userId = 1L;
     private final String userName = "BaekJongWon";
@@ -81,7 +83,7 @@ public class ReviewServiceTest {
 
     @BeforeEach
     void beforEach() {
-        reviewService = new ReviewService(userRepository, recipeRepository, reviewRepository, alarmRepository);
+        reviewService = new ReviewService(userRepository, recipeRepository, reviewRepository, alarmRepository, publisher);
     }
 
     @Nested

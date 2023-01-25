@@ -62,7 +62,6 @@ class ReviewControllerTest {
            PageRequest pageRequest=(PageRequest) pageableArgumentCaptor.getValue();
 
            assertEquals(Sort.by("createdAt", "desc"), pageRequest.withSort(Sort.by("createdAt", "desc")).getSort());
-
        }
 
     @Nested
