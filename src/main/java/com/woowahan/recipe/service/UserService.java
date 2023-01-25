@@ -173,7 +173,7 @@ public class UserService {
             throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
         }
 
-        user.updateMyPage(userUpdateDto.getPassword(), userUpdateDto.getName(), userUpdateDto.getAddress(),
+        user.updateMyPage(encoder.encode(userUpdateDto.getPassword()), userUpdateDto.getName(), userUpdateDto.getAddress(),
                 userUpdateDto.getEmail(), userUpdateDto.getPhoneNum(), userUpdateDto.getBirth());
 
         userRepository.save(user);
