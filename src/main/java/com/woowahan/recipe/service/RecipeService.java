@@ -160,7 +160,7 @@ public class RecipeService {
         }else {
             likeRepository.save(LikeEntity.of(user, recipe));
             if(!user.equals(recipe.getUser())) {  // 현재 좋아요를 누른 사람과 레시피 작성자가 일치하지 않다면 알람 등록
-                publisher.publishEvent(AlarmEvent.of(AlarmType.NEW_LIKE_ON_RECIPE, user, recipe.getUser()));
+                publisher.publishEvent(AlarmEvent.of(AlarmType.NEW_LIKE_ON_RECIPE, user, recipe.getUser(), recipe));
             }
             return "좋아요를 눌렀습니다.";
         }

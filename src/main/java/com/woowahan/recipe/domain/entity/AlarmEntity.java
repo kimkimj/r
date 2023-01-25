@@ -23,10 +23,15 @@ public class AlarmEntity extends BaseEntity {
     @Column(name = "alarm_type")
     private AlarmType alarmType;
 
-    @Column(name = "from_user_id")
-    private Long fromUser;
+    @ManyToOne
+    @JoinColumn(name = "from_user_id")
+    private UserEntity fromUser;
 
     @ManyToOne
     @JoinColumn(name = "target_user_id")
     private UserEntity targetUser;
+
+    @ManyToOne
+    @JoinColumn(name = "target_recipe_id")
+    private RecipeEntity targetRecipe;
 }
