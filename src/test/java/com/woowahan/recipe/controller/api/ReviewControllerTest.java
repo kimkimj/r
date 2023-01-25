@@ -2,10 +2,7 @@ package com.woowahan.recipe.controller.api;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateResponse;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewDeleteResponse;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.*;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.service.ReviewService;
@@ -46,7 +43,7 @@ class ReviewControllerTest {
     ObjectMapper objectMapper;
 
     @Nested
-    @DisplayName("댓글 등록")
+    @DisplayName("댓글 전체 조회")
     class findAll {
         @Test
         @WithMockUser
@@ -98,7 +95,7 @@ class ReviewControllerTest {
             //when
             when(reviewService.createReview(any(), any(), any()))
                     .thenReturn(ReviewCreateResponse.builder()
-                            .review_id(1l)
+                            .reviewId(1l)
                             .comment("comment")
                             .username("username")
                             .build());
@@ -108,7 +105,7 @@ class ReviewControllerTest {
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsBytes(request)))
-                    .andExpect(jsonPath("$.result.reivew_id").exists())
+                    .andExpect(jsonPath("$.result.reviewId").exists())
                     .andExpect(jsonPath("$.result.username").exists())
                     .andExpect(jsonPath("$.result.comment").exists())
                     .andExpect(status().isOk())
@@ -148,10 +145,9 @@ class ReviewControllerTest {
 
             //when
             when(reviewService.updateReview(any(), any(), any(), any()))
-                    .thenReturn(ReviewCreateResponse.builder()
-                            .review_id(1l)
-                            .comment("comment edited")
-                            .username("username")
+                    .thenReturn(ReviewUpdateResponse.builder()
+                            .reviewId(1l)
+                            .message("리뷰가 수정되었습니다")
                             .build());
             //then
 
@@ -159,9 +155,8 @@ class ReviewControllerTest {
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsBytes(request)))
-                    .andExpect(jsonPath("$.result.reivew_id").exists())
-                    .andExpect(jsonPath("$.result.username").exists())
-                    .andExpect(jsonPath("$.result.comment").exists())
+                    .andExpect(jsonPath("$.result.reviewId").exists())
+                    .andExpect(jsonPath("$.result.message").exists())
                     .andExpect(status().isOk())
                     .andDo(print());
         }

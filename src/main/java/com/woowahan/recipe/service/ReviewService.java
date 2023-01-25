@@ -2,11 +2,13 @@ package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.UserRole;
 import com.woowahan.recipe.domain.dto.reviewDto.*;
-import com.woowahan.recipe.domain.entity.*;
+import com.woowahan.recipe.domain.entity.AlarmType;
+import com.woowahan.recipe.domain.entity.RecipeEntity;
+import com.woowahan.recipe.domain.entity.ReviewEntity;
+import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.event.AlarmEvent;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
-import com.woowahan.recipe.repository.AlarmRepository;
 import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.ReviewRepository;
 import com.woowahan.recipe.repository.UserRepository;
@@ -18,15 +20,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
     private final UserRepository userRepository;
     private final RecipeRepository recipeRepository;
     private final ReviewRepository reviewRepository;
-    private final AlarmRepository alarmRepository;
     private final ApplicationEventPublisher publisher;
 
     // User가 존재하는지 확인한다
@@ -68,14 +67,14 @@ public class ReviewService {
 
         // 리뷰 작성자와 레시피 작성자가 일치하지 않다면 알람 등록
         if(!user.equals(recipe.getUser())) {
-            publisher.publishEvent(AlarmEvent.of(AlarmType.NEW_REVIEW_ON_RECIPE, user, recipe.getUser()));
+            publisher.publishEvent(AlarmEvent.of(AlarmType.NEW_REVIEW_ON_RECIPE, user, recipe.getUser(), recipe));
         }
 
-        return new ReviewCreateResponse(review.getReviewId(), user.getName(), review.getReview_comment());
+        return new ReviewCreateResponse(recipeId, user.getUserName(), reviewCreateRequest.getComment());
     }
 
     // 리뷰 수정
-    public ReviewCreateResponse updateReview(Long recipeId, Long reviewId, ReviewCreateRequest reviewCreateRequest, String username) {
+    public ReviewUpdateResponse updateReview(Long recipeId, Long reviewId, ReviewCreateRequest reviewCreateRequest, String username) {
         // 유저가 존재하는지 확인
         UserEntity user = validateUser(username);
 
@@ -99,17 +98,7 @@ public class ReviewService {
 
         // 저장
         ReviewEntity savedReview = reviewRepository.save(review);
-
-        // 알람 울리도록 저장
-        AlarmEntity alarm = AlarmEntity.builder()
-                .alarmType(AlarmType.NEW_REVIEW_ON_RECIPE)
-                .fromUser(user.getId())
-                .targetUser(recipe.getUser())
-                .build();
-
-        alarmRepository.save(alarm);
-
-        return new ReviewCreateResponse(savedReview.getReviewId(), user.getUserName(), savedReview.getReview_comment());
+        return new ReviewUpdateResponse(review.getReviewId(), "댓글이 수정되었습니다");
     }
 
     // 리뷰 단건 삭제

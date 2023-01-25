@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserRestController.class)
+@WithMockUser
 class UserRestControllerTest {
 
     @Autowired
@@ -51,7 +52,6 @@ class UserRestControllerTest {
                 .build();
 
         @Test
-        @WithMockUser
         void 회원가입_성공() throws Exception {
 
             UserJoinResDto userJoinResDto = new UserJoinResDto(userJoinReqDto.getUserName(), "회원가입 성공");
@@ -71,7 +71,6 @@ class UserRestControllerTest {
         }
 
         @Test
-        @WithMockUser
         void 회원가입_실패_아이디중복() throws Exception {
 
             // when
@@ -88,7 +87,6 @@ class UserRestControllerTest {
         }
 
         @Test
-        @WithMockUser
         void 회원가입_실패_이메일중복() throws Exception {
 
             // when
@@ -113,7 +111,6 @@ class UserRestControllerTest {
         UserLoginReqDto userLoginReqDto = new UserLoginReqDto("user", "1234");
 
         @Test
-        @WithMockUser
         void 로그인_성공() throws Exception {
 
             UserLoginResDto userLoginResDto = new UserLoginResDto("jwt");
@@ -133,7 +130,6 @@ class UserRestControllerTest {
         }
 
         @Test
-        @WithMockUser
         void 로그인_실패_아이디없음() throws Exception {
 
             // when
@@ -150,7 +146,6 @@ class UserRestControllerTest {
         }
 
         @Test
-        @WithMockUser
         void 로그인_실패_비밀번호다름() throws Exception {
 
             // when
@@ -183,7 +178,6 @@ class UserRestControllerTest {
                 .build();
 
         @Test
-        @WithMockUser
         void 회원조회_성공() throws Exception {
 
             // when
@@ -205,7 +199,6 @@ class UserRestControllerTest {
         }
 
         @Test
-        @WithMockUser
         void 회원조회_실패_아이디없음() throws Exception {
 
             // when
@@ -236,7 +229,6 @@ class UserRestControllerTest {
                 .build();
 
         @Test
-        @WithMockUser
         void 회원수정_성공() throws Exception {
 
             // when
@@ -254,7 +246,6 @@ class UserRestControllerTest {
         }
 
         @Test
-        @WithMockUser
         void 회원수정_실패_아이디없음() throws Exception {
 
             // when
@@ -271,7 +262,6 @@ class UserRestControllerTest {
         }
 
         @Test
-        @WithMockUser
         void 회원수정_실패_이메일중복() throws Exception {
 
             // when
@@ -299,7 +289,6 @@ class UserRestControllerTest {
                 .build();
 
         @Test
-        @WithMockUser
         void 회원삭제_성공() throws Exception {
 
             // when
@@ -317,7 +306,6 @@ class UserRestControllerTest {
         }
 
         @Test
-        @WithMockUser
         void 회원수정_실패_유저없음() throws Exception {
 
             // when
@@ -333,4 +321,5 @@ class UserRestControllerTest {
                     .andDo(print());
         }
     }
+
 }

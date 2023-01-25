@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: headerFragment"/>
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+
+<h2>전체 레시피 리스트</h2>
+<div> 전체 레시피 수 : <span : th:text="${#lists.size(allRecipes)}"></span></div>
+<div>
+    <button type="button" th:onclick="|location.href='@{/create}'|">레시피 등록</button>
+</div> <br />
+
+<div align="center">
+    <table>
+        <thead>
+        <tr>
+            <th style="width: 50px;">ID</th>
+            <th style="width: 150px;">레시피 제목</th>
+            <th style="width: 50px;">조회수</th>
+            <th style="width: 50px">좋아요</th>
+            <th style="width: 200px">작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="recipe : ${allRecipes}">
+            <td th:text="${recipe.recipe_id}"/>
+            <td th:text="${recipe.recipe_title}"/>
+            <td th:text="${recipe.recipe_view}"/>
+            <td th:text="${recipe.recipe_like}"/>
+            <td th:text="${recipe.createdDate}"/>
+            <!--
+            <td>
+                <button type="button" th:onclick="|location.href='@{/recipe/{Id}(Id=${recipe.id})}'|"
+                        style="width: auto">
+                    세부 정보 보기 아직 미구현
+                </button>
+            </td>
+            -->
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<br/>
+<div th:replace="fragments/footer :: footerFragment"/>
+</body>
+</html>

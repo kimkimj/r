@@ -162,13 +162,17 @@ class RecipeServiceTest {
         @Test
         @DisplayName("좋아요 취소")
         void cancelLikeTest() {
+            // given
             LikeEntity likeEntity = LikeEntityFixture.get(userEntity, recipeEntity);
 
             when(userRepository.findByUserName(userName)).thenReturn(Optional.of(userEntity));
             when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
             when(likeRepository.findByUserAndRecipe(userEntity, recipeEntity)).thenReturn(Optional.of(likeEntity));
 
+            // when
             String message = recipeService.pushLikes(id, userName);
+
+            // then
             assertEquals( "좋아요를 취소합니다.", message);
             verify(likeRepository, atLeastOnce()).delete(likeEntity);  // LikeRepository의 delete()가 최소 한번 호출됐는지 검증
         }

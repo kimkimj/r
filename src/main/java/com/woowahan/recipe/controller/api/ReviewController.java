@@ -39,11 +39,11 @@ public class ReviewController {
     }
 
     @PutMapping("/{recipeId}/reviews/{reviewId}")
-    public Response<ReviewCreateResponse> updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId,
+    public Response<ReviewUpdateResponse> updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId,
                                                        @RequestBody ReviewCreateRequest reviewCreateRequest,
                                                        Authentication authentication) {
-        ReviewCreateResponse reviewCreateResponse = reviewService.updateReview(recipeId, reviewId, reviewCreateRequest, authentication.getName());
-        return Response.success(reviewCreateResponse);
+        ReviewUpdateResponse reviewUpdateResponse = reviewService.updateReview(recipeId, reviewId, reviewCreateRequest, authentication.getName());
+        return Response.success(reviewUpdateResponse);
     }
 
     @DeleteMapping ("/{recipeId}/reviews/{reviewId}")

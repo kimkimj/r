@@ -121,6 +121,14 @@ public class RecipeRestController {
         return Response.success(pushLikesMessage);
     }
 
+    /**
+     * @author 이소영
+     * @param id
+     * @param authentication
+     * @date 2023-01-24
+     * @return Response<Integer>
+     * @description 좋아요 개수 세기 api
+    **/
     @GetMapping("/{id}/likes")
     public Response<Integer> countLikes(@PathVariable Long id, Authentication authentication) {
         String userName = authentication.getName();
