@@ -1,7 +1,7 @@
 package com.woowahan.recipe.domain.dto.orderDto;
 
 import com.woowahan.recipe.domain.entity.OrderEntity;
-import com.woowahan.recipe.domain.entity.OrderStatus;
+import com.woowahan.recipe.domain.OrderStatus;
 import lombok.Builder;
 
 public class OrderInfoResponse {
