@@ -40,7 +40,7 @@ public class RecipeRestController {
      * @return Response<Page<RecipePageResDto>>
      * @description 레시피 전체 조회 api
     **/
-    @GetMapping
+    @GetMapping("/list")
     public Response<Page<RecipePageResDto>> findAllRecipes(
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return Response.success(recipeService.findAllRecipes(pageable));
