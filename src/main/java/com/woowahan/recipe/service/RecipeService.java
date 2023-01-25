@@ -37,13 +37,13 @@ public class RecipeService {
 
     /**
      * @author 김응준
-     * @param recipe_id
+     * @param recipeId
      * @date 2023-01-17
      * @return recipeFindResDto
      * @description ID로 레시피 단건조회
     **/
-    public RecipeFindResDto findRecipe(Long recipe_id) {
-        Optional<RecipeEntity> optRecipe = recipeRepository.findById(recipe_id);
+    public RecipeFindResDto findRecipe(Long recipeId) {
+        Optional<RecipeEntity> optRecipe = recipeRepository.findById(recipeId);
         RecipeFindResDto recipeFindResDto = RecipeEntity.from(optRecipe.get());
         return recipeFindResDto;
     }
@@ -90,7 +90,7 @@ public class RecipeService {
     public RecipeCreateResDto createRecipe(@RequestParam RecipeCreateReqDto recipeCreateReqDto, String userName) {
         RecipeEntity recipeEntity = createRecipeEntity(recipeCreateReqDto, userName);
         RecipeEntity saveRecipe = recipeRepository.save(recipeEntity);
-        return new RecipeCreateResDto(saveRecipe.getId(), saveRecipe.getRecipe_title(), saveRecipe.getRecipe_body(),
+        return new RecipeCreateResDto(saveRecipe.getId(), saveRecipe.getRecipeTitle(), saveRecipe.getRecipeBody(),
                 saveRecipe.getUser().getUserName(), saveRecipe.getCreatedDate());
     }
 
@@ -107,10 +107,10 @@ public class RecipeService {
         RecipeEntity recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage()));
         validateWriterAndUserName(userName, recipe); // 동일 유저인지 검증
         // TODO: 2023-01-24 _를 사용하는 SnakeCase보다는 CamelCase가 Java 프로그래밍에서 권장되는 표기법이라고 합니다 :)
-        recipe.setRecipe_title(recipeUpdateReqDto.getRecipe_title());
-        recipe.setRecipe_body(recipeUpdateReqDto.getRecipe_body());
+        recipe.setRecipeTitle(recipeUpdateReqDto.getRecipeTitle());
+        recipe.setRecipeBody(recipeUpdateReqDto.getRecipeBody());
         recipeRepository.saveAndFlush(recipe);
-        return new RecipeUpdateResDto(recipe.getId(), recipe.getRecipe_title(), recipe.getRecipe_body(),
+        return new RecipeUpdateResDto(recipe.getId(), recipe.getRecipeTitle(), recipe.getRecipeBody(),
                 recipe.getUser().getUserName(), recipe.getLastModifiedDate());
     }
 
@@ -190,8 +190,8 @@ public class RecipeService {
     **/
     public RecipeEntity createRecipeEntity(RecipeCreateReqDto recipeCreateReqDto, String userName) {
         RecipeEntity recipeEntity = RecipeEntity.builder()
-                .recipe_title(recipeCreateReqDto.getRecipe_title())
-                .recipe_body(recipeCreateReqDto.getRecipe_body())
+                .recipeTitle(recipeCreateReqDto.getRecipeTitle())
+                .recipeBody(recipeCreateReqDto.getRecipeBody())
                 .user(userRepository.findByUserName(userName).orElseThrow(() ->
                         new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()))) // 현재 로그인된 userName으로 userEntity 저장
                 .build();

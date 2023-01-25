@@ -16,7 +16,7 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
      * 조회수 증가 쿼리
      */
     @Modifying
-    @Query("update RecipeEntity r set r.recipe_view = r.recipe_view + 1 where r.id = :id")
+    @Query("update RecipeEntity r set r.recipeView = r.recipeView + 1 where r.id = :id")
     int updateView(@Param("id") Long id);
 
     /**

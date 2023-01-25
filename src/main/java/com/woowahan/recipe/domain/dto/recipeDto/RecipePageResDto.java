@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RecipePageResDto {
-    private Long recipe_id;
-    private String recipe_title;
+    private Long recipeId;
+    private String recipeTitle;
     private String userName;
-    private int recipe_view;
-    private int recipe_like;
+    private int recipeView;
+    private int recipeLike;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
-//    private String thumbnail_image_path; 썸네일 추가시
+//    private String thumbnailImagePath; 썸네일 추가시
 }

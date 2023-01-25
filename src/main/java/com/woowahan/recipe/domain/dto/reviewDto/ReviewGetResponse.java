@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class ReviewGetResponse {
     private Long reviewId;
     private String username;
-    private String review_comment;
+    private String reviewComment;
     private LocalDateTime createdDate;
     private LocalDateTime last_modified;
 
@@ -23,7 +23,7 @@ public class ReviewGetResponse {
         return ReviewGetResponse.builder()
                 .reviewId(review.getReviewId())
                 .username(review.getUser().getUserName())
-                .review_comment(review.getReview_comment())
+                .reviewComment(review.getReviewComment())
                 .createdDate(review.getCreatedDate())
                 .last_modified(review.getLastModifiedDate())
                 .build();

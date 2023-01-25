@@ -58,11 +58,7 @@ public class ReviewServiceTest {
     private final int view = 12;
     private final RecipeEntity recipe = RecipeEntity.builder()
             .id(recipeId)
-            .recipe_title(title)
-            .recipe_body(body)
             .user(user)
-            .recipe_like(like)
-            .recipe_view(view)
             .build();
 
     // review entity 생성
@@ -72,7 +68,7 @@ public class ReviewServiceTest {
     private final ReviewEntity review = ReviewEntity.builder()
             .recipe(recipe)
             .reviewId(reviewId)
-            .review_comment(review_comment)
+            .reviewComment(review_comment)
             .user(user)
             .build();
 
