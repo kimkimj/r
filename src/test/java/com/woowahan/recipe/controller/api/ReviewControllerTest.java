@@ -52,7 +52,7 @@ class ReviewControllerTest {
             mockMvc.perform(get("/api/v1/recipes/1/reviews")
                             .param("page", "0")
                             .param("size", "20")
-                            .param("sort", "createdAt, desc"))
+                            .param("sort", "createdDate, desc"))
                     .andDo(print())
                     .andExpect(status().isOk());
             ArgumentCaptor<Pageable> pageableArgumentCaptor = ArgumentCaptor.forClass(Pageable.class);
