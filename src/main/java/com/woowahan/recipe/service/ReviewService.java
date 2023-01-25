@@ -1,7 +1,6 @@
 package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.UserRole;
-import com.woowahan.recipe.domain.dto.itemDto.ItemListResDto;
 import com.woowahan.recipe.domain.dto.reviewDto.*;
 import com.woowahan.recipe.domain.entity.*;
 import com.woowahan.recipe.event.AlarmEvent;
@@ -83,13 +82,13 @@ public class ReviewService {
         // 레시피가 존재하는지 확인
         RecipeEntity recipe = validateRecipe(recipeId);
 
-        //리뷰 작성자와 유저가 동일한지 확인
-        if (!recipe.getUser().getUserName().equals(username)) {
-            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
-        }
-
         // 리뷰가 존재하는지 확인
         ReviewEntity review = validateReview(reviewId);
+
+        //리뷰 작성자와 유저가 동일한지 확인
+        if (!review.getUser().getUserName().equals(username)) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        }
 
         // 내용이 있는지 확인
         if (reviewCreateRequest.getComment().length() == 0) {
@@ -110,7 +109,7 @@ public class ReviewService {
 
         alarmRepository.save(alarm);
 
-        return new ReviewCreateResponse(savedReview.getReviewId(), user.getName(), savedReview.getReview_comment());
+        return new ReviewCreateResponse(savedReview.getReviewId(), user.getUserName(), savedReview.getReview_comment());
     }
 
     // 리뷰 단건 삭제

@@ -35,18 +35,16 @@ public class ReviewServiceTest {
     UserRepository userRepository = mock(UserRepository.class);
     RecipeRepository recipeRepository = mock(RecipeRepository.class);
     AlarmRepository alarmRepository = mock(AlarmRepository.class);
-    ApplicationEventPublisher publisher;
+    ApplicationEventPublisher publisher = mock(ApplicationEventPublisher.class);
 
     private final Long userId = 1L;
-    private final String userName = "BaekJongWon";
+    private final String username = "BaekJongWon";
     private final UserEntity user = UserEntity.builder()
             .id(userId)
-            .userName(userName)
+            .userName(username)
             .build();
 
-    /**
-     * 다른 유저
-     */
+    // 다른 유저
     private final Long anotherUserId = 2L;
     private final String anotherUsername = "GordonRamsay";
     private final UserEntity anotherUser = UserEntity.builder()
@@ -94,25 +92,24 @@ public class ReviewServiceTest {
         @DisplayName("리뷰 등록 성공")
         void create_review_success() {
 
-            when(userRepository.findByUserName(userName)).thenReturn(Optional.of(user));
+            when(userRepository.findByUserName(username)).thenReturn(Optional.of(user));
             when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(recipe));
             when(reviewRepository.save(any())).thenReturn(review);
 
             assertDoesNotThrow(() -> reviewService.createReview(
-                    recipeId, new ReviewCreateRequest(review_comment), userName));
+                    recipeId, new ReviewCreateRequest(review_comment), username));
         }
 
-        // TODO: 2023-01-19 로그인하지 않았을 때 에러코드: invalid permission 아니면 username not found?
         @Test
         @DisplayName("리뷰 등록 실패 - 로그인 하지 않은 경우")
         void create_review_fail() {
 
-            when(userRepository.findByUserName(userName)).thenReturn(Optional.empty());
+            when(userRepository.findByUserName(username)).thenReturn(Optional.empty());
             when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(recipe));
             when(reviewRepository.save(any())).thenReturn(review);
 
             AppException exception = Assertions.assertThrows(AppException.class, () -> reviewService.createReview(
-                    recipeId, new ReviewCreateRequest(review_comment), userName));
+                    recipeId, new ReviewCreateRequest(review_comment), username));
             assertEquals(ErrorCode.USERNAME_NOT_FOUND, exception.getErrorCode());
         }
     }
@@ -124,21 +121,25 @@ public class ReviewServiceTest {
         @Test
         @DisplayName("리뷰 수정 성공")
         void update_review_success() {
-            ReviewCreateRequest reviewCreateRequest = new ReviewCreateRequest("댓글 수정");
+            when(userRepository.findByUserName(username)).thenReturn(Optional.of(user));
             when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(recipe));
-            ReviewCreateResponse reviewCreateResponse= reviewService.updateReview(recipeId, reviewId, reviewCreateRequest, userName);
+            when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
+
+            ReviewCreateRequest reviewCreateRequest = new ReviewCreateRequest("댓글 수정");
+            ReviewCreateResponse reviewCreateResponse= reviewService.updateReview(recipeId, reviewId, reviewCreateRequest, username);
             assertThat(reviewCreateResponse.getComment()).isEqualTo("댓글 수정");
+
         }
 
         @Test
         @DisplayName("리뷰 수정 실패 - 해당 레시피가 없는 경우")
         void update_review_fail() {
             ReviewCreateRequest reviewCreateRequest = new ReviewCreateRequest("댓글 수정");
-            when(userRepository.findByUserName(userName)).thenReturn(Optional.of(user));
+            when(userRepository.findByUserName(username)).thenReturn(Optional.of(user));
             when(recipeRepository.findById(recipeId))
                     .thenReturn(Optional.empty());
 
-            AppException exception = Assertions.assertThrows(AppException.class, () -> reviewService.updateReview(recipeId, reviewId, reviewCreateRequest, userName));
+            AppException exception = Assertions.assertThrows(AppException.class, () -> reviewService.updateReview(recipeId, reviewId, reviewCreateRequest, username));
             assertEquals(ErrorCode.RECIPE_NOT_FOUND, exception.getErrorCode());
         }
 
@@ -146,11 +147,11 @@ public class ReviewServiceTest {
         @DisplayName("리뷰 수정 실패 - 해당 유저가 없는 경우")
         void update_review_fail2() {
             ReviewCreateRequest reviewCreateRequest = new ReviewCreateRequest("댓글 수정");
-            when(userRepository.findByUserName(userName)).thenReturn(Optional.empty());
+            when(userRepository.findByUserName(username)).thenReturn(Optional.empty());
             when(recipeRepository.findById(recipeId))
                     .thenReturn(Optional.of(recipe));
 
-            AppException exception = Assertions.assertThrows(AppException.class, () -> reviewService.updateReview(recipeId, reviewId, reviewCreateRequest, userName));
+            AppException exception = Assertions.assertThrows(AppException.class, () -> reviewService.updateReview(recipeId, reviewId, reviewCreateRequest, username));
             assertEquals(ErrorCode.USERNAME_NOT_FOUND, exception.getErrorCode());
         }
 
@@ -158,7 +159,7 @@ public class ReviewServiceTest {
         @DisplayName("리뷰 수정 실패 - 작성자와 유저가 일치하지 않는 경우")
         void update_review_fail3() {
             ReviewCreateRequest reviewCreateRequest = new ReviewCreateRequest("댓글 수정");
-            when(userRepository.findByUserName(userName)).thenReturn(Optional.of(user));
+            when(userRepository.findByUserName(username)).thenReturn(Optional.of(user));
 
             when(recipeRepository.findById(recipeId))
                     .thenReturn(Optional.of(recipe));
@@ -177,36 +178,37 @@ public class ReviewServiceTest {
         @Test
         @DisplayName("리뷰 삭제 성공")
         void delete_review_success() {
-            given(userRepository.findByUserName(userName)).willReturn(Optional.of(user));
+            given(userRepository.findByUserName(username)).willReturn(Optional.of(user));
             given(recipeRepository.findById(recipeId)).willReturn(Optional.of(recipe));
+            given(reviewRepository.findById(reviewId)).willReturn(Optional.of(review));
 
-            ReviewDeleteResponse reviewDeleteResponse= reviewService.deleteReview(recipeId, reviewId,userName);
+            ReviewDeleteResponse reviewDeleteResponse= reviewService.deleteReview(recipeId, reviewId, username);
             assertThat(reviewDeleteResponse.getMessage()).isEqualTo("댓글 삭제 완료");
         }
 
         @Test
         @DisplayName("리뷰 삭제 실패 - 해당 유저가 존재하지 않음")
         void delete_review_fail_1() {
-            given(userRepository.findByUserName(userName)).willReturn(Optional.empty());
+            given(userRepository.findByUserName(username)).willReturn(Optional.empty());
 
-            AppException exception = Assertions.assertThrows(AppException.class, () -> reviewService.deleteReview(recipeId, reviewId, userName));
+            AppException exception = Assertions.assertThrows(AppException.class, () -> reviewService.deleteReview(recipeId, reviewId, username));
             assertEquals(ErrorCode.USERNAME_NOT_FOUND, exception.getErrorCode());
         }
 
         @Test
         @DisplayName("리뷰 삭제 실패 - 해당 레시피가 존재하지 않음")
         void delete_review_fail_2() {
-            given(userRepository.findByUserName(userName)).willReturn(Optional.of(user));
+            given(userRepository.findByUserName(username)).willReturn(Optional.of(user));
             given(recipeRepository.findById(recipeId)).willReturn(Optional.empty());
 
-            AppException exception = Assertions.assertThrows(AppException.class, () -> reviewService.deleteReview(recipeId, reviewId, userName));
+            AppException exception = Assertions.assertThrows(AppException.class, () -> reviewService.deleteReview(recipeId, reviewId, username));
             assertEquals(ErrorCode.RECIPE_NOT_FOUND, exception.getErrorCode());
         }
 
         @Test
         @DisplayName("리뷰 삭제 실패 - 작성자와 유저가 일치하지 않는 경우")
         void delete_review_fail_3() {
-            given(userRepository.findByUserName(userName)).willReturn(Optional.of(user));
+            given(userRepository.findByUserName(username)).willReturn(Optional.of(user));
             given(recipeRepository.findById(recipeId)).willReturn(Optional.of(recipe));
             given(reviewRepository.findById(reviewId)).willReturn(Optional.of(review));
 

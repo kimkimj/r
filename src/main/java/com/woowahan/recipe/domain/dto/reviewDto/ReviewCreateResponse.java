@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewCreateResponse {
-    private Long reivew_id;
+    private Long review_id;
     private String username;
     private String comment;
 }

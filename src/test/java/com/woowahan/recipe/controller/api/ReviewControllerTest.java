@@ -98,7 +98,7 @@ class ReviewControllerTest {
             //when
             when(reviewService.createReview(any(), any(), any()))
                     .thenReturn(ReviewCreateResponse.builder()
-                            .reivew_id(1l)
+                            .review_id(1l)
                             .comment("comment")
                             .username("username")
                             .build());
@@ -149,7 +149,7 @@ class ReviewControllerTest {
             //when
             when(reviewService.updateReview(any(), any(), any(), any()))
                     .thenReturn(ReviewCreateResponse.builder()
-                            .reivew_id(1l)
+                            .review_id(1l)
                             .comment("comment edited")
                             .username("username")
                             .build());
