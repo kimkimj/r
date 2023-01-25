@@ -13,6 +13,6 @@ import javax.validation.constraints.NotNull;
 @NotBlank
 @NotNull
 public class RecipeCreateReqDto {
-    private String recipe_title;
-    private String recipe_body;
+    private String recipeTitle;
+    private String recipeBody;
 }

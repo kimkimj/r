@@ -18,7 +18,7 @@ public class ReviewCreateRequest {
     public ReviewEntity toEntity(UserEntity user, RecipeEntity recipe, String content) {
         return ReviewEntity.builder()
                 .user(user)
-                .review_comment(content)
+                .reviewComment(content)
                 .recipe(recipe)
                 .build();
     }

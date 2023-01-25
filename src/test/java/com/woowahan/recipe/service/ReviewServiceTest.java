@@ -52,28 +52,28 @@ public class ReviewServiceTest {
 
 
     // 레시피엔티티 생성
-    private final Long recipeId = 1l;
+    private final Long recipeId = 1L;
     private final String title = "유부초밥";
     private final String body = "이렇게";
     private final int like = 10;
     private final int view = 12;
     private final RecipeEntity recipe = RecipeEntity.builder()
             .id(recipeId)
-            .recipe_title(title)
-            .recipe_body(body)
+            .recipeTitle(title)
+            .recipeBody(body)
             .user(user)
-            .recipe_like(like)
-            .recipe_view(view)
+            .recipeLike(like)
+            .recipeView(view)
             .build();
 
     // review entity 생성
-    private final Long reviewId = 1l;
-    private final String review_comment = "너무 맛있어용";
+    private final Long reviewId = 1L;
+    private final String reviewComment = "너무 맛있어용";
 
     private final ReviewEntity review = ReviewEntity.builder()
             .recipe(recipe)
             .reviewId(reviewId)
-            .review_comment(review_comment)
+            .reviewComment(reviewComment)
             .user(user)
             .build();
 
@@ -95,7 +95,7 @@ public class ReviewServiceTest {
             when(reviewRepository.save(any())).thenReturn(review);
 
             assertDoesNotThrow(() -> reviewService.createReview(
-                    recipeId, new ReviewCreateRequest(review_comment), userName));
+                    recipeId, new ReviewCreateRequest(reviewComment), userName));
         }
 
         // TODO: 2023-01-19 로그인하지 않았을 때 에러코드: invalid permission 아니면 username not found?
@@ -108,7 +108,7 @@ public class ReviewServiceTest {
             when(reviewRepository.save(any())).thenReturn(review);
 
             AppException exception = Assertions.assertThrows(AppException.class, () -> reviewService.createReview(
-                    recipeId, new ReviewCreateRequest(review_comment), userName));
+                    recipeId, new ReviewCreateRequest(reviewComment), userName));
             assertEquals(ErrorCode.USERNAME_NOT_FOUND, exception.getErrorCode());
         }
     }
@@ -221,7 +221,7 @@ public class ReviewServiceTest {
         ReviewEntity review2 = ReviewEntity.builder()
                 .reviewId(2l)
                 .recipe(recipe)
-                .review_comment("comment1")
+                .reviewComment("comment1")
                 .build();
 
         PageImpl<ReviewEntity> reviewList = new PageImpl<>(List.of(review, review2));

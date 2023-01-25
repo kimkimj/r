@@ -47,12 +47,12 @@ class RecipeRestControllerTest {
     void 레시피_ID_단건_조회() throws Exception {
         //given
         RecipeFindResDto recipeFindResDto = RecipeFindResDto.builder()
-                .recipe_id(1L)
-                .recipe_title("유부초밥")
-                .recipe_body("이렇게")
+                .recipeId(1L)
+                .recipeTitle("유부초밥")
+                .recipeBody("이렇게")
                 .userName("bjw")
-                .recipe_like(10)
-                .recipe_view(12)
+                .recipeLike(10)
+                .recipeView(12)
                 .build();
         //when
         when(recipeService.findRecipe(any())).thenReturn(recipeFindResDto);
@@ -61,12 +61,12 @@ class RecipeRestControllerTest {
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(recipeFindResDto)))
-                .andExpect(jsonPath("$.result.recipe_id").exists())
-                .andExpect(jsonPath("$.result.recipe_title").exists())
-                .andExpect(jsonPath("$.result.recipe_body").exists())
+                .andExpect(jsonPath("$.result.recipeId").exists())
+                .andExpect(jsonPath("$.result.recipeTitle").exists())
+                .andExpect(jsonPath("$.result.recipeBody").exists())
                 .andExpect(jsonPath("$.result.userName").exists())
-                .andExpect(jsonPath("$.result.recipe_like").exists())
-                .andExpect(jsonPath("$.result.recipe_view").exists())
+                .andExpect(jsonPath("$.result.recipeLike").exists())
+                .andExpect(jsonPath("$.result.recipeView").exists())
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -94,9 +94,9 @@ class RecipeRestControllerTest {
         RecipeCreateReqDto request = new RecipeCreateReqDto("hi", "hello");
         //when
         when(recipeService.createRecipe(any(), any())).thenReturn(RecipeCreateResDto.builder()
-                .recipe_id(1L)
-                .recipe_title("hi")
-                .recipe_body("hello")
+                .recipeId(1L)
+                .recipeTitle("hi")
+                .recipeBody("hello")
                 .userName("bjw")
                 .createdDate((LocalDateTime.now()))
                 .build());
@@ -117,9 +117,9 @@ class RecipeRestControllerTest {
         RecipeUpdateReqDto recipeUpdateReqDto = new RecipeUpdateReqDto("수정제목", "수정내용");
         //when
         when(recipeService.updateRecipe(any(), any(), any())).thenReturn(RecipeUpdateResDto.builder()
-                .recipe_id(1L)
-                .recipe_title("수정제목")
-                .recipe_body("수정내용")
+                .recipeId(1L)
+                .recipeTitle("수정제목")
+                .recipeBody("수정내용")
                 .userName("bjw")
                 .localDateTime(LocalDateTime.now())
                 .build());

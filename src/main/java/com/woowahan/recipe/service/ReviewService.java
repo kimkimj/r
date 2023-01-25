@@ -73,7 +73,7 @@ public class ReviewService {
             publisher.publishEvent(AlarmEvent.of(AlarmType.NEW_REVIEW_ON_RECIPE, user, recipe.getUser(), recipe));
         }
 
-        return new ReviewCreateResponse(review.getReviewId(), user.getName(), review.getReview_comment());
+        return new ReviewCreateResponse(review.getReviewId(), user.getName(), review.getReviewComment());
     }
 
     // 리뷰 수정
@@ -104,7 +104,7 @@ public class ReviewService {
         // 저장
         ReviewEntity savedReview = reviewRepository.save(review);
 
-        return new ReviewCreateResponse(savedReview.getReviewId(), user.getName(), savedReview.getReview_comment());
+        return new ReviewCreateResponse(savedReview.getReviewId(), user.getName(), savedReview.getReviewComment());
     }
 
     // 리뷰 단건 삭제
