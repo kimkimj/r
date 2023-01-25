@@ -14,5 +14,5 @@ public class RecipeCreateResDto {
     private String recipe_title;
     private String recipe_body;
     private String userName;
-    private LocalDateTime createdAt;
+    private LocalDateTime createdDate;
 }

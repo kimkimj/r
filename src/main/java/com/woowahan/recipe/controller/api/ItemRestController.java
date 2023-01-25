@@ -23,7 +23,7 @@ public class ItemRestController {
      * 재료 전체 조회
      */
     @GetMapping
-    public Response<Page<ItemListResDto>> findAllItem(@PageableDefault(size = 50, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Response<Page<ItemListResDto>> findAllItem(@PageableDefault(size = 50, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return Response.success(itemService.findAllItem(pageable));
     }
 

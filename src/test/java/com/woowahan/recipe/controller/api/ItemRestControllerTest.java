@@ -161,7 +161,7 @@ class ItemRestControllerTest {
         mockMvc.perform(get("/api/v1/items")
                         .param("page", "0")
                         .param("size", "50")
-                        .param("sort", "createdAt,desc"))
+                        .param("sort", "createdDate,desc"))
                         .andExpect(status().isOk());
 
         ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
@@ -172,7 +172,7 @@ class ItemRestControllerTest {
         /* then */
         assertEquals(0, pageable.getPageNumber());
         assertEquals(50, pageable.getPageSize());
-        assertEquals(Sort.by("createdAt", "desc"), pageable.withSort(Sort.by("createdAt", "desc")).getSort());
+        assertEquals(Sort.by("createdDate", "desc"), pageable.withSort(Sort.by("createdAt", "desc")).getSort());
     }
 
     @Test
