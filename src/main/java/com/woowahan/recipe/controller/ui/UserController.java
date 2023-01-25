@@ -1,14 +1,11 @@
 package com.woowahan.recipe.controller.ui;
 
-import com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
 import com.woowahan.recipe.service.OrderService;
 import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -76,9 +73,7 @@ public class UserController {
     }
 
     @GetMapping("/users/my/orders")
-    public String myOrders(@ModelAttribute("orderSearch") OrderSearch orderSearch, Authentication authentication, Pageable pageable, Model model) {
-        /*Page<OrderInfoResponse> orders = orderService.findAllOrder(authentication.getName(), pageable);
-        model.addAttribute("orders", orders);*/
+    public String myOrders() {
         return "user/my/myOrder";
     }
 
