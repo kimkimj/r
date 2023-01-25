@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="fragments/header :: headerFragment"/>
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div class="container2 px-4 text-center">
+    <div class="row gx-5">
+        <div class="col">
+            <div class="p-3 border bg-light"><a href="/users/my/recipe">레시피</a></div>
+        </div>
+        <div class="col">
+            <div class="p-3 border bg-light"><a href="/users/my/get-reviews">댓글</a></div>
+        </div>
+        <div class="col">
+            <div class="p-3 border bg-light"><a href="/users/my/orders">주문목록</a></div>
+        </div>
+        <div class="col">
+            <div class="p-3 border bg-light"><a href="/users/my/recipe-like">찜한 레시피</a></div>
+        </div>
+        <div class="col">
+            <div class="p-3 border bg-light"><a href="/users/my/update">회원 정보 수정</a></div>
+        </div>
+    </div>
+</div>
+<h2>찜한 레시피 페이지</h2>
+
+<br/>
+<div th:replace="fragments/footer :: footerFragment"/>
+</body>
+
+</html>

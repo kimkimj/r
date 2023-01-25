@@ -1,5 +1,6 @@
 package com.woowahan.recipe.service;
 
+import com.woowahan.recipe.domain.OrderStatus;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderDeleteResDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;

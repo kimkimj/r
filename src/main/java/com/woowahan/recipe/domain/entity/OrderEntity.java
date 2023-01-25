@@ -1,5 +1,6 @@
 package com.woowahan.recipe.domain.entity;
 
+import com.woowahan.recipe.domain.OrderStatus;
 import com.woowahan.recipe.exception.AppException;
 import lombok.Builder;
 import lombok.Getter;
