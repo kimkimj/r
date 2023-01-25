@@ -12,5 +12,6 @@ public class RecipeEntityFixture {
                 .recipe_body("testBody")
                 .user(user)
                 .build();
+
     }
 }
