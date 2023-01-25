@@ -2,6 +2,7 @@ package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewDeleteResponse;
 import com.woowahan.recipe.domain.entity.RecipeEntity;
 import com.woowahan.recipe.domain.entity.ReviewEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
@@ -19,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -29,6 +31,7 @@ public class ReviewServiceTest {
     UserRepository userRepository = mock(UserRepository.class);
     RecipeRepository recipeRepository = mock(RecipeRepository.class);
     ApplicationEventPublisher publisher = mock(ApplicationEventPublisher.class);
+
 
     private final Long userId = 1L;
     private final String userName = "BaekJongWon";
@@ -52,8 +55,8 @@ public class ReviewServiceTest {
     private final Long recipeId = 1l;
     private final String title = "유부초밥";
     private final String body = "이렇게";
-    private final Integer like = 10;
-    private final Integer view = 12;
+    private final int like = 10;
+    private final int view = 12;
     private final RecipeEntity recipe = RecipeEntity.builder()
             .id(recipeId)
             .recipe_title(title)
@@ -164,6 +167,73 @@ public class ReviewServiceTest {
         }
     }
 
+    @Nested
+    @DisplayName("리뷰 삭제")
+    class deleteReview {
+        @Test
+        @DisplayName("리뷰 삭제 성공")
+        void delete_review_success() {
+            given(userRepository.findByUserName(userName)).willReturn(Optional.of(user));
+            given(recipeRepository.findById(recipeId)).willReturn(Optional.of(recipe));
+
+            ReviewDeleteResponse reviewDeleteResponse= reviewService.deleteReview(recipeId, reviewId,userName);
+            assertThat(reviewDeleteResponse.getMessage()).isEqualTo("댓글 삭제 완료");
+        }
+
+        @Test
+        @DisplayName("리뷰 삭제 실패 - 해당 유저가 존재하지 않음")
+        void delete_review_fail_1() {
+            given(userRepository.findByUserName(userName)).willReturn(Optional.empty());
+
+            AppException exception = Assertions.assertThrows(AppException.class, () -> reviewService.deleteReview(recipeId, reviewId, userName));
+            assertEquals(ErrorCode.USERNAME_NOT_FOUND, exception.getErrorCode());
+        }
+
+        @Test
+        @DisplayName("리뷰 삭제 실패 - 해당 레시피가 존재하지 않음")
+        void delete_review_fail_2() {
+            given(userRepository.findByUserName(userName)).willReturn(Optional.of(user));
+            given(recipeRepository.findById(recipeId)).willReturn(Optional.empty());
+
+            AppException exception = Assertions.assertThrows(AppException.class, () -> reviewService.deleteReview(recipeId, reviewId, userName));
+            assertEquals(ErrorCode.RECIPE_NOT_FOUND, exception.getErrorCode());
+        }
+
+        @Test
+        @DisplayName("리뷰 삭제 실패 - 작성자와 유저가 일치하지 않는 경우")
+        void delete_review_fail_3() {
+            given(userRepository.findByUserName(userName)).willReturn(Optional.of(user));
+            given(recipeRepository.findById(recipeId)).willReturn(Optional.of(recipe));
+            given(reviewRepository.findById(reviewId)).willReturn(Optional.of(review));
+
+            when(userRepository.findByUserName(anotherUsername)).thenReturn(Optional.of(anotherUser));
+
+            AppException exception = Assertions.assertThrows(AppException.class, () -> reviewService.deleteReview(recipeId, reviewId, anotherUsername));
+            assertEquals(ErrorCode.INVALID_PERMISSION, exception.getErrorCode());
+        }
+    }
+
+    /*
+    @Test
+    @DisplayName("리뷰 전체 조회")
+    void findAll_review_success() {
+
+        ReviewEntity review2 = ReviewEntity.builder()
+                .reviewId(2l)
+                .recipe(recipe)
+                .review_comment("comment1")
+                .build();
+
+        PageImpl<ReviewEntity> reviewList = new PageImpl<>(List.of(review, review2));
+        PageRequest pageable = PageRequest.of(0, 20, Sort.Direction.DESC,"createdDate");
+
+        given(reviewRepository.findAll(pageable)).willReturn(reviewList);
+
+        given(recipeRepository.findById(recipeId)).willReturn(Optional.of(recipe));
+        given(reviewRepository.findById(reviewId)).willReturn(Optional.of(review));
+        given(reviewRepository.findById(2l)).willReturn(Optional.of(review2));
+        //Page<ReviewListResponse> reviewListResponses = reviewService.findAllReviews(recipeId, pageable);
+    }*/
 
 }
 

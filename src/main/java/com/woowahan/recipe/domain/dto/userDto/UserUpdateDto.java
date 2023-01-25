@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponse {
-//    private Long id;
-    private String userName;
+public class UserUpdateDto {
+
+    // ID는 수정이 되지 않기 때문에 제외
     private String password;
     private String name;
     private String address;
@@ -23,10 +23,8 @@ public class UserResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd", timezone = "Asia/Seoul")
     private String birth;
 
-    public static UserResponse toUserResponse(UserEntity user) {
-        return UserResponse.builder()
-//                .id(user.getId())
-                .userName(user.getUserName())
+    public static UserUpdateDto toUserUpdateDto(UserEntity user) {
+        return UserUpdateDto.builder()
                 .password(user.getPassword())
                 .name(user.getName())
                 .address(user.getAddress())

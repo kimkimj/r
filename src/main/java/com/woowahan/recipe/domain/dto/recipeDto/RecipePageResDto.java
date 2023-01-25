@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Builder
 @Getter
 @AllArgsConstructor
@@ -15,5 +17,7 @@ public class RecipePageResDto {
     private String userName;
     private int recipe_view;
     private int recipe_like;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
 //    private String thumbnail_image_path; 썸네일 추가시
 }

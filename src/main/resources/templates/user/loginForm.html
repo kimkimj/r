@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: headerFragment"/>
+
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div class="container">
+    <h2>로그인 화면</h2>
+    <!--/*@thymesVar id="userLoginReqDto" type="com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto"*/-->
+    <form role="form" th:action="@{/login}" th:object="${userLoginReqDto}" method="post">
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${err}">글로벌 오류 메세지</p>
+        </div>
+
+        <div class="mb-3">
+            <label th:for="userName" th:text="#{label.userName}" class="form-label">아이디</label>
+            <input type="text" th:field="*{userName}" class="form-control" placeholder="아이디를 입력해주세요"
+                   th:errorclass="field-error">
+            <div class="field-error" th:errors="*{userName}">아이디 오류</div>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">비밀번호</label>
+            <input type="password" th:field="*{password}" class="form-control" id="exampleInputPassword1"
+                   placeholder="비밀번호를 입력해주세요"
+                   th:errorclass="field-error">
+            <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        </div>
+        <button type="submit" class="btn btn-primary">로그인</button>
+    </form>
+
+</div>
+<div th:replace="fragments/footer :: footerFragment"/>
+</body>
+</html>

@@ -366,7 +366,7 @@ class UserRestControllerTest {
             given(alarmService.getMyAlarms(eq(loginUser.getUserName()), any(Pageable.class))).willReturn(alarms);
 
             // then
-            mockMvc.perform(get("/api/v1/users/alarms")
+            mockMvc.perform(get("/api/v1/my/alarms")
                     .with(csrf()))
                     .andDo(print())
                     .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
@@ -381,7 +381,7 @@ class UserRestControllerTest {
             // given
             // when
             // then
-            mockMvc.perform(get("/api/v1/users/alarms")
+            mockMvc.perform(get("/api/v1/my/alarms")
                     .with(csrf()))
                     .andDo(print())
                     .andExpect(status().isUnauthorized());

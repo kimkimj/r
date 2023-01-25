@@ -92,7 +92,7 @@ class RecipeServiceTest {
 
     @Test
     void 레시피_마이피드_실패_유저가올린_게시물이없는경우() {
-        PageRequest pageRequest = PageRequest.of(0, 20, Sort.by("createdAt"));
+        PageRequest pageRequest = PageRequest.of(0, 20, Sort.by("createdDate"));
         String userName3 = "messi";
         AppException appException = assertThrows(AppException.class, () -> recipeService.myRecipes(pageRequest, userName3));
         assertThat(appException.getErrorCode()).isEqualTo(ErrorCode.RECIPE_NOT_FOUND);

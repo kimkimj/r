@@ -78,13 +78,13 @@ class RecipeRestControllerTest {
         //then
         mockMvc.perform(get("/api/v1/recipes")
                         .param("size", "20")
-                        .param("sort", "createdAt, DESC"))
+                        .param("sort", "createdDate, DESC"))
                 .andExpect(status().isOk());
         ArgumentCaptor<Pageable> pageableArgumentCaptor = ArgumentCaptor.forClass(Pageable.class);
         verify(recipeService).findAllRecipes(pageableArgumentCaptor.capture());
         PageRequest pageRequest = (PageRequest) pageableArgumentCaptor.getValue();
 
-        assertThat(pageRequest.withSort(Sort.by("createdAt", "DESC")).getSort()).isEqualTo(Sort.by("createdAt", "DESC"));
+        assertThat(pageRequest.withSort(Sort.by("createdDate", "DESC")).getSort()).isEqualTo(Sort.by("createdAt", "DESC"));
         assertThat(pageRequest.getPageSize()).isEqualTo(20);
     }
 
@@ -98,7 +98,7 @@ class RecipeRestControllerTest {
                 .recipe_title("hi")
                 .recipe_body("hello")
                 .userName("bjw")
-                .createdAt((LocalDateTime.now()))
+                .createdDate((LocalDateTime.now()))
                 .build());
         //then
         mockMvc.perform(post("/api/v1/recipes")
