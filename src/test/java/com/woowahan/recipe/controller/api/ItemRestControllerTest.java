@@ -172,7 +172,7 @@ class ItemRestControllerTest {
         /* then */
         assertEquals(0, pageable.getPageNumber());
         assertEquals(50, pageable.getPageSize());
-        assertEquals(Sort.by("createdDate", "desc"), pageable.withSort(Sort.by("createdAt", "desc")).getSort());
+        assertEquals(Sort.by("createdDate", "desc"), pageable.withSort(Sort.by("createdDate", "desc")).getSort());
     }
 
     @Test
