@@ -135,15 +135,27 @@ public class ReviewService {
        return new ReviewDeleteResponse(reviewId, "댓글 삭제 완료");
    }
 
-   // 리뷰 전체 조회
+   // 특정 레시피의 리뷰 전체 조회
     public Page<ReviewListResponse> findAllReviews(Long recipeId, Pageable pageable) {
         // 레시피가 존재하는지 확인
         RecipeEntity recipe = validateRecipe(recipeId);
 
         // 20개씩 만들어진 순으로 정렬
-        pageable = PageRequest.of(0, 20, Sort.by("createdDate"));
+        pageable = PageRequest.of(0, 20, Sort.by("createdDate").descending());
 
         Page<ReviewEntity> reviews = reviewRepository.findAllByRecipe(recipe, pageable);
+        return reviews.map(ReviewListResponse::toList);
+    }
+
+    // 특정 유저의 리뷰 전체 조회
+    public Page<ReviewListResponse> findAllReviewsByUser(String username, Pageable pageable) {
+        // 유저가 존재하는지 확인
+        UserEntity user = validateUser(username);
+
+        // 20개씩 만들어진 순으로 정렬
+        pageable = PageRequest.of(0, 20, Sort.by("createdDate").descending());
+
+        Page<ReviewEntity> reviews = reviewRepository.findAllByUser(user, pageable);
         return reviews.map(ReviewListResponse::toList);
     }
 

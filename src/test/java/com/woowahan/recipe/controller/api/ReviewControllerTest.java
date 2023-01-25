@@ -45,24 +45,45 @@ class ReviewControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Nested
+    @DisplayName("댓글 등록")
+    class findAll {
+        @Test
+        @WithMockUser
+        @DisplayName("레시피에 대한 댓글 전체 조회 성공")
+        void find_all_reviews_by_recipe() throws Exception {
+            mockMvc.perform(get("/api/v1/recipes/1/reviews")
+                            .param("page", "0")
+                            .param("size", "20")
+                            .param("sort", "createdAt, desc"))
+                    .andDo(print())
+                    .andExpect(status().isOk());
+            ArgumentCaptor<Pageable> pageableArgumentCaptor = ArgumentCaptor.forClass(Pageable.class);
 
-       @Test
-       @WithMockUser
-       @DisplayName("댓글 전체 조회 성공")
-       void find_all_reviews() throws Exception {
-           mockMvc.perform(get("/api/v1/recipes/1/reviews")
-                           .param("page", "0")
-                           .param("size", "20")
-                           .param("sort", "createdAt, desc"))
-                   .andDo(print())
-                   .andExpect(status().isOk());
-           ArgumentCaptor<Pageable> pageableArgumentCaptor=ArgumentCaptor.forClass(Pageable.class);
+            verify(reviewService).findAllReviews(any(), pageableArgumentCaptor.capture());
+            PageRequest pageRequest = (PageRequest) pageableArgumentCaptor.getValue();
 
-           verify(reviewService).findAllReviews(any(), pageableArgumentCaptor.capture());
-           PageRequest pageRequest=(PageRequest) pageableArgumentCaptor.getValue();
+            assertEquals(Sort.by("createdDate", "desc"), pageRequest.withSort(Sort.by("createdDate", "desc")).getSort());
+        }
 
-           assertEquals(Sort.by("createdAt", "desc"), pageRequest.withSort(Sort.by("createdAt", "desc")).getSort());
-       }
+        @Test
+        @WithMockUser
+        @DisplayName("특정 유저의 전체 조회 성공")
+        void find_all_reviews_by_user() throws Exception {
+            mockMvc.perform(get("/api/v1/recipes/reviews")
+                            .param("page", "0")
+                            .param("size", "20")
+                            .param("sort", "createdDate, desc"))
+                    .andDo(print())
+                    .andExpect(status().isOk());
+            ArgumentCaptor<Pageable> pageableArgumentCaptor = ArgumentCaptor.forClass(Pageable.class);
+
+            verify(reviewService).findAllReviewsByUser(any(), pageableArgumentCaptor.capture());
+            PageRequest pageRequest = (PageRequest) pageableArgumentCaptor.getValue();
+
+            assertEquals(Sort.by("createdDate", "desc"), pageRequest.withSort(Sort.by("createdDate", "desc")).getSort());
+        }
+    }
 
     @Nested
     @DisplayName("댓글 등록")
