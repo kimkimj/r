@@ -5,6 +5,7 @@ import com.woowahan.recipe.domain.dto.recipeDto.RecipePageResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateReqDto;
 import com.woowahan.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,6 +21,7 @@ import javax.validation.Valid;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/recipes")
+@Slf4j
 public class RecipeController {
 
     private final RecipeService recipeService;
@@ -31,16 +33,17 @@ public class RecipeController {
     }
 
     @PostMapping("/create")
-    public String create(@Valid RecipeCreateReqDto form, BindingResult result, Model model, Authentication authentication) {
+    public String create(@ModelAttribute RecipeCreateReqDto form, BindingResult result, Authentication authentication) {
         if (result.hasErrors()) {
+            result.getFieldErrors().stream().forEach(err ->
+                    log.info("field={} value={} msg={}", err.getField(), err.getRejectedValue(), err.getDefaultMessage()));
             return "recipe/createForm";
         }
-        model.addAttribute("recipeCreateReqDto", new RecipeCreateReqDto());
         recipeService.createRecipe(form, authentication.getName());
         return "redirect:/list";
     }
 
-    @GetMapping("/update")
+    @GetMapping("/update/[recipeId}")
     public String updateForm(Model model) {
         model.addAttribute("recipeUpdateReqDto", new RecipeUpdateReqDto());
         return "recipe/updateForm";

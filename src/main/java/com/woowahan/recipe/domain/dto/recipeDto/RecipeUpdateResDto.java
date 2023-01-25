@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 public class RecipeUpdateResDto {
-    private Long recipe_id;
-    private String recipe_title;
-    private String recipe_body;
+    private Long recipeId;
+    private String recipeTitle;
+    private String recipeBody;
     private String userName;
     private LocalDateTime localDateTime;
 }

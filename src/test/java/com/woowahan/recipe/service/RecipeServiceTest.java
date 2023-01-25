@@ -86,7 +86,7 @@ class RecipeServiceTest {
 
         when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
         RecipeFindResDto recipeFindResDto = recipeService.findRecipe(id);
-        assertThat(recipeFindResDto.getRecipe_title()).isEqualTo("유부초밥");
+        assertThat(recipeFindResDto.getRecipeTitle()).isEqualTo("유부초밥");
         assertThat(recipeFindResDto.getUserName()).isEqualTo("bjw");
     }
 
@@ -115,8 +115,8 @@ class RecipeServiceTest {
         RecipeUpdateReqDto recipeUpdateReqDto = new RecipeUpdateReqDto("수정제목", "수정내용");
         when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
         RecipeUpdateResDto recipeUpdateResDto = recipeService.updateRecipe(recipeUpdateReqDto, id, userName);
-        assertThat(recipeUpdateResDto.getRecipe_title()).isEqualTo("수정제목");
-        assertThat(recipeUpdateResDto.getRecipe_body()).isEqualTo("수정내용");
+        assertThat(recipeUpdateResDto.getRecipeTitle()).isEqualTo("수정제목");
+        assertThat(recipeUpdateResDto.getRecipeBody()).isEqualTo("수정내용");
         assertThat(recipeUpdateResDto.getUserName()).isEqualTo(userName);
     }
 

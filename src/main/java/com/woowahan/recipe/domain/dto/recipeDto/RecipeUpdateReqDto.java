@@ -14,6 +14,6 @@ import javax.validation.constraints.NotNull;
 @NotBlank
 public class RecipeUpdateReqDto {
 
-    private String recipe_title;
-    private String recipe_body;
+    private String recipeTitle;
+    private String recipeBody;
 }

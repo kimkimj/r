@@ -3,23 +3,24 @@
 <head th:replace="fragments/header :: headerFragment"/>
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-<h2>레시피 등록 화면</h2>
-<form role="form" th:action="@{/create}" th:object="${recipeCreateReqDto}" method="post">
-    <div class="form-group">
-        <label th:for="recipe_title">제목</label>
-        <input type="text" th:field="*{recipe_title}" class="form-control" placeholder="제목을 입력하세요"
-               th:class="${#fields.hasErrors('recipe_title')}? 'form-control fieldError' : 'form-control'">
-        <p th:if="${#fields.hasErrors('recipe_title')}" th:errors="*{recipe_title}">Incorrect date</p>
-    </div>
-    <div class="form-group">
-        <label th:for="recipe_body">내용</label>
-        <input type="text" th:field="*{recipe_body}" class="form-control" placeholder="내용을 입력하세요"
-               th:class="${#fields.hasErrors('recipe_body')}? 'form-control fieldError' : 'form-control'">
-        <p th:if="${#fields.hasErrors('recipe_body')}" th:errors="*{recipe_body}">Incorrect date</p>
-    </div>
-    <button type="submit" class="btn btn-primary">작성완료</button>
-</form>
-<br/>
+<div class="container">
+    <h2>레시피 등록 화면</h2>
+    <form role="form" th:action="@{/recipes/create}" th:object="${recipeCreateReqDto}" method="post">
+        <div class="form-group">
+            <label th:for="recipe_title">제목</label>
+            <input type="text" th:field="*{getRecipeTitle}" class="form-control" placeholder="제목을 입력하세요"
+                   th:class="${#fields.hasErrors('recipe_title')}? 'form-control fieldError' : 'form-control'">
+            <p th:if="${#fields.hasErrors('recipe_title')}" th:errors="*{getRecipeTitle}">Incorrect date</p>
+        </div>
+        <div class="form-group">
+            <label th:for="recipe_body">내용</label>
+            <input type="text" th:field="*{getRecipeBody}" class="form-control" placeholder="내용을 입력하세요"
+                   th:class="${#fields.hasErrors('recipe_body')}? 'form-control fieldError' : 'form-control'">
+            <p th:if="${#fields.hasErrors('recipe_body')}" th:errors="*{getRecipeBody}">Incorrect date</p>
+        </div>
+        <button type="submit" class="btn btn-primary">작성완료</button>
+    </form>
+</div>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>
 </html>
