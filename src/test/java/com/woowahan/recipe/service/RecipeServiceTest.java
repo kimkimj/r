@@ -69,11 +69,11 @@ class RecipeServiceTest {
     private final int view = 12;
     private final RecipeEntity recipeEntity = RecipeEntity.builder()
             .id(id)
-            .recipe_title(title)
-            .recipe_body(body)
+            .recipeTitle(title)
+            .recipeBody(body)
             .user(userEntity)
-            .recipe_like(like)
-            .recipe_view(view)
+            .recipeLike(like)
+            .recipeView(view)
             .build();
 
     @BeforeEach

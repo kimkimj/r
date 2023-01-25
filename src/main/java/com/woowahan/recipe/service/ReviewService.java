@@ -1,10 +1,7 @@
 package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.UserRole;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateResponse;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewDeleteResponse;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.*;
 import com.woowahan.recipe.domain.entity.AlarmType;
 import com.woowahan.recipe.domain.entity.RecipeEntity;
 import com.woowahan.recipe.domain.entity.ReviewEntity;
@@ -73,26 +70,24 @@ public class ReviewService {
             publisher.publishEvent(AlarmEvent.of(AlarmType.NEW_REVIEW_ON_RECIPE, user, recipe.getUser(), recipe));
         }
 
-        return new ReviewCreateResponse(review.getReviewId(), user.getName(), review.getReviewComment());
+        return new ReviewCreateResponse(recipeId, user.getUserName(), reviewCreateRequest.getComment());
     }
 
     // 리뷰 수정
-    public ReviewCreateResponse updateReview(Long recipeId, Long reviewId, ReviewCreateRequest reviewCreateRequest, String username) {
+    public ReviewUpdateResponse updateReview(Long recipeId, Long reviewId, ReviewCreateRequest reviewCreateRequest, String username) {
         // 유저가 존재하는지 확인
         UserEntity user = validateUser(username);
 
         // 레시피가 존재하는지 확인
         RecipeEntity recipe = validateRecipe(recipeId);
 
-
-        // FIXME: 2023-01-25 리뷰 작성자와 리뷰어가 동일해도 댓글은 작성할 수 있을 것 같습니다.
-        //리뷰 작성자와 유저가 동일한지 확인
-        if (!recipe.getUser().getUserName().equals(username)) {
-            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
-        }
-
         // 리뷰가 존재하는지 확인
         ReviewEntity review = validateReview(reviewId);
+
+        //리뷰 작성자와 유저가 동일한지 확인
+        if (!review.getUser().getUserName().equals(username)) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        }
 
         // 내용이 있는지 확인
         if (reviewCreateRequest.getComment().length() == 0) {
@@ -103,8 +98,7 @@ public class ReviewService {
 
         // 저장
         ReviewEntity savedReview = reviewRepository.save(review);
-
-        return new ReviewCreateResponse(savedReview.getReviewId(), user.getName(), savedReview.getReviewComment());
+        return new ReviewUpdateResponse(review.getReviewId(), "댓글이 수정되었습니다");
     }
 
     // 리뷰 단건 삭제

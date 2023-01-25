@@ -8,8 +8,8 @@ public class RecipeEntityFixture {
     public static RecipeEntity get(UserEntity user) {
         return RecipeEntity.builder()
                 .id(1L)
-                .recipe_title("testTitle")
-                .recipe_body("testBody")
+                .recipeTitle("testTitle")
+                .recipeBody("testBody")
                 .user(user)
                 .build();
 
