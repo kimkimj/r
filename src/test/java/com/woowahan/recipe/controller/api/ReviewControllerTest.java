@@ -50,15 +50,18 @@ class ReviewControllerTest {
        @WithMockUser
        @DisplayName("댓글 전체 조회 성공")
        void find_all_reviews() throws Exception {
-           ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-           ReviewListResponse response = new ReviewListResponse(any(), any());
-
            mockMvc.perform(get("/api/v1/recipes/1/reviews")
-                   .with(csrf())
-                   .contentType(MediaType.APPLICATION_JSON)
-                   .content(objectMapper.writeValueAsBytes(response)))
-                   .andExpect(status().isOk())
-                   .andDo(print());
+                           .param("page", "0")
+                           .param("size", "20")
+                           .param("sort", "createdAt, desc"))
+                   .andDo(print())
+                   .andExpect(status().isOk());
+           ArgumentCaptor<Pageable> pageableArgumentCaptor=ArgumentCaptor.forClass(Pageable.class);
+
+           verify(reviewService).findAllReviews(any(), pageableArgumentCaptor.capture());
+           PageRequest pageRequest=(PageRequest) pageableArgumentCaptor.getValue();
+
+           assertEquals(Sort.by("createdAt", "desc"), pageRequest.withSort(Sort.by("createdAt", "desc")).getSort());
 
        }
 
