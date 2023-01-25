@@ -65,8 +65,17 @@ public class UserRestController {
      * 마이페이지 - 회원정보 조회
      */
     @GetMapping("/my/{id}")
-    public Response<UserResponse> findMyPageMe(@PathVariable Long id) {
-        UserResponse userResponse = userService.findMyPageMe(id);
+    public Response<UserResponse> findMyPage(@PathVariable Long id) {
+        UserResponse userResponse = userService.findMyPage(id);
         return Response.success(userResponse);
+    }
+
+    /**
+     * 마이페이지 - 회원정보 수정
+     */
+    @PutMapping("/my/{id}")
+    public Response<UserUpdateDto> updateMyPage(@PathVariable Long id, @RequestBody UserUpdateDto userUpdateDto, Authentication authentication) {
+        UserUpdateDto updateMe = userService.updateMyPage(id, userUpdateDto, authentication.getName());
+        return Response.success(updateMe);
     }
 }
