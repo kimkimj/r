@@ -14,4 +14,12 @@ public class LikeEntityFixture {
                 .build();
         return likeEntity;
     }
+
+    public static LikeEntity createLike(UserEntity user, RecipeEntity recipe) {
+        LikeEntity likeEntity = LikeEntity.builder()
+                .user(user)
+                .recipe(recipe)
+                .build();
+        return likeEntity;
+    }
 }

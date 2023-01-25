@@ -38,6 +38,7 @@ dependencies {
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
+    testImplementation 'com.h2database:h2:2.1.214'
 
     // lombok
     compileOnly 'org.projectlombok:lombok'
@@ -48,6 +49,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     // https://mvnrepository.com/artifact/org.springframework.security/spring-security-test
     testImplementation group: 'org.springframework.security', name: 'spring-security-test'
+
 }
 
 tasks.named('test') {
