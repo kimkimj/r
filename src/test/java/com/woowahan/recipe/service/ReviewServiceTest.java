@@ -1,6 +1,7 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.reviewDto.*;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateResponse;
 import com.woowahan.recipe.domain.entity.RecipeEntity;
 import com.woowahan.recipe.domain.entity.ReviewEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
@@ -11,6 +12,7 @@ import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.ReviewRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import org.junit.jupiter.api.*;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Optional;
 
@@ -28,6 +30,7 @@ public class ReviewServiceTest {
     UserRepository userRepository = mock(UserRepository.class);
     RecipeRepository recipeRepository = mock(RecipeRepository.class);
     AlarmRepository alarmRepository = mock(AlarmRepository.class);
+    ApplicationEventPublisher publisher = mock(ApplicationEventPublisher.class);
 
     private final Long userId = 1L;
     private final String userName = "BaekJongWon";
@@ -75,7 +78,7 @@ public class ReviewServiceTest {
 
     @BeforeEach
     void beforEach() {
-        reviewService = new ReviewService(userRepository, recipeRepository, reviewRepository, alarmRepository);
+        reviewService = new ReviewService(userRepository, recipeRepository, reviewRepository, alarmRepository, publisher);
     }
 
     @Nested
