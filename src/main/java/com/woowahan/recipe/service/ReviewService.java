@@ -1,13 +1,17 @@
 package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.UserRole;
-import com.woowahan.recipe.domain.dto.itemDto.ItemListResDto;
-import com.woowahan.recipe.domain.dto.reviewDto.*;
-import com.woowahan.recipe.domain.entity.*;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewDeleteResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
+import com.woowahan.recipe.domain.entity.AlarmType;
+import com.woowahan.recipe.domain.entity.RecipeEntity;
+import com.woowahan.recipe.domain.entity.ReviewEntity;
+import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.event.AlarmEvent;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
-import com.woowahan.recipe.repository.AlarmRepository;
 import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.ReviewRepository;
 import com.woowahan.recipe.repository.UserRepository;
@@ -19,15 +23,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
     private final UserRepository userRepository;
     private final RecipeRepository recipeRepository;
     private final ReviewRepository reviewRepository;
-    private final AlarmRepository alarmRepository;
     private final ApplicationEventPublisher publisher;
 
     // User가 존재하는지 확인한다
@@ -69,7 +70,7 @@ public class ReviewService {
 
         // 리뷰 작성자와 레시피 작성자가 일치하지 않다면 알람 등록
         if(!user.equals(recipe.getUser())) {
-            publisher.publishEvent(AlarmEvent.of(AlarmType.NEW_REVIEW_ON_RECIPE, user, recipe.getUser()));
+            publisher.publishEvent(AlarmEvent.of(AlarmType.NEW_REVIEW_ON_RECIPE, user, recipe.getUser(), recipe));
         }
 
         return new ReviewCreateResponse(review.getReviewId(), user.getName(), review.getReview_comment());
@@ -83,6 +84,8 @@ public class ReviewService {
         // 레시피가 존재하는지 확인
         RecipeEntity recipe = validateRecipe(recipeId);
 
+
+        // FIXME: 2023-01-25 리뷰 작성자와 리뷰어가 동일해도 댓글은 작성할 수 있을 것 같습니다.
         //리뷰 작성자와 유저가 동일한지 확인
         if (!recipe.getUser().getUserName().equals(username)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
@@ -100,15 +103,6 @@ public class ReviewService {
 
         // 저장
         ReviewEntity savedReview = reviewRepository.save(review);
-
-        // 알람 울리도록 저장
-        AlarmEntity alarm = AlarmEntity.builder()
-                .alarmType(AlarmType.NEW_REVIEW_ON_RECIPE)
-                .fromUser(user.getId())
-                .targetUser(recipe.getUser())
-                .build();
-
-        alarmRepository.save(alarm);
 
         return new ReviewCreateResponse(savedReview.getReviewId(), user.getName(), savedReview.getReview_comment());
     }

@@ -1,9 +1,15 @@
 package com.woowahan.recipe.controller.api;
 
 import com.woowahan.recipe.domain.dto.Response;
+import com.woowahan.recipe.domain.dto.alarmDto.AlarmResponseDto;
 import com.woowahan.recipe.domain.dto.userDto.*;
+import com.woowahan.recipe.service.AlarmService;
 import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserRestController {
 
     private final UserService userService;
+    private final AlarmService alarmService;
 
     /**
      * 회원가입
@@ -59,6 +66,22 @@ public class UserRestController {
     public Response<UserDeleteDto> deleteUser(@PathVariable Long id, Authentication authentication) {
         UserDeleteDto userDeleteDto = userService.deleteUser(id, authentication.getName());
         return Response.success(userDeleteDto);
+    }
+
+    /**
+     * @author 이소영
+     * @param authentication
+     * @param pageable
+     * @date 2023-01-25
+     * @return Page<AlarmResponseDto>
+     * @description 현재 로그인한 회원의 알람 목록 조회 api
+    **/
+
+    @GetMapping("/my/alarms")
+    public Response<Page<AlarmResponseDto>> getAlarms(Authentication authentication, @PageableDefault(sort = "createdDate",direction = Sort.Direction.DESC) Pageable pageable) {
+        String userName = authentication.getName();
+        Page<AlarmResponseDto> alarms = alarmService.getMyAlarms(userName, pageable);
+        return Response.success(alarms);
     }
 
     /**

@@ -1,23 +1,19 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.reviewDto.*;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewDeleteResponse;
 import com.woowahan.recipe.domain.entity.RecipeEntity;
 import com.woowahan.recipe.domain.entity.ReviewEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
-import com.woowahan.recipe.repository.AlarmRepository;
 import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.ReviewRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,8 +30,8 @@ public class ReviewServiceTest {
     ReviewRepository reviewRepository = mock(ReviewRepository.class);
     UserRepository userRepository = mock(UserRepository.class);
     RecipeRepository recipeRepository = mock(RecipeRepository.class);
-    AlarmRepository alarmRepository = mock(AlarmRepository.class);
-    ApplicationEventPublisher publisher;
+    ApplicationEventPublisher publisher = mock(ApplicationEventPublisher.class);
+
 
     private final Long userId = 1L;
     private final String userName = "BaekJongWon";
@@ -83,7 +79,7 @@ public class ReviewServiceTest {
 
     @BeforeEach
     void beforEach() {
-        reviewService = new ReviewService(userRepository, recipeRepository, reviewRepository, alarmRepository, publisher);
+        reviewService = new ReviewService(userRepository, recipeRepository, reviewRepository, publisher);
     }
 
     @Nested
