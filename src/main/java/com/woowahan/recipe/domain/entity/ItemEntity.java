@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,9 +27,9 @@ public class ItemEntity extends BaseEntity{
     private String itemImagePath;
     @NotBlank
     private String itemName;
-    @NotBlank
+    @NotNull
     private Integer itemPrice;
-    @NotBlank
+    @NotNull
     private Integer itemStock;
 
     @ManyToOne
