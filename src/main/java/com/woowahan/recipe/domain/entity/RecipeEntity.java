@@ -54,12 +54,12 @@ public class RecipeEntity extends BaseEntity {
     }
 
     // 레시피 수정을위한 set메서드    * 이미지 추가 예정
-    public void setRecipeTitle(String recipe_title) {
-        this.recipeTitle = recipe_title;
+    public void setRecipeTitle(String recipeTitle) {
+        this.recipeTitle = recipeTitle;
     }
 
-    public void setRecipeBody(String recipe_body) {
-        this.recipeBody = recipe_body;
+    public void setRecipeBody(String recipeBody) {
+        this.recipeBody = recipeBody;
     }
 
     public RecipePageResDto toResponse() {
