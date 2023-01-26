@@ -10,10 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,13 +32,15 @@ public class ItemController {
     }
 
     @PostMapping("/create")
-    public String create(@Validated ItemCreateReqDto reqDto, BindingResult bindingResult, Model model, Authentication authentication) {
+//    public String create(@Valid ItemCreateReqDto reqDto, BindingResult bindingResult, Model model, Authentication authentication) {
+    //동작 test용
+    public String create(@Valid @ModelAttribute ItemCreateReqDto reqDto, BindingResult bindingResult, Model model) {
+
         if (bindingResult.hasErrors()) {
             log.info("bindingResult = {}", bindingResult);
             return "item/createForm";
         }
-        model.addAttribute("itemCreateReqDto", new ItemCreateReqDto());
-        itemService.createItem(reqDto, authentication.getName());
+        itemService.createItem(reqDto, "ididid");
         return "redirect:/";
     }
 
@@ -52,7 +53,7 @@ public class ItemController {
         return "item/updateForm";
     }
 
-    @PostMapping("{id}/update")
+    @PutMapping("{id}/update")
     public String update(@PathVariable Long id, @Validated ItemUpdateReqDto reqDto, BindingResult bindingResult, Model model, Authentication authentication) {
         if (bindingResult.hasErrors()) {
             log.info("bindingResult = {}", bindingResult);
