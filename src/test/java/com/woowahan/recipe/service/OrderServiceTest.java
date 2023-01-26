@@ -7,6 +7,7 @@ import com.woowahan.recipe.domain.entity.*;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.exception.NotEnoughStockException;
 import com.woowahan.recipe.repository.ItemRepository;
+import com.woowahan.recipe.repository.OrderCustomRepository;
 import com.woowahan.recipe.repository.OrderRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.when;
 class OrderServiceTest {
 
     OrderRepository orderRepository = Mockito.mock(OrderRepository.class);
+    OrderCustomRepository orderCustomRepository = Mockito.mock(OrderCustomRepository.class);
     ItemRepository itemRepository = Mockito.mock(ItemRepository.class);
     UserRepository userRepository = Mockito.mock(UserRepository.class);
     UserEntity user = Mockito.mock(UserEntity.class);
@@ -33,7 +35,7 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        orderService = new OrderService(orderRepository, userRepository, itemRepository);
+        orderService = new OrderService(orderRepository, orderCustomRepository, userRepository, itemRepository);
     }
 
     // given
