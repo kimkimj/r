@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <th:block th:fragment="bodyHeaderFragment">
     <header>
         <nav class="py-2 bg-light border-bottom">
             <div class="container d-flex flex-wrap">
                 <ul class="nav me-auto">
-                    <li class="nav-item"><a href="#" class="nav-link link-dark px-2 active" aria-current="page">Home</a></li>
+                    <li class="nav-item"><a href="/" class="nav-link link-dark px-2 active" aria-current="page">Home</a></li>
                     <li class="nav-item"><a href="#" class="nav-link link-dark px-2">상품</a></li>
                     <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Pricing</a></li>
                     <li class="nav-item"><a href="#" class="nav-link link-dark px-2">FAQs</a></li>
                     <li class="nav-item"><a href="/users/my/recipe" class="nav-link link-dark px-2">내 정보</a></li>
                 </ul>
                 <ul class="nav">
-                    <li class="nav-item"><a href="/login" class="nav-link link-dark px-2">Login</a></li>
-                    <li class="nav-item"><a href="/join" class="nav-link link-dark px-2">Sign up</a></li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()"><a href="/login" class="nav-link link-dark px-2">Login</a></li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()"><a href="/join" class="nav-link link-dark px-2">Sign up</a></li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/" class="nav-link link-dark px-2">LogOut</a></li>
                 </ul>
             </div>
         </nav>

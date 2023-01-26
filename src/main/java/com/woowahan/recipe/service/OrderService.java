@@ -4,9 +4,11 @@ import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderDeleteResDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderInfoResponse;
+import com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch;
 import com.woowahan.recipe.domain.entity.*;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.repository.ItemRepository;
+import com.woowahan.recipe.repository.OrderCustomRepository;
 import com.woowahan.recipe.repository.OrderRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.woowahan.recipe.exception.ErrorCode.*;
 
@@ -23,6 +28,7 @@ import static com.woowahan.recipe.exception.ErrorCode.*;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderCustomRepository orderCustomRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
@@ -64,12 +70,19 @@ public class OrderService {
         return pages.map(OrderInfoResponse::from);
     }
 
+    @Transactional(readOnly = true)
+    public List<OrderInfoResponse> findAllOrder2(String username, OrderSearch orderSearch) {
+        validateUser(username);
+        List<OrderEntity> orderList = orderCustomRepository.findAllByString(orderSearch);
+        return orderList.stream().map(OrderInfoResponse::from)
+                .collect(Collectors.toList());
+    }
+
     public OrderDeleteResDto cancelOrder(String username, Long orderId) {
         validateUser(username);
         OrderEntity order = validateOrder(orderId);
         order.cancel();
-        // FIXME: 2023/01/20 soft delete 구현하기
-        orderRepository.delete(order);
+//        orderRepository.delete(order);
         return OrderDeleteResDto.from(order);
     }
 
