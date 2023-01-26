@@ -1,45 +1,73 @@
 <!DOCTYPE html>
 
+<html lang ="ko">
 <html xmlns:th="http://www.thymeleaf.org">
-
+  <head>
+    <meta charset="UTF-8">
+    <title>주문 페이지</title>
+  </head>
   <head th:replace="fragments/header :: headerFragment"/>
 
   <body>
     <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-    <h2>주문서</h2>
-    <!--/*@thymesVar id="userJoinReqDto" type="com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto"*/-->
-    <form role="form" th:action="@{/place order}" th:object="${delivery}" method="post">
+    <h2>주문자 정보</h2>
+      <form role="form" th:action="@{/order}" th:object="${userEntity}" method="post">
+        <div class="form-group">
+          <div>이름: [[${userEntity.name}]]</div>
+        </div>
+        <div class="form-group">
+          <div>핸드폰 번호: [[${userEntity.phoneNum}]]</div>
+        </div>
+        <div class="form-group">
+          <div>이메일: [[${userEntity.email}]]</div>
+        </div>
+
+    <h2>배송지 정보</h2>
+        <div class="form-group">
+          <div>이름: [[${userEntity.name}]]</div>
+        </div>
       <div class="form-group">
-        <label th:for="name">이름</label>
-        <input type="text" th:field="*{address}" class="form-control" placeholder="이름을 입력하세요"
-               th:class="${#fields.hasErrors('userName')}? 'form-control fieldError' : 'form-control'">
-        <p th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">Incorrect date</p>
+        <div>핸드폰 번호: [[${userEntity.phoneNum}]]</div>
       </div>
       <div class="form-group">
-        <label th:for="password">비밀번호</label>
-        <input type="text" th:field="*{password}" class="form-control" placeholder="비밀번호를 입력하세요">
+        <div>주소: [[${userEntity.address}]]</div>
       </div>
+
+    <h2>주문 정보</h2>
       <div class="form-group">
-        <label th:for="name">이름</label>
-        <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요">
+        <div class="container">
+          <div class="card-columns">
+            <div class = "card-deck">
+                <div class="card">
+                  <img class="card-img-top" src="..." alt="Card image cap">
+                  <div class="card-body">
+                    <h5 class="card-title">[[${orderEntity.orderItems.get(0).getItem()}]]</h5>
+                  </div>
+                </div>
+                <div class="card" th:if="${orderEntity.orderItems.getSize() > 1}" >
+                  <img class="card-img-top" src="..." alt="Card image cap">
+                  <div class="card-body">
+                    <h5 class="card-title">[[${orderEntity.orderItems.get(1).getItem()}]]</h5>
+                  </div>
+                </div>
+                <div class="card" th:if="${orderEntity.orderItems.getSize() > 1}">
+                  <img class="card-img-top" src="..." alt="Card image cap">
+                  <div class="card-body">
+                    <h5 class="card-title">[[${orderEntity.orderItems.get(2).getItem()}]]</h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+      <span th:if="${orderEntity.orderItems.getSize() > 3}">외 "[[${orderEntity.orderItems.getSize()]] - 3"개 상품</span>
+      <br></br>
       <div class="form-group">
-        <label th:for="address">주소</label>
-        <input type="text" th:field="*{address}" class="form-control" placeholder="아이디를 입력하세요">
+        <div>결제 예정 금액: [[${orderItemEntity.getTotalPrice()}]]</div>
       </div>
-      <div class="form-group">
-        <label th:for="email">이메일</label>
-        <input type="text" th:field="*{email}" class="form-control" placeholder="이메일을 입력하세요">
-      </div>
-      <div class="form-group">
-        <label th:for="phoneNum">핸드폰 번호</label>
-        <input type="text" th:field="*{phoneNum}" class="form-control" placeholder="핸드폰 번호를 입력하세요">
-      </div>
-      <div class="form-group">
-        <label th:for="birth">출생연도</label>
-        <input type="text" th:field="*{birth}" class="form-control" placeholder="출생연도를 입력하세요">
-      </div>
-      <button type="submit" class="btn btn-primary">회원가입</button>
+
+      <button type="submit" class="btn btn-primary">결제하기</button>
     </form>
     <br/>
     <div th:replace="fragments/footer :: footerFragment"/>
