@@ -1,6 +1,7 @@
 package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateReqDto;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipePageResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateReqDto;
 import com.woowahan.recipe.service.RecipeService;
@@ -45,19 +46,32 @@ public class RecipeController {
     }
 
     @GetMapping("/update/{recipeId}")
-    public String updateForm(Model model) {
+    public String updateForm(Model model,@PathVariable Long recipeId) {
         model.addAttribute("recipeUpdateReqDto", new RecipeUpdateReqDto());
+        model.addAttribute("recipeId", recipeId);
         return "recipe/updateForm";
     }
 
-    @PutMapping("/update/{recipeId}")
-    public String update(@Valid RecipeUpdateReqDto form, BindingResult result, Model model, @PathVariable Long recipeId, Authentication authentication) {
+    @PostMapping("/update/{recipeId}")
+    public String update(@Valid @ModelAttribute RecipeUpdateReqDto form, BindingResult result, @PathVariable Long recipeId, Authentication authentication) {
         if (result.hasErrors()) {
             return "recipe/updateForm";
         }
-        model.addAttribute("recipeUpdateReqDto", new RecipeUpdateReqDto());
-        recipeService.updateRecipe(form, recipeId, authentication.getName());
-        return "redirect:/list";
+        System.out.println("1");
+        String userName = "messi"; // 인증 생기기 전까지 임시 사용
+//        String userName = authentication.getName();
+        recipeService.updateRecipe(form, recipeId, userName);
+        System.out.println("2");
+        return "redirect:/recipes/list";
+    }
+
+    @GetMapping("/{recipeId}")
+    public String findRecipe(@PathVariable Long recipeId, Model model) {
+        recipeService.updateView(recipeId);
+        RecipeFindResDto recipe = recipeService.findRecipe(recipeId);
+        model.addAttribute("recipeId", recipeId);
+        model.addAttribute("recipe", recipe);
+        return "recipe/recipeDetailList";
     }
 
     @GetMapping("/list")
