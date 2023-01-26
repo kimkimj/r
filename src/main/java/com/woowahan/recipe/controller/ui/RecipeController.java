@@ -38,8 +38,9 @@ public class RecipeController {
             return "recipe/createForm";
         }
         System.out.println(form.getRecipeBody() + form.getRecipeTitle());
-        recipeService.createRecipe(form,"messi"); // 인증 생기기 전까지 임시 사용
-//        recipeService.createRecipe(form, authentication.getName());
+        String userName = "messi"; // 인증 생기기 전까지 임시 사용
+//        String userName = authentication.getName();
+        recipeService.createRecipe(form, userName);
         return "redirect:/recipes/list";
     }
 
@@ -66,4 +67,12 @@ public class RecipeController {
         return "recipe/recipeList";
     }
 
+    @GetMapping("/my")
+    public String myRecipes(Authentication authentication, Model model, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        String userName = "messi"; // 인증 생기기 전까지 임시 사용
+//        String userName = authentication.getName();
+        Page<RecipePageResDto> myRecipes = recipeService.myRecipes(pageable, userName);
+        model.addAttribute("myRecipes", myRecipes);
+        return "recipe/myRecipes";
+    }
 }

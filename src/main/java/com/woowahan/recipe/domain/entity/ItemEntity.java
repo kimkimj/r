@@ -2,10 +2,7 @@ package com.woowahan.recipe.domain.entity;
 
 
 import com.woowahan.recipe.exception.NotEnoughStockException;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -14,6 +11,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Builder
 @Entity
 public class ItemEntity extends BaseEntity{

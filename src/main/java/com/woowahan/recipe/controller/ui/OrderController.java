@@ -1,6 +1,10 @@
 package com.woowahan.recipe.controller.ui;
 
+import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
+import com.woowahan.recipe.domain.entity.DeliveryEntity;
+import com.woowahan.recipe.domain.entity.OrderItemEntity;
+import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,23 +18,16 @@ import javax.validation.Valid;
 @Controller
 @RequiredArgsConstructor
 public class OrderController {
-    /*
-    private final UserService userService;
 
-    @GetMapping("/join")
-    public String joinForm(Model model) {
-        model.addAttribute("userJoinReqDto", new UserJoinReqDto());
-        return "user/joinForm";
+
+    @GetMapping("/placeOrder")
+    public String orderForm(Model model) {
+        model.addAttribute("deliveryEntity", new DeliveryEntity());
+        model.addAttribute("userEntity", new UserEntity());
+        model.addAttribute("orderItemEntity", new OrderItemEntity());
+        return "order/orderForm";
     }
 
-    @PostMapping("/join")
-    public String join(@Valid UserJoinReqDto form, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            return "user/joinForm";
-        }
-        model.addAttribute("userJoinReqDto", new UserJoinReqDto());
-        userService.join(form);
-        return "redirect:/";
-    }*/
+
 
 }
