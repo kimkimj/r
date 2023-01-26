@@ -43,7 +43,7 @@ public class RecipeController {
         return "redirect:/list";
     }
 
-    @GetMapping("/update/[recipeId}")
+    @GetMapping("/update/{recipeId}")
     public String updateForm(Model model) {
         model.addAttribute("recipeUpdateReqDto", new RecipeUpdateReqDto());
         return "recipe/updateForm";
