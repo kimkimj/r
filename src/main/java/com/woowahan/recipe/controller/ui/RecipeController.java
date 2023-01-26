@@ -33,14 +33,14 @@ public class RecipeController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute RecipeCreateReqDto form, BindingResult result, Authentication authentication) {
+    public String create(@Valid @ModelAttribute RecipeCreateReqDto form, BindingResult result, Authentication authentication) {
         if (result.hasErrors()) {
-            result.getFieldErrors().stream().forEach(err ->
-                    log.info("field={} value={} msg={}", err.getField(), err.getRejectedValue(), err.getDefaultMessage()));
             return "recipe/createForm";
         }
-        recipeService.createRecipe(form, authentication.getName());
-        return "redirect:/list";
+        System.out.println(form.getRecipeBody() + form.getRecipeTitle());
+        recipeService.createRecipe(form,"messi"); // 인증 생기기 전까지 임시 사용
+//        recipeService.createRecipe(form, authentication.getName());
+        return "redirect:/recipes/list";
     }
 
     @GetMapping("/update/{recipeId}")
