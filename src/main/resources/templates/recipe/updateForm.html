@@ -4,7 +4,8 @@
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 <h2>레시피 수정 화면</h2>
-<form role="form" th:action="@{/update}" th:object="${recipeUpdateReqDto}" method="put">
+
+<form role="form" th:action="@{/recipes/update/{recipeId} (recipeId=${recipeId})}" th:object="${recipeUpdateReqDto}" method="post">
     <div class="form-group">
         <label th:for="recipeTitle">제목</label>
         <input type="text" th:field="*{recipeTitle}" class="form-control" placeholder="제목을 입력하세요"
