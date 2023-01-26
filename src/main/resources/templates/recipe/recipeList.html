@@ -31,14 +31,12 @@
             <td th:text="${recipe.getRecipeLike}"/>
             <td th:text="${recipe.getUserName()}"/>
             <td th:text="${recipe.createdDate}"/>
-            <!--
             <td>
-                <button type="button" th:onclick="|location.href='@{/recipe/{Id}(Id=${recipe.id})}'|"
+                <button type="button" th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|"
                         style="width: auto">
-                    세부 정보 보기 아직 미구현
+                    레시피 보기
                 </button>
             </td>
-            -->
         </tr>
         </tbody>
     </table>
