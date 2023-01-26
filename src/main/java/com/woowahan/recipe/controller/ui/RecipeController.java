@@ -1,6 +1,7 @@
 package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateReqDto;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipePageResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateReqDto;
 import com.woowahan.recipe.service.RecipeService;
@@ -58,6 +59,14 @@ public class RecipeController {
         model.addAttribute("recipeUpdateReqDto", new RecipeUpdateReqDto());
         recipeService.updateRecipe(form, recipeId, authentication.getName());
         return "redirect:/list";
+    }
+
+    @GetMapping("/{recipeId}")
+    public String findRecipe(@PathVariable Long recipeId, Model model) {
+        recipeService.updateView(recipeId);
+        RecipeFindResDto recipe = recipeService.findRecipe(recipeId);
+        model.addAttribute("recipe", recipe);
+        return "recipe/recipeDetailList";
     }
 
     @GetMapping("/list")
