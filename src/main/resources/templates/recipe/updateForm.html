@@ -6,16 +6,16 @@
 <h2>레시피 수정 화면</h2>
 <form role="form" th:action="@{/update}" th:object="${recipeUpdateReqDto}" method="put">
     <div class="form-group">
-        <label th:for="recipe_title">제목</label>
-        <input type="text" th:field="*{getRecipeTitle}" class="form-control" placeholder="제목을 입력하세요"
-               th:class="${#fields.hasErrors('recipe_title')}? 'form-control fieldError' : 'form-control'">
-        <p th:if="${#fields.hasErrors('recipe_title')}" th:errors="*{getRecipeTitle}">Incorrect date</p>
+        <label th:for="recipeTitle">제목</label>
+        <input type="text" th:field="*{recipeTitle}" class="form-control" placeholder="제목을 입력하세요"
+               th:class="${#fields.hasErrors('recipeTitle')}? 'form-control fieldError' : 'form-control'">
+        <p th:if="${#fields.hasErrors('recipeTitle')}" th:errors="*{recipeTitle}">Incorrect date</p>
     </div>
     <div class="form-group">
-        <label th:for="recipe_body">내용</label>
-        <input type="text" th:field="*{getRecipeBody}" class="form-control" placeholder="내용을 입력하세요"
-               th:class="${#fields.hasErrors('recipe_body')}? 'form-control fieldError' : 'form-control'">
-        <p th:if="${#fields.hasErrors('recipe_body')}" th:errors="*{getRecipeBody}">Incorrect date</p>
+        <label th:for="recipeBody">내용</label>
+        <input type="text" th:field="*{recipeBody}" class="form-control" placeholder="내용을 입력하세요"
+               th:class="${#fields.hasErrors('recipeBody')}? 'form-control fieldError' : 'form-control'">
+        <p th:if="${#fields.hasErrors('recipeBody')}" th:errors="*{recipeBody}">Incorrect date</p>
     </div>
     <button type="submit" class="btn btn-primary">수정완료</button>
 </form>

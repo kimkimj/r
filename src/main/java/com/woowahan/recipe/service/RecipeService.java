@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -71,9 +72,9 @@ public class RecipeService {
      * @description 레시피 마이피드
      **/
     public Page<RecipePageResDto> myRecipes(Pageable pageable, String userName) {
-        recipeRepository.findByUserName(userName).orElseThrow(
-                () -> new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage()));
-        Page<RecipeEntity> recipeEntities = recipeRepository.findRecipeEntitiesByUserName(userName, pageable);
+        UserEntity user = validateUserName(userName);
+        validateRecipe(user);
+        Page<RecipeEntity> recipeEntities = recipeRepository.findRecipeEntitiesByUser(user, pageable);
         return new PageImpl<>(recipeEntities.stream()
                 .map(RecipeEntity::toResponse)
                 .collect(Collectors.toList()));
@@ -222,6 +223,18 @@ public class RecipeService {
     **/
     private RecipeEntity validateRecipe(Long id) {
         return recipeRepository.findById(id).orElseThrow(() -> {
+            throw new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage());
+        });
+    }
+    /**
+     * @author 김응준
+     * @param user
+     * @date 2023-01-26
+     * @return List<RecipeEntity>
+     * @description UserEntity user를 이용하여 현재 조회하고자 하는 레시피가 존재하는지 검증 (공통로직)
+     **/
+    private List<RecipeEntity> validateRecipe(UserEntity user) {
+        return recipeRepository.findByUser(user).orElseThrow(() -> {
             throw new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage());
         });
     }

@@ -1,6 +1,7 @@
 package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateReqDto;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipePageResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateReqDto;
 import com.woowahan.recipe.service.RecipeService;
@@ -33,17 +34,18 @@ public class RecipeController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute RecipeCreateReqDto form, BindingResult result, Authentication authentication) {
+    public String create(@Valid @ModelAttribute RecipeCreateReqDto form, BindingResult result, Authentication authentication) {
         if (result.hasErrors()) {
-            result.getFieldErrors().stream().forEach(err ->
-                    log.info("field={} value={} msg={}", err.getField(), err.getRejectedValue(), err.getDefaultMessage()));
             return "recipe/createForm";
         }
-        recipeService.createRecipe(form, authentication.getName());
-        return "redirect:/list";
+        System.out.println(form.getRecipeBody() + form.getRecipeTitle());
+        String userName = "messi"; // 인증 생기기 전까지 임시 사용
+//        String userName = authentication.getName();
+        recipeService.createRecipe(form, userName);
+        return "redirect:/recipes/list";
     }
 
-    @GetMapping("/update/[recipeId}")
+    @GetMapping("/update/{recipeId}")
     public String updateForm(Model model) {
         model.addAttribute("recipeUpdateReqDto", new RecipeUpdateReqDto());
         return "recipe/updateForm";
@@ -59,6 +61,14 @@ public class RecipeController {
         return "redirect:/list";
     }
 
+    @GetMapping("/{recipeId}")
+    public String findRecipe(@PathVariable Long recipeId, Model model) {
+        recipeService.updateView(recipeId);
+        RecipeFindResDto recipe = recipeService.findRecipe(recipeId);
+        model.addAttribute("recipe", recipe);
+        return "recipe/recipeDetailList";
+    }
+
     @GetMapping("/list")
     public String list(Model model, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<RecipePageResDto> allRecipes = recipeService.findAllRecipes(pageable);
@@ -66,4 +76,12 @@ public class RecipeController {
         return "recipe/recipeList";
     }
 
+    @GetMapping("/my")
+    public String myRecipes(Authentication authentication, Model model, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        String userName = "messi"; // 인증 생기기 전까지 임시 사용
+//        String userName = authentication.getName();
+        Page<RecipePageResDto> myRecipes = recipeService.myRecipes(pageable, userName);
+        model.addAttribute("myRecipes", myRecipes);
+        return "recipe/myRecipes";
+    }
 }

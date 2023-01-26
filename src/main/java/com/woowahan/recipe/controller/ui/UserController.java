@@ -2,15 +2,18 @@ package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
+import com.woowahan.recipe.security.auth.PrincipalDetails;
 import com.woowahan.recipe.service.OrderService;
 import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
@@ -23,6 +26,7 @@ public class UserController {
     private final UserService userService;
     private final OrderService orderService;
 
+    // 회원가입
     @GetMapping("/join")
     public String joinForm(Model model) {
         model.addAttribute("userJoinReqDto", new UserJoinReqDto());
@@ -39,6 +43,7 @@ public class UserController {
         return "redirect:/login";
     }
 
+    // 로그인
     @GetMapping("/login")
     public String loginForm(Model model) {
         model.addAttribute("userLoginReqDto", new UserLoginReqDto());
@@ -57,13 +62,20 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/users/my/update")
-    public String updateForm() {
-        return "user/updateForm";
+    // 회원 정보 수정
+    @GetMapping("/users/my/update/{id}")
+    public String updateForm(@PathVariable Long id, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        // 로그인이 되어있는 유저의 id와 수정페이지에 접속하는 id가 같아야 함
+        if (principalDetails.getUser().getId() == id) {
+            model.addAttribute("user", userService.findUser(id));
+            return "user/updateForm";
+        }
+        return "redirect:/";
     }
 
-    @PostMapping("/users/my/update")
-    public String update() {
+    @PostMapping("/users/my/update/{id}")
+    public String update(/*@PathVariable Long id, UserEntity user*/) {
+//        userService.updateUser()
         return "user/updateForm";
     }
 

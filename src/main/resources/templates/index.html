@@ -5,6 +5,7 @@
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
     <h2>홈</h2>
+    <button type="button" th:onclick="|location.href='@{/recipes/list}'|">레시피</button>
     <br/>
     <div th:replace="fragments/footer :: footerFragment"/>
 </div>
