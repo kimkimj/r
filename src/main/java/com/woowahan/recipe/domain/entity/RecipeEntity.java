@@ -71,7 +71,7 @@ public class RecipeEntity extends BaseEntity {
                 .recipeLike(this.recipeLike)
                 .createdDate(this.getCreatedDate())
                 .lastModifiedDate(this.getLastModifiedDate())
-//                .thumbnailImagePath(this.recipe_image_path) 썸네일 추가시
+//                .thumbnailImagePath(this.recipeImagePath) 썸네일 추가시
                 .build();
     }
 }
