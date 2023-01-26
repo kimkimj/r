@@ -5,6 +5,7 @@ import com.woowahan.recipe.exception.AppException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import static com.woowahan.recipe.exception.ErrorCode.NOT_ENOUGH_STOCK;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class OrderEntity extends BaseEntity{
 
