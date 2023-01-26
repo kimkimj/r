@@ -6,23 +6,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartEntity extends BaseEntity {
+public class CartItemEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cart_id")
+    @Column(name = "cart_item_id")
     private Long id;
 
-    @OneToOne(mappedBy = "cart_entity")
-    private UserEntity user;
+    private Long cartItemCnt;
+    private Long cartItemPrice;
 
-    @OneToMany(mappedBy = "cart_entity")
-    private List<CartItemEntity> cartItems;
+    @ManyToOne
+    @JoinColumn(name = "item_id")
+    private ItemEntity item;
+
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private CartEntity cart;
+
 }
