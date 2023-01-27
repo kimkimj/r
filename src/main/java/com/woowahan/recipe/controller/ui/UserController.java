@@ -79,11 +79,6 @@ public class UserController {
         return "user/updateForm";
     }
 
-    @GetMapping("/users/my/recipe")
-    public String myRecipe() {
-        return "user/my/myRecipe";
-    }
-
     @GetMapping("/users/my/orders")
     public String myOrders() {
         return "user/my/myOrder";
