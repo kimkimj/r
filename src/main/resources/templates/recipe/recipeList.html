@@ -21,6 +21,7 @@
             <th style="width: 50px">좋아요</th>
             <th style="width: 150px">작성자</th>
             <th style="width: 200px">작성일</th>
+            <th style="width: 200px">수정일</th>
         </tr>
         </thead>
         <tbody>
@@ -31,6 +32,7 @@
             <td th:text="${recipe.getRecipeLike}"/>
             <td th:text="${recipe.getUserName()}"/>
             <td th:text="${recipe.createdDate}"/>
+            <td th:text="${recipe.lastModifiedDate}"/>
             <td>
                 <button type="button" th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|"
                         style="width: auto">
