@@ -55,6 +55,23 @@ public class CartService {
         cartItemRepository.save(cartItem);
     }
 
+    public void updateCartItem(Long itemId, Integer itemCnt, String userName) {
+        UserEntity user = validateUser(userName);
+
+        ItemEntity item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage()));
+
+        if(item.getItemStock() < itemCnt) {
+            throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
+        }
+
+        CartEntity cart = validateCart(user);
+
+        CartItemEntity cartItem = cartItemRepository.findByIdAndCart(itemId, cart)
+                .orElseThrow(() -> new AppException(ErrorCode.CART_ITEM_NOT_FOUND, ErrorCode.CART_ITEM_NOT_FOUND.getMessage()));
+        cartItem.updateCartItemCnt(itemCnt);
+    }
+
     private UserEntity validateUser(String userName) {
         return userRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));

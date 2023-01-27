@@ -38,4 +38,7 @@ public class CartItemEntity extends BaseEntity {
                 .build();
     }
 
+    public void updateCartItemCnt(Integer itemCnt) {
+        this.cartItemCnt = itemCnt;
+    }
 }

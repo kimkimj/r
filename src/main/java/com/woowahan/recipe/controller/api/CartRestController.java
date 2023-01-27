@@ -34,4 +34,12 @@ public class CartRestController {
         cartService.createCartItem(cartItemCreateReq, userName);
         return Response.success("상품이 장바구니에 담겼습니다.");
     }
+
+    @PutMapping("/{itemId}")
+    public Response<String> updateCartItem (@PathVariable Long itemId, Integer itemCnt, Authentication authentication) {
+        String userName = authentication.getName();
+        cartService.updateCartItem(itemId, itemCnt, userName);
+        return Response.success("수량이 변경되었습니다.");
+    }
+
 }
