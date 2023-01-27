@@ -46,25 +46,36 @@ public class RecipeController {
     }
 
     @GetMapping("/update/{recipeId}")
-    public String updateForm(Model model) {
+    public String updateForm(Model model,@PathVariable Long recipeId) {
         model.addAttribute("recipeUpdateReqDto", new RecipeUpdateReqDto());
+        model.addAttribute("recipeId", recipeId);
         return "recipe/updateForm";
     }
 
-    @PutMapping("/update/{recipeId}")
-    public String update(@Valid RecipeUpdateReqDto form, BindingResult result, Model model, @PathVariable Long recipeId, Authentication authentication) {
+    @PostMapping("/update/{recipeId}")
+    public String update(@Valid @ModelAttribute RecipeUpdateReqDto form, BindingResult result, @PathVariable Long recipeId, Authentication authentication) {
         if (result.hasErrors()) {
             return "recipe/updateForm";
         }
-        model.addAttribute("recipeUpdateReqDto", new RecipeUpdateReqDto());
-        recipeService.updateRecipe(form, recipeId, authentication.getName());
-        return "redirect:/list";
+        String userName = "messi"; // 인증 생기기 전까지 임시 사용
+//        String userName = authentication.getName();
+        recipeService.updateRecipe(form, recipeId, userName);
+        return "redirect:/recipes/list";
+    }
+
+    @GetMapping("/delete/{recipeId}")
+    public String delete(@PathVariable Long recipeId, Authentication authentication) {
+        String userName = "messi"; // 인증 생기기 전까지 임시 사용
+//        String userName = authentication.getName();
+        recipeService.deleteRecipe(recipeId, userName);
+        return "redirect:/recipes/list";
     }
 
     @GetMapping("/{recipeId}")
     public String findRecipe(@PathVariable Long recipeId, Model model) {
         recipeService.updateView(recipeId);
         RecipeFindResDto recipe = recipeService.findRecipe(recipeId);
+        model.addAttribute("recipeId", recipeId);
         model.addAttribute("recipe", recipe);
         return "recipe/recipeDetailList";
     }
@@ -82,6 +93,6 @@ public class RecipeController {
 //        String userName = authentication.getName();
         Page<RecipePageResDto> myRecipes = recipeService.myRecipes(pageable, userName);
         model.addAttribute("myRecipes", myRecipes);
-        return "recipe/myRecipes";
+        return "user/my/myRecipes";
     }
 }
