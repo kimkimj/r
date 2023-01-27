@@ -5,6 +5,7 @@ import com.woowahan.recipe.domain.dto.cartDto.CartInfoResponse;
 import com.woowahan.recipe.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -19,12 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CartRestController {
 
-    private final CartService cartSertvice;
+    private final CartService cartService;
 
-    @GetMapping("/list")
-    public Response<CartInfoResponse> findCartList(@PageableDefault(sort = "id", direction = Sort.Direction.DESC)Pageable pageable, Authentication authentication) {
+    @GetMapping
+    public Response<Page<CartInfoResponse>> findCartList(@PageableDefault(sort = "id", direction = Sort.Direction.DESC)Pageable pageable, Authentication authentication) {
         String userName = authentication.getName();
-        cartSertvice.findCartList(pageable, userName);
-        return Response.success(null);
+        Page<CartInfoResponse> cartInfoResponsePage = cartService.findCartItemList(pageable, userName);
+        return Response.success(cartInfoResponsePage);
     }
 }
