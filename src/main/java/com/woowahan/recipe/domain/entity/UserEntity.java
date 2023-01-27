@@ -79,4 +79,8 @@ public class UserEntity extends BaseEntity {
         this.phoneNum = phoneNum;
         this.birth = birth;
     }
+
+    public void updateToSeller(UserEntity user) {
+        user.userRole = UserRole.SELLER;
+    }
 }
