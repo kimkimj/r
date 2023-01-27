@@ -87,6 +87,6 @@ public class RecipeController {
 //        String userName = authentication.getName();
         Page<RecipePageResDto> myRecipes = recipeService.myRecipes(pageable, userName);
         model.addAttribute("myRecipes", myRecipes);
-        return "recipe/myRecipes";
+        return "user/my/myRecipes";
     }
 }
