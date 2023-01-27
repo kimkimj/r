@@ -1,0 +1,18 @@
+
+.textbox{
+    width: 65%;
+    padding: 30px;
+    text-align: center;
+    background-color: #ffb347;
+    font-size: 18px;
+}
+
+.progress{
+    width: 65%;
+    height: 30px;
+}
+
+.progress-bar{
+    background-color: #fd7e14;
+
+}

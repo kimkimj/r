@@ -9,12 +9,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/recipes")
-public class ReviewController {
+public class ReviewRestController {
     private final ReviewService reviewService;
 
     @GetMapping("/{recipeId}/reviews")

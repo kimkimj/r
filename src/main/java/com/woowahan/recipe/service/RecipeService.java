@@ -124,7 +124,7 @@ public class RecipeService {
      * @description 레시피 삭제
     **/
     public RecipeResponse deleteRecipe(Long recipeId, String userName) {
-        RecipeEntity recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage()));
+        RecipeEntity recipe = validateRecipe(recipeId);
         validateWriterAndUserName(userName, recipe); // 동일 유저 검증
         recipeRepository.deleteById(recipeId);
 
