@@ -29,7 +29,4 @@ public class OrderController {
         model.addAttribute("orderItemEntity", new OrderItemEntity());
         return "order/orderForm";
     }
-
-
-
 }
