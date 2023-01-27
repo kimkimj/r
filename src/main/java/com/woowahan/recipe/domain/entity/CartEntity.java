@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -20,6 +21,7 @@ public class CartEntity extends BaseEntity {
     @Column(name = "cart_id")
     private Long id;
 
+    @NotBlank
     @OneToOne(mappedBy = "cart_entity")
     private UserEntity user;
 
