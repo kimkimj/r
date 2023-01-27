@@ -19,8 +19,8 @@ public class CartItemEntity extends BaseEntity {
     @Column(name = "cart_item_id")
     private Long id;
 
-    private Long cartItemCnt;
-    private Long cartItemPrice;
+    private Integer cartItemCnt;
+    private Integer cartItemPrice;
 
     @ManyToOne
     @JoinColumn(name = "item_id")
