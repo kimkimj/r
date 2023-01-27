@@ -3,7 +3,11 @@ package com.woowahan.recipe.domain.dto.orderDto;
 import com.woowahan.recipe.domain.entity.OrderEntity;
 import com.woowahan.recipe.domain.OrderStatus;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class OrderInfoResponse {
 
     private String orderNum;
