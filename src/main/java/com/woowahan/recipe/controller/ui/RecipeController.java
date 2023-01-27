@@ -57,11 +57,17 @@ public class RecipeController {
         if (result.hasErrors()) {
             return "recipe/updateForm";
         }
-        System.out.println("1");
         String userName = "messi"; // 인증 생기기 전까지 임시 사용
 //        String userName = authentication.getName();
         recipeService.updateRecipe(form, recipeId, userName);
-        System.out.println("2");
+        return "redirect:/recipes/list";
+    }
+
+    @GetMapping("/delete/{recipeId}")
+    public String delete(@PathVariable Long recipeId, Authentication authentication) {
+        String userName = "messi"; // 인증 생기기 전까지 임시 사용
+//        String userName = authentication.getName();
+        recipeService.deleteRecipe(recipeId, userName);
         return "redirect:/recipes/list";
     }
 
