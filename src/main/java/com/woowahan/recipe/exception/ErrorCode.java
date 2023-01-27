@@ -20,7 +20,8 @@ public enum ErrorCode {
     ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "재료가 존재하지 않습니다"),
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "주문이 존재하지 않습니다."),
     EMPTY_CONTENT(HttpStatus.BAD_REQUEST, "내용이 없습니다."),
-    NOT_ENOUGH_STOCK(HttpStatus.BAD_REQUEST, "재고 수량이 없습니다.");
+    NOT_ENOUGH_STOCK(HttpStatus.BAD_REQUEST, "재고 수량이 없습니다."),
+    CART_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니에 담긴 상품이 없습니다.");
 
     private HttpStatus httpStatus;
     private String message;
