@@ -1,7 +1,10 @@
 package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.dto.cartDto.CartInfoResponse;
+import com.woowahan.recipe.domain.dto.cartDto.CartItemCreateReq;
 import com.woowahan.recipe.domain.entity.CartEntity;
+import com.woowahan.recipe.domain.entity.CartItemEntity;
+import com.woowahan.recipe.domain.entity.ItemEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
@@ -36,6 +39,21 @@ public class CartService {
         return cartItemPage;
     }
 
+    public void createCartItem(CartItemCreateReq cartItemCreateReq, String userName) {
+        UserEntity user = validateUser(userName);
+
+        ItemEntity item = itemRepository.findById(cartItemCreateReq.getItemId())
+                .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage()));
+
+        if(item.getItemStock() <= 0) {
+            throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
+        }
+
+        CartEntity cart = validateCart(user);
+        CartItemEntity cartItem = CartItemEntity.createCartItem(cartItemCreateReq.getItemCnt(), item, cart);
+
+        cartItemRepository.save(cartItem);
+    }
 
     private UserEntity validateUser(String userName) {
         return userRepository.findByUserName(userName)

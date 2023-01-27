@@ -20,7 +20,6 @@ public class CartItemEntity extends BaseEntity {
     private Long id;
 
     private Integer cartItemCnt;
-    private Integer cartItemPrice;
 
     @ManyToOne
     @JoinColumn(name = "item_id")
@@ -29,5 +28,14 @@ public class CartItemEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "cart_id")
     private CartEntity cart;
+
+
+    public static CartItemEntity createCartItem(Integer itemCnt, ItemEntity item, CartEntity cart) {
+        return CartItemEntity.builder()
+                .cartItemCnt(itemCnt)
+                .item(item)
+                .cart(cart)
+                .build();
+    }
 
 }
