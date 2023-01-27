@@ -65,11 +65,15 @@ public class CartService {
             throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
         }
 
-        CartEntity cart = validateCart(user);
-
-        CartItemEntity cartItem = cartItemRepository.findByIdAndCart(itemId, cart)
-                .orElseThrow(() -> new AppException(ErrorCode.CART_ITEM_NOT_FOUND, ErrorCode.CART_ITEM_NOT_FOUND.getMessage()));
+        CartItemEntity cartItem = validateCartItem(itemId);
         cartItem.updateCartItemCnt(itemCnt);
+    }
+
+    public void deleteCartItem(Long itemId, String userName) {
+        UserEntity user = validateUser(userName);
+
+        CartItemEntity cartItem = validateCartItem(itemId);
+        cartItemRepository.delete(cartItem);
     }
 
     private UserEntity validateUser(String userName) {
@@ -80,5 +84,10 @@ public class CartService {
     private CartEntity validateCart(UserEntity user) {
         return cartRepository.findByUser(user)
                 .orElse(cartRepository.save(CartEntity.builder().user(user).build()));
+    }
+
+    private CartItemEntity validateCartItem(Long itemId) {
+        return cartItemRepository.findById(itemId)
+                .orElseThrow(() -> new AppException(ErrorCode.CART_ITEM_NOT_FOUND, ErrorCode.CART_ITEM_NOT_FOUND.getMessage()));
     }
 }

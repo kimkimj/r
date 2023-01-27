@@ -42,4 +42,10 @@ public class CartRestController {
         return Response.success("수량이 변경되었습니다.");
     }
 
+    @DeleteMapping("/{itemId}")
+    public Response<String> deleteCartItem(@PathVariable Long itemId, Authentication authentication) {
+        String userName = authentication.getName();
+        cartService.deleteCartItem(itemId, userName);
+        return Response.success("장바구니에서 아이템에서 삭제되었습니다.");
+    }
 }
