@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: headerFragment"/>
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<button right; type="button" class="btn btn-primary"
+        onclick="location.href='createForm.html'"
+        th:onclick="|location.href='@{/items/create}'|">상품 등록</button>
+<div class="card" style="width: 18rem;">
+  <img src="..." class="card-img-top" alt="...">
+</div>
+<div class="card-body">
+  <a href="#" class="btn btn-primary">수량버튼</a>
+  <p class="card-text">52340원</p>
+  <h5 class="card-title">사과</h5>
+</div>
+
+<br/>
+<div th:replace="fragments/footer :: footerFragment"/>
+</body>
+</html>
