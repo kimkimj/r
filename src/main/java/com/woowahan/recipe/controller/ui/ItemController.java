@@ -1,10 +1,15 @@
 package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.itemDto.ItemCreateReqDto;
+import com.woowahan.recipe.domain.dto.itemDto.ItemListResDto;
 import com.woowahan.recipe.domain.dto.itemDto.ItemUpdateReqDto;
 import com.woowahan.recipe.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +24,16 @@ import javax.validation.Valid;
 public class ItemController {
 
     private final ItemService itemService;
+
+    /**
+     * 상품 전체조회
+     */
+    @GetMapping
+    public String findAllForm(Model model, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ItemListResDto> items = itemService.findAllItem(pageable);
+        model.addAttribute("items", items);
+        return "item/findAllForm";
+    }
 
     /**
      * 재료 등록(관리자, 판매자)
