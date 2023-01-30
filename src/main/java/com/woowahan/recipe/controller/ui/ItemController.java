@@ -1,8 +1,10 @@
 package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.itemDto.ItemCreateReqDto;
+import com.woowahan.recipe.domain.dto.itemDto.ItemDetailResDto;
 import com.woowahan.recipe.domain.dto.itemDto.ItemListResDto;
 import com.woowahan.recipe.domain.dto.itemDto.ItemUpdateReqDto;
+import com.woowahan.recipe.repository.ItemRepository;
 import com.woowahan.recipe.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,18 @@ import javax.validation.Valid;
 public class ItemController {
 
     private final ItemService itemService;
+    private final ItemRepository itemRepository;
+
+    /**
+     * 상품 상세조회
+     */
+    @GetMapping("/{id}")
+    public String findForm(Model model, @PathVariable Long id) {
+        ItemDetailResDto resDto = itemService.findItem(id);
+        model.addAttribute("id", id);
+        model.addAttribute("resDto", resDto);
+        return "item/findForm";
+    }
 
     /**
      * 상품 전체조회
