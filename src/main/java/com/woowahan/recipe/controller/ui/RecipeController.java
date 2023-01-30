@@ -81,7 +81,7 @@ public class RecipeController {
     }
 
     @GetMapping("/list")
-    public String list(Model model, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String list(Model model, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<RecipePageResDto> allRecipes = recipeService.findAllRecipes(pageable);
         model.addAttribute("allRecipes", allRecipes);
         return "recipe/recipeList";
