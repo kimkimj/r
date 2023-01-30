@@ -5,7 +5,6 @@ import com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserResponse;
-import com.woowahan.recipe.repository.UserRepository;
 import com.woowahan.recipe.service.OrderService;
 import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
@@ -34,7 +31,6 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
     private final OrderService orderService;
 
     // 관리자 페이지
@@ -93,8 +89,9 @@ public class UserController {
     }
 
     @GetMapping("/users/logout")
-    public String logout(HttpServletResponse response) {
-        expireCookie(response, "token");
+    public String logout(HttpSession session) {
+        session.removeAttribute("jwt");
+        session.invalidate();
         return "redirect:/";
     }
 
@@ -146,12 +143,6 @@ public class UserController {
     @GetMapping("/users/my/recipe-like")
     public String myLikeRecipe() {
         return "user/my/myLikeRecipe";
-    }
-
-    private void expireCookie(HttpServletResponse response, String cookieName) {
-        Cookie cookie = new Cookie(cookieName, null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
     }
 
 }
