@@ -2,27 +2,40 @@
 
 <html lang ="ko">
 <html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/header :: headerFragment"/>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <title>주문 페이지</title>
-    <head th:replace="fragments/header :: headerFragment"/>
    </head>
   <style>
 
     .main {
+      width: 60%;
+      min-height: 400px;
       background-color: seashell;
-      margin: 50px;
-    }
-
-    .box {
-      margin-top: 25px;
+      margin: auto;
     }
 
     .item-list {
       display: flex;
       flex-direction: row;
     }
+
+    .box {
+      margin-top: 35px;
+    }
+
+    .content{
+      margin-top: 5px;
+      margin-left: 25px
+    }
+
+    table {
+      margin-top: 10px;
+      width: 40%;
+    }
+
 
     .button-container{
       margin-top: 50px;
@@ -40,43 +53,48 @@
     <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
     <div class = main>
       <div class="box">
-        <h4>주문자 정보</h4>
-        <table>
-          <tr>
-            <td>이름</td>
-            <td>[[${userResponse.name}]]</td>
-          </tr>
-          <tr>
-            <td>핸드폰 번호</td>
-            <td>[[${userResponse.phoneNum}]]</td>
-          </tr>
-          <tr>
-            <td>이메일</td>
-            <td>[[${userResponse.email}]]</td>
-          </tr>
-        </table>
+        <h5><b>주문자 정보</b></h5>
+        <div class="content">
+          <table>
+            <tr>
+              <td>이름</td>
+              <td>[[${userResponse.name}]]</td>
+            </tr>
+            <tr>
+              <td>핸드폰 번호</td>
+              <td>[[${userResponse.phoneNum}]]</td>
+            </tr>
+            <tr>
+              <td>이메일</td>
+              <td>[[${userResponse.email}]]</td>
+            </tr>
+          </table>
+        </div>
       </div>
       <div class="box">
-        <h4>배송지 정보</h4>
-        <table>
-          <tr>
-            <td>이름</td>
-            <td>[[${userResponse.name}]]</td>
-          </tr>
-          <tr>
-            <td>핸드폰 번호  </td>
-            <td>[[${userResponse.phoneNum}]]</td>
-          </tr>
-          <tr>
-            <td>주소</td>
-            <td>[[${userResponse.address}]]</td>
-          </tr>
-        </table>
+        <h5><b>배송지 정보</b></h5>
+        <div class="content">
+          <table>
+            <tr>
+              <td>이름</td>
+              <td>[[${userResponse.name}]]</td>
+            </tr>
+            <tr>
+              <td>핸드폰 번호</td>
+              <td>[[${userResponse.phoneNum}]]</td>
+            </tr>
+            <tr>
+              <td>주소</td>
+              <td>[[${userResponse.address}]]</td>
+            </tr>
+          </table>
+          </div>
       </div>
     <div class="box">
-      <h4>주문 정보</h4>
-        <div>결제 예정 금액: [[${orderInfoResponse.getTotalPrice()}]]</div>
-
+      <h5><b>주문 정보</b></h5>
+        <div class="content">
+          <div>결제 예정 금액: [[${orderInfoResponse.getTotalPrice()}]]</div>
+        </div>
       </div>
       <div class="button-container">
         <div class="button">

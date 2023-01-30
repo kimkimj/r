@@ -4,10 +4,7 @@ import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderInfoResponse;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserResponse;
-import com.woowahan.recipe.domain.entity.DeliveryEntity;
-import com.woowahan.recipe.domain.entity.OrderEntity;
-import com.woowahan.recipe.domain.entity.OrderItemEntity;
-import com.woowahan.recipe.domain.entity.UserEntity;
+import com.woowahan.recipe.domain.entity.*;
 import com.woowahan.recipe.service.OrderService;
 import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -36,4 +33,13 @@ public class OrderController {
         return "order/orderForm";
     }
 
+    @GetMapping("{userId}/delivery/{orderId}")
+    public String getDeliveryStatus(@PathVariable Long userId, @PathVariable Long orderId, Model model) {
+        String username = "GordonRamsey";
+        OrderInfoResponse order = orderService.findOrder(username, orderId);
+        model.addAttribute("orderInfoResponse", order);
+        UserResponse userResponse = userService.findUser(userId);
+        model.addAttribute("userResponse", userResponse);
+        return "order/delivery";
+    }
 }
