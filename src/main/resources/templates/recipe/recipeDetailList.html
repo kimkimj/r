@@ -70,6 +70,7 @@
             <h1>레시피 상세보기 페이지</h1>
             <button type="button" th:onclick="|location.href='@{/recipes/update/{recipeId} (recipeId=${recipeId})}'|">레시피 수정</button>
             <button type="button" th:onclick="|location.href='@{/recipes/delete/{recipeId} (recipeId=${recipeId})}'|">레시피 삭제(복구 불가)</button>
+            <button type="button" th:onclick="|location.href='@{/recipes/list}'|">전체 레시피 보기</button>
         </div>
         <br><br>
 
