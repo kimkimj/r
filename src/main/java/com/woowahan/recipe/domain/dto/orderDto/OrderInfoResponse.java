@@ -1,5 +1,6 @@
 package com.woowahan.recipe.domain.dto.orderDto;
 
+import com.woowahan.recipe.domain.entity.DeliveryStatus;
 import com.woowahan.recipe.domain.entity.OrderEntity;
 import com.woowahan.recipe.domain.OrderStatus;
 import lombok.Builder;
@@ -15,14 +16,16 @@ public class OrderInfoResponse {
     private String address;
     private Integer totalPrice;
     private OrderStatus orderStatus;
+    private DeliveryStatus deliveryStatus;
 
     @Builder
-    public OrderInfoResponse(String orderNum, String username, String address, Integer totalPrice, OrderStatus orderStatus) {
+    public OrderInfoResponse(String orderNum, String username, String address, Integer totalPrice, OrderStatus orderStatus, DeliveryStatus deliveryStatus) {
         this.orderNum = orderNum;
         this.username = username;
         this.address = address;
         this.totalPrice = totalPrice;
         this.orderStatus = orderStatus;
+        this.deliveryStatus = deliveryStatus;
     }
 
     public static OrderInfoResponse from(OrderEntity order) {
@@ -32,6 +35,7 @@ public class OrderInfoResponse {
                 .address(order.getUser().getAddress())
                 .totalPrice(order.getTotalPrice())
                 .orderStatus(order.getOrderStatus())
+                .deliveryStatus(order.getDelivery().getDeliveryStatus())
                 .build();
     }
 }

@@ -20,7 +20,7 @@
         align-items: center;
     }
 
-    div#wapper {
+    div.recipe-wapper {
         width: 100%;
         /* text-align: left; */
         min-height: 300px;
@@ -51,7 +51,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
 <!-- 섹션의 전체 틀 div -->
-<div id="wapper">
+<div class="recipe-wapper">
 
     <!-- bodyHeader -->
     <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
@@ -69,100 +69,45 @@
     <!-- 레시피 리스트 div : 한 줄에 3개 들어가도록 레이아웃 적용 -->
     <div class="recipe-list-section">
 
-        <!-- 1 -->
-        <div class="recipe-list-section1 card" style="width: 18rem;">
-            <!-- 레시피 이미지와 레시피 제목을 클릭하면 해당 레시피로 이동 -->
-            <a href="#" class="card-link">
-                <img src="https://image.groro.co.kr/files/groro_086b68e990df4c2a803b5fd97cad500d.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <p class="card-text" style="text-align: center;">매콤짭조름한 참치캔 활용 밥도둑 반찬</p>
-                    <h5 class="card-title" style="text-align: center;">참치감자조림</h5>
-                </div>
-            </a>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">조회수</li>
-                <li class="list-group-item">좋아요</li>
-                <li class="list-group-item">댓글</li>
-            </ul>
-
-            <div class="card-body">
-                <a href="#" class="card-link">작성자</a>
+        <!-- th:block -->
+        <th:block th:each="recipe : ${allRecipes}">
+            <div class="recipe-list-section1 card" style="width: 18rem;">
+                <!-- 레시피 이미지와 레시피 제목을 클릭하면 해당 레시피로 이동 -->
+                <a th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|" class="card-link">
+                    <img src="https://image.groro.co.kr/files/groro_086b68e990df4c2a803b5fd97cad500d.jpg" class="card-img-top" alt="...">
+<!--                    <img src="${recipe.thumbnailImagePath}" class="card-img-top" alt="...">  썸네일 추가시-->
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;"><span th:text="${recipe.getRecipeTitle()}"></span></li></h5>
+                    </div>
+                </a>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><span th:text="'ID : ' + ${recipe.getRecipeId}"></span></li>
+                    <li class="list-group-item"><span th:text="'조회수 : ' + ${recipe.getRecipeView}"></span></li>
+                    <li class="list-group-item"><span th:text="'좋아요 : ' + ${recipe.getRecipeLike()}"></span></li>
+                    <li class="list-group-item"><span th:text="'작성자 : ' + ${recipe.getUserName()}"></span></li>
+                </ul>
             </div>
-        </div>
-
-        <!-- 2 -->
-        <div class="recipe-list-section2 card" style="width: 18rem;">
-            <!-- 레시피 이미지와 레시피 제목을 클릭하면 해당 레시피로 이동 -->
-            <a href="#" class="card-link">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSML5OVEyWoPlZuAbBJ4cGu2fPtkxha8-eyHw&usqp=CAU" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <p class="card-text" style="text-align: center;">매콤짭조름한 참치캔 활용 밥도둑 반찬</p>
-                    <h5 class="card-title" style="text-align: center;">참치감자조림</h5>
-                </div>
-            </a>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">조회수</li>
-                <li class="list-group-item">좋아요</li>
-                <li class="list-group-item">댓글</li>
-            </ul>
-
-            <div class="card-body">
-                <a href="#" class="card-link">작성자</a>
-            </div>
-        </div>
-
-        <!-- 3 -->
-        <div class="recipe-list-section3 card" style="width: 18rem;">
-            <!-- 레시피 이미지와 레시피 제목을 클릭하면 해당 레시피로 이동 -->
-            <a href="#" class="card-link">
-                <img src="https://www.urbanbrush.net/web/wp-content/uploads/edd/2021/06/urbanbrush-20210610204959637322.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <p class="card-text" style="text-align: center;">매콤짭조름한 참치캔 활용 밥도둑 반찬</p>
-                    <h5 class="card-title" style="text-align: center;">참치감자조림</h5>
-                </div>
-            </a>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">조회수</li>
-                <li class="list-group-item">좋아요</li>
-                <li class="list-group-item">댓글</li>
-            </ul>
-
-            <div class="card-body">
-                <a href="#" class="card-link">작성자</a>
-            </div>
-        </div>
+        </th:block>
     </div>
 
-    <!-- 레시피 리스트 조회 테이블 -->
-    <div align="center">
-        <table>
-            <thead>
-            <tr>
-                <th style="width: 50px">ID</th>
-                <th style="width: 150px">레시피 제목</th>
-                <th style="width: 50px">조회수</th>
-                <th style="width: 50px">좋아요</th>
-                <th style="width: 150px">작성자</th>
-                <th style="width: 200px">작성일</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="recipe : ${allRecipes}">
-                <td th:text="${recipe.getRecipeId}"/>
-                <td th:text="${recipe.getRecipeTitle}"/>
-                <td th:text="${recipe.getRecipeView}"/>
-                <td th:text="${recipe.getRecipeLike}"/>
-                <td th:text="${recipe.getUserName()}"/>
-                <td th:text="${recipe.createdDate}"/>
-                <td>
-                    <button type="button" th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|"
-                            style="width: auto">
-                        레시피 보기
-                    </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <!-- pagination -->
+    <div class="py-3 my-4">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
+                    <a class="page-link" th:href="@{/recipes/list(page = ${nowPage - 2})}">Previous</a>
+                </li>
+
+                <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                    <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/recipes/list(page = ${page - 1})}" th:text="${page}">1</a></li>
+                    <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: olivedrab"></strong></li>
+                </th:block>
+
+                <li class="page-item">
+                    <a class="page-link" th:href="@{/recipes/list(page = ${nowPage})}">Next</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
     <br>
