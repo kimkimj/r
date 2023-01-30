@@ -73,8 +73,9 @@
         <th:block th:each="recipe : ${allRecipes}">
             <div class="recipe-list-section1 card" style="width: 18rem;">
                 <!-- 레시피 이미지와 레시피 제목을 클릭하면 해당 레시피로 이동 -->
-                <a href="#" class="card-link">
+                <a th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|" class="card-link">
                     <img src="https://image.groro.co.kr/files/groro_086b68e990df4c2a803b5fd97cad500d.jpg" class="card-img-top" alt="...">
+<!--                    <img src="${recipe.thumbnailImagePath}" class="card-img-top" alt="...">  썸네일 추가시-->
                     <div class="card-body">
                         <h5 class="card-title" style="text-align: center;"><span th:text="${recipe.getRecipeTitle()}"></span></li></h5>
                     </div>
