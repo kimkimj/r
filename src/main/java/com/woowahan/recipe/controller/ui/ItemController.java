@@ -93,4 +93,13 @@ public class ItemController {
         return "redirect:/";
     }
 
+    /**
+     * 재료 삭제(관리자, 판매자)
+     */
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id, Model model) {
+        itemService.deleteItem(id, "ididid");
+        return "redirect:/items";
+    }
+
 }

@@ -29,6 +29,10 @@
               th:onclick="|location.href='@{/items/update/{id}(id=${id})}'|" type="button">상품 수정</button>
     </div>
     <div class="col">
+      <button class="w-100 btn btn-primary btn-lg"
+              th:onclick="|location.href='@{/items/delete/{id}(id=${id})}'|" type="button">상품 삭제</button>
+    </div>
+    <div class="col">
       <button class="w-100 btn btn-secondary btn-lg"
               onclick="location.href='findAllForm.html'"
               th:onclick="|location.href='@{/items}'|" type="button">목록으로</button>
