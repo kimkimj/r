@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: headerFragment">
+<head th:replace="fragments/header :: headerFragment"/>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,11 +11,14 @@
     <title>레시피 조회 페이지</title>
 </head>
 <style>
-    body {
-        width: 1200px;
-        text-align: center;
-        /* color: olivedrab; */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
+    body {
+        width: 100%;
         display: flex;
         align-items: center;
     }
@@ -27,22 +30,52 @@
         margin: 0 auto;
     }
 
-    .recipe-list-section {
-        width: 1500px;
-        height: 800px;
-        background-color: linen;
+    .recipe-list-wrapper {
+        width: 100%;
+        height: 100%;
         display: flex;
-        align-items: center; /*세로 가운데 맞춤*/
+        align-items: center; /* 세로 가운데 맞춤 */
         justify-content: center; /* 가로 */
+    }
+
+    /* 리스트 중에 한개의 박스 div */
+    .recipe-list-div {
+        margin: 5px;
+        padding: 5px;
+        text-decoration: none;
+        color: #646464;
+    }
+
+    a { text-decoration:none !important }
+    a:hover { text-decoration:none !important }
+
+    /* 제목 구분 */
+    .card-title span {
+        color:black;
+        font-weight: bold;
+        cursor:pointer;
+    }
+
+    /* pagination 색상 변경 */
+    .page-link {
+        color: #000;
+        background-color: #fff;
+        border: 1px solid #ccc;
+    }
+
+    .page-item.active .page-link {
+        z-index: 1;
+        color: #555;
+        font-weight:bold;
+        background-color: #f1f1f1;
+        border-color: #ccc;
 
     }
-    /* 상자 안에 어떤 크기이든지간에 세로로 중간에 오도록 적용해야 한다. -> 예정 */
-    .recipe-list-section1, .recipe-list-section2, .recipe-list-section3{
-        border: 1px solid;
-        margin: 5px;
-        padding: 10px;
-        width: 400px;
-        height: 580px;
+
+    .page-link:focus, .page-link:hover {
+        color: #000;
+        background-color: #fafafa;
+        border-color: #ccc;
     }
 
 </style>
@@ -56,64 +89,72 @@
     <!-- bodyHeader -->
     <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 
-    <div>
-        <h2>전체 레시피 리스트</h2>
-        <!--<div> 전체 레시피 수 : <span : th:text="${#lists.size(allRecipes)}"></span></div>-->
-    </div>
+    <!-- 기본 컨테이너 -->
+    <div class="container">
+        <div>
+            <br><h1>전체 레시피 리스트</h1><hr>
+            <!--<div> 전체 레시피 수 : <span : th:text="${#lists.size(allRecipes)}"></span></div>-->
 
-    <div>
-        <button type="button" th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>
-        <button type="button" th:onclick="|location.href='@{/recipes/my}'|">내 글 보기</button>
-    </div><br>
+            <span style="float: right;">
+                <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>
+                <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/my}'|">내 글 보기</button>
+            </span>
+        </div><br><br><br><br>
 
-    <!-- 레시피 리스트 div : 한 줄에 3개 들어가도록 레이아웃 적용 -->
-    <div class="recipe-list-section">
-
-        <!-- th:block -->
-        <th:block th:each="recipe : ${allRecipes}">
-            <div class="recipe-list-section1 card" style="width: 18rem;">
-                <!-- 레시피 이미지와 레시피 제목을 클릭하면 해당 레시피로 이동 -->
-                <a th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|" class="card-link">
-                    <img src="https://image.groro.co.kr/files/groro_086b68e990df4c2a803b5fd97cad500d.jpg" class="card-img-top" alt="...">
-<!--                    <img src="${recipe.thumbnailImagePath}" class="card-img-top" alt="...">  썸네일 추가시-->
+        <!-- 레시피 리스트 div-->
+        <div class="recipe-list-wrapper">
+            <!-- th:block -->
+            <th:block th:each="recipe : ${allRecipes}">
+                <div class="card recipe-list-div" style="width: 18rem;">
+                    <a th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|" class="card-link">
+                        <img src="https://static.wtable.co.kr/image/production/service/recipe/1820/791f502d-842a-4aaf-9e63-091a60b93b96.jpg?size=1024x1024" class="card-img-top" alt="...">
+                    </a>
                     <div class="card-body">
-                        <h5 class="card-title" style="text-align: center;"><span th:text="${recipe.getRecipeTitle()}"></span></li></h5>
+                        <a th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|" class="card-link">
+                            <div class="card-title" style="text-align: center;">
+                                <span th:text="${recipe.getRecipeTitle()}"></span>
+                            </div>
+                        </a>
+
+                        <br>
+
+                        <div class="list-group list-group-flush">
+                            <span th:text="'ID : ' + ${recipe.getRecipeId}"></span>
+                            <span th:text="'조회수 : ' + ${recipe.getRecipeView}"></span>
+                            <span th:text="'좋아요 : ' + ${recipe.getRecipeLike()}"></span>
+                            <span th:text="'작성자 : ' + ${recipe.getUserName()}"></span>
+                        </div>
                     </div>
-                </a>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><span th:text="'ID : ' + ${recipe.getRecipeId}"></span></li>
-                    <li class="list-group-item"><span th:text="'조회수 : ' + ${recipe.getRecipeView}"></span></li>
-                    <li class="list-group-item"><span th:text="'좋아요 : ' + ${recipe.getRecipeLike()}"></span></li>
-                    <li class="list-group-item"><span th:text="'작성자 : ' + ${recipe.getUserName()}"></span></li>
+                </div>
+            </th:block>
+        </div>
+
+        <!-- pagination -->
+        <div class="py-3 my-4">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/recipes/list(page = ${nowPage - 2})}">Previous</a>
+                    </li>
+
+                    <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                        <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/recipes/list(page = ${page - 1})}" th:text="${page}">1</a></li>
+                        <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
+                    </th:block>
+
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{/recipes/list(page = ${nowPage})}">Next</a>
+                    </li>
                 </ul>
-            </div>
-        </th:block>
-    </div>
+            </nav>
+        </div>
 
-    <!-- pagination -->
-    <div class="py-3 my-4">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
-                    <a class="page-link" th:href="@{/recipes/list(page = ${nowPage - 2})}">Previous</a>
-                </li>
-
-                <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                    <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/recipes/list(page = ${page - 1})}" th:text="${page}">1</a></li>
-                    <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: olivedrab"></strong></li>
-                </th:block>
-
-                <li class="page-item">
-                    <a class="page-link" th:href="@{/recipes/list(page = ${nowPage})}">Next</a>
-                </li>
-            </ul>
-        </nav>
     </div>
 
     <br>
     <!-- footer -->
     <div th:replace="fragments/footer :: footerFragment"/>
-
+    <br><br>
     <!-- 전체 틀 섹션 div 끝 태그 -->
 </div>
 </body>

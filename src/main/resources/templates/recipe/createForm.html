@@ -43,11 +43,11 @@
     <!--        <br>-->
 
     <!-- 레시피 등록하는 곳 -->
-    <div class="container px-4 recipe-image">
+    <div class="container px-4">
         <div class="row gx-5">
 
             <!-- 내용 -->
-            <div class="p-3 border bg-light">
+            <div class="p-3 border" style="background-color: #F8FAF9;">
                 <h5>레시피 작성</h5>
                 <hr>
                 <form role="form" th:action="@{/recipes/create}" th:object="${recipeCreateReqDto}" method="post">
@@ -75,7 +75,7 @@
             </div>
 
             <!-- 레시피 이미지 첨부파일 -->
-            <div class="p-3 border bg-light" style="margin-top: 20px;">
+            <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
                 <h5>레시피 이미지</h5>
                 <hr>
                 <!--
@@ -92,7 +92,7 @@
 
             <!-- 재료 목록 -->
 
-            <div class="p-3 border bg-light" style="margin-top: 20px;">
+            <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
                 <h5>재료 목록</h5><hr><br>
                 <!-- 첫번째 재료 -->
                 <span class="d-grid gap-1 col-2">
