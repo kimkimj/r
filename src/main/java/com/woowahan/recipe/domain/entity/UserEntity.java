@@ -27,8 +27,7 @@ public class UserEntity extends BaseEntity {
     private Long id;
 
     // Foreign Key
-    @OneToOne
-    @JoinColumn(name="cart_id")
+    @OneToOne(mappedBy = "user")
     private CartEntity cartEntity;
 
     @Builder.Default
