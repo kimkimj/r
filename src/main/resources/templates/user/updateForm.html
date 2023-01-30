@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: headerFragment"/>
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
@@ -15,7 +15,7 @@
             <div class="p-3 border bg-light"><a href="/users/my/orders">주문목록</a></div>
         </div>
         <div class="col">
-            <div class="p-3 border bg-light"><a href="/users/my/recipe-like">쇼핑후기</a></div>
+            <div class="p-3 border bg-light"><a href="/users/my/recipe-like">찜한 레시피</a></div>
         </div>
         <div class="col">
             <div class="p-3 border bg-light"><a href="/users/my/update">회원 정보 수정</a></div>
@@ -25,15 +25,14 @@
 <h2>회원정보 수정페이지</h2>
 <div class="container_etc" style="width: 460px">
     <h2>회원정보 수정</h2>
-    <p style="margin:15px 0;line-height:34px;">
-        <button id="btnUpdEmail" type="button" onclick="$('#updEmail').show()" class="btn btn-default" style="float:right;">이메일 수정</button>
-    </p>
-    <div id="emailFrms" class="form-group has-feedback">
-        <input type="text" name="frm[pro_id_email]" class="form-control" id="id_email" placeholder="이메일">
-        <span id="emailStatus" class="glyphicon form-control-feedback" aria-hidden="true"></span>
-        <span id="emailMsg" style="display:none;"></span>
-    </div>
-    <p style="text-align:center"><button id="btnEmail" type="button" onclick="chkEmailSSL()" class="btn btn-primary" style="width:150px">변경</button></p>
+    <!--<form role="form" th:action="@{/users/my/update}" th:object="${user}" method="post">
+        <div class="mb-3">
+            <label th:for="userName" th:text="#{label.userName}" class="form-label">아이디</label>
+            <input type="text" th:field="*{userName}" class="form-control"
+                   th:errorclass="field-error">
+            <div class="field-error" th:errors="*{userName}">아이디 오류</div>
+        </div>
+    </form>-->
 
 </div>
 

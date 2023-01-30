@@ -1,8 +1,11 @@
 package com.woowahan.recipe.controller.ui;
 
+import com.woowahan.recipe.domain.dto.orderDto.OrderInfoResponse;
+import com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserResponse;
+import com.woowahan.recipe.repository.UserRepository;
 import com.woowahan.recipe.service.OrderService;
 import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +19,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,6 +34,7 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
     private final OrderService orderService;
 
     // 관리자 페이지
@@ -65,43 +71,65 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute UserLoginReqDto userLoginReqDto, BindingResult result,
-                        HttpServletResponse response) {
+                        HttpServletRequest httpServletRequest){
         if (result.hasErrors()) {
             result.getFieldErrors().stream().forEach(err ->
                     log.info("field={} value={} msg={}", err.getField(), err.getRejectedValue(), err.getDefaultMessage()));
             return "user/loginForm";
         }
 
+        // 세션 넣기
+        httpServletRequest.getSession().invalidate();
+        HttpSession session = httpServletRequest.getSession(true);
+
         String token = userService.login(userLoginReqDto.getUserName(), userLoginReqDto.getPassword());
-        Cookie cookie = new Cookie("token", token);
-        response.addCookie(cookie);
+        session.setAttribute("jwt", "Bearer " + token);
+        String checkJwt = (String) session.getAttribute("jwt");
+        log.info("checkJwt={}", checkJwt);
+        log.info("token={}", token);
+        session.setMaxInactiveInterval(1800);
 
         return "redirect:/";
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/users/logout")
     public String logout(HttpServletResponse response) {
         expireCookie(response, "token");
         return "redirect:/";
     }
 
     // 회원 정보 수정
-    @GetMapping("/users/my/update/{id}")
-    public String updateForm(@PathVariable Long id, Model model) {
+//    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/users/my/update")
+    public String updateForm(Model model) {
+//        log.info("user22={}", authentication.getName());
+        /*UserEntity user = userRepository.findByUserName(authentication.getName()).orElseThrow(() -> {
+            throw new AppException(USERNAME_NOT_FOUND, USERNAME_NOT_FOUND.getMessage());
+        });*/
+//        model.addAttribute("user", user);
         // 로그인이 되어있는 유저의 id와 수정페이지에 접속하는 id가 같아야 함
-        UserResponse user = userService.findUser(id);
-        model.addAttribute("user", user);
-        return "redirect:/";
+        return "user/updateForm";
     }
 
-    @PostMapping("/users/my/update/{id}")
+    @PostMapping("/users/my/update")
     public String update(/*@PathVariable Long id, UserEntity user*/) {
 //        userService.updateUser()
         return "user/updateForm";
     }
 
+    /*public String admin(Model model, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<UserResponse> userList = userService.findAll(pageable);
+        model.addAttribute("userList", userList);
+        return "user/admin";
+    }*/
+
     @GetMapping("/users/my/orders")
-    public String myOrders() {
+    public String myOrders(Model model, OrderSearch orderSearch,
+                           @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        String userName = "jin2"; // 임시
+        List<OrderInfoResponse> orderList = orderService.findAllOrder2(userName, orderSearch);
+        model.addAttribute("orderSearch", orderSearch);
+        model.addAttribute("orderList", orderList);
         return "user/my/myOrder";
     }
 

@@ -23,17 +23,13 @@
     </div>
 </div>
 <h2>마이 주문페이지</h2>
-<!--<div>
+<div align="center">
     <div>
-        &lt;!&ndash;/*@thymesVar id="orderSearch" type="com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch"*/&ndash;&gt;
         <form th:object="${orderSearch}" class="form-inline">
             <div class="form-group mb-2">
-                <input type="text" th:field="*{itemName}" class="form-control" placeholder="재료이름"/>
-            </div>
-            <div class="form-group mx-sm-1 mb-2">
                 <select th:field="*{orderStatus}" class="form-control">
                     <option value="">주문상태</option>
-                    <option th:each="status : ${T(com.woowahan.recipe.domain.OrderStatus)}"
+                    <option th:each="status : ${T(com.woowahan.recipe.domain.OrderStatus).values()}"
                             th:value="${status}"
                             th:text="${status}">option
                     </option>
@@ -42,33 +38,27 @@
             <button type="submit" class="btn btn-primary mb-2">검색</button>
         </form>
     </div>
-
-    <table class="table table-striped">
+    <table>
         <thead>
         <tr>
-            <th>주문번호</th>
-            <th>회원명</th>
-            <th>주소</th>
-            <th>주문가격</th>
-            <th>상태</th>
-&lt;!&ndash;            <th>일시</th>&ndash;&gt;
-            <th></th>
+            <th style="width: 250px">주문번호</th>
+            <th style="width: 50px">이름</th>
+            <th style="width: 250px">주소</th>
+            <th style="width: 100px">총 가격</th>
+            <th style="width: 100px">주문 상태</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="item : ${orders}">
-            <td th:text="${item.orderNum}"></td>
-            <td th:text="${item.username}"></td>
-            <td th:text="${item.address}"></td>
-            <td th:text="${item.orderItems[0].orderPrice}"></td>
-            <td th:text="${item.orderItems[0].count}"></td>
-            <td th:text="${item.status}"></td>
-            <td th:text="${item.orderDate}"></td>
+        <tr th:each="order : ${orderList}">
+            <td th:text="${order.orderNum}"/>
+            <td th:text="${order.username}"/>
+            <td th:text="${order.address}"/>
+            <td th:text="${order.totalPrice}"/>
+            <td th:text="${order.orderStatus}"/>
         </tr>
-
         </tbody>
     </table>
-</div>-->
+</div>
 <br/>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>
