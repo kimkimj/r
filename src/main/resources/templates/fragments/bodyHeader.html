@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="bodyHeaderFragment">
     <header>
         <nav class="py-2 bg-light border-bottom">
@@ -9,12 +9,15 @@
                     <li class="nav-item"><a href="/items" class="nav-link link-dark px-2">상품</a></li>
                     <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Pricing</a></li>
                     <li class="nav-item"><a href="#" class="nav-link link-dark px-2">FAQs</a></li>
-                    <li class="nav-item"><a href="/users/my/recipe" class="nav-link link-dark px-2">내 정보</a></li>
+                    <!--로그인만 가능-->
+                    <li class="nav-item"><a href="/users/my/update" class="nav-link link-dark px-2">내 정보</a></li>
                 </ul>
                 <ul class="nav">
-                    <li class="nav-item" sec:authorize="!isAuthenticated()"><a href="/login" class="nav-link link-dark px-2">Login</a></li>
-                    <li class="nav-item" sec:authorize="!isAuthenticated()"><a href="/join" class="nav-link link-dark px-2">Sign up</a></li>
-                    <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/" class="nav-link link-dark px-2">LogOut</a></li>
+                    <!--비로그인도 가능-->
+                    <li class="nav-item" sec:authorize="isAnonymous()"><a href="/login" class="nav-link link-dark px-2">Login</a></li>
+                    <li class="nav-item" sec:authorize="isAnonymous()"><a href="/join" class="nav-link link-dark px-2">Sign up</a></li>
+                    <!--로그인만 가능-->
+                    <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/users/logout" class="nav-link link-dark px-2">LogOut</a></li>
                 </ul>
             </div>
         </nav>

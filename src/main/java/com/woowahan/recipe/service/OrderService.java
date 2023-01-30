@@ -73,7 +73,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<OrderInfoResponse> findAllOrder2(String username, OrderSearch orderSearch) {
         validateUser(username);
-        List<OrderEntity> orderList = orderCustomRepository.findAllByString(orderSearch);
+        List<OrderEntity> orderList = orderCustomRepository.findAllByString(orderSearch, username);
         return orderList.stream().map(OrderInfoResponse::from)
                 .collect(Collectors.toList());
     }

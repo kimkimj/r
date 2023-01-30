@@ -29,6 +29,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (token == null || !token.startsWith("Bearer ")) {
+            log.info("헤더가 Null이거나 Bearer로 시작 안함, to1={}", token);
             filterChain.doFilter(request, response);
             return;
         }
