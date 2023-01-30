@@ -22,7 +22,10 @@
 <tr th:each="item : ${items}">
   <div class="inner">
     <div class="card" style="width: 10rem;">
-      <img src="..." class="card-img-top" alt="...">
+    <a onclick="location.href='findForm.html'"
+       th:onclick="|location.href='@{/items/{id}(id=${item.getId})}'|">
+      <img src="..." class="card-img-top" alt="이미지 준비중입니다.">
+    </a>
     </div>
     <div class="card-body">
       <a href="#" class="btn btn-primary">수량버튼</a>
