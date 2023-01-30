@@ -22,7 +22,7 @@ public class ItemDetailResDto {
     public static ItemDetailResDto from(ItemEntity item) {
         return ItemDetailResDto.builder()
                 .itemImagePath(item.getItemImagePath())
-                .itemName(item.getItemName())
+                .itemName(item.getName())
                 .itemPrice(item.getItemPrice())
                 .itemStock(item.getItemStock())
                 .build();

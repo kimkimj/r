@@ -1,5 +1,6 @@
 package com.woowahan.recipe.service;
 
+import com.woowahan.recipe.domain.dto.cartDto.CartInfoResponse;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.entity.CartEntity;
 import com.woowahan.recipe.domain.entity.CartItemEntity;
@@ -13,10 +14,10 @@ import com.woowahan.recipe.repository.ItemRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -30,17 +31,17 @@ public class CartService {
     private final ItemRepository itemRepository;
 
 
-    /*public Page<CartInfoResponse> findCartItemList(Pageable pageable, String userName) {
+    public Page<CartInfoResponse> findCartItemList(Pageable pageable, String userName) {
         UserEntity user = validateUser(userName);
 
         CartEntity cart = validateCart(user);
 
         log.info("cart : {}" , cart.getId());
-        Page<CartInfoResponse> cartItemPage = cartItemRepository.findByCart(pageable, cart).map(CartInfoResponse::from);
+        Page<CartInfoResponse> cartItemPage = cartItemRepository.findByCart(cart, pageable).map(CartInfoResponse::from);
         log.info("cart : {}" , cart.getId());
 
         return cartItemPage;
-    }*/
+    }
 
     public void createCartItem(CartItemReq cartItemCreateReq, String userName) {
         UserEntity user = validateUser(userName);
@@ -90,13 +91,15 @@ public class CartService {
     }
 
     private CartEntity validateCart(UserEntity user) {
-        Optional<CartEntity> optCart = cartRepository.findByUser(user);
+        return cartRepository.findByUser(user).orElseGet(() -> cartRepository.save(CartEntity.builder().user(user).build()));
+
+        /*Optional<CartEntity> optCart = cartRepository.findByUser(user);
 
         if(cartRepository.findByUser(user).isPresent()) {
             return optCart.get();
         } else {
             return cartRepository.save(CartEntity.builder().user(user).build());
-        }
+        }*/
     }
 
     private CartItemEntity validateCartItem(Long itemId) {

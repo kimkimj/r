@@ -17,7 +17,7 @@ public class ItemCreateResDto {
 
     public static ItemCreateResDto from(ItemEntity item) {
         return ItemCreateResDto.builder()
-                .itemName(item.getItemName())
+                .itemName(item.getName())
                 .message("상품 등록 완료")
                 .build();
     }
