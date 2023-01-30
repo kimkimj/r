@@ -1,7 +1,6 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.cartDto.CartInfoResponse;
-import com.woowahan.recipe.domain.dto.cartDto.CartItemCreateReq;
+import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.entity.CartEntity;
 import com.woowahan.recipe.domain.entity.CartItemEntity;
 import com.woowahan.recipe.domain.entity.ItemEntity;
@@ -13,12 +12,14 @@ import com.woowahan.recipe.repository.CartRepository;
 import com.woowahan.recipe.repository.ItemRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Transactional
 public class CartService {
@@ -28,24 +29,25 @@ public class CartService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
-    @Transactional(readOnly = true)
-    public Page<CartInfoResponse> findCartItemList(Pageable pageable, String userName) {
+
+    /*public Page<CartInfoResponse> findCartItemList(Pageable pageable, String userName) {
         UserEntity user = validateUser(userName);
 
         CartEntity cart = validateCart(user);
 
+        log.info("cart : {}" , cart.getId());
         Page<CartInfoResponse> cartItemPage = cartItemRepository.findByCart(pageable, cart).map(CartInfoResponse::from);
+        log.info("cart : {}" , cart.getId());
 
         return cartItemPage;
-    }
+    }*/
 
-    public void createCartItem(CartItemCreateReq cartItemCreateReq, String userName) {
+    public void createCartItem(CartItemReq cartItemCreateReq, String userName) {
         UserEntity user = validateUser(userName);
 
-        ItemEntity item = itemRepository.findById(cartItemCreateReq.getItemId())
-                .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage()));
+        ItemEntity item = validateItem(cartItemCreateReq.getItemId());
 
-        if(item.getItemStock() <= 0) {
+        if(item.getItemStock() < cartItemCreateReq.getItemCnt()) {
             throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
         }
 
@@ -55,35 +57,46 @@ public class CartService {
         cartItemRepository.save(cartItem);
     }
 
-    public void updateCartItem(Long itemId, Integer itemCnt, String userName) {
-        UserEntity user = validateUser(userName);
+    public void updateCartItem(CartItemReq cartItemUpdateReq, String userName) {
+        validateUser(userName);
 
-        ItemEntity item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage()));
+        CartItemEntity cartItem = validateCartItem(cartItemUpdateReq.getItemId());
 
-        if(item.getItemStock() < itemCnt) {
+        log.info("cartItem.getItem().getItemStock() : {}", cartItem.getItem().getItemStock());
+        log.info("cartItem.getCartItemCnt() : {}", cartItemUpdateReq.getItemCnt());
+        if(cartItem.getItem().getItemStock() < cartItemUpdateReq.getItemCnt()) {
             throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
         }
 
-        CartItemEntity cartItem = validateCartItem(itemId);
-        cartItem.updateCartItemCnt(itemCnt);
+        cartItem.updateCartItemCnt(cartItemUpdateReq.getItemCnt());
     }
 
     public void deleteCartItem(Long itemId, String userName) {
-        UserEntity user = validateUser(userName);
+        validateUser(userName);
 
         CartItemEntity cartItem = validateCartItem(itemId);
         cartItemRepository.delete(cartItem);
     }
 
+    /* 공통 로직 */
+
     private UserEntity validateUser(String userName) {
         return userRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
     }
+    private ItemEntity validateItem(Long itemId) {
+        return itemRepository.findById(itemId)
+                .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage()));
+    }
 
     private CartEntity validateCart(UserEntity user) {
-        return cartRepository.findByUser(user)
-                .orElse(cartRepository.save(CartEntity.builder().user(user).build()));
+        Optional<CartEntity> optCart = cartRepository.findByUser(user);
+
+        if(cartRepository.findByUser(user).isPresent()) {
+            return optCart.get();
+        } else {
+            return cartRepository.save(CartEntity.builder().user(user).build());
+        }
     }
 
     private CartItemEntity validateCartItem(Long itemId) {

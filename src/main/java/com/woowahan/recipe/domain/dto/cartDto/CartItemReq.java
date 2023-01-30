@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartItemCreateReq {
+public class CartItemReq {
     private Long itemId;
 
     private Integer itemCnt;

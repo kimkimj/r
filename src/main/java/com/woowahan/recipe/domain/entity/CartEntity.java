@@ -21,7 +21,7 @@ public class CartEntity extends BaseEntity {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name="cart_id")
+    @JoinColumn(name="user_id")
     private UserEntity user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
