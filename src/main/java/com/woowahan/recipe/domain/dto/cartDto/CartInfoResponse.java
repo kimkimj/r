@@ -22,7 +22,7 @@ public class CartInfoResponse {
 
     public static CartInfoResponse from(CartItemEntity cartItemEntity) {
         return CartInfoResponse.builder()
-                .itemName(cartItemEntity.getItem().getItemName())
+                .itemName(cartItemEntity.getItem().getName())
                 .itemImagePath(cartItemEntity.getItem().getItemImagePath())
                 .itemPrice(cartItemEntity.getItem().getItemPrice())
                 .itemCnt(cartItemEntity.getCartItemCnt())

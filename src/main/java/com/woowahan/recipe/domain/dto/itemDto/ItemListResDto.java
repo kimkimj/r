@@ -24,7 +24,7 @@ public class ItemListResDto {
         return ItemListResDto.builder()
                 .id(item.getId())
                 .itemImagePath(item.getItemImagePath())
-                .itemName(item.getItemName())
+                .itemName(item.getName())
                 .price(item.getItemPrice())
                 .stock(item.getItemStock())
                 .build();

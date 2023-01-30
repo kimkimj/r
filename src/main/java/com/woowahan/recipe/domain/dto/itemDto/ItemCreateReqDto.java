@@ -26,7 +26,7 @@ public class ItemCreateReqDto {
     public ItemEntity toEntity() {
         return ItemEntity.builder()
                 .itemImagePath(this.itemImagePath)
-                .itemName(this.itemName)
+                .name(this.itemName)
                 .itemPrice(this.itemPrice)
                 .itemStock(this.itemStock)
                 .build();

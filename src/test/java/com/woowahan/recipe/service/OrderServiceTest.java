@@ -46,7 +46,7 @@ class OrderServiceTest {
 
     ItemEntity givenItem = ItemEntity.builder()
             .id(1L)
-            .itemName("양파")
+            .name("양파")
             .itemPrice(1000)
             .itemStock(10)
             .build();
