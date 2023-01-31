@@ -21,20 +21,13 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
     @Query("update RecipeEntity r set r.recipeView = r.recipeView + 1 where r.id = :id")
     int updateView(@Param("id") Long id);
 
-    /**
-     * 레시피 마이피드
-     */
+    // 레시피 마이피드
     Page<RecipeEntity> findRecipeEntitiesByUser(UserEntity user, Pageable pageable);
     Optional<List<RecipeEntity>> findByUser(UserEntity user);
 
-    /**
-     * 레시피 검색
-     */
-    Page<RecipeEntity> findByRecipeTitleContaining(String keyword, Pageable pageable);
 
-    /* 다른 시도
-    @Query(value = "SELECT re FROM RecipeEntity re WHERE re.recipeTitle LIKE %:title%,
-           countQuery = "SELECT COUNT(re.id) FROM RecipeEntity re WHERE re.recipeTitle LIKE %:RecipeTitle%")
-
-    Page<RecipeEntity> findAllSearch(String recipeTitle, Pageable pageable);*/
+    // 레시피 검색
+    @Query(value = "SELECT re FROM RecipeEntity re WHERE re.recipeTitle LIKE %:recipeTitle%",
+           countQuery = "SELECT COUNT(re.id) FROM RecipeEntity re WHERE re.recipeTitle LIKE %:recipeTitle%")
+    Page<RecipeEntity> findAllSearch(String recipeTitle, Pageable pageable);
 }

@@ -257,7 +257,7 @@ public class RecipeService {
      * @description 전체조회 페이지에서 레시피 검색
      **/
     public Page<RecipePageResDto> searchRecipes(String keyword, Pageable pageable) {
-        Page<RecipeEntity> recipeEntities = recipeRepository.findByRecipeTitleContaining(keyword, pageable);
+        Page<RecipeEntity> recipeEntities = recipeRepository.findAllSearch(keyword, pageable);
 
         // 레시피가 없는 경우
         if(recipeEntities.getSize() == 0) {
@@ -265,15 +265,4 @@ public class RecipeService {
         }
         return recipeEntities.map(RecipeEntity::toResponse);
     }
-
-    /* 다른 시도
-    public Page<RecipePageResDto> findAllSearch(String recipeTitle, Pageable pageable) {
-    Page<RecipeEntity> recipeEntities = recipeRepository.findAllSearch(recipeTitle, pageable);
-
-    // 레시피가 없는 경우
-    if(recipeEntities.getSize() == 0) {
-        throw new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage());
-    }
-        return recipeEntities.map(RecipeEntity::toResponse);
-    }*/
 }

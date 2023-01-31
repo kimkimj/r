@@ -138,20 +138,15 @@ public class RecipeRestController {
 
     /**
      * @author 이다온
-     * @param recipeSearchReqDto
+     * @param title
      * @param pageable
      * @date 2023-01-31
      * @return Response<Page<RecipePageResDto>>
      * @description 레시피 검색 api
      */
     @PostMapping("/search")
-    public Response<Page<RecipePageResDto>> searchRecipes(@RequestBody RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 50, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        return Response.success(recipeService.searchRecipes(recipeSearchReqDto.getKeyword(), pageable));
+    public Response<Page<RecipePageResDto>> searchRecipes(@RequestBody String title, @PageableDefault(size = 50, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return Response.success(recipeService.searchRecipes(title, pageable));
     }
 
-    /* 다른 시도
-    @PostMapping("/search")
-    public Response<Page<RecipePageResDto>> findAllSearch(@RequestParam String recipeTitle, @PageableDefault(size = 50, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        return Response.success(recipeService.findAllSearch(recipeTitle, pageable));
-    }*/
 }

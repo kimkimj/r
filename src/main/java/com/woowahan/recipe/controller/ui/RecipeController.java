@@ -82,17 +82,7 @@ public class RecipeController {
         Page<RecipePageResDto> allRecipes = recipeService.findAllRecipes(pageable);
 
         // pagination
-        int nowPage = allRecipes.getPageable().getPageNumber() + 1;
-        int startPage = Math.max(nowPage - 4, 1);
-        int endPage = Math.min(nowPage + 5, allRecipes.getTotalPages());
-        int lastPage = allRecipes.getTotalPages();
-
-        model.addAttribute("allRecipes", allRecipes);
-        model.addAttribute("nowPage", nowPage);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        model.addAttribute("lastPage", lastPage);
-        return "recipe/recipeList";
+        return paging(model, allRecipes);
     }
 
     @GetMapping("/my")
@@ -117,39 +107,32 @@ public class RecipeController {
     /**
      * 레시피 검색
      */
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/search")
-    public String search(Model model, @ModelAttribute RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<RecipePageResDto> searchRecipes = recipeService.searchRecipes(recipeSearchReqDto.getKeyword(), pageable);
+    public String search(Model model, @ModelAttribute RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<RecipePageResDto> allRecipes = recipeService.searchRecipes(recipeSearchReqDto.getKeyword(), pageable);
 
-        int nowPage = searchRecipes.getPageable().getPageNumber() + 1;
+        return paging(model, allRecipes);
+    }
+
+    /**
+     * TODO : 2023-01-31 페이징 중복 코드 정리
+     * @param model
+     * @param allRecipes
+     * @return
+     */
+    private String paging(Model model, Page<RecipePageResDto> allRecipes) {
+        int nowPage = allRecipes.getPageable().getPageNumber() + 1;
         int startPage = Math.max(nowPage - 4, 1);
-        int endPage = Math.min(nowPage + 5, searchRecipes.getTotalPages());
-        int lastPage = searchRecipes.getTotalPages();
+        int endPage = Math.min(nowPage + 5, allRecipes.getTotalPages());
+        int lastPage = allRecipes.getTotalPages();
 
-        model.addAttribute("searchRecipes", searchRecipes);
+        model.addAttribute("allRecipes", allRecipes);
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("lastPage", lastPage);
         return "recipe/recipeList";
     }
-
-        /* 다른 시도
-        @GetMapping("/search")
-        public String search(Model model, @Requ도estParam String recipeTitle, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<RecipePageResDto> searchRecipes = recipeService.findAllSearch(recipeTitle, pageable);
-
-        int nowPage = searchRecipes.getPageable().getPageNumber() + 1;
-        int startPage = Math.max(nowPage - 4, 1);
-        int endPage = Math.min(nowPage + 5, searchRecipes.getTotalPages());
-        int lastPage = searchRecipes.getTotalPages();
-
-        model.addAttribute("searchRecipes", searchRecipes);
-        model.addAttribute("nowPage", nowPage);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        model.addAttribute("lastPage", lastPage);
-        return "recipe/recipeList";
-    }*/
 }
 
