@@ -103,7 +103,17 @@ public class RecipeController {
         String userName = "messi"; // 인증 생기기 전까지 임시 사용
 //        String userName = authentication.getName();
         Page<RecipePageResDto> myRecipes = recipeService.myRecipes(pageable, userName);
+
+        int nowPage = myRecipes.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4, 1);
+        int endPage = Math.min(nowPage + 5, myRecipes.getTotalPages());
+        int lastPage = myRecipes.getTotalPages();
+
         model.addAttribute("myRecipes", myRecipes);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("lastPage", lastPage);
         return "user/my/myRecipes";
     }
 }
