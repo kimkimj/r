@@ -1,20 +1,26 @@
 package com.woowahan.recipe.controller.ui;
 
+import com.woowahan.recipe.domain.dto.itemDto.ItemUpdateReqDto;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
 import com.woowahan.recipe.security.auth.PrincipalDetails;
 import com.woowahan.recipe.service.OrderService;
+import com.woowahan.recipe.service.ReviewService;
 import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -25,6 +31,7 @@ public class UserController {
 
     private final UserService userService;
     private final OrderService orderService;
+    private final ReviewService reviewService;
 
     // 회원가입
     @GetMapping("/join")
@@ -89,9 +96,44 @@ public class UserController {
         return "user/my/myGetReview";
     }
 
-    @GetMapping("/users/my/send-reviews")
-    public String mySendReviews() {
-        return "user/my/mySendReview";
+
+    @GetMapping("/users/my/reviews")
+    public String myReviews(Model model, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        String username = "GordonRamsey"; // 인증 생기기 전까지 임시 사용
+//        String username = authentication.getName();
+        Page<ReviewListResponse> reviews = reviewService.findAllReviewsByUser(username, pageable);
+        model.addAttribute("allMyReviews", reviews);
+        return "user/my/myReviews";
+    }
+
+    @GetMapping("/update/{recipeId}/{reviewId}")
+    public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model) {
+        model.addAttribute("reviewUpdateRequest", new ReviewCreateRequest());
+        model.addAttribute("recipeId", recipeId);
+        model.addAttribute("reviewId", reviewId);
+        return "review/updateForm";
+    }
+
+    @PostMapping("/update/{recipeId}/{reviewId}")
+    public String update(@Valid @ModelAttribute ReviewCreateRequest reqDto, BindingResult bindingResult,
+                         @PathVariable Long recipeId, @PathVariable Long reviewId,
+                         ReviewCreateRequest request, Authentication authentication, Model model) {
+        if (bindingResult.hasErrors()) {
+            log.info("bindingResult = {}", bindingResult);
+            return "review/updateForm";
+        }
+        String username = "GordonRamsey"; // 인증 생기기 전까지 임시 사용
+//        String username = authentication.getName();
+        reviewService.updateReview(reviewId, recipeId, request, username);
+        return "redirect:/users/my/send-reviews";
+    }
+
+    @DeleteMapping("/delete/{recipeId}/{reviewId}")
+    public String deleteReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Authentication authentication) {
+        String username = "GordenRamsey"; // 인증 생기기 전까지 임시 사용
+//        String username = authentication.getName();
+        reviewService.deleteReview(reviewId, recipeId, username);
+        return "redirect:/users/my/send-reviews";
     }
 
     @GetMapping("/users/my/recipe-like")

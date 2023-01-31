@@ -12,18 +12,22 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReviewListResponse {
     private Long reviewId;
+    private Long recipeId;
+    private String recipeTitle;
     private String username;
     private String reviewComment;
     private LocalDateTime createdDate;
-    private LocalDateTime last_modified;
+    private LocalDateTime lastModified;
 
     public static ReviewListResponse toList(ReviewEntity review) {
         return ReviewListResponse.builder()
                 .reviewId(review.getReviewId())
+                .recipeId(review.getRecipe().getId())
+                .recipeTitle(review.getRecipe().getRecipeTitle())
                 .username(review.getUser().getUserName())
                 .reviewComment(review.getReviewComment())
                 .createdDate(review.getCreatedDate())
-                .last_modified(review.getLastModifiedDate())
+                .lastModified(review.getLastModifiedDate())
                 .build();
     }
 }

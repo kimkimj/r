@@ -21,7 +21,7 @@ public class ReviewRestController {
             return Response.success(reviews);
     }
 
-    // 특정 유저에 대한 리뷰 조회
+    // 유저가 작성한 리뷰 조회
     @GetMapping("/reviews")
     public Response<Page<ReviewListResponse>> getAllReviewsByUser(Pageable pageable, Authentication authentication) {
         Page<ReviewListResponse> reviews = reviewService.findAllReviewsByUser(authentication.getName(), pageable);
