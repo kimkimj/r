@@ -145,7 +145,6 @@ public class UserController {
         return "user/my/myGetReview";
     }
 
-
     @GetMapping("/users/my/reviews")
     public String myReviews(Model model, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         String username = "GordonRamsey"; // 인증 생기기 전까지 임시 사용
@@ -176,7 +175,7 @@ public class UserController {
         reviewService.updateReview(reviewId, recipeId, request, username);
         model.addAttribute("recipeId", recipeId);
         model.addAttribute("reviewId", reviewId);
-        return "review/updateForm";
+        return "redirect:/users/my/reviews";
     }
 
     @GetMapping("/delete/{recipeId}/{reviewId}")
@@ -184,7 +183,7 @@ public class UserController {
         String username = "GordenRamsey"; // 인증 생기기 전까지 임시 사용
 //        String username = authentication.getName();
         reviewService.deleteReview(reviewId, recipeId, username);
-        return "redirect:/users/my/myReviews";
+        return "redirect:/users/my/reviews";
     }
 
 
@@ -194,5 +193,4 @@ public class UserController {
         model.addAttribute("myLikeRecipeList", myLikeRecipeList);
         return "user/my/myLikeRecipe";
     }
-
 }

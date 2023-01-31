@@ -51,9 +51,8 @@ public class ReviewService {
 
 
     // 리뷰 단건 조회
-    public ReviewGetResponse findReviewById (Long id) {
-        ReviewEntity review = reviewRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND, ErrorCode.REVIEW_NOT_FOUND.getMessage()));
+    public ReviewGetResponse findReviewById (Long reviewId) {
+        ReviewEntity review = validateReview(reviewId);
         return ReviewGetResponse.toReviewGetResponse(review);
     }
 
