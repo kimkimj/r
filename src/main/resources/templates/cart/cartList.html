@@ -1,0 +1,52 @@
+<head th:replace="fragments/header :: headerFragment"/>
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+    <div>장바구니 페이지</div>
+    <div>
+        <table class="cart_table">
+            <thead>
+            <tr>
+                <th scope="col">Check</th>
+                <th scope="col">Image</th>
+                <th scope="g-col-6">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Delete</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            <tr class="cartList" th:each="item : ${cartList}">
+                <th scope="row">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked="checked">
+                </th>
+                <td></td>
+<!--                <td th:text="${item.getImagePath()}">상품 이미지 경로</td>-->
+                <td th:text="${item.name}">상품 이름</td>
+                <td th:text="${item.price}">상품 가격</td>
+                <td><button type="button" class="btn btn-danger" th:onclick="|location.href='@{/carts/{itemId} (itemId=${itemId})}'|">삭제</button></td>
+            </tr>
+            </tbody>
+        </table>
+        <div>
+
+        </div>
+    </div>
+</body>
+<script>
+    function getTotalPrice() {
+        let totalPrice = 0;  // 총 가격
+        let totalCount = 0;  // 총 갯수
+        let finalTotalPrice = 3000; 		// 최종 가격(총 가격 + 배송비)
+
+        $(".cartList>td").each(function(index, element){
+            // 총 가격
+            totalPrice += parseInt($(element).find(".individual_totalPrice_input").val());
+            // 총 갯수
+            totalCount += parseInt($(element).find(".individual_bookCount_input").val());
+            // 총 종류
+            totalKind += 1;
+            // 총 마일리지
+            totalPoint += parseInt($(element).find(".individual_totalPoint_input").val());
+        });
+    }
+</script>
+<div th:replace="fragments/footer :: footerFragment"/>

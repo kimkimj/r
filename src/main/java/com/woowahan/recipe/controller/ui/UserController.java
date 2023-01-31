@@ -38,7 +38,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -125,7 +124,6 @@ public class UserController {
     }
 
     @PostMapping("/users/my/update")
-    // FIXME: 2023/01/31 진혁
     public String update(@ModelAttribute UserResponse userResponse, Authentication authentication) {
         UserEntity user = findService.findUserName(authentication.getName());
         userService.updateUser(user.getId(), userResponse, authentication.getName());
@@ -136,7 +134,7 @@ public class UserController {
     @GetMapping("/users/my/orders")
     public String myOrders(Model model, OrderSearch orderSearch, Authentication authentication,
                            @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<OrderInfoResponse> orderList = orderService.findAllOrder2(authentication.getName(), orderSearch);
+        Page<OrderInfoResponse> orderList = orderService.findMyOrder(authentication.getName(), orderSearch, pageable);
         model.addAttribute("orderSearch", orderSearch);
         model.addAttribute("orderList", orderList);
         return "user/my/myOrder";
@@ -192,7 +190,7 @@ public class UserController {
 
     @GetMapping("/users/my/recipe-like")
     public String myLikeRecipe(Model model, Authentication authentication, @PageableDefault(size = 20)Pageable pageable) {
-        List<RecipeFindResDto> myLikeRecipeList = findService.findMyLikeRecipe(authentication.getName());
+        Page<RecipeFindResDto> myLikeRecipeList = findService.findMyLikeRecipe(authentication.getName(), pageable);
         model.addAttribute("myLikeRecipeList", myLikeRecipeList);
         return "user/my/myLikeRecipe";
     }

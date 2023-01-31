@@ -8,11 +8,10 @@ import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.RecipeCustomRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -28,9 +27,9 @@ public class FindService {
         });
     }
 
-    public List<RecipeFindResDto> findMyLikeRecipe(String userName) {
-        List<RecipeEntity> myLikeRecipeList = recipeCustomRepository.findByUserAndLove(userName);
-        return myLikeRecipeList.stream().map(RecipeEntity::from).collect(Collectors.toList());
+    public Page<RecipeFindResDto> findMyLikeRecipe(String userName, Pageable pageable) {
+        Page<RecipeEntity> pages = recipeCustomRepository.findByUserAndLove(userName, pageable);
+        return pages.map(RecipeEntity::from);
     }
 
 }
