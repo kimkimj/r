@@ -1,9 +1,6 @@
 package com.woowahan.recipe.controller.ui;
 
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateReqDto;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipePageResDto;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateReqDto;
+import com.woowahan.recipe.domain.dto.recipeDto.*;
 import com.woowahan.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -116,4 +113,43 @@ public class RecipeController {
         model.addAttribute("lastPage", lastPage);
         return "user/my/myRecipes";
     }
+
+    /**
+     * 레시피 검색
+     */
+    @GetMapping("/search")
+    public String search(Model model, @ModelAttribute RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<RecipePageResDto> searchRecipes = recipeService.searchRecipes(recipeSearchReqDto.getKeyword(), pageable);
+
+        int nowPage = searchRecipes.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4, 1);
+        int endPage = Math.min(nowPage + 5, searchRecipes.getTotalPages());
+        int lastPage = searchRecipes.getTotalPages();
+
+        model.addAttribute("searchRecipes", searchRecipes);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("lastPage", lastPage);
+        return "recipe/recipeList";
+    }
+
+        /* 다른 시도
+        @GetMapping("/search")
+        public String search(Model model, @Requ도estParam String recipeTitle, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<RecipePageResDto> searchRecipes = recipeService.findAllSearch(recipeTitle, pageable);
+
+        int nowPage = searchRecipes.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4, 1);
+        int endPage = Math.min(nowPage + 5, searchRecipes.getTotalPages());
+        int lastPage = searchRecipes.getTotalPages();
+
+        model.addAttribute("searchRecipes", searchRecipes);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("lastPage", lastPage);
+        return "recipe/recipeList";
+    }*/
 }
+
