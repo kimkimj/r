@@ -17,7 +17,7 @@ public class ItemCreateReqDto {
 
     private String itemImagePath;
     @NotBlank(message = "상품명은 필수입니다.")
-    private String name;
+    private String itemName;
     @NotNull(message = "상품 가격은 필수입니다.")
     private Integer itemPrice;
     @NotNull(message = "상품 수량은 필수입니다.")
@@ -26,7 +26,7 @@ public class ItemCreateReqDto {
     public ItemEntity toEntity() {
         return ItemEntity.builder()
                 .itemImagePath(this.itemImagePath)
-                .name(this.name)
+                .name(this.itemName)
                 .itemPrice(this.itemPrice)
                 .itemStock(this.itemStock)
                 .build();
