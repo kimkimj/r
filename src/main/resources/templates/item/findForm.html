@@ -10,12 +10,20 @@
     <h2>상품 상세</h2>
   </div>
   <div class="card" style="width: 20rem;margin: auto auto 20px;">
+    <div>
       <img src="..." class="card-img-top" alt="이미지 준비중입니다.">
+    </div>
+    <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+      <button type="button" class="btn btn-primary">-</button>
+      <input style="width: 200px; text-align: center;" type="text" th:value = "0" readonly>
+      <!--               value="상품A" th:value="${resDto.getItemName()}" readonly>-->
+      <button type="button" class="btn btn-primary">+</button>
+    </div>
   </div>
   <div>
     <label for="itemName">상품명</label>
     <input type="text" id="itemName" name="itemName" class="form-control"
-           value="상품A" th:value="${resDto.getName()}" readonly>
+           value="상품A" th:value="${resDto.getItemName()}" readonly>
   </div>
   <div>
     <label for="price">가격</label>
@@ -39,6 +47,8 @@
               th:onclick="|location.href='@{/items}'|" type="button">목록으로</button>
     </div>
   </div>
+
+</div>
 </div>
 
 <div th:replace="fragments/footer :: footerFragment"/>
