@@ -20,11 +20,16 @@ public class CartEntity extends BaseEntity {
     @Column(name = "cart_id")
     private Long id;
 
-    @MapsId
     @OneToOne
     @JoinColumn(name="user_id")
     private UserEntity user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<CartItemEntity> cartItems;
+
+    public static CartEntity createCart(UserEntity user) {
+        return CartEntity.builder()
+                .user(user)
+                .build();
+    }
 }
