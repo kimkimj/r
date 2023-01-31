@@ -13,28 +13,34 @@
   }
 </style>
 <body>
-<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-<button style="margin: auto auto 20px;display:block;" type="button" class="btn btn-primary"
-        onclick="location.href='createForm.html'"
-        th:onclick="|location.href='@{/items/create}'|">상품 등록</button>
-
-<div class="container">
-<tr th:each="item : ${items}">
-  <div class="inner">
-    <div class="card" style="width: 10rem;">
-    <a onclick="location.href='findForm.html'"
-       th:onclick="|location.href='@{/items/{id}(id=${item.getId})}'|">
-      <img src="..." class="card-img-top" alt="이미지 준비중입니다.">
-    </a>
-    </div>
-    <div class="card-body">
-      <a href="#" class="btn btn-primary">수량버튼</a>
-      <p class="card-title" th:text="${item.getItemName()}">상품 이름</p>
-      <h5 class="card-text" th:text="${item.getPrice()}+원">가격</h5>
-    </div>
+  <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+  <div style="margin: auto 430px 20px auto;">
+  <button style="margin: auto 0px 10px auto;display:block;" type="button" class="btn btn-primary"
+          onclick="location.href='createForm.html'"
+          th:onclick="|location.href='@{/items/create}'|">상품 등록</button>
+  <form style="text-align: right" th:action="@{/items/search}" method="get">
+    <input type="text" name = "keyword" placeholder="상품 검색">
+    <button type="submit">검색</button>
+  </form>
   </div>
-</tr>
-</div>
+<!--상품 목록 시작-->
+  <div class="container">
+  <tr th:each="item : ${items}">
+    <div class="inner">
+      <div class="card" style="width: 10rem;">
+      <a onclick="location.href='findForm.html'"
+         th:onclick="|location.href='@{/items/{id}(id=${item.getId})}'|">
+        <img src="..." class="card-img-top" alt="이미지 준비중입니다.">
+      </a>
+      </div>
+      <div class="card-body">
+        <a href="#" class="btn btn-primary">수량버튼</a>
+        <p class="card-title" th:text="${item.getItemName()}">상품 이름</p>
+        <h5 class="card-text" th:text="${item.getPrice()}+원">가격</h5>
+      </div>
+    </div>
+  </tr>
+  </div>
 <br/>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>
