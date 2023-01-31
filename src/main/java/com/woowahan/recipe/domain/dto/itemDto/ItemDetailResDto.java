@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class ItemDetailResDto {
 
     private String itemImagePath;
-    private String name;
+    private String itemName;
     private Integer itemPrice;
     private Integer itemStock;
     private String message;
@@ -22,7 +22,7 @@ public class ItemDetailResDto {
     public static ItemDetailResDto from(ItemEntity item) {
         return ItemDetailResDto.builder()
                 .itemImagePath(item.getItemImagePath())
-                .name(item.getName())
+                .itemName(item.getName())
                 .itemPrice(item.getItemPrice())
                 .itemStock(item.getItemStock())
                 .build();
