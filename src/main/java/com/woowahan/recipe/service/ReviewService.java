@@ -49,6 +49,14 @@ public class ReviewService {
         return review;
     }
 
+
+    // 리뷰 단건 조회
+    public ReviewGetResponse findReviewById (Long id) {
+        ReviewEntity review = reviewRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND, ErrorCode.REVIEW_NOT_FOUND.getMessage()));
+        return ReviewGetResponse.toReviewGetResponse(review);
+    }
+
     // 리뷰 작성
     public ReviewCreateResponse createReview(Long recipeId, ReviewCreateRequest reviewCreateRequest, String username)  {
         // 유저가 존재하는지 확인

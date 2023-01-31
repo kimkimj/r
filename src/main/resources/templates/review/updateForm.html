@@ -37,11 +37,10 @@
     <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
     <div class="wrapper">
         <h2>리뷰 수정</h2>
-        <form role="form" th:action="@{/update/{recipeId} (recipeId=${recipeId})/{reviewId} (reviewId=${reviewId})}" th:object="${reviewUpdateRequest}" method="post">
+        <form role="form" th:action="@{/update/{recipeId}/{reviewId}(recipeId=${recipeId}, reviewId=${reviewId})}" th:object="${reviewUpdateRequest}" method="post">
             <div class="form-group">
                 <label>리뷰 내용</label>
-                <textarea th:field="*reviewUpdateRequest" class="form-control" placeholder="수정할 내용을 입력하세요"
-                       th:class="${#fields.hasErrors('reviewComment')}? 'form-control fieldError' : 'form-control'">
+                <textarea th:field="*{reviewComment}" class="form-control" placeholder="수정할 내용을 입력하세요">
                 </textarea>
             </div>
         <div class="button-container">

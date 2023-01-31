@@ -13,7 +13,6 @@
 
         .header-row {
             width: 80%;
-
             margin: 0px;
         }
 
@@ -39,19 +38,20 @@
             <br>
             <table class="header-row">
                 <tr>
-                    <th style="width: 50%">레시피</th>
-                    <th style="width: 20%">작성 날짜</th>
-                    <th style="width: 70%">내용</th>
+                    <th>레시피</th>
+                    <th>작성 날짜</th>
+                    <th>내용</th>
                 </tr>
             </table>
             <th:block th:each="review : ${allMyReviews}">
                 <table>
                     <tr>
                         <td><a th:href="@{/recipes/{recipeId}(recipeId=${review.recipeId})}" th:utext="${review.recipeTitle}">레시피</a></td>
-                        <td><span th:text="${review.lastModified !=null}? ${#temporals.format(review.lastModified, 'yyyy-MM-dd HH:mm:ss')}:${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></span> </td>
+                        <td style="width: 260px"><span th:text="${review.lastModified !=null}? ${#temporals.format(review.lastModified, 'yyyy-MM-dd HH:mm:ss')}:${#temporals.format(review.lastModified, 'yyyy-MM-dd HH:mm:ss')}"></span> </td>
                         <td>[[${review.reviewComment}]]</td>
-                        <td class="btn"><button type="button" class="btn btn-primary" th:onclick="|location.href='@{/update/${review.recipeId}/${review.reviewId}}'|">수정</button></td>
-                        <td class="btn"><button type="button" class="btn btn-danger" th:onclick="|location.href='@{/delete/${review.recipeId}/${review.reviewId}}'|">삭제</button></td>
+
+                        <td class="btn"><button type="button" class="btn btn-primary" th:onclick="|location.href='@{/update/{recipeId}/{reviewId}(recipeId=${review.recipeId}, reviewId=${review.reviewId})}'|">수정</button></td>
+                        <td class="btn"><button type="button" class="btn btn-danger" th:onclick="|location.href=' @{/update/{recipeId}/{reviewId}(recipeId=${review.recipeId}, reviewId=${review.reviewId})}'|">삭제</button></td>
                     </tr>
                 </table>
             </th:block>

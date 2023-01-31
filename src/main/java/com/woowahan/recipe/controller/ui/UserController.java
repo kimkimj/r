@@ -159,7 +159,7 @@ public class UserController {
 
     @GetMapping("/update/{recipeId}/{reviewId}")
     public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model) {
-        model.addAttribute("reviewUpdateRequest", new ReviewCreateRequest());
+        model.addAttribute("reviewUpdateRequest", reviewService.findReviewById(reviewId));
         model.addAttribute("recipeId", recipeId);
         model.addAttribute("reviewId", reviewId);
         return "review/updateForm";
@@ -176,7 +176,9 @@ public class UserController {
         String username = "GordonRamsey"; // 인증 생기기 전까지 임시 사용
 //        String username = authentication.getName();
         reviewService.updateReview(reviewId, recipeId, request, username);
-        return "redirect:/users/my/myReviews";
+        model.addAttribute("recipeId", recipeId);
+        model.addAttribute("reviewId", reviewId);
+        return "review/updateForm";
     }
 
     @GetMapping("/delete/{recipeId}/{reviewId}")
