@@ -115,9 +115,9 @@ public class UserController {
     }
 
     @PostMapping("/update/{recipeId}/{reviewId}")
-    public String update(@Valid @ModelAttribute ReviewCreateRequest reqDto, BindingResult bindingResult,
+    public String update(@Valid @ModelAttribute ReviewCreateRequest request, BindingResult bindingResult,
                          @PathVariable Long recipeId, @PathVariable Long reviewId,
-                         ReviewCreateRequest request, Authentication authentication, Model model) {
+                        Authentication authentication, Model model) {
         if (bindingResult.hasErrors()) {
             log.info("bindingResult = {}", bindingResult);
             return "review/updateForm";
@@ -125,16 +125,17 @@ public class UserController {
         String username = "GordonRamsey"; // 인증 생기기 전까지 임시 사용
 //        String username = authentication.getName();
         reviewService.updateReview(reviewId, recipeId, request, username);
-        return "redirect:/users/my/send-reviews";
+        return "redirect:/users/my/myReviews";
     }
 
-    @DeleteMapping("/delete/{recipeId}/{reviewId}")
-    public String deleteReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Authentication authentication) {
+    @GetMapping("/delete/{recipeId}/{reviewId}")
+    public String delete(@PathVariable Long recipeId, @PathVariable Long reviewId, Authentication authentication) {
         String username = "GordenRamsey"; // 인증 생기기 전까지 임시 사용
 //        String username = authentication.getName();
         reviewService.deleteReview(reviewId, recipeId, username);
-        return "redirect:/users/my/send-reviews";
+        return "redirect:/users/my/myReviews";
     }
+
 
     @GetMapping("/users/my/recipe-like")
     public String myLikeRecipe() {
