@@ -7,7 +7,7 @@ public class ItemEntityFixture {
     public static ItemEntity get() {
         ItemEntity item = ItemEntity.builder()
                                     .id(1L)
-                                    .itemName("testItemName")
+                                    .name("testItemName")
                                     .itemPrice(1000)
                                     .itemStock(5)
                                     .build();

@@ -48,7 +48,7 @@ class ItemRestControllerTest {
         /* given */
         ItemCreateReqDto itemCreateReqDto = new ItemCreateReqDto("imagepath", "name", 1000, 5);
         given(itemService.createItem(any(ItemCreateReqDto.class), any()))
-                .willReturn(new ItemCreateResDto("name", "상품 등록 완료"));
+                .willReturn(new ItemCreateResDto(1L, "name", "상품 등록 완료"));
         /* when */
         ResultActions resultActions = mockMvc.perform(post("/api/v1/items")
                                         .with(csrf())
@@ -87,7 +87,7 @@ class ItemRestControllerTest {
         /* given */
         ItemUpdateReqDto itemUpdateReqDto = new ItemUpdateReqDto("imagepath", "name", 1000, 5);
         given(itemService.updateItem(any(), any(ItemUpdateReqDto.class), any()))
-                .willReturn(new ItemUpdateResDto("imagepath", "name", 1000, 5, "상품 수정 완료"));
+                .willReturn(new ItemUpdateResDto(1L, "imagepath", "name", 1000, 5, "상품 수정 완료"));
         /* when */
         ResultActions resultActions = mockMvc.perform(put("/api/v1/items/1")
                         .with(csrf())
@@ -182,7 +182,7 @@ class ItemRestControllerTest {
         /* given */
         ItemDetailResDto dto = ItemDetailResDto.builder()
                 .itemImagePath("image path")
-                .itemName("name")
+                .name("name")
                 .itemPrice(3000)
                 .itemStock(10)
                 .build();

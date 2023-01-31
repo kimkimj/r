@@ -22,7 +22,7 @@ public class ItemUpdateResDto {
     public static ItemUpdateResDto from(ItemEntity item) {
         return ItemUpdateResDto.builder()
                 .id(item.getId())
-                .itemName(item.getItemName())
+                .itemName(item.getName())
                 .itemPrice(item.getItemPrice())
                 .itemStock(item.getItemStock())
                 .message("상품 수정 완료")
