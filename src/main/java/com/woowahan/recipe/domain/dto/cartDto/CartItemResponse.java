@@ -1,13 +1,11 @@
 package com.woowahan.recipe.domain.dto.cartDto;
 
 import com.woowahan.recipe.domain.entity.CartItemEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Builder
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartItemResponse {
