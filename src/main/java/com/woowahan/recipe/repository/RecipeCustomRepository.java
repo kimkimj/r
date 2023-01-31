@@ -3,6 +3,9 @@ package com.woowahan.recipe.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woowahan.recipe.domain.entity.RecipeEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,14 +21,19 @@ public class RecipeCustomRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<RecipeEntity> findByUserAndLove(String userNameCond) {
-        return queryFactory.select(recipeEntity)
+    public Page<RecipeEntity> findByUserAndLove(String userNameCond, Pageable pageable) {
+        List<RecipeEntity> contents = queryFactory.select(recipeEntity)
                 .from(recipeEntity)
                 .join(recipeEntity.likes, likeEntity)
                 .join(likeEntity.user, userEntity)
                 .where(likeEntity.user.userName.eq(userNameCond))
                 .distinct()
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+        int total = contents.size();
+        return new PageImpl<>(contents, pageable, total);
     }
 
 }
