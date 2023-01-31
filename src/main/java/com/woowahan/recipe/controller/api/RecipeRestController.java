@@ -135,4 +135,18 @@ public class RecipeRestController {
         Integer likeCnt = recipeService.countLikes(id, userName);
         return Response.success(likeCnt);
     }
+
+    /**
+     * @author 이다온
+     * @param title
+     * @param pageable
+     * @date 2023-01-31
+     * @return Response<Page<RecipePageResDto>>
+     * @description 레시피 검색 api
+     */
+    @PostMapping("/search")
+    public Response<Page<RecipePageResDto>> searchRecipes(@RequestBody String title, @PageableDefault(size = 50, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return Response.success(recipeService.searchRecipes(title, pageable));
+    }
+
 }

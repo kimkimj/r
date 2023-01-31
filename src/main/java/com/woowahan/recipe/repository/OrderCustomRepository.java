@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface OrderCustomRepository{
     // 상품 주문 내역 조회
-    List<OrderEntity> findAllByString(OrderSearch orderSearch);
+    List<OrderEntity> findAllByString(OrderSearch orderSearch, String userName);
 }

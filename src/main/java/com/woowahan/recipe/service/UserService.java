@@ -9,6 +9,8 @@ import com.woowahan.recipe.repository.UserRepository;
 import com.woowahan.recipe.security.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,6 +71,7 @@ public class UserService {
     /**
      * 회원정보 조회 - One Person
      */
+    @Transactional(readOnly = true)
     public UserResponse findUser(Long id) {
 
         // 찾고자 하는 회원의 id가 없는 경우
@@ -76,6 +79,30 @@ public class UserService {
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
 
         return UserResponse.toUserResponse(user);
+    }
+
+
+    /**
+     * 회원정보 전체 조회
+     */
+    public Page<UserResponse> findAll(Pageable pageable) {
+        Page<UserEntity> pages = userRepository.findAll(pageable);
+        return pages.map(UserResponse::toUserResponse);
+    }
+
+    /**
+     * 회원등급 관리자로 변경
+     */
+    public void updateToSeller(String username, Long id) {
+        UserEntity admin = userRepository.findByUserName(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        if (admin.getUserRole().equals(UserRole.ADMIN)) {
+            user.updateToSeller(user);
+        }
     }
 
     // TODO: 2023-01-21 회원가입 수정에 비밀번호 로직 변경

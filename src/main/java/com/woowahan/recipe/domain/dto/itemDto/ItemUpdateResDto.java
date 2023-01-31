@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ItemUpdateResDto {
 
+    private Long id;
     private String itemImagePath;
     private String itemName;
     private Integer itemPrice;
@@ -20,7 +21,8 @@ public class ItemUpdateResDto {
 
     public static ItemUpdateResDto from(ItemEntity item) {
         return ItemUpdateResDto.builder()
-                .itemName(item.getItemName())
+                .id(item.getId())
+                .itemName(item.getName())
                 .itemPrice(item.getItemPrice())
                 .itemStock(item.getItemStock())
                 .message("상품 수정 완료")

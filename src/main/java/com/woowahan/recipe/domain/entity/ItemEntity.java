@@ -7,6 +7,8 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,23 +23,23 @@ public class ItemEntity extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //이미지가 없을 경우 기본이미지를 어떻게 넣어줄지 ? e.g) 이미지 준비중 입니다
     private String itemImagePath;
     @NotBlank
-    private String itemName;
+    @Column(name = "item_name")
+    private String name;
     @NotNull
     private Integer itemPrice;
     @NotNull
     private Integer itemStock;
 
-    @ManyToOne
-    @JoinColumn(name = "recipe_id")
-    private RecipeEntity recipe;
+    @Builder.Default
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<RecipeItemEntity> recipeItems = new ArrayList<>();
 
     /* 아이템 수정 */
     public void update(String itemImagePath, String itemName, Integer itemPrice, Integer itemStock) {
         this.itemImagePath = itemImagePath;
-        this.itemName = itemName;
+        this.name = itemName;
         this.itemPrice = itemPrice;
         this.itemStock = itemStock;
     }

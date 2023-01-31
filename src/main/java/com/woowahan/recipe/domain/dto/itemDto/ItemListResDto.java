@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ItemListResDto {
 
-//  재료 id가 response에 꼭 필요할까 ?
     private Long id;
     private String itemImagePath;
     private String itemName;
@@ -24,7 +23,7 @@ public class ItemListResDto {
         return ItemListResDto.builder()
                 .id(item.getId())
                 .itemImagePath(item.getItemImagePath())
-                .itemName(item.getItemName())
+                .itemName(item.getName())
                 .price(item.getItemPrice())
                 .stock(item.getItemStock())
                 .build();

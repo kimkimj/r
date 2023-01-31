@@ -1,6 +1,7 @@
 package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
+import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
 import com.woowahan.recipe.domain.entity.CartEntity;
 import com.woowahan.recipe.domain.entity.CartItemEntity;
 import com.woowahan.recipe.domain.entity.ItemEntity;
@@ -13,10 +14,10 @@ import com.woowahan.recipe.repository.ItemRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -30,56 +31,55 @@ public class CartService {
     private final ItemRepository itemRepository;
 
 
-    /*public Page<CartInfoResponse> findCartItemList(Pageable pageable, String userName) {
+    public Page<CartItemResponse> findCartItemList(Pageable pageable, String userName) {
         UserEntity user = validateUser(userName);
 
         CartEntity cart = validateCart(user);
 
         log.info("cart : {}" , cart.getId());
-        Page<CartInfoResponse> cartItemPage = cartItemRepository.findByCart(pageable, cart).map(CartInfoResponse::from);
+        Page<CartItemResponse> cartItemPage = cartItemRepository.findByCart(cart, pageable).map(CartItemResponse::from);
         log.info("cart : {}" , cart.getId());
 
         return cartItemPage;
-    }*/
+    }
 
     public void createCartItem(CartItemReq cartItemCreateReq, String userName) {
         UserEntity user = validateUser(userName);
 
+        CartEntity cart = validateCart(user);
+
         ItemEntity item = validateItem(cartItemCreateReq.getItemId());
 
-        if(item.getItemStock() < cartItemCreateReq.getItemCnt()) {
+        if(item.getItemStock() < cartItemCreateReq.getCartItemCnt()) {
             throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
         }
 
-        CartEntity cart = validateCart(user);
-        CartItemEntity cartItem = CartItemEntity.createCartItem(cartItemCreateReq.getItemCnt(), item, cart);
+        CartItemEntity cartItem = CartItemEntity.createCartItem(cartItemCreateReq.getCartItemCnt(), item, cart);
 
         cartItemRepository.save(cartItem);
     }
 
     public void updateCartItem(CartItemReq cartItemUpdateReq, String userName) {
-        validateUser(userName);
+        UserEntity user = validateUser(userName);
 
-        CartItemEntity cartItem = validateCartItem(cartItemUpdateReq.getItemId());
+        CartEntity cart = validateCart(user);
 
-        log.info("cartItem.getItem().getItemStock() : {}", cartItem.getItem().getItemStock());
-        log.info("cartItem.getCartItemCnt() : {}", cartItemUpdateReq.getItemCnt());
-        if(cartItem.getItem().getItemStock() < cartItemUpdateReq.getItemCnt()) {
+        CartItemEntity cartItem = validateCartItem(cart, cartItemUpdateReq.getItemId());
+
+        if(cartItem.getItem().getItemStock() < cartItemUpdateReq.getCartItemCnt()) {
             throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
         }
 
-        cartItem.updateCartItemCnt(cartItemUpdateReq.getItemCnt());
+        cartItem.updateCartItemCnt(cartItemUpdateReq.getCartItemCnt());
     }
 
     public void deleteCartItem(Long itemId, String userName) {
         validateUser(userName);
 
-        CartItemEntity cartItem = validateCartItem(itemId);
-        cartItemRepository.delete(cartItem);
+        cartItemRepository.deleteById(itemId);
     }
 
     /* 공통 로직 */
-
     private UserEntity validateUser(String userName) {
         return userRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
@@ -90,17 +90,19 @@ public class CartService {
     }
 
     private CartEntity validateCart(UserEntity user) {
-        Optional<CartEntity> optCart = cartRepository.findByUser(user);
+        return cartRepository.findByUser(user).orElseGet(() -> cartRepository.save(CartEntity.createCart(user)));
+
+        /*Optional<CartEntity> optCart = cartRepository.findByUser(user);
 
         if(cartRepository.findByUser(user).isPresent()) {
             return optCart.get();
         } else {
             return cartRepository.save(CartEntity.builder().user(user).build());
-        }
+        }*/
     }
 
-    private CartItemEntity validateCartItem(Long itemId) {
-        return cartItemRepository.findById(itemId)
+    private CartItemEntity validateCartItem(CartEntity cart, Long itemId) {
+        return cartItemRepository.findByCartAndItemId(cart, itemId)
                 .orElseThrow(() -> new AppException(ErrorCode.CART_ITEM_NOT_FOUND, ErrorCode.CART_ITEM_NOT_FOUND.getMessage()));
     }
 }
