@@ -182,7 +182,7 @@ class ItemRestControllerTest {
         /* given */
         ItemDetailResDto dto = ItemDetailResDto.builder()
                 .itemImagePath("image path")
-                .name("name")
+                .itemName("name")
                 .itemPrice(3000)
                 .itemStock(10)
                 .build();
