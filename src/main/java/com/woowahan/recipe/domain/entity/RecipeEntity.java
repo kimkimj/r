@@ -35,6 +35,9 @@ public class RecipeEntity extends BaseEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @OneToMany(mappedBy = "recipe")
+    private List<LikeEntity> likes;
+
  /* 리뷰 개발
     @Builder.Default
     @OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)

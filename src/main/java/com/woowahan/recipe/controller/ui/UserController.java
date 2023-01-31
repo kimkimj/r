@@ -2,12 +2,12 @@ package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.orderDto.OrderInfoResponse;
 import com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserResponse;
 import com.woowahan.recipe.domain.entity.UserEntity;
-import com.woowahan.recipe.exception.AppException;
-import com.woowahan.recipe.repository.UserRepository;
+import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.OrderService;
 import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +29,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
-import static com.woowahan.recipe.exception.ErrorCode.USERNAME_NOT_FOUND;
-
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -38,7 +36,7 @@ public class UserController {
 
     private final UserService userService;
     private final OrderService orderService;
-    private final UserRepository userRepository;
+    private final FindService findService;
 
     // 관리자 페이지
     @GetMapping("/admin/users")
@@ -108,9 +106,7 @@ public class UserController {
     @GetMapping("/users/my/update")
     public String updateForm(Model model, Authentication authentication) {
         log.info("user22={}", authentication.getName());
-        UserEntity user = userRepository.findByUserName(authentication.getName()).orElseThrow(() -> {
-            throw new AppException(USERNAME_NOT_FOUND, USERNAME_NOT_FOUND.getMessage());
-        });
+        UserEntity user = findService.findUserName(authentication.getName());
         model.addAttribute("user", user);
         // 로그인이 되어있는 유저의 id와 수정페이지에 접속하는 id가 같아야 함
         return "user/updateForm";
@@ -118,15 +114,17 @@ public class UserController {
 
     @PostMapping("/users/my/update")
     // FIXME: 2023/01/31 진혁
-    public String update() {
+    public String update(@ModelAttribute UserResponse userResponse, Authentication authentication) {
+        UserEntity user = findService.findUserName(authentication.getName());
+        userService.updateUser(user.getId(), userResponse, authentication.getName());
+
         return "user/updateForm";
     }
 
     @GetMapping("/users/my/orders")
-    public String myOrders(Model model, OrderSearch orderSearch,
+    public String myOrders(Model model, OrderSearch orderSearch, Authentication authentication,
                            @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        String userName = "jin2"; // 임시
-        List<OrderInfoResponse> orderList = orderService.findAllOrder2(userName, orderSearch);
+        List<OrderInfoResponse> orderList = orderService.findAllOrder2(authentication.getName(), orderSearch);
         model.addAttribute("orderSearch", orderSearch);
         model.addAttribute("orderList", orderList);
         return "user/my/myOrder";
@@ -143,7 +141,9 @@ public class UserController {
     }
 
     @GetMapping("/users/my/recipe-like")
-    public String myLikeRecipe() {
+    public String myLikeRecipe(Model model, Authentication authentication, @PageableDefault(size = 20)Pageable pageable) {
+        List<RecipeFindResDto> myLikeRecipeList = findService.findMyLikeRecipe(authentication.getName());
+        model.addAttribute("myLikeRecipeList", myLikeRecipeList);
         return "user/my/myLikeRecipe";
     }
 
