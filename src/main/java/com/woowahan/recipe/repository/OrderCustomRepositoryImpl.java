@@ -6,6 +6,9 @@ import com.woowahan.recipe.domain.OrderStatus;
 import com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch;
 import com.woowahan.recipe.domain.entity.OrderEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,11 +29,11 @@ public class OrderCustomRepositoryImpl implements OrderCustomRepository{
     // 주문 진행, 주문 취소 조건 필요
     // 상품 이름에 대한 조건 필요
     @Override
-    public List<OrderEntity> findAllByString(OrderSearch orderSearch, String userName) {
-        return searchOrder(orderSearch.getOrderStatus(), orderSearch.getItemName(), userName);
+    public Page<OrderEntity> findAllByString(OrderSearch orderSearch, String userName, Pageable pageable) {
+        return searchOrder(orderSearch.getOrderStatus(), orderSearch.getItemName(), userName, pageable);
     }
 
-    private List<OrderEntity> searchOrder(OrderStatus orderStatusCond, String itemNameCond, String userNameCond) {
+    private Page<OrderEntity> searchOrder(OrderStatus orderStatusCond, String itemNameCond, String userNameCond, Pageable pageable) {
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         if (userNameCond != null) {
@@ -44,7 +47,7 @@ public class OrderCustomRepositoryImpl implements OrderCustomRepository{
         if (itemNameCond != null) {
             booleanBuilder.and(itemEntity.name.contains(itemNameCond));
         }
-        return queryFactory.select(orderEntity)
+        List<OrderEntity> contents = queryFactory.select(orderEntity)
                 .from(orderEntity)
                 .join(orderEntity.user, userEntity).fetchJoin()
                 .join(orderEntity.delivery, deliveryEntity).fetchJoin()
@@ -52,6 +55,11 @@ public class OrderCustomRepositoryImpl implements OrderCustomRepository{
                 .join(orderItemEntity.item, itemEntity).fetchJoin()
                 .where(booleanBuilder)
                 .distinct()
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+        long total = contents.size();
+        return new PageImpl<>(contents, pageable, total);
     }
 }

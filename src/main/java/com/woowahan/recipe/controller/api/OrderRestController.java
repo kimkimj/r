@@ -10,12 +10,8 @@ import com.woowahan.recipe.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,16 +27,8 @@ public class OrderRestController {
     }
 
     @GetMapping("/users/orders/list")
-    public Response<Page<OrderInfoResponse>> findMyOrder(@PageableDefault(sort = "createdDate", direction = Sort.Direction.DESC)Pageable pageable,
-                                                         Authentication authentication) {
-        Page<OrderInfoResponse> orderInfoResponses = orderService.findAllOrder(authentication.getName(), pageable);
-        return Response.success(orderInfoResponses);
-    }
-
-    // FIXME: 2023/01/27 변수명 변경하기
-    @PostMapping("/users/orders/list2")
-    public Response<List<OrderInfoResponse>> findMyOrder2(@RequestBody OrderSearch orderSearch, Authentication authentication) {
-        List<OrderInfoResponse> orderInfoResponses = orderService.findAllOrder2(authentication.getName(), orderSearch);
+    public Response<Page<OrderInfoResponse>> findMyOrder(@RequestBody OrderSearch orderSearch, Authentication authentication, Pageable pageable) {
+        Page<OrderInfoResponse> orderInfoResponses = orderService.findMyOrder(authentication.getName(), orderSearch, pageable);
         return Response.success(orderInfoResponses);
     }
 
