@@ -35,6 +35,9 @@ public class RecipeEntity extends BaseEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @OneToMany(mappedBy = "recipe")
+    private List<LikeEntity> likes;
+
  /* 리뷰 개발
     @Builder.Default
     @OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
@@ -42,8 +45,8 @@ public class RecipeEntity extends BaseEntity {
     private List<ReviewEntity> reivews;
 */
     @Builder.Default
-    @OneToMany(mappedBy = "recipe")
-    private List<ItemEntity> items = new ArrayList<>();
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    private List<RecipeItemEntity> recipeItems = new ArrayList<>();
 
     public static RecipeFindResDto from(RecipeEntity recipeEntity) {
         return new RecipeFindResDto(

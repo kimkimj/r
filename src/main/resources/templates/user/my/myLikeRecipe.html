@@ -23,7 +23,33 @@
     </div>
 </div>
 <h2>찜한 레시피 페이지</h2>
-
+<div align="center">
+    <table>
+        <thead>
+        <tr>
+            <!--private String recipeTitle;
+            private String recipeBody;
+            private String userName;
+            private int recipeLike;
+            private int recipeView;-->
+            <th style="width: 250px">레시피 제목</th>
+            <th style="width: 250px">레시피 내용</th>
+            <th style="width: 100px">레시피 작성자</th>
+            <th style="width: 50px">레시피 좋아요 수</th>
+            <th style="width: 50px">레시피 조회수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="recipe : ${myLikeRecipeList}">
+            <td th:text="${recipe.recipeTitle}"/>
+            <td th:text="${recipe.recipeBody}"/>
+            <td th:text="${recipe.userName}"/>
+            <td th:text="${recipe.recipeLike}"/>
+            <td th:text="${recipe.recipeView}"/>
+        </tr>
+        </tbody>
+    </table>
+</div>
 <br/>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>

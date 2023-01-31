@@ -27,11 +27,34 @@
     <h2>회원정보 수정</h2>
     <form role="form" th:action="@{/users/my/update}" th:object="${user}" method="post">
         <div class="mb-3">
-            <label th:for="userName" th:text="#{label.userName}" class="form-label">아이디</label>
-            <input type="text" th:field="*{userName}" class="form-control"
-                   th:errorclass="field-error">
-            <div class="field-error" th:errors="*{userName}">아이디 오류</div>
+            <label th:for="password" th:text="#{label.userPassword}" class="form-label">비밀번호</label>
+            <input type="password" th:field="*{password}" class="form-control" id="exampleInputPassword1">
         </div>
+        <div class="mb-3">
+            <label th:for="address" th:text="#{label.address}" class="form-label">주소</label>
+            <input type="text" th:field="*{address}" class="form-control"
+                   th:errorclass="field-error">
+            <div class="field-error" th:errors="*{address}">주소 오류</div>
+        </div>
+        <div class="mb-3">
+            <label th:for="email" th:text="#{label.email}" class="form-label">이메일</label>
+            <input type="text" th:field="*{email}" class="form-control"
+                   th:errorclass="field-error">
+            <div class="field-error" th:errors="*{email}">이메일 오류</div>
+        </div>
+        <div class="mb-3">
+            <label th:for="address" th:text="#{label.phoneNum}" class="form-label">핸드폰번호</label>
+            <input type="text" th:field="*{phoneNum}" class="form-control"
+                   th:errorclass="field-error">
+            <div class="field-error" th:errors="*{phoneNum}">핸드폰 번호 오류</div>
+        </div>
+        <div class="mb-3">
+            <label th:for="address" th:text="#{label.birth}" class="form-label">생일</label>
+            <input type="text" th:field="*{birth}" class="form-control"
+                   th:errorclass="field-error">
+            <div class="field-error" th:errors="*{birth}">생일 오류</div>
+        </div>
+        <button type="submit" class="btn btn-primary">회원 수정</button>
     </form>
 
 </div>
