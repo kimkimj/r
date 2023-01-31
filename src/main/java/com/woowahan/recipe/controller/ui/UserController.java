@@ -5,6 +5,9 @@ import com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserResponse;
+import com.woowahan.recipe.domain.entity.UserEntity;
+import com.woowahan.recipe.exception.AppException;
+import com.woowahan.recipe.repository.UserRepository;
 import com.woowahan.recipe.service.OrderService;
 import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +29,8 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.woowahan.recipe.exception.ErrorCode.USERNAME_NOT_FOUND;
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -32,6 +38,7 @@ public class UserController {
 
     private final UserService userService;
     private final OrderService orderService;
+    private final UserRepository userRepository;
 
     // 관리자 페이지
     @GetMapping("/admin/users")
@@ -92,33 +99,28 @@ public class UserController {
     public String logout(HttpSession session) {
         session.removeAttribute("jwt");
         session.invalidate();
+
         return "redirect:/";
     }
 
     // 회원 정보 수정
 //    @PreAuthorize("isAuthenticated()")
     @GetMapping("/users/my/update")
-    public String updateForm(Model model) {
-//        log.info("user22={}", authentication.getName());
-        /*UserEntity user = userRepository.findByUserName(authentication.getName()).orElseThrow(() -> {
+    public String updateForm(Model model, Authentication authentication) {
+        log.info("user22={}", authentication.getName());
+        UserEntity user = userRepository.findByUserName(authentication.getName()).orElseThrow(() -> {
             throw new AppException(USERNAME_NOT_FOUND, USERNAME_NOT_FOUND.getMessage());
-        });*/
-//        model.addAttribute("user", user);
+        });
+        model.addAttribute("user", user);
         // 로그인이 되어있는 유저의 id와 수정페이지에 접속하는 id가 같아야 함
         return "user/updateForm";
     }
 
     @PostMapping("/users/my/update")
-    public String update(/*@PathVariable Long id, UserEntity user*/) {
-//        userService.updateUser()
+    // FIXME: 2023/01/31 진혁
+    public String update() {
         return "user/updateForm";
     }
-
-    /*public String admin(Model model, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<UserResponse> userList = userService.findAll(pageable);
-        model.addAttribute("userList", userList);
-        return "user/admin";
-    }*/
 
     @GetMapping("/users/my/orders")
     public String myOrders(Model model, OrderSearch orderSearch,
