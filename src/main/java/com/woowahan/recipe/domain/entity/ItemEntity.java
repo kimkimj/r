@@ -7,6 +7,8 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,9 +32,9 @@ public class ItemEntity extends BaseEntity{
     @NotNull
     private Integer itemStock;
 
-    @ManyToOne
-    @JoinColumn(name = "recipe_id")
-    private RecipeEntity recipe;
+    @Builder.Default
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<RecipeItemEntity> recipeItems = new ArrayList<>();
 
     /* 아이템 수정 */
     public void update(String itemImagePath, String itemName, Integer itemPrice, Integer itemStock) {

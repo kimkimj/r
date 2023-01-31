@@ -42,8 +42,8 @@ public class RecipeEntity extends BaseEntity {
     private List<ReviewEntity> reivews;
 */
     @Builder.Default
-    @OneToMany(mappedBy = "recipe")
-    private List<ItemEntity> items = new ArrayList<>();
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    private List<RecipeItemEntity> recipeItems = new ArrayList<>();
 
     public static RecipeFindResDto from(RecipeEntity recipeEntity) {
         return new RecipeFindResDto(
