@@ -42,7 +42,7 @@ class CartServiceTest {
         cartService = new CartService(cartRepository, cartItemRepository, userRepository, itemRepository);
         cartItemReq = CartItemReq.builder()
                                     .itemId(item.getId())
-                                    .itemCnt(3)
+                                    .cartItemCnt(3)
                                     .build();
     }
 
@@ -107,7 +107,7 @@ class CartServiceTest {
             CartEntity cart = mock(CartEntity.class);
             cartItemReq = CartItemReq.builder()
                                             .itemId(item.getId())
-                                            .itemCnt(10)
+                                            .cartItemCnt(10)
                                             .build();
 
             when(userRepository.findByUserName(userName)).thenReturn(Optional.of(user));
@@ -151,7 +151,7 @@ class CartServiceTest {
 
             when(cartItemRepository.findByCart(pageRequest, cart)).thenReturn(Page.empty());
 
-            Page<CartInfoResponse> result = cartService.findCartItemList(pageRequest, userName);
+            Page<CartItemResponse> result = cartService.findCartItemList(pageRequest, userName);
 
             assertThat(result.getContent()).isEmpty();
         }*/

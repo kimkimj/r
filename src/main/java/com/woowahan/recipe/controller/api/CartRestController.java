@@ -1,8 +1,8 @@
 package com.woowahan.recipe.controller.api;
 
 import com.woowahan.recipe.domain.dto.Response;
-import com.woowahan.recipe.domain.dto.cartDto.CartInfoResponse;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
+import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
 import com.woowahan.recipe.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +22,9 @@ public class CartRestController {
     private final CartService cartService;
 
     @GetMapping
-    public Response<Page<CartInfoResponse>> findCartList(@PageableDefault(sort = "itemName", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+    public Response<Page<CartItemResponse>> findCartList(@PageableDefault(sort = "itemName", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
         String userName = authentication.getName();
-        Page<CartInfoResponse> cartInfoResponsePage = cartService.findCartItemList(pageable, userName);
+        Page<CartItemResponse> cartInfoResponsePage = cartService.findCartItemList(pageable, userName);
         return Response.success(cartInfoResponsePage);
     }
 
