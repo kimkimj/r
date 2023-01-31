@@ -26,10 +26,6 @@ public class UserEntity extends BaseEntity {
     @Column(name = "user_id")
     private Long id;
 
-    // Foreign Key
-    @OneToOne(mappedBy = "user")
-    private CartEntity cartEntity;
-
     @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<OrderEntity> orders = new ArrayList<>();
@@ -77,5 +73,9 @@ public class UserEntity extends BaseEntity {
         this.email = email;
         this.phoneNum = phoneNum;
         this.birth = birth;
+    }
+
+    public void updateToSeller(UserEntity user) {
+        user.userRole = UserRole.SELLER;
     }
 }

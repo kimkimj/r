@@ -1,10 +1,6 @@
 package com.woowahan.recipe.controller.ui;
 
-import com.woowahan.recipe.domain.dto.itemDto.ItemCreateReqDto;
-import com.woowahan.recipe.domain.dto.itemDto.ItemDetailResDto;
-import com.woowahan.recipe.domain.dto.itemDto.ItemListResDto;
-import com.woowahan.recipe.domain.dto.itemDto.ItemUpdateReqDto;
-import com.woowahan.recipe.repository.ItemRepository;
+import com.woowahan.recipe.domain.dto.itemDto.*;
 import com.woowahan.recipe.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -26,7 +23,6 @@ import javax.validation.Valid;
 public class ItemController {
 
     private final ItemService itemService;
-    private final ItemRepository itemRepository;
 
     /**
      * 상품 상세조회
@@ -50,6 +46,17 @@ public class ItemController {
     }
 
     /**
+     * 상품 검색
+     */
+    @GetMapping("/search")
+    public String search(Model model, @ModelAttribute ItemSearchReqDto itemSearchReqDto, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ItemListResDto> searchItems = itemService.searchItem(itemSearchReqDto.getKeyword(), pageable);
+        model.addAttribute("items", searchItems);
+        return "item/findAllForm";
+    }
+
+
+    /**
      * 재료 등록(관리자, 판매자)
      */
     @GetMapping("/create")
@@ -61,14 +68,15 @@ public class ItemController {
     @PostMapping("/create")
     //동작 test용
 //    public String create(@Valid ItemCreateReqDto reqDto, BindingResult bindingResult, Model model, Authentication authentication) {
-    public String create(@Valid @ModelAttribute ItemCreateReqDto reqDto, BindingResult bindingResult) {
+    public String create(@Valid @ModelAttribute ItemCreateReqDto reqDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             log.info("bindingResult = {}", bindingResult);
             return "item/createForm";
         }
-        itemService.createItem(reqDto, "ididid");
-        return "redirect:/";
+        ItemCreateResDto resDto = itemService.createItem(reqDto, "ididid");
+        redirectAttributes.addAttribute("id", resDto.getId());
+        return "redirect:/items/{id}";
     }
 
     /**
@@ -84,13 +92,25 @@ public class ItemController {
     @PostMapping("/update/{id}")
     //동작 test용
 //    public String update(@PathVariable Long id, @Valid @ModelAttribute ItemUpdateReqDto reqDto, BindingResult bindingResult, Model model, Authentication authentication) {
-    public String update(@Valid @ModelAttribute ItemUpdateReqDto reqDto, BindingResult bindingResult, @PathVariable Long id) {
+    public String update(@Valid @ModelAttribute ItemUpdateReqDto reqDto, BindingResult bindingResult,
+                         @PathVariable Long id,
+                         RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.info("bindingResult = {}", bindingResult);
             return "item/updateForm";
         }
-        itemService.updateItem(id, reqDto, "ididid");
-        return "redirect:/";
+        ItemUpdateResDto resDto = itemService.updateItem(id, reqDto, "ididid");
+        redirectAttributes.addAttribute("id", resDto.getId());
+        return "redirect:/items/{id}";
+    }
+
+    /**
+     * 재료 삭제(관리자, 판매자)
+     */
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id, Model model) {
+        itemService.deleteItem(id, "ididid");
+        return "redirect:/items";
     }
 
 }

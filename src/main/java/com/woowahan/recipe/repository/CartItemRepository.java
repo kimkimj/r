@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItemEntity, Long> {
-    Page<CartItemEntity> findByCart(Pageable pageable, CartEntity cart);
+    Page<CartItemEntity> findByCart(CartEntity cart, Pageable pageable);
 }

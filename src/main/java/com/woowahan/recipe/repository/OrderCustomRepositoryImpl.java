@@ -26,19 +26,23 @@ public class OrderCustomRepositoryImpl implements OrderCustomRepository{
     // 주문 진행, 주문 취소 조건 필요
     // 상품 이름에 대한 조건 필요
     @Override
-    public List<OrderEntity> findAllByString(OrderSearch orderSearch) {
-        return searchOrder(orderSearch.getOrderStatus(), orderSearch.getItemName());
+    public List<OrderEntity> findAllByString(OrderSearch orderSearch, String userName) {
+        return searchOrder(orderSearch.getOrderStatus(), orderSearch.getItemName(), userName);
     }
 
-    private List<OrderEntity> searchOrder(OrderStatus orderStatusCond, String itemNameCond) {
+    private List<OrderEntity> searchOrder(OrderStatus orderStatusCond, String itemNameCond, String userNameCond) {
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();
+        if (userNameCond != null) {
+            booleanBuilder.and(userEntity.userName.eq(userNameCond));
+        }
+
         if (orderStatusCond != null) {
             booleanBuilder.and(orderEntity.orderStatus.eq(orderStatusCond));
         }
 
         if (itemNameCond != null) {
-            booleanBuilder.and(itemEntity.itemName.contains(itemNameCond));
+            booleanBuilder.and(itemEntity.name.contains(itemNameCond));
         }
         return queryFactory.select(orderEntity)
                 .from(orderEntity)

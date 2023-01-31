@@ -58,9 +58,7 @@ public class RecipeService {
      **/
     public Page<RecipePageResDto> findAllRecipes(Pageable pageable) {
         Page<RecipeEntity> recipeEntities = recipeRepository.findAll(pageable);
-        return new PageImpl<>(recipeEntities.stream()
-                .map(RecipeEntity::toResponse)
-                .collect(Collectors.toList()));
+        return recipeEntities.map(RecipeEntity::toResponse);
     }
 
     /**
@@ -75,9 +73,7 @@ public class RecipeService {
         UserEntity user = validateUserName(userName);
         validateRecipe(user);
         Page<RecipeEntity> recipeEntities = recipeRepository.findRecipeEntitiesByUser(user, pageable);
-        return new PageImpl<>(recipeEntities.stream()
-                .map(RecipeEntity::toResponse)
-                .collect(Collectors.toList()));
+        return recipeEntities.map(RecipeEntity::toResponse);
     }
 
     /**
@@ -157,9 +153,11 @@ public class RecipeService {
         Optional<LikeEntity> optLike= likeRepository.findByUserAndRecipe(user, recipe);
         if(optLike.isPresent()) {
             likeRepository.delete(optLike.get());
+            recipeRepository.decreaseLikeCounts(id);
             return "좋아요를 취소합니다.";
         }else {
             likeRepository.save(LikeEntity.of(user, recipe));
+            recipeRepository.increaseLikeCounts(id);
             if(!user.equals(recipe.getUser())) {  // 현재 좋아요를 누른 사람과 레시피 작성자가 일치하지 않다면 알람 등록
                 publisher.publishEvent(AlarmEvent.of(AlarmType.NEW_LIKE_ON_RECIPE, user, recipe.getUser(), recipe));
             }
@@ -252,4 +250,21 @@ public class RecipeService {
         }
     }
 
+    /**
+     * @author 이다온
+     * @param keyword
+     * @param pageable
+     * @date 2023-01-31
+     * @return Page<RecipePageResDto>
+     * @description 전체조회 페이지에서 레시피 검색
+     **/
+    public Page<RecipePageResDto> searchRecipes(String keyword, Pageable pageable) {
+        Page<RecipeEntity> recipeEntities = recipeRepository.findAllSearch(keyword, pageable);
+
+        // 레시피가 없는 경우
+        if(recipeEntities.getSize() == 0) {
+            throw new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage());
+        }
+        return recipeEntities.map(RecipeEntity::toResponse);
+    }
 }

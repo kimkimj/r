@@ -21,9 +21,27 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
     @Query("update RecipeEntity r set r.recipeView = r.recipeView + 1 where r.id = :id")
     int updateView(@Param("id") Long id);
 
+    // 레시피 마이피드
+    /**
+     * 좋아요 개수 증감 쿼리
+     */
+    @Modifying
+    @Query("update RecipeEntity r set r.recipeLike = r.recipeLike + 1 where r.id = :id")
+    Integer increaseLikeCounts(@Param("id") Long id);
+
+    @Modifying
+    @Query("update RecipeEntity r set r.recipeLike = r.recipeLike - 1 where r.id = :id")
+    Integer decreaseLikeCounts(@Param("id") Long id);
+
     /**
      * 레시피 마이피드
      */
     Page<RecipeEntity> findRecipeEntitiesByUser(UserEntity user, Pageable pageable);
     Optional<List<RecipeEntity>> findByUser(UserEntity user);
+
+
+    // 레시피 검색
+    @Query(value = "SELECT re FROM RecipeEntity re WHERE re.recipeTitle LIKE %:recipeTitle%",
+           countQuery = "SELECT COUNT(re.id) FROM RecipeEntity re WHERE re.recipeTitle LIKE %:recipeTitle%")
+    Page<RecipeEntity> findAllSearch(String recipeTitle, Pageable pageable);
 }

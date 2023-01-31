@@ -1,6 +1,5 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.itemDto.ItemListResDto;
 import com.woowahan.recipe.domain.dto.itemDto.*;
 import com.woowahan.recipe.domain.entity.ItemEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
@@ -13,7 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import static com.woowahan.recipe.domain.UserRole.*;
+import static com.woowahan.recipe.domain.UserRole.USER;
 
 
 @RequiredArgsConstructor
@@ -52,7 +51,7 @@ public class ItemService {
      * 재료 페이지에서 재료 검색
      */
     public Page<ItemListResDto> searchItem(String keyword, Pageable pageable) {
-        Page<ItemEntity> items = itemRepository.findByItemNameContaining(keyword, pageable);
+        Page<ItemEntity> items = itemRepository.findByNameContaining(keyword, pageable);
         if(items.getSize() == 0) { //재료 검색시 키워드에 맞는 재료가 없으면 에러메세지 출력 -> 나중에 프론트에서 다시 처리 해줘야 할 듯
             throw new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage());
         }
