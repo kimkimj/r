@@ -77,8 +77,6 @@ class CartServiceTest {
             } catch (AppException e) {
                 assertEquals("재료가 존재하지 않습니다", e.getMessage());
             }
-
-            verify(cartRepository, never()).findByUser(any());
         }
     }
 
@@ -173,8 +171,8 @@ class CartServiceTest {
                                                     .build();
 
             when(userRepository.findByUserName(userName)).thenReturn(Optional.of(user));
-            when(cartItemRepository.findById(cartItem.getId())).thenReturn(Optional.of(cartItem));
             when(cartRepository.findByUser(user)).thenReturn(Optional.of(cart));
+            when(cartItemRepository.findByCartAndItemId(cart, cartItem.getItem().getId())).thenReturn(Optional.of(cartItem));
 
             assertTrue(item.getItemStock() < cartItem.getCartItemCnt());
             try {
@@ -214,7 +212,7 @@ class CartServiceTest {
             when(cartItemRepository.findById(cartItemId)).thenReturn(Optional.of(mock(CartItemEntity.class)));
 
             cartService.deleteCartItem(cartItemId, userName);
-            verify(cartItemRepository, atLeastOnce()).delete(any(CartItemEntity.class));
+            verify(cartItemRepository, atLeastOnce()).deleteById(any(Long.class));
         }
 
         @Test
