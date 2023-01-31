@@ -42,7 +42,7 @@ public class OrderCustomRepositoryImpl implements OrderCustomRepository{
         }
 
         if (itemNameCond != null) {
-            booleanBuilder.and(itemEntity.itemName.contains(itemNameCond));
+            booleanBuilder.and(itemEntity.name.contains(itemNameCond));
         }
         return queryFactory.select(orderEntity)
                 .from(orderEntity)
