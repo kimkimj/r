@@ -1,67 +1,152 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: headerFragment"/>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>마이 레시피 페이지</title>
+</head>
+<style>
+
+    /* pagination 색상 변경 */
+    .page-link {
+        color: #000;
+        background-color: #fff;
+        border: 1px solid #ccc;
+    }
+
+    .page-item.active .page-link {
+        z-index: 1;
+        color: #555;
+        font-weight:bold;
+        background-color: #f1f1f1;
+        border-color: #ccc;
+
+    }
+
+    .page-link:focus, .page-link:hover {
+        color: #000;
+        background-color: #fafafa;
+        border-color: #ccc;
+    }
+
+
+    a { text-decoration:none !important; color:black; }
+    a:hover { text-decoration:none !important; color:black;}
+
+    /* 테이블 tr 색상 */
+    .tr-hover:hover {
+        background-color: #E3F4EA;
+    }
+
+    /*.my-nev {
+        border-radius: 5px;
+        padding: 13px;
+        background-color: rgba(218, 226, 182, 0.38);
+    }*/
+
+    /* 마이 메뉴바 스타일 */
+    .detail-box {
+        border: 1px solid #DFE7E8;
+        padding: 8px;
+        border-radius: 7px;
+        font-size: large;
+        margin-bottom: 5px;
+        color: black;
+    }
+</style>
 <body>
-<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-<div class="container2 px-4 text-center">
-    <div class="row gx-5">
-        <div class="col">
-            <div class="p-3 border bg-light"><a href="/users/my/recipe">레시피</a></div>
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+<!-- 섹션의 전체 틀 div -->
+<div class="recipe-wapper">
+
+    <!-- bodyHeader -->
+    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+
+        <div class="container"><br>
+            <!-- 상단 메뉴바 -->
+            <div class="container2 px-4 text-center my-nev">
+                <div class="row gx-5">
+                    <div class="col">
+                        <div class="p-3 border detail-box"><a href="/recipes/list">레시피</a></div>
+                    </div>
+                    <div class="col">
+                        <div class="p-3 border detail-box"><a href="/users/my/get-reviews">댓글</a></div>
+                    </div>
+                    <div class="col">
+                        <div class="p-3 border detail-box"><a href="/users/my/orders">주문목록</a></div>
+                    </div>
+                    <div class="col">
+                        <div class="p-3 border detail-box"><a href="/users/my/recipe-like">찜한 레시피</a></div>
+                    </div>
+                    <div class="col">
+                        <div class="p-3 border detail-box"><a href="/users/my/update">회원 정보 수정</a></div>
+                    </div>
+                </div>
+            </div><br><br>
+
+            <div>
+                <h1>마이 레시피 리스트</h1><hr>
+                <span style="float: right;">
+                    <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>
+                    <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/list}'|">전체 레시피 보기</button>
+                </span>
+            </div><br><br><br><br>
+
+            <table class="table table-hover" style="text-align: center;">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col" style="width: 350px">레시피 제목</th>
+                    <th scope="col">작성일</th>
+                    <th scope="col">수정일</th>
+                    <th scope="col" style="width: 100px">조회수</th>
+                    <th scope="col" style="width: 100px">좋아요</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="tr-hover" th:each="recipe : ${myRecipes}" th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|">
+                    <th scope="row" th:text="${recipe.getRecipeId()}"/>
+                    <td th:text="${recipe.getRecipeTitle}"/>
+                    <td th:text="${recipe.createdDate}"/>
+                    <td th:text="${recipe.lastModifiedDate}"/>
+                    <td th:text="${recipe.getRecipeView}"/>
+                    <td th:text="${recipe.getRecipeLike}"/>
+                </tr>
+                </tbody>
+            </table>
         </div>
-        <div class="col">
-            <div class="p-3 border bg-light"><a href="/users/my/get-reviews">댓글</a></div>
-        </div>
-        <div class="col">
-            <div class="p-3 border bg-light"><a href="/users/my/orders">주문목록</a></div>
-        </div>
-        <div class="col">
-            <div class="p-3 border bg-light"><a href="/users/my/recipe-like">찜한 레시피</a></div>
-        </div>
-        <div class="col">
-            <div class="p-3 border bg-light"><a href="/users/my/update">회원 정보 수정</a></div>
-        </div>
+
+    <!-- pagination -->
+    <div class="py-3 my-4">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
+                    <a class="page-link" th:href="@{/recipes/my(page = ${nowPage - 2})}">Previous</a>
+                </li>
+
+                <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                    <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/recipes/my(page = ${page - 1})}" th:text="${page}">1</a></li>
+                    <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
+                </th:block>
+
+                <li class="page-item">
+                    <a class="page-link" th:href="@{/recipes/my(page = ${nowPage})}">Next</a>
+                </li>
+            </ul>
+        </nav>
     </div>
+
+    <br>
+    <!-- footer -->
+    <div th:replace="fragments/footer :: footerFragment"/>
+    <br><br>
 </div>
-<h2>마이페이지</h2>
-<div>
-    <button type="button" th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>
-    <button type="button" th:onclick="|location.href='@{/recipes/list}'|">전체 레시피 보기</button>
-</div>
-<br/>
-<div class="list">
-    <div align="center">
-        <table>
-            <thead>
-            <tr>
-                <th style="width: 50px;">ID</th>
-                <th style="width: 150px">레시피 제목</th>
-                <th style="width: 50px">조회수</th>
-                <th style="width: 50px">좋아요</th>
-                <th style="width: 200px">작성일</th>
-                <th style="width: 200px">수정일</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="recipe : ${myRecipes}">
-                <td th:text="${recipe.getRecipeId()}"/>
-                <td th:text="${recipe.getRecipeTitle}"/>
-                <td th:text="${recipe.getRecipeView}"/>
-                <td th:text="${recipe.getRecipeLike}"/>
-                <td th:text="${recipe.createdDate}"/>
-                <td th:text="${recipe.lastModifiedDate}"/>
-                <td>
-                    <button type="button"
-                            th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|"
-                            style="width: auto">
-                        레시피 보기
-                    </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-<br/>
-<div th:replace="fragments/footer :: footerFragment"/>
 </body>
 </html>

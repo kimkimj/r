@@ -73,9 +73,7 @@ public class RecipeService {
         UserEntity user = validateUserName(userName);
         validateRecipe(user);
         Page<RecipeEntity> recipeEntities = recipeRepository.findRecipeEntitiesByUser(user, pageable);
-        return new PageImpl<>(recipeEntities.stream()
-                .map(RecipeEntity::toResponse)
-                .collect(Collectors.toList()));
+        return recipeEntities.map(RecipeEntity::toResponse);
     }
 
     /**
