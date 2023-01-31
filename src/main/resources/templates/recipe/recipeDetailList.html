@@ -159,12 +159,12 @@
                 </div>
 
                 <div class="p-3 border bg-light margin-10">
-                    <h5>레시피</h5><hr><br>
+                    <h5>레시피</h5><hr>
 
                     <!-- 레시피 제목 -->
                     <div class="mb-3">
-                        <div th:text="${recipe.recipeTitle}">제목</b></div>
-                    </div><br>
+                        <div style="font-weight: bold; font-size: x-large;" th:text="${recipe.recipeTitle}">제목</b></div>
+                    </div>
 
                     <div class="mb-3">
                         <div th:text="${recipe.recipeBody}">
@@ -180,10 +180,7 @@
                 </div>
 
                 <div class="p-3 border bg-light margin-10">
-                    <h5>재료</h5><hr><br>
-
-                    <h5>기본 재료</h5>
-                    <hr>
+                    <h5>레시피 재료</h5><hr><br>
                     <div th:text="${data}">
                         오이 1/2개<br>
                         호밀빵 슬라이스 4장<br>
