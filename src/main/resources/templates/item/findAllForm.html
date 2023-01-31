@@ -33,8 +33,13 @@
         <img src="..." class="card-img-top" alt="이미지 준비중입니다.">
       </a>
       </div>
+      <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+        <button type="button" class="btn btn-primary">-</button>
+        <input style="width: 110px; text-align: center;" type="text" th:value = "0" readonly>
+<!--               value="상품A" th:value="${resDto.getItemName()}" readonly>-->
+        <button type="button" class="btn btn-primary">+</button>
+      </div>
       <div class="card-body">
-        <a href="#" class="btn btn-primary">수량버튼</a>
         <p class="card-title" th:text="${item.getItemName()}">상품 이름</p>
         <h5 class="card-text" th:text="${item.getPrice()}+원">가격</h5>
       </div>
