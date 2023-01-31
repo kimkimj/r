@@ -45,6 +45,15 @@ public class ItemController {
         return "item/findAllForm";
     }
 
+    /**
+     * 상품 검색
+     */
+    @GetMapping("/search")
+    public String search(Model model, @ModelAttribute ItemSearchReqDto itemSearchReqDto, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ItemListResDto> searchItems = itemService.searchItem(itemSearchReqDto.getKeyword(), pageable);
+        model.addAttribute("items", searchItems);
+        return "item/findAllForm";
+    }
 
 
     /**
@@ -59,7 +68,7 @@ public class ItemController {
     @PostMapping("/create")
     //동작 test용
 //    public String create(@Valid ItemCreateReqDto reqDto, BindingResult bindingResult, Model model, Authentication authentication) {
-    public String create(Model model, @Valid @ModelAttribute ItemCreateReqDto reqDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String create(@Valid @ModelAttribute ItemCreateReqDto reqDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             log.info("bindingResult = {}", bindingResult);
@@ -83,7 +92,9 @@ public class ItemController {
     @PostMapping("/update/{id}")
     //동작 test용
 //    public String update(@PathVariable Long id, @Valid @ModelAttribute ItemUpdateReqDto reqDto, BindingResult bindingResult, Model model, Authentication authentication) {
-    public String update(@Valid @ModelAttribute ItemUpdateReqDto reqDto, BindingResult bindingResult, @PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String update(@Valid @ModelAttribute ItemUpdateReqDto reqDto, BindingResult bindingResult,
+                         @PathVariable Long id,
+                         RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.info("bindingResult = {}", bindingResult);
             return "item/updateForm";
