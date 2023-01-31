@@ -21,7 +21,6 @@ public class ItemEntity extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //이미지가 없을 경우 기본이미지를 어떻게 넣어줄지 ? e.g) 이미지 준비중 입니다
     private String itemImagePath;
     @NotBlank
     @Column(name = "item_name")
