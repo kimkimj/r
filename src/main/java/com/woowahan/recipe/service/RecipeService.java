@@ -58,9 +58,7 @@ public class RecipeService {
      **/
     public Page<RecipePageResDto> findAllRecipes(Pageable pageable) {
         Page<RecipeEntity> recipeEntities = recipeRepository.findAll(pageable);
-        return new PageImpl<>(recipeEntities.stream()
-                .map(RecipeEntity::toResponse)
-                .collect(Collectors.toList()));
+        return recipeEntities.map(RecipeEntity::toResponse);
     }
 
     /**

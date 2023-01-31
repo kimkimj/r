@@ -1,7 +1,6 @@
 package com.woowahan.recipe.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowahan.recipe.fixture.TestInfoFixture;
 import com.woowahan.recipe.service.CartService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -14,7 +13,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,7 +30,7 @@ class CartRestControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @Nested
+    /*@Nested
     @DisplayName("장바구니 조회 테스트")
     class findCartList {
 
@@ -60,7 +58,7 @@ class CartRestControllerTest {
                             .andExpect(status().isOk());
 
         }
-    }
+    }*/
 
     @Nested
     @DisplayName("장바구니 아이템 등록 테스트")

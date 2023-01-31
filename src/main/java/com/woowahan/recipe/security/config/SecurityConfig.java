@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/api/v1/recipes/my, /api/v1/alarms, /api/v1/carts").authenticated()
                 .antMatchers(HttpMethod.GET).permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/users/join", "/api/v1/users/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1/users/**/role/change").hasRole("ROLE_ADMIN")
+//                .antMatchers(HttpMethod.GET, "/users/**").authenticated() //추가
                 .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.PUT).authenticated()
                 .antMatchers(HttpMethod.DELETE).authenticated()

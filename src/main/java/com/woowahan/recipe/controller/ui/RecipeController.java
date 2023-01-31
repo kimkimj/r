@@ -83,7 +83,18 @@ public class RecipeController {
     @GetMapping("/list")
     public String list(Model model, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<RecipePageResDto> allRecipes = recipeService.findAllRecipes(pageable);
+
+        // pagination
+        int nowPage = allRecipes.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4, 1);
+        int endPage = Math.min(nowPage + 5, allRecipes.getTotalPages());
+        int lastPage = allRecipes.getTotalPages();
+
         model.addAttribute("allRecipes", allRecipes);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("lastPage", lastPage);
         return "recipe/recipeList";
     }
 

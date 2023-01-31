@@ -37,6 +37,7 @@ public class OrderRestController {
         return Response.success(orderInfoResponses);
     }
 
+    // FIXME: 2023/01/27 변수명 변경하기
     @PostMapping("/users/orders/list2")
     public Response<List<OrderInfoResponse>> findMyOrder2(@RequestBody OrderSearch orderSearch, Authentication authentication) {
         List<OrderInfoResponse> orderInfoResponses = orderService.findAllOrder2(authentication.getName(), orderSearch);

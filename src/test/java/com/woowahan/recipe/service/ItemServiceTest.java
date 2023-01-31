@@ -60,7 +60,7 @@ class ItemServiceTest {
         item = ItemEntity.builder()
                 .id(1L)
                 .itemImagePath(itemCreateReqDto.getItemImagePath())
-                .itemName(itemCreateReqDto.getItemName())
+                .name(itemCreateReqDto.getItemName())
                 .itemPrice(itemCreateReqDto.getItemPrice())
                 .itemStock(itemCreateReqDto.getItemStock())
                 .build();

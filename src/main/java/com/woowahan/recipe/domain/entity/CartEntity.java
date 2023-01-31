@@ -20,6 +20,7 @@ public class CartEntity extends BaseEntity {
     @Column(name = "cart_id")
     private Long id;
 
+    @MapsId
     @OneToOne
     @JoinColumn(name="user_id")
     private UserEntity user;
