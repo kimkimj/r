@@ -207,4 +207,24 @@ public class UserService {
 
         return UserUpdateDto.toUserUpdateDto(user);
     }
+
+    @Transactional
+    public UserResponse updateInfo(UserUpdateReqDto reqDto, String userName) {
+        UserEntity user = userRepository.findByUserName(userName).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage());
+        });
+
+        user.updateInfo(reqDto);
+        return UserResponse.toUserResponse(user);
+    }
+
+    @Transactional
+    public UserResponse updatePassword(String password, String userName) {
+        UserEntity user = userRepository.findByUserName(userName).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage());
+        });
+
+        user.updatePassword(encoder.encode(password));
+        return UserResponse.toUserResponse(user);
+    }
 }

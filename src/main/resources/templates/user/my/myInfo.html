@@ -29,28 +29,42 @@
         </div>
     </div>
     <div class="container_etc" style="width: 460px">
-        <h2>회원정보 수정</h2>
-        <a href="/users/my/update/password">비밀번호 변경</a>
-        <form role="form" th:action="@{/users/my/update}" th:object="${user}" method="post">
+        <h2>회원정보</h2>
+        <form role="form" th:object="${user}" method="get">
+            <div class="mb-3">
+                <label th:for="address" th:text="#{label.name}" class="form-label">주소</label>
+                <input type="text" th:field="*{name}" class="form-control"
+                       th:errorclass="field-error" readonly>
+                <div class="field-error" th:errors="*{name}">주소 오류</div>
+            </div>
+
+            <div class="mb-3">
+                <label th:for="address" th:text="#{label.userName}" class="form-label">주소</label>
+                <input type="text" th:field="*{userName}" class="form-control"
+                       th:errorclass="field-error" readonly>
+                <div class="field-error" th:errors="*{userName}">주소 오류</div>
+            </div>
+
             <div class="mb-3">
                 <label th:for="address" th:text="#{label.address}" class="form-label">주소</label>
                 <input type="text" th:field="*{address}" class="form-control"
-                       th:errorclass="field-error">
+                       th:errorclass="field-error" readonly>
                 <div class="field-error" th:errors="*{address}">주소 오류</div>
             </div>
+
             <div class="mb-3">
                 <label th:for="email" th:text="#{label.email}" class="form-label">이메일</label>
                 <input type="text" th:field="*{email}" class="form-control"
-                       th:errorclass="field-error">
+                       th:errorclass="field-error" readonly>
                 <div class="field-error" th:errors="*{email}">이메일 오류</div>
             </div>
+
             <div class="mb-3">
                 <label th:for="address" th:text="#{label.phoneNum}" class="form-label">핸드폰번호</label>
                 <input type="text" th:field="*{phoneNum}" class="form-control"
-                       th:errorclass="field-error">
+                       th:errorclass="field-error" readonly>
                 <div class="field-error" th:errors="*{phoneNum}">핸드폰 번호 오류</div>
             </div>
-            <button type="submit" class="btn btn-primary">회원 수정</button>
         </form>
 
     </div>
