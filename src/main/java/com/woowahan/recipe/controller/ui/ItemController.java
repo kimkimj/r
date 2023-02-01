@@ -85,7 +85,7 @@ public class ItemController {
     @GetMapping("/update/{id}")
     public String updateForm(@PathVariable Long id,  Model model) {
         model.addAttribute("id", id);
-        model.addAttribute("itemUpdateReqDto", new ItemUpdateReqDto());
+        model.addAttribute("itemUpdateReqDto", itemService.findItem(id));
         return "item/updateForm";
     }
 
