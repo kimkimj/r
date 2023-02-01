@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -43,7 +45,7 @@ public class OrderEntity extends BaseEntity{
     @Builder
     public OrderEntity(Long id, UserEntity user, DeliveryEntity delivery, OrderStatus orderStatus) {
         this.id = id;
-        this.orderNumber = UUID.randomUUID().toString();
+        this.orderNumber = createOrderNumber();
         this.user = user;
         this.delivery = delivery;
         this.orderStatus = orderStatus;
@@ -72,9 +74,16 @@ public class OrderEntity extends BaseEntity{
         order.addUser(user);
         order.addDelivery(delivery);
         order.addOrderItem(orderItem);
-        order.orderNumber = UUID.randomUUID().toString();
+        order.orderNumber = order.createOrderNumber();
         order.orderStatus = OrderStatus.ORDER;
         return order;
+    }
+
+    public String createOrderNumber() {
+        String date = String.valueOf(LocalDate.now(ZoneId.of("Asia/Seoul")));
+        String now = date.replace("-", "");
+        String substring = UUID.randomUUID().toString().substring(0, 8);
+        return now + substring;
     }
 
     // 장바구니 주문
@@ -117,6 +126,5 @@ public class OrderEntity extends BaseEntity{
         }
         return totalCount;
     }
-
 
 }
