@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: headerFragment"/>
 <!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,22 +24,6 @@
         margin: 0 auto;
     }
 
-    .recipe-list-wrapper {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center; /* 세로 가운데 맞춤 */
-        justify-content: center; /* 가로 */
-    }
-
-    /* 리스트 중에 한개의 박스 div */
-    .recipe-list-div {
-        margin: 5px;
-        padding: 5px;
-        text-decoration: none;
-        color: #646464;
-    }
-
     a {
         text-decoration: none !important
     }
@@ -55,17 +38,6 @@
         font-weight: bold;
         cursor: pointer;
     }
-
-
-    .page-item.active .page-link {
-        z-index: 1;
-        color: #555;
-        font-weight: bold;
-        background-color: #f1f1f1;
-        border-color: #ccc;
-
-    }
-
 </style>
 <body>
 <!-- Option 1: Bootstrap Bundle with Popper -->
@@ -76,40 +48,41 @@
 <!-- 섹션의 전체 틀 div -->
 <div class="recipe-wapper">
 
-    <!-- bodyHeader -->
-    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+    <div align="left">
+        <table>
+            <thead>
+            <tr> <!-- width 총 300px-->
+                <th style="width: 30px;">ID</th>
+                <th style="width: 50px">이름</th>
+                <th style="width: 100px">수량</th>
+                <th style="width: 100px">가격</th>
 
-    <!-- 기본 컨테이너 -->
-    <div class="container">
-        <div>
-            <br>
-            <h1>전체 레시피 리스트</h1>
-            <hr>
-            <!--<div> 전체 레시피 수 : <span : th:text="${#lists.size(allItems)}"></span></div>-->
-        </div>
-        <br><br><br><br>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${allItems}">
 
-        <!-- 레시피 리스트 div-->
-        <div class="recipe-list-wrapper">
-            <!-- th:block -->
-            <th:block th:each="item : ${allItems}">
-                <div class="card recipe-list-div" style="width: 18rem;">
-                    <div class="card-body">
-                        <div class="card-title" style="text-align: center;">
-                            <span th:text="${item.getName()}"></span>
-                        </div>
-
-                        <br>
-
-                        <div class="list-group list-group-flush">
-                            <span th:text="'ID : ' + ${item.getItemPrice()}"></span>
-                            <span th:text="'조회수 : ' + ${item.getItemStock()}"></span>
-                        </div>
-                    </div>
-                </div>
-            </th:block>
-        </div>
+                <td th:text="${item.getId()}"/>
+                <td th:text="${item.getName()}"/>
+                <td th:text="${item.getItemStock()}"/>
+                <td th:text="${item.getItemPrice()}"/>
+                <td>
+                    <!-- 어떻게 item.getName()을 정해야 할지 모르겠네요-->
+                    <button type="button" th:onclick="|location.href='@{/recipes/item/{name}(name=${item.getName()})}'|"
+                            style="width: auto">
+                        선택
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
+
 </div>
+<script>
+    function window_close() {
+        window.close();
+    }
+</script>
 </body>
 </html>

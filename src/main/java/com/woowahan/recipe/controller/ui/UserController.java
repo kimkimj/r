@@ -2,13 +2,11 @@ package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
-import com.woowahan.recipe.domain.dto.orderDto.OrderInfoResponse;
-import com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewUpdateResponse;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserResponse;
+import com.woowahan.recipe.domain.dto.userDto.*;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.ReviewService;
@@ -23,10 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -104,8 +99,16 @@ public class UserController {
         return "redirect:/";
     }
 
+    // 마이페이지
+    @GetMapping("/users/my")
+    public String myPage(Model model, Authentication authentication) {
+        UserEntity user = findService.findUserName(authentication.getName());
+        UserResponse userResponse = UserResponse.toUserResponse(user);
+        model.addAttribute("user", userResponse);
+        return "user/my/myInfo";
+    }
+
     // 회원 정보 수정
-//    @PreAuthorize("isAuthenticated()")
     @GetMapping("/users/my/update")
     public String updateForm(Model model, Authentication authentication) {
         log.info("user22={}", authentication.getName());
@@ -116,11 +119,24 @@ public class UserController {
     }
 
     @PostMapping("/users/my/update")
-    public String update(@ModelAttribute UserResponse userResponse, Authentication authentication) {
-        UserEntity user = findService.findUserName(authentication.getName());
-        userService.updateUser(user.getId(), userResponse, authentication.getName());
+    public String updateUser(Model model, UserUpdateReqDto reqDto, Authentication authentication) {
+        UserResponse userResponse = userService.updateInfo(reqDto, authentication.getName());
+        model.addAttribute("user", userResponse);
 
-        return "redirect:users/my/reviews";
+        return "redirect:/users/my";
+    }
+
+    @GetMapping("/users/my/update/password")
+    public String updatePasswordForm(Model model) {
+        model.addAttribute("userPasswordReqDto", new UserPasswordReqDto());
+        return "user/my/passwordForm";
+    }
+
+    @PostMapping("/users/my/update/password")
+    public String updatePassword(Model model, UserPasswordReqDto userPasswordReqDto, Authentication authentication) {
+        model.addAttribute("userPasswordReqDto", userPasswordReqDto);
+        userService.updatePassword(userPasswordReqDto.getPassword(), authentication.getName());
+        return "redirect:/users/my";
     }
 
     @GetMapping("/users/my/get-reviews")
