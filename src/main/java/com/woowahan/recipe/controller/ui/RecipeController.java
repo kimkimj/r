@@ -1,5 +1,6 @@
 package com.woowahan.recipe.controller.ui;
 
+import com.woowahan.recipe.domain.dto.itemDto.ItemListForRecipeResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
 import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.RecipeService;
@@ -131,7 +132,18 @@ public class RecipeController {
     }
 
     /**
-     * TODO : 2023-01-31 페이징 중복 코드 정리
+     * 재료 검색
+     */
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @GetMapping("/searchItem")
+    public String searchItem(Model model, @ModelAttribute RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 100, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ItemListForRecipeResDto> allItems = recipeService.searchItemPage(recipeSearchReqDto.getKeyword(), pageable);
+        model.addAttribute("allItems", allItems);
+        return "recipe/itemList";
+    }
+
+    /**
+     * TODO : 2023-01-31 레시피 페이징 중복 코드 정리
      * @param model
      * @param allRecipes
      * @return
