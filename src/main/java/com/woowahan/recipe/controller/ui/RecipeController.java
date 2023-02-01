@@ -136,18 +136,7 @@ public class RecipeController {
 
         return paging(model, allRecipes);
     }
-//
-//    /**
-//     * 재료 검색
-//     */
-//    @CrossOrigin(origins = "*", allowedHeaders = "*")
-//    @GetMapping("/searchItem")
-//    @RequestBody
-//    public String searchItem(Model model, @ModelAttribute RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 100, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-//        Page<ItemListForRecipeResDto> allItems = recipeService.searchItemPage(recipeSearchReqDto.getKeyword(), pageable);
-//        model.addAttribute("allItems", allItems);
-//        return "recipe/itemList";
-//    }
+
 
     @Getter
     @AllArgsConstructor
@@ -155,12 +144,17 @@ public class RecipeController {
         private final List<String> results;
     }
 
+    /**
+     * 재료검색
+     * @param keyword
+     * @return
+     */
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/searchItem")
     @ResponseBody
     public SearchResponse searchItem(@RequestParam String keyword) {
         // TODO: support paging
-        Page<ItemListForRecipeResDto> allItems = recipeService.searchItemPage(keyword, PageRequest.of(0, 20));
+        Page<ItemListForRecipeResDto> allItems = recipeService.searchItemPage(keyword, PageRequest.of(0, 100));
         return new SearchResponse(allItems
                 .stream()
                 .map(ItemListForRecipeResDto::getName)
