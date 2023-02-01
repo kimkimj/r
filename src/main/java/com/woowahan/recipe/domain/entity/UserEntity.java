@@ -2,6 +2,7 @@ package com.woowahan.recipe.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.woowahan.recipe.domain.UserRole;
+import com.woowahan.recipe.domain.dto.userDto.UserUpdateReqDto;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -53,6 +54,16 @@ public class UserEntity extends BaseEntity {
 
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="Asia/Seoul")
     private String birth;
+
+    public void updateInfo(UserUpdateReqDto userUpdateReqDto) {
+        this.address = userUpdateReqDto.getAddress();
+        this.email = userUpdateReqDto.getEmail();
+        this.phoneNum = userUpdateReqDto.getPhoneNum();
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 
     public void updateUser(String userName, String password, String name,
                            String address, String email, String phoneNum, String birth) {

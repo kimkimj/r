@@ -54,8 +54,8 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderInfoResponse findOrder(String username, Long orderId) {
-        validateUser(username);
+    public OrderInfoResponse findOrder(String userName, Long orderId) {
+        validateUser(userName);
         OrderEntity order = validateOrder(orderId);
         return OrderInfoResponse.from(order);
     }
