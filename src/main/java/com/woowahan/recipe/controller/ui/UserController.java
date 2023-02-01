@@ -2,6 +2,10 @@ package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
+import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
+import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
+import com.woowahan.recipe.domain.dto.userDto.UserResponse;
 import com.woowahan.recipe.domain.dto.userDto.*;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.service.FindService;
@@ -109,8 +113,8 @@ public class UserController {
     public String updateForm(Model model, Authentication authentication) {
         log.info("user22={}", authentication.getName());
         UserEntity user = findService.findUserName(authentication.getName());
-        UserResponse userResponse = UserResponse.toUserResponse(user);
-        model.addAttribute("user", userResponse);
+        model.addAttribute("user", user);
+        // 로그인이 되어있는 유저의 id와 수정페이지에 접속하는 id가 같아야 함
         return "user/updateForm";
     }
 
@@ -140,18 +144,29 @@ public class UserController {
         return "user/my/myGetReview";
     }
 
-
     @GetMapping("/users/my/reviews")
     public String myReviews(Model model, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         String username = "GordonRamsey"; // 인증 생기기 전까지 임시 사용
 //        String username = authentication.getName();
-        Page<ReviewListResponse> reviews = reviewService.findAllReviewsByUser(username, pageable);
-        model.addAttribute("allMyReviews", reviews);
+        Page<ReviewListResponse> reviewList = reviewService.findAllReviewsByUser(username, pageable);
+
+        int nowPage = reviewList.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4, 1);
+        int endPage = Math.min(nowPage + 5, reviewList.getTotalPages());
+        int lastPage = reviewList.getTotalPages();
+
+        model.addAttribute("allMyReviews", reviewList);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("lastPage", lastPage);
+
         return "user/my/myReviews";
     }
 
     @GetMapping("/update/{recipeId}/{reviewId}")
     public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model) {
+        model.addAttribute("previousComment", reviewService.findReviewById(reviewId).getReviewComment());
         model.addAttribute("reviewUpdateRequest", new ReviewCreateRequest());
         model.addAttribute("recipeId", recipeId);
         model.addAttribute("reviewId", reviewId);
@@ -168,15 +183,22 @@ public class UserController {
         }
         String username = "GordonRamsey"; // 인증 생기기 전까지 임시 사용
 //        String username = authentication.getName();
-        reviewService.updateReview(reviewId, recipeId, request, username);
-        return "redirect:/users/my/myReviews";
+        reviewService.updateReview(recipeId, reviewId, request, username);
+        return "redirect:/users/my/reviews";
     }
 
     @GetMapping("/delete/{recipeId}/{reviewId}")
     public String delete(@PathVariable Long recipeId, @PathVariable Long reviewId, Authentication authentication) {
-        String username = "GordenRamsey"; // 인증 생기기 전까지 임시 사용
+        String username = "GordonRamsey"; // 인증 생기기 전까지 임시 사용
 //        String username = authentication.getName();
-        reviewService.deleteReview(reviewId, recipeId, username);
-        return "redirect:/users/my/myReviews";
+        reviewService.deleteReview(recipeId, reviewId, username);
+        return "redirect:/users/my/reviews";
+    }
+
+    @GetMapping("/users/my/recipe-like")
+    public String myLikeRecipe(Model model, Authentication authentication, @PageableDefault(size = 20)Pageable pageable) {
+        Page<RecipeFindResDto> myLikeRecipeList = findService.findMyLikeRecipe(authentication.getName(), pageable);
+        model.addAttribute("myLikeRecipeList", myLikeRecipeList);
+        return "user/my/myLikeRecipe";
     }
 }
