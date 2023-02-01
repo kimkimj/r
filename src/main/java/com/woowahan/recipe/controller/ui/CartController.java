@@ -1,6 +1,5 @@
 package com.woowahan.recipe.controller.ui;
 
-import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
 import com.woowahan.recipe.service.CartService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -40,13 +38,6 @@ public class CartController {
         model.addAttribute("lastPage", lastPage);
 
         return "cart/cartList";
-    }
-
-    @PostMapping
-    public String cartForm(Model model, CartItemReq request, Authentication authentication) {
-        cartService.createCartItem(request, authentication.getName());
-        model.addAttribute("상품이 장바구니에 담겼습니다.");
-        return "item/findAllForm";
     }
 
 }

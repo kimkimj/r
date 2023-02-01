@@ -15,38 +15,62 @@
             </thead>
             <tbody class="table-group-divider">
             <tr class="cartList" th:each="item : ${cartList}">
-                <th scope="row">
+                <td>
                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked="checked">
-                </th>
-                <td></td>
-<!--                <td th:text="${item.getImagePath()}">상품 이미지 경로</td>-->
-                <td th:text="${item.name}">상품 이름</td>
-                <td th:text="${item.price}">상품 가격</td>
+                </td>
+<!--                <td class=".individual_image_input" th:text="${item.getImagePath()}">상품 이미지 경로</td>-->
+                <td class="individual_name_input" th:text="${item.name}">상품 이름</td>
+                <td class="individual_cnt_input" th:text="${item.cnt}"></td>
+                <td class=".individual_totalPrice_input" th:text="${item.price}">상품 가격</td>
                 <td><button type="button" class="btn btn-danger" th:onclick="|location.href='@{/carts/{itemId} (itemId=${itemId})}'|">삭제</button></td>
             </tr>
             </tbody>
         </table>
-        <div>
-
+        <div class="result">
+            <span class="totalPrice_span">0</span>
+            <span class="totalCount_span">0</span>
+            <span class="delivery_price">0</span>
+            <span class="finalTotalPrice_span">0</span>
         </div>
     </div>
 </body>
 <script>
-    function getTotalPrice() {
-        let totalPrice = 0;  // 총 가격
-        let totalCount = 0;  // 총 갯수
-        let finalTotalPrice = 3000; 		// 최종 가격(총 가격 + 배송비)
+    $(document).ready(function() {
+        function getTotalPrice() {
+            let totalPrice = 0;  // 총 가격
+            let totalCount = 0;  // 총 갯수
+            let deliveryPrice = 0;  // 배송비
+            let finalTotalPrice = 0; 		// 최종 가격(총 가격 + 배송비)
 
-        $(".cartList>td").each(function(index, element){
+            $(".cartList").each(function (index, element) {
+                if($(".form-check-input").checked()) {
+                    // 총 가격
+                    totalPrice += parseInt($(element).find(".individual_totalPrice_input").val());
+                    // 총 갯수
+                    totalCount += parseInt($(element).find(".individual_cnt_input").val());
+                }
+            });
+
+            // 배송비
+            if (totalPrice >= 50000) {
+                deliveryPrice = 0;
+            } else if (totalPrice == 0) {
+                deliveryPrice = 0;
+            } else {
+                deliveryPrice = 3000;
+            }
+
+            finalTotalPrice = totalPrice + deliveryPrice;
+
             // 총 가격
-            totalPrice += parseInt($(element).find(".individual_totalPrice_input").val());
+            $(".totalPrice_span").text(totalPrice.toLocaleString());
             // 총 갯수
-            totalCount += parseInt($(element).find(".individual_bookCount_input").val());
-            // 총 종류
-            totalKind += 1;
-            // 총 마일리지
-            totalPoint += parseInt($(element).find(".individual_totalPoint_input").val());
-        });
-    }
+            $(".totalCount_span").text(totalCount);
+            // 배송비
+            $(".delivery_price").text(deliveryPrice.toLocaleString());
+            // 최종 가격(총 가격 + 배송비)
+            $(".finalTotalPrice_span").text(finalTotalPrice.toLocaleString());
+        }
+    })
 </script>
 <div th:replace="fragments/footer :: footerFragment"/>
