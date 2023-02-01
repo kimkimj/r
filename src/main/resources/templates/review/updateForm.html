@@ -40,12 +40,12 @@
         <form role="form" th:action="@{/update/{recipeId}/{reviewId}(recipeId=${recipeId}, reviewId=${reviewId})}" th:object="${reviewUpdateRequest}" method="post">
             <div class="form-group">
                 <label>리뷰 내용</label>
-                <textarea th:field="*{reviewComment}" class="form-control" placeholder="수정할 내용을 입력하세요">
+                <textarea th:field="*{comment}" class="form-control">
                 </textarea>
             </div>
         <div class="button-container">
             <div class="button">
-                <button type="button" class="btn btn-success">수정하기</button>
+                <button type="submit" class="btn btn-outline-success">수정하기</button>
             </div>
         </div>
         </form>

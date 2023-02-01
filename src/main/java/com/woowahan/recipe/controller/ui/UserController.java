@@ -6,6 +6,7 @@ import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
 import com.woowahan.recipe.domain.dto.orderDto.OrderInfoResponse;
 import com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewUpdateResponse;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserResponse;
@@ -128,7 +129,7 @@ public class UserController {
         UserEntity user = findService.findUserName(authentication.getName());
         userService.updateUser(user.getId(), userResponse, authentication.getName());
 
-        return "user/updateForm";
+        return "redirect:users/my/reviews";
     }
 
     @GetMapping("/users/my/orders")
@@ -156,7 +157,8 @@ public class UserController {
 
     @GetMapping("/update/{recipeId}/{reviewId}")
     public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model) {
-        model.addAttribute("reviewUpdateRequest", reviewService.findReviewById(reviewId));
+        model.addAttribute("previousComment", reviewService.findReviewById(reviewId).getReviewComment());
+        model.addAttribute("reviewUpdateRequest", new ReviewCreateRequest());
         model.addAttribute("recipeId", recipeId);
         model.addAttribute("reviewId", reviewId);
         return "review/updateForm";
@@ -172,17 +174,15 @@ public class UserController {
         }
         String username = "GordonRamsey"; // 인증 생기기 전까지 임시 사용
 //        String username = authentication.getName();
-        reviewService.updateReview(reviewId, recipeId, request, username);
-        model.addAttribute("recipeId", recipeId);
-        model.addAttribute("reviewId", reviewId);
+        reviewService.updateReview(recipeId, reviewId, request, username);
         return "redirect:/users/my/reviews";
     }
 
     @GetMapping("/delete/{recipeId}/{reviewId}")
     public String delete(@PathVariable Long recipeId, @PathVariable Long reviewId, Authentication authentication) {
-        String username = "GordenRamsey"; // 인증 생기기 전까지 임시 사용
+        String username = "GordonRamsey"; // 인증 생기기 전까지 임시 사용
 //        String username = authentication.getName();
-        reviewService.deleteReview(reviewId, recipeId, username);
+        reviewService.deleteReview(recipeId, reviewId, username);
         return "redirect:/users/my/reviews";
     }
 
