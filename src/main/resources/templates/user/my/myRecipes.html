@@ -116,7 +116,7 @@
     <div class="py-3 my-4">
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
+                <li class="page-item" th:classappend="${!myRecipes.hasPrevious} ? 'disabled'">
                     <a class="page-link" th:href="@{/recipes/my(page = ${nowPage - 2})}">Previous</a>
                 </li>
 

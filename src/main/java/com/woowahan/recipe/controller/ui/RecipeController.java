@@ -4,9 +4,12 @@ import com.woowahan.recipe.domain.dto.itemDto.ItemListForRecipeResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
 import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.RecipeService;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -16,7 +19,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletRequest;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -130,16 +136,35 @@ public class RecipeController {
 
         return paging(model, allRecipes);
     }
+//
+//    /**
+//     * 재료 검색
+//     */
+//    @CrossOrigin(origins = "*", allowedHeaders = "*")
+//    @GetMapping("/searchItem")
+//    @RequestBody
+//    public String searchItem(Model model, @ModelAttribute RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 100, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+//        Page<ItemListForRecipeResDto> allItems = recipeService.searchItemPage(recipeSearchReqDto.getKeyword(), pageable);
+//        model.addAttribute("allItems", allItems);
+//        return "recipe/itemList";
+//    }
 
-    /**
-     * 재료 검색
-     */
+    @Getter
+    @AllArgsConstructor
+    class SearchResponse {
+        private final List<String> results;
+    }
+
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/searchItem")
-    public String searchItem(Model model, @ModelAttribute RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 100, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<ItemListForRecipeResDto> allItems = recipeService.searchItemPage(recipeSearchReqDto.getKeyword(), pageable);
-        model.addAttribute("allItems", allItems);
-        return "recipe/itemList";
+    @ResponseBody
+    public SearchResponse searchItem(@RequestParam String keyword) {
+        // TODO: support paging
+        Page<ItemListForRecipeResDto> allItems = recipeService.searchItemPage(keyword, PageRequest.of(0, 20));
+        return new SearchResponse(allItems
+                .stream()
+                .map(ItemListForRecipeResDto::getName)
+                .collect(Collectors.toList()));
     }
 
     /**

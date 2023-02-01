@@ -116,7 +116,7 @@
                     <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
                 </th:block>
 
-                <li class="page-item">
+                <li class="page-item" th:classappend="${!myLikeRecipeList.hasNext} ? 'disabled'">
                     <a class="page-link" th:href="@{/recipes/likes/my(page = ${nowPage})}">Next</a>
                 </li>
             </ul>
@@ -129,24 +129,5 @@
     <br><br>
 </div>
 </body>
-</html><!--
-<t<table>
-    <thead>
-    <tr>
-        <th style="width: 250px">레시피 제목</th>
-        <th style="width: 250px">레시피 내용</th>
-        <th style="width: 100px">레시피 작성자</th>
-        <th style="width: 50px">레시피 좋아요 수</th>
-        <th style="width: 50px">레시피 조회수</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="recipe : ${myLikeRecipeList}">
-        <td th:text="${recipe.recipeTitle}"/>
-        <td th:text="${recipe.recipeBody}"/>
-        <td th:text="${recipe.userName}"/>
-        <td th:text="${recipe.recipeLike}"/>
-        <td th:text="${recipe.recipeView}"/>
-    </tr>
-    </tbody>
-</</table>-->
+
+</html>

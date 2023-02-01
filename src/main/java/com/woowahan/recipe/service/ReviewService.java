@@ -49,6 +49,13 @@ public class ReviewService {
         return review;
     }
 
+
+    // 리뷰 단건 조회
+    public ReviewGetResponse findReviewById (Long reviewId) {
+        ReviewEntity review = validateReview(reviewId);
+        return ReviewGetResponse.toReviewGetResponse(review);
+    }
+
     // 리뷰 작성
     public ReviewCreateResponse createReview(Long recipeId, ReviewCreateRequest reviewCreateRequest, String username)  {
         // 유저가 존재하는지 확인
