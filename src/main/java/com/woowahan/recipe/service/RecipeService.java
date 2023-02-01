@@ -1,13 +1,12 @@
 package com.woowahan.recipe.service;
 
+import com.woowahan.recipe.domain.dto.itemDto.ItemListForRecipeResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
-import com.woowahan.recipe.domain.entity.AlarmType;
-import com.woowahan.recipe.domain.entity.LikeEntity;
-import com.woowahan.recipe.domain.entity.RecipeEntity;
-import com.woowahan.recipe.domain.entity.UserEntity;
+import com.woowahan.recipe.domain.entity.*;
 import com.woowahan.recipe.event.AlarmEvent;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
+import com.woowahan.recipe.repository.ItemRepository;
 import com.woowahan.recipe.repository.LikeRepository;
 import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.UserRepository;
@@ -34,15 +33,16 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+    private final ItemRepository itemRepository;
     private final ApplicationEventPublisher publisher;
 
     /**
-     * @author 김응준
      * @param recipeId
-     * @date 2023-01-17
      * @return recipeFindResDto
+     * @author 김응준
+     * @date 2023-01-17
      * @description ID로 레시피 단건조회
-    **/
+     **/
     public RecipeFindResDto findRecipe(Long recipeId) {
         Optional<RecipeEntity> optRecipe = recipeRepository.findById(recipeId);
         RecipeFindResDto recipeFindResDto = RecipeEntity.from(optRecipe.get());
@@ -50,10 +50,10 @@ public class RecipeService {
     }
 
     /**
-     * @author 김응준
      * @param pageable
-     * @date 2023-01-20
      * @return Page<RecipePageResDto>
+     * @author 김응준
+     * @date 2023-01-20
      * @description 레시피 전체 조회
      **/
     public Page<RecipePageResDto> findAllRecipes(Pageable pageable) {
@@ -62,11 +62,11 @@ public class RecipeService {
     }
 
     /**
-     * @author 김응준
      * @param pageable
      * @param userName
-     * @date 2023-01-20
      * @return Page<RecipePageResDto>
+     * @author 김응준
+     * @date 2023-01-20
      * @description 레시피 마이피드
      **/
     public Page<RecipePageResDto> myRecipes(Pageable pageable, String userName) {
@@ -77,13 +77,13 @@ public class RecipeService {
     }
 
     /**
-     * @author 김응준
      * @param recipeCreateReqDto
      * @param userName
-     * @date 2023-01-18
      * @return RecipeCreateResDto
+     * @author 김응준
+     * @date 2023-01-18
      * @description 레시피 작성
-    **/
+     **/
     public RecipeCreateResDto createRecipe(@RequestParam RecipeCreateReqDto recipeCreateReqDto, String userName) {
         RecipeEntity recipeEntity = createRecipeEntity(recipeCreateReqDto, userName);
         RecipeEntity saveRecipe = recipeRepository.save(recipeEntity);
@@ -92,14 +92,14 @@ public class RecipeService {
     }
 
     /**
-     * @author 김응준
      * @param recipeUpdateReqDto
      * @param recipeId
      * @param userName
-     * @date 2023-01-19
      * @return RecipeUpdateResDto
+     * @author 김응준
+     * @date 2023-01-19
      * @description 레시피 수정
-    **/
+     **/
     public RecipeUpdateResDto updateRecipe(@RequestParam RecipeUpdateReqDto recipeUpdateReqDto, Long recipeId, String userName) {
         RecipeEntity recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage()));
         validateWriterAndUserName(userName, recipe); // 동일 유저인지 검증
@@ -112,13 +112,13 @@ public class RecipeService {
     }
 
     /**
-     * @author 김응준
      * @param recipeId
      * @param userName
-     * @date 2023-01-20
      * @return RecipeResponse
+     * @author 김응준
+     * @date 2023-01-20
      * @description 레시피 삭제
-    **/
+     **/
     public RecipeResponse deleteRecipe(Long recipeId, String userName) {
         RecipeEntity recipe = validateRecipe(recipeId);
         validateWriterAndUserName(userName, recipe); // 동일 유저 검증
@@ -128,37 +128,37 @@ public class RecipeService {
     }
 
     /**
-     * @author 김응준
      * @param id
-     * @date 2023-01-19
      * @return int
+     * @author 김응준
+     * @date 2023-01-19
      * @description 조회수 증가
-    **/
+     **/
     public int updateView(Long id) {
         return recipeRepository.updateView(id);
     }
 
     /**
-     * @author 이소영
      * @param id
      * @param userName
-     * @date 2023-01-24
      * @return String
+     * @author 이소영
+     * @date 2023-01-24
      * @description 좋아요를 처음 눌렀다면 "좋아요를 눌렀습니다.", 좋아요를 이미 누른 상태라면 "좋아요를 취소합니다." 반환
-     *              좋아요를 눌렀을 때 레시피 작성자와 좋아요를 누른 회원이 다르다면 NEW_LIKE_ON_RECIPE 알람 등록
-    **/
+     * 좋아요를 눌렀을 때 레시피 작성자와 좋아요를 누른 회원이 다르다면 NEW_LIKE_ON_RECIPE 알람 등록
+     **/
     public String pushLikes(Long id, String userName) {
         UserEntity user = validateUserName(userName);
         RecipeEntity recipe = validateRecipe(id);
-        Optional<LikeEntity> optLike= likeRepository.findByUserAndRecipe(user, recipe);
-        if(optLike.isPresent()) {
+        Optional<LikeEntity> optLike = likeRepository.findByUserAndRecipe(user, recipe);
+        if (optLike.isPresent()) {
             likeRepository.delete(optLike.get());
             recipeRepository.decreaseLikeCounts(id);
             return "좋아요를 취소합니다.";
-        }else {
+        } else {
             likeRepository.save(LikeEntity.of(user, recipe));
             recipeRepository.increaseLikeCounts(id);
-            if(!user.equals(recipe.getUser())) {  // 현재 좋아요를 누른 사람과 레시피 작성자가 일치하지 않다면 알람 등록
+            if (!user.equals(recipe.getUser())) {  // 현재 좋아요를 누른 사람과 레시피 작성자가 일치하지 않다면 알람 등록
                 publisher.publishEvent(AlarmEvent.of(AlarmType.NEW_LIKE_ON_RECIPE, user, recipe.getUser(), recipe));
             }
             return "좋아요를 눌렀습니다.";
@@ -166,13 +166,13 @@ public class RecipeService {
     }
 
     /**
-     * @author 이소영
      * @param id
      * @param userName
-     * @date 2023-01-24
      * @return Integer
+     * @author 이소영
+     * @date 2023-01-24
      * @description 좋아요 개수를 반환
-    **/
+     **/
     public Integer countLikes(Long id, String userName) {
         RecipeEntity recipe = validateRecipe(id);
         Integer likeCnt = likeRepository.countByRecipe(recipe);
@@ -180,13 +180,13 @@ public class RecipeService {
     }
 
     /**
-     * @author 김응준
      * @param recipeCreateReqDto
      * @param userName
-     * @date 2023-01-18
      * @return RecipeEntity
+     * @author 김응준
+     * @date 2023-01-18
      * @description 레시피 작성 엔티티 생성 (공통로직)
-    **/
+     **/
     public RecipeEntity createRecipeEntity(RecipeCreateReqDto recipeCreateReqDto, String userName) {
         RecipeEntity recipeEntity = RecipeEntity.builder()
                 .recipeTitle(recipeCreateReqDto.getRecipeTitle())
@@ -198,10 +198,10 @@ public class RecipeService {
     }
 
     /**
-     * @author 이소영
      * @param userName
-     * @date 2023-01-24
      * @return UserEntity
+     * @author 이소영
+     * @date 2023-01-24
      * @description userName을 이용하여 현재 로그인한 회원이 존재하는지 검증 (공통로직)
      **/
     private UserEntity validateUserName(String userName) {
@@ -213,22 +213,23 @@ public class RecipeService {
     }
 
     /**
-     * @author 이소영
      * @param id
-     * @date 2023-01-25
      * @return RecipeEntity
+     * @author 이소영
+     * @date 2023-01-25
      * @description recipeId를 이용하여 현재 조회하고자 하는 레시피가 존재하는지 검증 (공통로직)
-    **/
+     **/
     private RecipeEntity validateRecipe(Long id) {
         return recipeRepository.findById(id).orElseThrow(() -> {
             throw new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage());
         });
     }
+
     /**
-     * @author 김응준
      * @param user
-     * @date 2023-01-26
      * @return List<RecipeEntity>
+     * @author 김응준
+     * @date 2023-01-26
      * @description UserEntity user를 이용하여 현재 조회하고자 하는 레시피가 존재하는지 검증 (공통로직)
      **/
     private List<RecipeEntity> validateRecipe(UserEntity user) {
@@ -236,14 +237,15 @@ public class RecipeService {
             throw new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage());
         });
     }
+
     /**
-     * @author 김응준
      * @param userName
      * @param recipeEntity
-     * @date 2023-01-19
      * @return
+     * @author 김응준
+     * @date 2023-01-19
      * @description 레시피 작성자와 로그인한 유저가 같은지 검증 (공통로직)
-    **/
+     **/
     public void validateWriterAndUserName(String userName, RecipeEntity recipeEntity) {
         if (!recipeEntity.getUser().getUserName().equals(userName)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
@@ -251,20 +253,37 @@ public class RecipeService {
     }
 
     /**
-     * @author 이다온
      * @param keyword
      * @param pageable
-     * @date 2023-01-31
      * @return Page<RecipePageResDto>
+     * @author 이다온
+     * @date 2023-01-31
      * @description 전체조회 페이지에서 레시피 검색
      **/
     public Page<RecipePageResDto> searchRecipes(String keyword, Pageable pageable) {
         Page<RecipeEntity> recipeEntities = recipeRepository.findAllSearch(keyword, pageable);
 
         // 레시피가 없는 경우
-        if(recipeEntities.getSize() == 0) {
+        if (recipeEntities.getSize() == 0) {
             throw new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage());
         }
         return recipeEntities.map(RecipeEntity::toResponse);
     }
+
+    /**
+     * @param keyword
+     * @param pageable
+     * @return Page<ItemListForRecipeResDto>
+     * @author 김응준
+     * @date 2023-02-01
+     * @description 레시피등록->재료등록->검색->결과페이지
+     */
+    public Page<ItemListForRecipeResDto> searchItemPage(String keyword, Pageable pageable) {
+        Page<ItemEntity> items = itemRepository.findAllSearch(keyword, pageable);
+        if (items.getSize() == 0) { //재료 검색시 키워드에 맞는 재료가 없으면 에러메세지 출력 -> 나중에 프론트에서 다시 처리 해줘야 할 듯
+            throw new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage());
+        }
+        return items.map(ItemListForRecipeResDto::from);
+    }
+
 }
