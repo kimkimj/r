@@ -21,8 +21,8 @@ public class OrderRestController {
     private final OrderService orderService;
 
     @GetMapping("/orders/{id}")
-    public Response<OrderInfoResponse> findOrder(@PathVariable Long id, Authentication authentication) {
-        OrderInfoResponse orderInfoResponse = orderService.findOrder(authentication.getName(), id);
+    public Response<OrderInfoResponse> findOrder(@PathVariable Long id) {
+        OrderInfoResponse orderInfoResponse = orderService.findOrder(id);
         return Response.success(orderInfoResponse);
     }
 

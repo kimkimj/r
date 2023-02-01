@@ -53,7 +53,6 @@ class OrderServiceTest {
 
     DeliveryEntity delivery = new DeliveryEntity(givenUser.getAddress(), DeliveryStatus.READY);
 
-    // FIXME: 2023/01/19 허진혁 주문 테스트 의문 -> 의논 필요
     @Test
     void 상품주문() throws Exception {
         // given
@@ -85,23 +84,5 @@ class OrderServiceTest {
         // then
         assertEquals(ErrorCode.NOT_ENOUGH_STOCK.getMessage(), notEnoughStockException.getMessage());
     }
-
-    // FIXME: 2023/01/19 허진혁 - 수정해야함
-    /*@Test
-    void 주문취소() throws Exception {
-        // given
-        OrderItemEntity givenOrderItem = OrderItemEntity.createOrderItem(givenItem, givenItem.getItemPrice(), 1);
-        OrderEntity givenOrder = OrderEntity.createOrder(givenUser, delivery, givenOrderItem);
-
-        when(userRepository.findByUserName(givenUser.getUserName())).thenReturn(Optional.of(givenUser));
-        when(itemRepository.findById(givenItem.getId())).thenReturn(Optional.of(givenItem));
-        when(orderRepository.findById(givenOrderItem.getId())).thenReturn(Optional.of(givenOrder));
-        // when
-        OrderDeleteResDto orderDeleteResDto = orderService.cancelOrder(givenUser.getName(), givenItem.getId());
-        // then
-        assertEquals(OrderStatus.CANCEL, orderDeleteResDto.getOrderStatus());
-        assertEquals(9, givenItem.getItemStock());
-    }*/
-
 
 }
