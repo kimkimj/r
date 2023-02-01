@@ -88,6 +88,8 @@
                         </textarea>
                         <p th:if="${#fields.hasErrors('recipeBody')}" th:errors="*{recipeBody}"></p>
                     </div>
+                    <div id="recipe-form-list">
+                    </div>
                     <button type="submit" class="btn btn-outline-success">작성완료</button>
                     <!--                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">-->
                     <!--                            <button class="btn btn-secondary me-md-2" type="button">수정</button>-->
@@ -116,6 +118,8 @@
             <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
                 <h5>재료 목록</h5><hr>
 
+                <ul id="item-list">
+                </ul>
                 <!-- Button trigger modal, 재료 등록 버튼 -->
                 <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
                   재료 등록
@@ -132,17 +136,19 @@
                       <div class="modal-body">
                           <!-- search -->
                           <div class="modal-search">
-                              <form th:action="@{/recipes/searchItem}" method="get" target="myframe">
-                                  <input type="text" name="keyword" placeholder="재료 검색">
-                                  <iframe name="myframe" style="width:50%; height: 330px"></iframe>
-                                  <button style="border:none; background:none;" type="submit"><img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"></button>
-                              </form>
+                              <input id="keyword" type="text" name="keyword" placeholder="재료 검색">
+                              <button style="border:none; background:none;" onclick="searchAndShowItems(document.querySelector('#keyword').value)">
+                                  <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png">
+                              </button>
+                          </div>
+                          <div>
+                              <ul id="search-list">
+                              </ul>
                           </div>
 
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">닫기</button>
-                        <button type="button" class="btn btn-outline-success">재료 저장</button>
                       </div>
                     </div>
                   </div>
@@ -161,5 +167,80 @@
 <!-- footer -->
 <div th:replace="fragments/footer :: footerFragment"/>
 <br><br>
+<script>
+    async function searchAndShowItems(keyword) {
+        // <ul id="search-list" ...> 가져온다.
+        let itemList = document.querySelector("#search-list")
+
+        let items = await searchKeyword(keyword);
+        if (items.length === 0) {
+            alert("검색 결과가 없습니다.")
+            return;
+        }
+
+        clearSearchResult();
+
+        for (let item of items) {
+            let itemElement = document.createElement("li");
+
+            // text 추가
+            itemElement.appendChild(document.createTextNode(item))
+
+            // button 추가
+            let addItemButton = document.createElement("button");
+            addItemButton.innerHTML = "선택";
+            addItemButton.onclick = () => {
+                addItem(item);
+                addFormItem(item);
+            };
+            itemElement.appendChild(addItemButton);
+
+            // search list 에 추가
+            itemList.appendChild(itemElement);
+        }
+    }
+
+    function addFormItem(item) {
+        let recipeFormList = document.querySelector("#recipe-form-list");
+
+        // input 태그 생성
+        let itemElement = document.createElement("input");
+        itemElement.type = "text";
+        itemElement.name = "recipes[]";
+        itemElement.value = item;
+        itemElement.hidden = true;
+
+        // input 태그 추가
+        recipeFormList.appendChild(itemElement);
+    }
+
+    function clearSearchResult() {
+        let itemList = document.querySelector("#search-list")
+        itemList.innerHTML = "";
+    }
+
+    async function searchKeyword(keyword) {
+        let response = await fetch(`http://localhost:8080/recipes/searchItem?keyword=${encodeURIComponent(keyword)}`, {
+            method: "GET",
+        })
+        let body = await response.json()
+        return body.results;
+    }
+
+    function addItem(item) {
+        let itemList = document.querySelector("#item-list");
+        let itemElement = document.createElement("li");
+        itemElement.appendChild(document.createTextNode(item))
+        itemList.appendChild(itemElement);
+    }
+
+    function new_window() {
+        window.open(
+            "recipes/searchItem",
+            "Child",
+            "width=400, height=300, top=50, left=50"
+        );
+    }
+</script>
 </body>
 </html>
