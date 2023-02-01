@@ -125,7 +125,7 @@
                     <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
                 </th:block>
 
-                <li class="page-item">
+                <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
                     <a class="page-link" th:href="@{/recipes/my(page = ${nowPage})}">Next</a>
                 </li>
             </ul>
