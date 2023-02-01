@@ -36,8 +36,7 @@ public class RecipeController {
             return "recipe/createForm";
         }
         System.out.println(form.getRecipeBody() + form.getRecipeTitle());
-        String userName = "messi"; // 인증 생기기 전까지 임시 사용
-//        String userName = authentication.getName();
+        String userName = authentication.getName();
         recipeService.createRecipe(form, userName);
         return "redirect:/recipes/list";
     }
@@ -54,16 +53,14 @@ public class RecipeController {
         if (result.hasErrors()) {
             return "recipe/updateForm";
         }
-        String userName = "messi"; // 인증 생기기 전까지 임시 사용
-//        String userName = authentication.getName();
+        String userName = authentication.getName();
         recipeService.updateRecipe(form, recipeId, userName);
         return "redirect:/recipes/list";
     }
 
     @GetMapping("/delete/{recipeId}")
     public String delete(@PathVariable Long recipeId, Authentication authentication) {
-        String userName = "messi"; // 인증 생기기 전까지 임시 사용
-//        String userName = authentication.getName();
+        String userName = authentication.getName();
         recipeService.deleteRecipe(recipeId, userName);
         return "redirect:/recipes/list";
     }
@@ -87,8 +84,7 @@ public class RecipeController {
 
     @GetMapping("/my")
     public String myRecipes(Authentication authentication, Model model, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        String userName = "messi"; // 인증 생기기 전까지 임시 사용
-//        String userName = authentication.getName();
+        String userName = authentication.getName();
         Page<RecipePageResDto> myRecipes = recipeService.myRecipes(pageable, userName);
 
         int nowPage = myRecipes.getPageable().getPageNumber() + 1;
