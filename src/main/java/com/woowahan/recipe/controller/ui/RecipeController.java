@@ -1,6 +1,7 @@
 package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.recipeDto.*;
+import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import javax.validation.Valid;
 public class RecipeController {
 
     private final RecipeService recipeService;
+    private final FindService findService;
 
     @GetMapping("/create")
     public String createForm(Model model) {
@@ -98,6 +100,23 @@ public class RecipeController {
         model.addAttribute("endPage", endPage);
         model.addAttribute("lastPage", lastPage);
         return "user/my/myRecipes";
+    }
+
+    @GetMapping("/likes/my")
+    public String myLikeRecipe(Model model, Authentication authentication, @PageableDefault(size = 20)Pageable pageable) {
+        Page<RecipeFindResDto> myLikeRecipeList = findService.findMyLikeRecipe(authentication.getName(), pageable);
+
+        int nowPage = myLikeRecipeList.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4, 1);
+        int endPage = Math.min(nowPage + 5, myLikeRecipeList.getTotalPages());
+        int lastPage = myLikeRecipeList.getTotalPages();
+
+        model.addAttribute("myLikeRecipeList", myLikeRecipeList);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("lastPage", lastPage);
+        return "user/my/myLikeRecipe";
     }
 
     /**
