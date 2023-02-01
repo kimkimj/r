@@ -10,5 +10,6 @@ public enum UserRole {
     ADMIN("role_admin"),
     SELLER("role_seller"),
     USER("role_user");
+
     private String value;
 }
