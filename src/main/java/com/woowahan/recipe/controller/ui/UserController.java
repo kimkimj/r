@@ -1,17 +1,12 @@
 package com.woowahan.recipe.controller.ui;
 
-import com.woowahan.recipe.domain.dto.itemDto.ItemUpdateReqDto;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
-import com.woowahan.recipe.domain.dto.orderDto.OrderInfoResponse;
-import com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserResponse;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.service.FindService;
-import com.woowahan.recipe.service.OrderService;
 import com.woowahan.recipe.service.ReviewService;
 import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,18 +16,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +34,6 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
-    private final OrderService orderService;
     private final ReviewService reviewService;
     private final FindService findService;
 
@@ -131,15 +119,6 @@ public class UserController {
         return "user/updateForm";
     }
 
-    @GetMapping("/users/my/orders")
-    public String myOrders(Model model, OrderSearch orderSearch, Authentication authentication,
-                           @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<OrderInfoResponse> orderList = orderService.findMyOrder(authentication.getName(), orderSearch, pageable);
-        model.addAttribute("orderSearch", orderSearch);
-        model.addAttribute("orderList", orderList);
-        return "user/my/myOrder";
-    }
-
     @GetMapping("/users/my/get-reviews")
     public String myGetReviews() {
         return "user/my/myGetReview";
@@ -184,13 +163,4 @@ public class UserController {
         reviewService.deleteReview(reviewId, recipeId, username);
         return "redirect:/users/my/myReviews";
     }
-
-
-    @GetMapping("/users/my/recipe-like")
-    public String myLikeRecipe(Model model, Authentication authentication, @PageableDefault(size = 20)Pageable pageable) {
-        Page<RecipeFindResDto> myLikeRecipeList = findService.findMyLikeRecipe(authentication.getName(), pageable);
-        model.addAttribute("myLikeRecipeList", myLikeRecipeList);
-        return "user/my/myLikeRecipe";
-    }
-
 }
