@@ -132,8 +132,9 @@
                       <div class="modal-body">
                           <!-- search -->
                           <div class="modal-search">
-                              <form th:action="@{/recipes/searchItem}" method="get">
+                              <form th:action="@{/recipes/searchItem}" method="get" target="myframe">
                                   <input type="text" name="keyword" placeholder="재료 검색">
+                                  <iframe name="myframe" style="width:50%; height: 330px"></iframe>
                                   <button style="border:none; background:none;" type="submit"><img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"></button>
                               </form>
                           </div>
