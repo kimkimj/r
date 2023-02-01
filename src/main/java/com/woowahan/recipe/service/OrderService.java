@@ -17,9 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static com.woowahan.recipe.exception.ErrorCode.*;
 
 @Service
@@ -64,18 +61,10 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Page<OrderInfoResponse> findAllOrder(String username, Pageable pageable) {
-        UserEntity user = validateUser(username);
-        Page<OrderEntity> pages = orderRepository.findMyOrderByUser(user, pageable);
-        return pages.map(OrderInfoResponse::from);
-    }
-
-    @Transactional(readOnly = true)
-    public List<OrderInfoResponse> findAllOrder2(String username, OrderSearch orderSearch) {
+    public Page<OrderInfoResponse> findMyOrder(String username, OrderSearch orderSearch, Pageable pageable) {
         validateUser(username);
-        List<OrderEntity> orderList = orderCustomRepository.findAllByString(orderSearch, username);
-        return orderList.stream().map(OrderInfoResponse::from)
-                .collect(Collectors.toList());
+        Page<OrderEntity> pages = orderCustomRepository.findAllByString(orderSearch, username, pageable);
+        return pages.map(OrderInfoResponse::from);
     }
 
     public OrderDeleteResDto cancelOrder(String username, Long orderId) {

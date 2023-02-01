@@ -37,12 +37,15 @@
 <!-- bodyHeader -->
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 
-<div class="container">
-    <br>
+<div class="container"><br>
+
     <div>
-        <h1>레시피 등록 페이지</h1>
+        <h1>레시피 등록 페이지</h1><hr>
     </div>
-    <br>
+    <div>
+        <button type="button" class="btn btn-outline-success" style="float: right;"
+                th:onclick="|location.href='@{/recipes/list}'|">목록가기</button>
+    </div><br><br><br>
 
     <!--        &lt;!&ndash; 카테고리 선택 &ndash;&gt;-->
     <!--        <div>-->
