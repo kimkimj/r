@@ -3,6 +3,11 @@ server:
 servlet:
   encoding:
     force-response: true
+# S3 설정
+#  multipart:
+#    enabled: true
+#    max-file-size: 20MB
+#    max-request-size: 20MB
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -19,6 +24,11 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+# S3 설정
+#  profiles:
+#    include:
+#      - aws
+#      - credentials
 jwt:
   token:
     secret: secret.aa.bb.cc

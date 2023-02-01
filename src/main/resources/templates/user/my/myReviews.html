@@ -12,6 +12,10 @@
             margin-top: 30px;
         }
 
+        .header {
+            width:80%
+        }
+
         .header-row {
             table-layout: fixed;
             width: 80%;
@@ -24,7 +28,7 @@
             width: 100%;
             padding: 20px;
             text-align: center;
-            font-size: 18px;
+            font-size: 16px;
             margin-left:auto;
             margin-right:auto;
         }
@@ -33,30 +37,86 @@
             width: 70px;
             margin-right: 5px;
         }
+
+        /* pagination 색상 변경 */
+        .page-link {
+            color: #000;
+            background-color: #fff;
+            border: 1px solid #ccc;
+        }
+
+        .page-item.active .page-link {
+            z-index: 1;
+            color: #555;
+            font-weight:bold;
+            background-color: #f1f1f1;
+            border-color: #ccc;
+
+        }
+
+        .page-link:focus, .page-link:hover {
+            color: #000;
+            background-color: #fafafa;
+            border-color: #ccc;
+        }
+
+        a { text-decoration:none !important; color:black; }
+        a:hover { text-decoration:none !important; color:black;}
+
+        /* 테이블 tr 색상 */
+        .tr-hover:hover {
+            background-color: #E3F4EA;
+        }
+
     </style>
     <body>
         <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-        <div class="wrapper">
-            <h4>내가 작성한 리뷰</h4>
-            <br>
-            <table class="header-row">
-                <tr>
-                    <th style="width: 35%">레시피</th>
-                    <th style="width: 25%">작성 날짜</th>
-                    <th style="width: 40%">내용</th>
+        <div class="container"><br>
+            <div>
+                <h4>내가 작성한 리뷰</h4><hr>
+            </div><br><br>
+
+            <table class="table table-hover" style="text-align: center;">
+                <thead>
+                <tr class="header">
+                    <th scope="col" style="width: 300px">레시피</th>
+                    <th scope="col" style="width:20%">작성일</th>
+                    <th scope="col" style="width:20%">수정일</th>
+                    <th scope="col" style="width:300px">내용</th>
+
                 </tr>
-            </table>
-            <th:block th:each="review : ${allMyReviews}">
-                <table>
-                    <tr>
+                </thead>
+                    <tbody>
+                    <tr class="tr-hover" th:each="review : ${allMyReviews}">
                         <td><a th:href="@{/recipes/{recipeId}(recipeId=${review.recipeId})}" th:utext="${review.recipeTitle}">레시피</a></td>
-                        <td style="width: 260px"><span th:text="${review.lastModified !=null}? ${#temporals.format(review.lastModified, 'yyyy-MM-dd HH:mm:ss')}:${#temporals.format(review.lastModified, 'yyyy-MM-dd HH:mm:ss')}"></span> </td>
-                        <td>[[${review.reviewComment}]]</td>
-                        <td class="btn"><button type="button" class="btn btn-outline-primary" th:onclick="|location.href='@{/update/{recipeId}/{reviewId}(recipeId=${review.recipeId}, reviewId=${review.reviewId})}'|">수정</button></td>
-                        <td class="btn"><button type="button" class="btn btn-outline-danger" th:onclick="|location.href=' @{/delete/{recipeId}/{reviewId}(recipeId=${review.recipeId}, reviewId=${review.reviewId})}'|">삭제</button></td>
+                        <td style="width: 160px"><span th:text="${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></span> </td>
+                        <td style="width: 160px"><span th:text="${review.lastModified ==null}? ${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm:ss')}:${#temporals.format(review.lastModified, 'yyyy-MM-dd HH:mm:ss')}"></span> </td>
+                        <td style="width: 300px">[[${review.reviewComment}]]</td>
+                        <td style="width:50px" class="btn"><button type="button" class="btn btn-outline-primary" th:onclick="|location.href='@{/update/{recipeId}/{reviewId}(recipeId=${review.recipeId}, reviewId=${review.reviewId})}'|">수정</button></td>
+                        <td style="width:50px" class="btn"><button type="button" class="btn btn-outline-danger" th:onclick="|location.href=' @{/delete/{recipeId}/{reviewId}(recipeId=${review.recipeId}, reviewId=${review.reviewId})}'|">삭제</button></td>
                     </tr>
-                </table>
-            </th:block>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- pagination -->
+        <div class="py-3 my-4">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/users/my/reviews(page = ${nowPage - 2})}">Previous</a>
+                    </li>
+
+                    <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                        <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/users/my/reviews(page = ${page - 1})}" th:text="${page}">1</a></li>
+                        <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
+                    </th:block>
+
+                    <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/users/my/reviews(page = ${nowPage})}">Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
         <div th:replace="fragments/footer :: footerFragment"/>
     </body>

@@ -63,16 +63,16 @@
             <div class="container2 px-4 text-center my-nev">
                 <div class="row gx-5">
                     <div class="col">
-                        <div class="p-3 border detail-box"><a href="/recipes/list">레시피</a></div>
+                        <div class="p-3 border detail-box"><a href="/recipes/my">레시피</a></div>
                     </div>
                     <div class="col">
                         <div class="p-3 border detail-box"><a href="/users/my/get-reviews">댓글</a></div>
                     </div>
                     <div class="col">
-                        <div class="p-3 border detail-box"><a href="/users/my/orders">주문목록</a></div>
+                        <div class="p-3 border detail-box"><a href="/orders/my">주문목록</a></div>
                     </div>
                     <div class="col">
-                        <div class="p-3 border detail-box"><a href="/users/my/recipe-like">찜한 레시피</a></div>
+                        <div class="p-3 border detail-box"><a href="/recipes/likes/my">찜한 레시피</a></div>
                     </div>
                     <div class="col">
                         <div class="p-3 border detail-box"><a href="/users/my/update">회원 정보 수정</a></div>
@@ -125,7 +125,7 @@
                     <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
                 </th:block>
 
-                <li class="page-item">
+                <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
                     <a class="page-link" th:href="@{/recipes/my(page = ${nowPage})}">Next</a>
                 </li>
             </ul>

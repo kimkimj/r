@@ -24,6 +24,25 @@ public class ItemController {
 
     private final ItemService itemService;
 
+
+    /**
+     * paging -> 상품 전체 조회
+     */
+    private String paging(Model model, Page<ItemListResDto> items) {
+        int nowPage = items.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4, 1);
+        int endPage = Math.min(nowPage + 5, items.getTotalPages());
+        int lastPage = items.getTotalPages();
+
+        model.addAttribute("items", items);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("lastPage", lastPage);
+        return "item/findAllForm";
+    }
+
+
     /**
      * 상품 상세조회
      */
@@ -41,8 +60,7 @@ public class ItemController {
     @GetMapping
     public String findAllForm(Model model, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<ItemListResDto> items = itemService.findAllItem(pageable);
-        model.addAttribute("items", items);
-        return "item/findAllForm";
+        return paging(model, items);
     }
 
     /**
@@ -74,7 +92,8 @@ public class ItemController {
             log.info("bindingResult = {}", bindingResult);
             return "item/createForm";
         }
-        ItemCreateResDto resDto = itemService.createItem(reqDto, "ididid");
+        ItemCreateResDto resDto = itemService.createItem(reqDto, "ididid4");
+
         redirectAttributes.addAttribute("id", resDto.getId());
         return "redirect:/items/{id}";
     }
@@ -85,7 +104,7 @@ public class ItemController {
     @GetMapping("/update/{id}")
     public String updateForm(@PathVariable Long id,  Model model) {
         model.addAttribute("id", id);
-        model.addAttribute("itemUpdateReqDto", new ItemUpdateReqDto());
+        model.addAttribute("itemUpdateReqDto", itemService.findItem(id));
         return "item/updateForm";
     }
 
@@ -99,7 +118,7 @@ public class ItemController {
             log.info("bindingResult = {}", bindingResult);
             return "item/updateForm";
         }
-        ItemUpdateResDto resDto = itemService.updateItem(id, reqDto, "ididid");
+        ItemUpdateResDto resDto = itemService.updateItem(id, reqDto, "ididid4");
         redirectAttributes.addAttribute("id", resDto.getId());
         return "redirect:/items/{id}";
     }
@@ -108,7 +127,7 @@ public class ItemController {
      * 재료 삭제(관리자, 판매자)
      */
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id, Model model) {
+    public String delete(@PathVariable Long id) {
         itemService.deleteItem(id, "ididid");
         return "redirect:/items";
     }

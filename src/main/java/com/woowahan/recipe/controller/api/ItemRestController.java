@@ -27,6 +27,7 @@ public class ItemRestController {
         return Response.success(itemService.findAllItem(pageable));
     }
 
+
     /**
      * 재료 단건(상세) 조회
      */
@@ -39,7 +40,7 @@ public class ItemRestController {
      * 재료 검색
      */
     @PostMapping("/search")
-    public Response<Page<ItemListResDto>> searchItem(@RequestBody ItemSearchReqDto itemSearchReqDto, @PageableDefault(size = 50, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Response<Page<ItemListResDto>> searchItem(@RequestBody ItemSearchReqDto itemSearchReqDto, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return Response.success(itemService.searchItem(itemSearchReqDto.getKeyword(), pageable));
     }
 

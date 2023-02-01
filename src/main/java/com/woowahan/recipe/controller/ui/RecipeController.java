@@ -1,6 +1,8 @@
 package com.woowahan.recipe.controller.ui;
 
+import com.woowahan.recipe.domain.dto.itemDto.ItemListForRecipeResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
+import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ import javax.validation.Valid;
 public class RecipeController {
 
     private final RecipeService recipeService;
+    private final FindService findService;
 
     @GetMapping("/create")
     public String createForm(Model model) {
@@ -36,8 +39,7 @@ public class RecipeController {
             return "recipe/createForm";
         }
         System.out.println(form.getRecipeBody() + form.getRecipeTitle());
-        String userName = "messi"; // 인증 생기기 전까지 임시 사용
-//        String userName = authentication.getName();
+        String userName = authentication.getName();
         recipeService.createRecipe(form, userName);
         return "redirect:/recipes/list";
     }
@@ -54,16 +56,14 @@ public class RecipeController {
         if (result.hasErrors()) {
             return "recipe/updateForm";
         }
-        String userName = "messi"; // 인증 생기기 전까지 임시 사용
-//        String userName = authentication.getName();
+        String userName = authentication.getName();
         recipeService.updateRecipe(form, recipeId, userName);
         return "redirect:/recipes/list";
     }
 
     @GetMapping("/delete/{recipeId}")
     public String delete(@PathVariable Long recipeId, Authentication authentication) {
-        String userName = "messi"; // 인증 생기기 전까지 임시 사용
-//        String userName = authentication.getName();
+        String userName = authentication.getName();
         recipeService.deleteRecipe(recipeId, userName);
         return "redirect:/recipes/list";
     }
@@ -87,8 +87,7 @@ public class RecipeController {
 
     @GetMapping("/my")
     public String myRecipes(Authentication authentication, Model model, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        String userName = "messi"; // 인증 생기기 전까지 임시 사용
-//        String userName = authentication.getName();
+        String userName = authentication.getName();
         Page<RecipePageResDto> myRecipes = recipeService.myRecipes(pageable, userName);
 
         int nowPage = myRecipes.getPageable().getPageNumber() + 1;
@@ -104,6 +103,23 @@ public class RecipeController {
         return "user/my/myRecipes";
     }
 
+    @GetMapping("/likes/my")
+    public String myLikeRecipe(Model model, Authentication authentication, @PageableDefault(size = 20)Pageable pageable) {
+        Page<RecipeFindResDto> myLikeRecipeList = findService.findMyLikeRecipe(authentication.getName(), pageable);
+
+        int nowPage = myLikeRecipeList.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4, 1);
+        int endPage = Math.min(nowPage + 5, myLikeRecipeList.getTotalPages());
+        int lastPage = myLikeRecipeList.getTotalPages();
+
+        model.addAttribute("myLikeRecipeList", myLikeRecipeList);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("lastPage", lastPage);
+        return "user/my/myLikeRecipe";
+    }
+
     /**
      * 레시피 검색
      */
@@ -116,7 +132,18 @@ public class RecipeController {
     }
 
     /**
-     * TODO : 2023-01-31 페이징 중복 코드 정리
+     * 재료 검색
+     */
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @GetMapping("/searchItem")
+    public String searchItem(Model model, @ModelAttribute RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 100, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ItemListForRecipeResDto> allItems = recipeService.searchItemPage(recipeSearchReqDto.getKeyword(), pageable);
+        model.addAttribute("allItems", allItems);
+        return "recipe/itemList";
+    }
+
+    /**
+     * TODO : 2023-01-31 레시피 페이징 중복 코드 정리
      * @param model
      * @param allRecipes
      * @return

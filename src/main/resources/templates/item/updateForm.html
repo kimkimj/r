@@ -20,19 +20,19 @@
       <div>
         <label th:for="itemName">상품명</label>
         <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명을 입력하세요"
-               th:class="${#fields.hasErrors('itemName')}? 'form-control fieldError' : 'form-control'">
+               th:class="${#fields.hasErrors('itemName')}? 'form-control fieldError' : 'form-control'" onfocus="this.value=''; return true;">
         <p class="fieldError" th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}">Incorrect name</p>
       </div>
       <div>
         <label th:for="itemPrice">상품 가격</label>
         <input type="text" th:field="*{itemPrice}" class="form-control" placeholder="상품 가격을 입력하세요"
-               th:class="${#fields.hasErrors('itemPrice')}? 'form-control fieldError' : 'form-control'">
+               th:class="${#fields.hasErrors('itemPrice')}? 'form-control fieldError' : 'form-control'" onfocus="this.value=''; return true;">
         <p class="fieldError" th:if="${#fields.hasErrors('itemPrice')}" th:errors="*{itemPrice}">Incorrect price</p>
       </div>
       <div>
         <label th:for="itemStock">총 수량</label>
         <input type="text" th:field="*{itemStock}" class="form-control" placeholder="상품 총 수량을 입력하세요"
-               th:class="${#fields.hasErrors('itemStock')}? 'form-control fieldError' : 'form-control'">
+               th:class="${#fields.hasErrors('itemStock')}? 'form-control fieldError' : 'form-control'" onfocus="this.value=''; return true;">
         <p class="fieldError" th:if="${#fields.hasErrors('itemStock')}" th:errors="*{itemStock}">Incorrect stock</p>
       </div>
       <hr>
