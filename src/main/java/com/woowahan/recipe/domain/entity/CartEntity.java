@@ -5,10 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,7 +17,19 @@ public class CartEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cartId;
-    private Long cartQuantity; // 수량
-    private Long cartTotalPrice; // 총가격
+    @Column(name = "cart_id")
+    private Long id;
+
+    @OneToOne
+    @JoinColumn(name="user_id")
+    private UserEntity user;
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    private List<CartItemEntity> cartItems;
+
+    public static CartEntity createCart(UserEntity user) {
+        return CartEntity.builder()
+                .user(user)
+                .build();
+    }
 }

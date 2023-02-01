@@ -5,22 +5,27 @@ import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/recipes")
-public class ReviewController {
+public class ReviewRestController {
     private final ReviewService reviewService;
 
     @GetMapping("/{recipeId}/reviews")
-    public Response<ReviewListResponse> getAllReviews(@PathVariable Long recipeId) {
-            ReviewListResponse reviews = reviewService.findAllReviews(recipeId);
-            //log.info("포스트 리스트 조회 성공");
+    public Response<Page<ReviewListResponse>> getAllReviews(@PathVariable Long recipeId, Pageable pageable) {
+            Page<ReviewListResponse> reviews = reviewService.findAllReviews(recipeId, pageable);
             return Response.success(reviews);
+    }
+
+    // 유저가 작성한 리뷰 조회
+    @GetMapping("/reviews")
+    public Response<Page<ReviewListResponse>> getAllReviewsByUser(Pageable pageable, Authentication authentication) {
+        Page<ReviewListResponse> reviews = reviewService.findAllReviewsByUser(authentication.getName(), pageable);
+        return Response.success(reviews);
     }
 
     @PostMapping("/{recipeId}/reviews")
@@ -32,11 +37,11 @@ public class ReviewController {
     }
 
     @PutMapping("/{recipeId}/reviews/{reviewId}")
-    public Response<ReviewCreateResponse> updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId,
+    public Response<ReviewUpdateResponse> updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId,
                                                        @RequestBody ReviewCreateRequest reviewCreateRequest,
                                                        Authentication authentication) {
-        ReviewCreateResponse reviewCreateResponse = reviewService.updateReview(recipeId, reviewId, reviewCreateRequest, authentication.getName());
-        return Response.success(reviewCreateResponse);
+        ReviewUpdateResponse reviewUpdateResponse = reviewService.updateReview(recipeId, reviewId, reviewCreateRequest, authentication.getName());
+        return Response.success(reviewUpdateResponse);
     }
 
     @DeleteMapping ("/{recipeId}/reviews/{reviewId}")

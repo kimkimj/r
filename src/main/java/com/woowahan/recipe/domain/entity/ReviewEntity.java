@@ -1,17 +1,19 @@
 package com.woowahan.recipe.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Where(clause = "deleted_date is null")
+@SQLDelete(sql = "UPDATE review_entity SET deleted_date = now() WHERE review_id = ?")
 public class ReviewEntity extends BaseEntity{
     @Id
     @Column(name="review_id")
@@ -26,10 +28,10 @@ public class ReviewEntity extends BaseEntity{
     @JoinColumn(name = "recipe_id")
     private RecipeEntity recipe;
 
-    private String review_comment;
+    private String reviewComment;
 
-    public void update(String review_comment) {
-        this.review_comment = review_comment;
+    public void update(String reviewComment) {
+        this.reviewComment = reviewComment;
     }
 
 }

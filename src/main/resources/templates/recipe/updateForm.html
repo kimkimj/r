@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: headerFragment"/>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+
+<!-- bodyHeader -->
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+
+<div class="container">
+    <br>
+    <div>
+        <h1>레시피 수정 페이지</h1><hr>
+    </div>
+    <div>
+        <button type="button" class="btn btn-outline-success" style="float: right;"
+                th:onclick="|location.href='@{/recipes/list}'|">목록가기</button>
+    </div><br><br><br>
+
+    <!--        &lt;!&ndash; 카테고리 선택 &ndash;&gt;-->
+    <!--        <div>-->
+    <!--            <h5>레시피 카테고리</h5>-->
+    <!--            <select class="form-select" aria-label="Default select example" style="width: 550px;">-->
+    <!--                <option selected>카테고리를 선택해주세요.</option>-->
+    <!--                <option value="1">메인요리</option>-->
+    <!--                <option value="2">간단요리</option>-->
+    <!--                <option value="3">초대요리</option>-->
+    <!--                <option value="4">안주요리</option>-->
+    <!--                <option value="5">분식</option>-->
+    <!--                <option value="6">간식</option>-->
+    <!--            </select>-->
+    <!--        </div>-->
+
+    <!--        <br>-->
+
+    <!-- 레시피 등록하는 곳 -->
+    <div class="container px-4">
+        <div class="row gx-5">
+
+            <!-- 내용 -->
+            <div class="p-3 border bg-light">
+                <h5>레시피 작성</h5>
+                <hr>
+                <form role="form" th:action="@{/recipes/update/{recipeId} (recipeId=${recipeId})}" th:object="${recipeUpdateReqDto}" method="post">
+                    <!-- 레시피 제목  -->
+                    <div class="form-group col">
+                        <label th:for="recipeTitle">제목</label>
+                        <input type="text" th:field="*{recipeTitle}" class="form-control" placeholder="제목을 입력하세요"
+                               th:class="${#fields.hasErrors('recipeTitle')}? 'form-control fieldError' : 'form-control'">
+                        <p th:if="${#fields.hasErrors('recipeTitle')}" th:errors="*{recipeTitle}"></p>
+                    </div><br>
+                    <!-- 레시피 내용  -->
+                    <div class="form-group mb-3">
+                        <label th:for="recipeBody" class="form-label">레시피 내용</label>
+                        <textarea th:field="*{recipeBody}" class="form-control" rows="3" style="height: 300px;"
+                                  th:class="${#fields.hasErrors('recipeBody')}? 'form-control fieldError' : 'form-control'">
+                                </textarea>
+                        <p th:if="${#fields.hasErrors('recipeBody')}" th:errors="*{recipeBody}"></p>
+                    </div>
+                    <button type="submit" class="btn btn-outline-success">작성완료</button>
+                    <!--                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">-->
+                    <!--                            <button class="btn btn-secondary me-md-2" type="button">수정</button>-->
+                    <!--                            <button type="submit" class="btn btn-secondary me-md-2" type="button">삭제</button>-->
+                    <!--                        </div> 수정 삭제는 상세 페이지로 옮길 예정 -->
+                </form>
+            </div>
+
+            <!-- 레시피 이미지 첨부파일 -->
+            <div class="p-3 border bg-light" style="margin-top: 20px;">
+                <h5>레시피 이미지</h5>
+                <hr>
+                <!--
+                <br>
+                <img src="" class="img-fluid" alt="..." style="">
+                <br><br>
+                -->
+                <!-- File input -->
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" id="inputGroupFile02">
+                    <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                </div>
+            </div>
+
+            <!-- 재료 목록 -->
+
+            <div class="p-3 border bg-light" style="margin-top: 20px;">
+                <h5>재료 목록</h5><hr><br>
+                <!-- 첫번째 재료 -->
+                <span class="d-grid gap-1 col-2">
+                    <table>
+                        <tr>
+                            <th>재료이름</th>
+                            <th>단위</th>
+                        </tr>
+                        <tr th:each="recipe , index: ${data}">
+                            <td th:text="${data}">
+                                <input value="">
+                            </td>
+                            <td th:text="${data}">
+                                <input value="">
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- 재료 등록 버튼 -->
+                    <button class="btn btn-outline-success" type="submit">등록</button>
+                </span>
+                <br>
+
+                <!-- 두번째 재료 -->
+                <span class="d-grid gap-1 col-2">
+                    <table>
+                        <tr>
+                            <th>재료이름</th>
+                            <th>단위</th>
+                        </tr>
+                        <tr th:each="recipe , index: ${data}">
+                            <td th:text="${data}">
+                                <input value="">
+                            </td>
+                            <td th:text="${data}">
+                                <input value="">
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- 재료 등록 버튼 -->
+                    <button class="btn btn-outline-success" type="submit">등록</button>
+                </span>
+
+                <br>
+
+                <!-- 세번째 재료 -->
+                <span class="d-grid gap-1 col-2">
+                    <table>
+                        <tr>
+                            <th>재료이름</th>
+                            <th>단위</th>
+                        </tr>
+                        <tr th:each="recipe , index: ${data}">
+                            <td th:text="${data}">
+                                <input value="">
+                            </td>
+                            <td th:text="${data}">
+                                <input value="">
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- 재료 등록 버튼 -->
+                    <button class="btn btn-outline-success" type="submit">등록</button>
+                </span><br><br>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <br><br><br><br>
+
+</div>
+
+<!-- footer -->
+<div th:replace="fragments/footer :: footerFragment"/>
+<br><br>
+</body>
+</html>

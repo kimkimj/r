@@ -26,4 +26,11 @@ public class LikeEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "recipe_id")
     private RecipeEntity recipe;
+
+    public static LikeEntity of(UserEntity user, RecipeEntity recipe) {
+        return LikeEntity.builder()
+                .user(user)
+                .recipe(recipe)
+                .build();
+    }
 }

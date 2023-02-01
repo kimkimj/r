@@ -1,9 +1,6 @@
 package com.woowahan.recipe.domain.dto.recipeDto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -11,13 +8,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 public class RecipeFindResDto {
-    private Long recipe_id;
-    private String recipe_title;
-    private String recipe_body;
+    private Long recipeId;
+    private String recipeTitle;
+    private String recipeBody;
     private String userName;
-    private int recipe_like;
-    private int recipe_view;
-    private LocalDateTime createdAt;
-    private LocalDateTime lastModifiedAt;
+    private int recipeLike;
+    private int recipeView;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
 }

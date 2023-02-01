@@ -2,10 +2,7 @@ package com.woowahan.recipe.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.woowahan.recipe.domain.UserRole;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -16,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,11 +25,6 @@ public class UserEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
-
-    // Foreign Key
-    @OneToOne
-    @JoinColumn(name="cart_id")
-    private CartEntity cartEntity;
 
     @Builder.Default
     @OneToMany(mappedBy = "user")
@@ -70,5 +63,19 @@ public class UserEntity extends BaseEntity {
         this.email = email;
         this.phoneNum = phoneNum;
         this.birth = birth;
+    }
+
+    public void updateMyPage(String password, String name, String address,
+                             String email, String phoneNum, String birth) {
+        this.password = password;
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.phoneNum = phoneNum;
+        this.birth = birth;
+    }
+
+    public void updateToSeller(UserEntity user) {
+        user.userRole = UserRole.SELLER;
     }
 }

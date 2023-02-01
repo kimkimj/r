@@ -2,46 +2,48 @@ package com.woowahan.recipe.domain.entity;
 
 
 import com.woowahan.recipe.exception.NotEnoughStockException;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Builder
 @Entity
-public class ItemEntity {
+public class ItemEntity extends BaseEntity{
 
     @Id
     @Column(name = "item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     private String itemImagePath;
-    private String itemName;
+    @NotBlank
+    @Column(name = "item_name")
+    private String name;
+    @NotNull
     private Integer itemPrice;
+    @NotNull
     private Integer itemStock;
 
-    @ManyToOne
-    @JoinColumn(name = "recipe_id")
-    private RecipeEntity recipe;
+    @Builder.Default
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<RecipeItemEntity> recipeItems = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "seller_id")
     private SellerEntity seller;
 
-    //필요한지 불확실
-//    @OneToMany
-//    @JoinColumn(name = "recipe_id")
-//    private List<RecipeEntity> recipeList;
-
+    /* 아이템 수정 */
     public void update(String itemImagePath, String itemName, Integer itemPrice, Integer itemStock, SellerEntity seller) {
         this.itemImagePath = itemImagePath;
-        this.itemName = itemName;
+        this.name = itemName;
         this.itemPrice = itemPrice;
         this.itemStock = itemStock;
         this.seller = seller;

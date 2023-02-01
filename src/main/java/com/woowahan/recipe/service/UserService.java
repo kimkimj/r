@@ -9,6 +9,8 @@ import com.woowahan.recipe.repository.UserRepository;
 import com.woowahan.recipe.security.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,6 +71,7 @@ public class UserService {
     /**
      * 회원정보 조회 - One Person
      */
+    @Transactional(readOnly = true)
     public UserResponse findUser(Long id) {
 
         // 찾고자 하는 회원의 id가 없는 경우
@@ -76,6 +79,30 @@ public class UserService {
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
 
         return UserResponse.toUserResponse(user);
+    }
+
+
+    /**
+     * 회원정보 전체 조회
+     */
+    public Page<UserResponse> findAll(Pageable pageable) {
+        Page<UserEntity> pages = userRepository.findAll(pageable);
+        return pages.map(UserResponse::toUserResponse);
+    }
+
+    /**
+     * 회원등급 관리자로 변경
+     */
+    public void updateToSeller(String username, Long id) {
+        UserEntity admin = userRepository.findByUserName(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        if (admin.getUserRole().equals(UserRole.ADMIN)) {
+            user.updateToSeller(user);
+        }
     }
 
     // TODO: 2023-01-21 회원가입 수정에 비밀번호 로직 변경
@@ -93,6 +120,7 @@ public class UserService {
         userRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage()));
 
+        // TODO: 2023-01-24 생각해봐야 할 사항 - 애초에 ID는 수정이 되면 안된다.
         // 회원가입과 동일하게 정보 수정시에도 ID(userName)이 중복되지 않게 처리
         userRepository.findByUserName(userResponse.getUserName())
                 .ifPresent(userEntity -> {
@@ -135,5 +163,48 @@ public class UserService {
 
         userRepository.delete(user);
         return new UserDeleteDto(id, "회원 삭제가 완료되었습니다.");
+    }
+
+    /**
+     * 마이페이지 - 회원정보 조회
+     */
+    public UserResponse findMyPage(Long id) {
+
+        // 찾고자 하는 회원의 id가 없는 경우
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        return UserResponse.toUserResponse(user);
+    }
+
+    /**
+     * 마이페이지 - 회원정보 수정
+     */
+    @Transactional
+    public UserUpdateDto updateMyPage(Long id, UserUpdateDto userUpdateDto, String userName) {
+
+        // 고유 식별 번호(id)가 없는 경우
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        // 애초에 ID는 수정이 되면 안되기 때문에 ID(userName) 중복체크 필요없음
+
+        // 회원가입과 동일하게 정보 수정시에도 email이 중복되지 않게 처리
+        userRepository.findByEmail(userUpdateDto.getEmail())
+                .ifPresent(userEntity -> {
+                    throw new AppException(ErrorCode.DUPLICATED_EMAIL, ErrorCode.DUPLICATED_EMAIL.getMessage());
+                });
+
+        // 본인인 경우 수정 가능, ROLE이 ADMIN이면 수정 가능
+        if (!user.getUserName().equals(userName) && user.getUserRole().equals(UserRole.ADMIN)) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        }
+
+        user.updateMyPage(encoder.encode(userUpdateDto.getPassword()), userUpdateDto.getName(), userUpdateDto.getAddress(),
+                userUpdateDto.getEmail(), userUpdateDto.getPhoneNum(), userUpdateDto.getBirth());
+
+        userRepository.save(user);
+
+        return UserUpdateDto.toUserUpdateDto(user);
     }
 }

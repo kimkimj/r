@@ -12,12 +12,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ItemCreateResDto {
 
+    private Long id;
     private String itemName;
     private String message;
 
     public static ItemCreateResDto from(ItemEntity item) {
         return ItemCreateResDto.builder()
-                .itemName(item.getItemName())
+                .id(item.getId())
+                .itemName(item.getName())
                 .message("상품 등록 완료")
                 .build();
     }

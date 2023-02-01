@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: headerFragment"/>
+<style>
+  .container {
+    display: flex;
+    gap: 20px 1%;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+  .inner{
+    width: 30%;
+  }
+</style>
+<body>
+  <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+  <div style="margin: auto 430px 20px auto;">
+  <button style="margin: auto 0px 10px auto;display:block;" type="button" class="btn btn-primary"
+          onclick="location.href='createForm.html'"
+          th:onclick="|location.href='@{/items/create}'|">상품 등록</button>
+  <form style="text-align: right" th:action="@{/items/search}" method="get">
+    <input type="text" name = "keyword" placeholder="상품 검색">
+    <button type="submit">검색</button>
+  </form>
+  </div>
+<!--상품 목록 시작-->
+  <div class="container">
+  <tr th:each="item : ${items}">
+    <div class="inner">
+      <div class="card" style="width: 10rem;">
+      <a onclick="location.href='findForm.html'"
+         th:onclick="|location.href='@{/items/{id}(id=${item.getId})}'|">
+        <img src="..." class="card-img-top" alt="이미지 준비중입니다.">
+      </a>
+      </div>
+      <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+        <button type="button" class="btn btn-primary">-</button>
+        <input style="width: 110px; text-align: center;" type="text" th:value = "0" readonly>
+<!--               value="상품A" th:value="${resDto.getItemName()}" readonly>-->
+        <button type="button" class="btn btn-primary">+</button>
+      </div>
+      <div class="card-body">
+        <p class="card-title" th:text="${item.getItemName()}">상품 이름</p>
+        <h5 class="card-text" th:text="${item.getPrice()}+원">가격</h5>
+      </div>
+    </div>
+  </tr>
+  </div>
+<br/>
+<div th:replace="fragments/footer :: footerFragment"/>
+</body>
+</html>

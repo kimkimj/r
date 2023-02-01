@@ -3,17 +3,19 @@ package com.woowahan.recipe.domain.dto.recipeDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@NotNull
-@NotBlank
 public class RecipeUpdateReqDto {
 
-    private String recipe_title;
-    private String recipe_body;
+    @NotBlank(message = "제목을 입력해주세요.")
+    private String recipeTitle;
+    @NotBlank(message = "내용을 입력해주세요.")
+    private String recipeBody;
 }

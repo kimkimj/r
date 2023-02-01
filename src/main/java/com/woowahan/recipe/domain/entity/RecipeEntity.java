@@ -22,18 +22,21 @@ public class RecipeEntity extends BaseEntity {
     @Column(name = "recipe_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String recipe_title;
-    private String recipe_body;
+    private String recipeTitle;
+    private String recipeBody;
     // 조회수의 기본 값을 0으로 지정, null 불가 처리 -> null 불가능하니까 int형으로
     @Column(columnDefinition = "integer default 0", nullable = false)
-    private int recipe_like;
+    private int recipeLike;
     @Column(columnDefinition = "integer default 0", nullable = false)
-    private int recipe_view;
-    private String recipe_image_path;
+    private int recipeView;
+    private String recipeImagePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    @OneToMany(mappedBy = "recipe")
+    private List<LikeEntity> likes;
 
  /* 리뷰 개발
     @Builder.Default
@@ -42,34 +45,36 @@ public class RecipeEntity extends BaseEntity {
     private List<ReviewEntity> reivews;
 */
     @Builder.Default
-    @OneToMany(mappedBy = "recipe")
-    private List<ItemEntity> items = new ArrayList<>();
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    private List<RecipeItemEntity> recipeItems = new ArrayList<>();
 
     public static RecipeFindResDto from(RecipeEntity recipeEntity) {
         return new RecipeFindResDto(
-                recipeEntity.getId(), recipeEntity.recipe_title, recipeEntity.recipe_body
-                ,recipeEntity.user.getUserName(), recipeEntity.getRecipe_like(), recipeEntity.getRecipe_view()
+                recipeEntity.getId(), recipeEntity.recipeTitle, recipeEntity.recipeBody
+                ,recipeEntity.user.getUserName(), recipeEntity.getRecipeLike(), recipeEntity.getRecipeView()
                 ,recipeEntity.getCreatedDate(),recipeEntity.getLastModifiedDate()
         );
     }
 
     // 레시피 수정을위한 set메서드    * 이미지 추가 예정
-    public void setRecipe_title(String recipe_title) {
-        this.recipe_title = recipe_title;
+    public void setRecipeTitle(String recipeTitle) {
+        this.recipeTitle = recipeTitle;
     }
 
-    public void setRecipe_body(String recipe_body) {
-        this.recipe_body = recipe_body;
+    public void setRecipeBody(String recipeBody) {
+        this.recipeBody = recipeBody;
     }
 
     public RecipePageResDto toResponse() {
         return RecipePageResDto.builder()
-                .recipe_id(this.id)
-                .recipe_title(this.recipe_title)
+                .recipeId(this.id)
+                .recipeTitle(this.recipeTitle)
                 .userName(this.user.getUserName())
-                .recipe_view(this.recipe_view)
-                .recipe_like(this.recipe_like)
-//                .thumbnail_image_path(this.recipe_image_path) 썸네일 추가시
+                .recipeView(this.recipeView)
+                .recipeLike(this.recipeLike)
+                .createdDate(this.getCreatedDate())
+                .lastModifiedDate(this.getLastModifiedDate())
+//                .thumbnailImagePath(this.recipeImagePath) 썸네일 추가시
                 .build();
     }
 }

@@ -1,17 +1,36 @@
 package com.woowahan.recipe.domain.dto.reviewDto;
 
+import com.woowahan.recipe.domain.entity.ReviewEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.domain.Pageable;
+import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 public class ReviewListResponse {
-    private List<ReviewGetResponse> content;
-    private Pageable pageable;
+    private Long reviewId;
+    private Long recipeId;
+    private String recipeTitle;
+    private String username;
+    private String reviewComment;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModified;
+
+    public static ReviewListResponse toList(ReviewEntity review) {
+        return ReviewListResponse.builder()
+                .reviewId(review.getReviewId())
+                .recipeId(review.getRecipe().getId())
+                .recipeTitle(review.getRecipe().getRecipeTitle())
+                .username(review.getUser().getUserName())
+                .reviewComment(review.getReviewComment())
+                .createdDate(review.getCreatedDate())
+                .lastModified(review.getLastModifiedDate())
+                .build();
+    }
 }
 

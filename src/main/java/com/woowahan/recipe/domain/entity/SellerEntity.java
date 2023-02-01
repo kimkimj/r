@@ -1,5 +1,6 @@
 package com.woowahan.recipe.domain.entity;
 
+import com.woowahan.recipe.domain.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,14 +24,25 @@ public class SellerEntity extends BaseEntity {
     @Column(name = "seller_id")
     private Long id;
 
+    @Column(name = "seller_name")
+    private String name;
+
+    @Column(name = "")
+    private String password;
+
+    @Column(name = "company_name")
+    private String companyName;
+
+    private String address;
+
+    private String email;
+
+    private String phoneNum;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+
     @Column(name = "seller_no")
-    private String sellerNo;  // 사업자 등록번호
-
-    @Column(name = "seller_site")
-    private String sellerUrl;  // 사업자 홈페이지 주소
-
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    UserEntity user;
+    private String no;  // 사업자 등록번호
 
 }

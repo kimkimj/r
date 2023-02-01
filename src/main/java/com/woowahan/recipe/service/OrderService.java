@@ -4,8 +4,11 @@ import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderDeleteResDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderInfoResponse;
+import com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch;
 import com.woowahan.recipe.domain.entity.*;
+import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.repository.ItemRepository;
+import com.woowahan.recipe.repository.OrderCustomRepository;
 import com.woowahan.recipe.repository.OrderRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +17,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.woowahan.recipe.exception.ErrorCode.*;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderCustomRepository orderCustomRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
@@ -55,9 +61,9 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Page<OrderInfoResponse> findAllOrder(String username, Pageable pageable) {
-        UserEntity user = validateUser(username);
-        Page<OrderEntity> pages = orderRepository.findMyOrderByUser(user, pageable);
+    public Page<OrderInfoResponse> findMyOrder(String username, OrderSearch orderSearch, Pageable pageable) {
+        validateUser(username);
+        Page<OrderEntity> pages = orderCustomRepository.findAllByString(orderSearch, username, pageable);
         return pages.map(OrderInfoResponse::from);
     }
 
@@ -65,7 +71,7 @@ public class OrderService {
         validateUser(username);
         OrderEntity order = validateOrder(orderId);
         order.cancel();
-        orderRepository.delete(order);
+//        orderRepository.delete(order);
         return OrderDeleteResDto.from(order);
     }
 
@@ -73,19 +79,19 @@ public class OrderService {
 
     private OrderEntity validateOrder(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(() -> {
-            throw new RuntimeException("주문이 존재하지 않습니다.");
+            throw new AppException(ORDER_NOT_FOUND, ORDER_NOT_FOUND.getMessage());
         });
     }
 
     private ItemEntity validateItem(Long itemId) {
         return itemRepository.findById(itemId).orElseThrow(() -> {
-            throw new RuntimeException("재료가 존재하지 않습니다.");
+            throw new AppException(ITEM_NOT_FOUND, ITEM_NOT_FOUND.getMessage());
         });
     }
 
     private UserEntity validateUser(String userName) {
         return userRepository.findByUserName(userName).orElseThrow(() -> {
-            throw new RuntimeException("유저 네임 존재하지 않습니다.");
+            throw new AppException(USERNAME_NOT_FOUND, USERNAME_NOT_FOUND.getMessage());
         });
     }
 
