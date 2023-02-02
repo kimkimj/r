@@ -120,9 +120,12 @@
 
                 <ul id="item-list">
                 </ul>
-                <!-- Button trigger modal, 재료 등록 버튼 -->
+                <!-- 재료 등록 버튼(modal), 등록한 재료 전체삭제 버튼 -->
                 <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
                   재료 등록
+                </button>
+                <button type="button" class="btn btn-outline-success" onclick="allRemove();">
+                    재료 전체삭제
                 </button>
 
                 <!-- Modal -->
@@ -157,7 +160,6 @@
             </div>
 
         </div>
-
     </div>
 
     <br><br><br><br>
@@ -232,6 +234,12 @@
         let itemElement = document.createElement("li");
         itemElement.appendChild(document.createTextNode(item))
         itemList.appendChild(itemElement);
+    }
+
+    function allRemove() {
+        console.log("삭제 버튼 누르기");
+        let itemList = document.querySelector("#item-list")
+        itemList.innerHTML = "";
     }
 
 </script>
