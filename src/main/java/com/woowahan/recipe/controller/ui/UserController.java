@@ -139,15 +139,16 @@ public class UserController {
         return "redirect:/users/my";
     }
 
-    @GetMapping("/users/my/get-reviews")
+    @GetMapping("/my/get-reviews")
     public String myGetReviews() {
         return "user/my/myGetReview";
     }
 
-    @GetMapping("/users/my/reviews")
-    public String myReviews(Model model, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        String username = "GordonRamsey"; // 인증 생기기 전까지 임시 사용
-//        String username = authentication.getName();
+    // 내가 작성한 리뷰 목록
+    @GetMapping("/my/reviews")
+    public String myReviews(Model model, Authentication authentication,
+                            @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        String username = authentication.getName();
         Page<ReviewListResponse> reviewList = reviewService.findAllReviewsByUser(username, pageable);
 
         int nowPage = reviewList.getPageable().getPageNumber() + 1;
@@ -164,6 +165,7 @@ public class UserController {
         return "user/my/myReviews";
     }
 
+    // 리뷰 수정
     @GetMapping("/update/{recipeId}/{reviewId}")
     public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model) {
         model.addAttribute("previousComment", reviewService.findReviewById(reviewId).getReviewComment());
@@ -181,18 +183,17 @@ public class UserController {
             log.info("bindingResult = {}", bindingResult);
             return "review/updateForm";
         }
-        String username = "GordonRamsey"; // 인증 생기기 전까지 임시 사용
-//        String username = authentication.getName();
+        String username = authentication.getName();
         reviewService.updateReview(recipeId, reviewId, request, username);
-        return "redirect:/users/my/reviews";
+        return "redirect:/my/reviews";
     }
 
+    // 리뷰 삭제
     @GetMapping("/delete/{recipeId}/{reviewId}")
     public String delete(@PathVariable Long recipeId, @PathVariable Long reviewId, Authentication authentication) {
-        String username = "GordonRamsey"; // 인증 생기기 전까지 임시 사용
-//        String username = authentication.getName();
+        String username = authentication.getName();
         reviewService.deleteReview(recipeId, reviewId, username);
-        return "redirect:/users/my/reviews";
+        return "redirect:/my/reviews";
     }
 
     @GetMapping("/users/my/recipe-like")

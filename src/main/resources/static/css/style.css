@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+/* a태그 */
+a, a:visited, a:active, a:focus {
+    text-decoration: none;
+    color: black;
+}
+
+header {
+    text-align : center;
+}
+header .logo {
+    position: absolute; left: 50px; top: 0;
+}
+header .user-logo {
+    position: absolute; right: 50px; top: 0;
+}
+

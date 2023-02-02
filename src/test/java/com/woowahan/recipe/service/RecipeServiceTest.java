@@ -10,6 +10,7 @@ import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.fixture.LikeEntityFixture;
+import com.woowahan.recipe.repository.ItemRepository;
 import com.woowahan.recipe.repository.LikeRepository;
 import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.UserRepository;
@@ -37,6 +38,7 @@ class RecipeServiceTest {
     RecipeRepository recipeRepository = mock(RecipeRepository.class);
     UserRepository userRepository = mock(UserRepository.class);
     LikeRepository likeRepository = mock(LikeRepository.class);
+    ItemRepository itemRepository = mock(ItemRepository.class);
     ApplicationEventPublisher publisher = mock(ApplicationEventPublisher.class);
 
     /**
@@ -78,7 +80,7 @@ class RecipeServiceTest {
 
     @BeforeEach
     void beforeEach() {
-        recipeService = new RecipeService(recipeRepository, userRepository, likeRepository, publisher);
+        recipeService = new RecipeService(recipeRepository, userRepository, likeRepository, itemRepository, publisher);
     }
 
     @Test
@@ -106,7 +108,7 @@ class RecipeServiceTest {
 
         assertDoesNotThrow(
                 () -> recipeService.createRecipe(new RecipeCreateReqDto(
-                        title, body), userName));
+                        title, body, any()), userName));
     }
 
     @Test

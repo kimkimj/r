@@ -36,3 +36,8 @@ out/
 ### VS Code ###
 .vscode/
 gradle/
+
+### S3 yml ###
+application-aws.yml
+application-credentials.yml
+

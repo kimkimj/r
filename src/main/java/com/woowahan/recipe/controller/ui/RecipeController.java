@@ -4,9 +4,12 @@ import com.woowahan.recipe.domain.dto.itemDto.ItemListForRecipeResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
 import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.RecipeService;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -15,8 +18,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -38,7 +44,6 @@ public class RecipeController {
         if (result.hasErrors()) {
             return "recipe/createForm";
         }
-        System.out.println(form.getRecipeBody() + form.getRecipeTitle());
         String userName = authentication.getName();
         recipeService.createRecipe(form, userName);
         return "redirect:/recipes/list";
@@ -46,19 +51,20 @@ public class RecipeController {
 
     @GetMapping("/update/{recipeId}")
     public String updateForm(Model model,@PathVariable Long recipeId) {
-        model.addAttribute("recipeUpdateReqDto", new RecipeUpdateReqDto());
+        model.addAttribute("recipeUpdateReqDto", recipeService.findRecipe(recipeId));
         model.addAttribute("recipeId", recipeId);
         return "recipe/updateForm";
     }
 
     @PostMapping("/update/{recipeId}")
-    public String update(@Valid @ModelAttribute RecipeUpdateReqDto form, BindingResult result, @PathVariable Long recipeId, Authentication authentication) {
+    public String update(@Valid @ModelAttribute RecipeUpdateReqDto form, BindingResult result, @PathVariable Long recipeId, RedirectAttributes redirectAttributes, Authentication authentication) {
         if (result.hasErrors()) {
             return "recipe/updateForm";
         }
         String userName = authentication.getName();
-        recipeService.updateRecipe(form, recipeId, userName);
-        return "redirect:/recipes/list";
+        RecipeUpdateResDto resDto = recipeService.updateRecipe(form, recipeId, userName);
+        redirectAttributes.addAttribute("recipeId", resDto.getRecipeId());
+        return "redirect:/recipes/update/{recipeId}";
     }
 
     @GetMapping("/delete/{recipeId}")
@@ -131,15 +137,28 @@ public class RecipeController {
         return paging(model, allRecipes);
     }
 
+
+    @Getter
+    @AllArgsConstructor
+    class SearchResponse {
+        private final List<String> results;
+    }
+
     /**
-     * 재료 검색
+     * 재료검색
+     * @param keyword
+     * @return
      */
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/searchItem")
-    public String searchItem(Model model, @ModelAttribute RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 100, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<ItemListForRecipeResDto> allItems = recipeService.searchItemPage(recipeSearchReqDto.getKeyword(), pageable);
-        model.addAttribute("allItems", allItems);
-        return "recipe/itemList";
+    @ResponseBody
+    public SearchResponse searchItem(@RequestParam String keyword) {
+        // TODO: support paging
+        Page<ItemListForRecipeResDto> allItems = recipeService.searchItemPage(keyword, PageRequest.of(0, 100));
+        return new SearchResponse(allItems
+                .stream()
+                .map(ItemListForRecipeResDto::getName)
+                .collect(Collectors.toList()));
     }
 
     /**

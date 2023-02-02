@@ -63,15 +63,16 @@
             <tr th:each="item : ${allItems}">
 
                 <td th:text="${item.getId()}"/>
-                <td th:text="${item.getName()}"/>
+                <td th:text="${item.getName()}" id="parentValue"/>
                 <td th:text="${item.getItemStock()}"/>
                 <td th:text="${item.getItemPrice()}"/>
                 <td>
                     <!-- 어떻게 item.getName()을 정해야 할지 모르겠네요-->
-                    <button type="button" th:onclick="|location.href='@{/recipes/item/{name}(name=${item.getName()})}'|"
-                            style="width: auto">
-                        선택
-                    </button>
+                    <input type="button" value="선택" onclick="sendValue();">
+<!--                    <button type="button" th:onclick="|location.href='@{/recipes/item/{name}(name=${item.getName()})}'|"-->
+<!--                            style="width: auto">-->
+<!--                        선택-->
+<!--                    </button>-->
                 </td>
             </tr>
             </tbody>
@@ -80,7 +81,8 @@
 
 </div>
 <script>
-    function window_close() {
+    function sendValue() {
+        window.opener.document.getElementById( "parentValue" ).value = document.getElementById("${item.getName()}").value;
         window.close();
     }
 </script>

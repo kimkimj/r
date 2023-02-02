@@ -1,9 +1,9 @@
 package com.woowahan.recipe.controller.ui;
 
-import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
 import com.woowahan.recipe.service.CartService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -12,10 +12,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/carts")
 public class CartController {
@@ -24,6 +26,7 @@ public class CartController {
 
     @GetMapping
     public String cartItemList(Model model, @PageableDefault(sort = "itemName", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+        log.debug("cartItemList() 실행");
         String userName = "user";
         Page<CartItemResponse> cartList = cartService.findCartItemList(pageable, authentication.getName());
 
@@ -42,11 +45,14 @@ public class CartController {
         return "cart/cartList";
     }
 
-    @PostMapping
-    public String cartForm(Model model, CartItemReq request, Authentication authentication) {
-        cartService.createCartItem(request, authentication.getName());
-        model.addAttribute("상품이 장바구니에 담겼습니다.");
-        return "item/findAllForm";
-    }
+    @PostMapping("/{itemId}")
+    public String deleteCartItem(@PathVariable Long itemId, Model model, @PageableDefault(sort = "itemName", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+        log.info("itemId : {}", itemId);
+        cartService.deleteCartItem(itemId, authentication.getName());
+        Page<CartItemResponse> cartList = cartService.findCartItemList(pageable, authentication.getName());
 
+        model.addAttribute("cartList", cartList);
+        model.addAttribute("message", "장바구니에서 아이템이 삭제되었습니다.");
+        return "/cart/cartList";
+    }
 }

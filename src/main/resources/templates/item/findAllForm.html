@@ -13,6 +13,25 @@
   }
 </style>
 <body>
+  <script>
+    function count(type)  {
+      // 결과를 표시할 element
+      const resultElement = document.getElementById('result');
+
+      // 현재 화면에 표시된 값
+      let number = resultElement.innerText;
+
+      // 더하기/빼기
+      if(type === 'plus') {
+        number = parseInt(number) + 1;
+      }else if(type === 'minus')  {
+        number = parseInt(number) - 1;
+      }
+
+      // 결과 출력
+      resultElement.innerText = number;
+    }
+  </script>
   <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
   <!--상품 등록 버튼 & 상품 검색 창-->
   <div style="margin: 60px 180px 60px auto;">
@@ -35,12 +54,12 @@
         <img src="..." class="card-img-top" alt="이미지 준비중입니다.">
       </a>
       </div>
+
       <!--장바구니 수량 버튼-->
-      <div style="width: 190px;" class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-        <button type="button" class="btn btn-primary">-</button>
-        <input style="width: 110px; text-align: center;" type="text" th:value = "0" readonly>
-<!--               value="상품A" th:value="${resDto.getItemName()}" readonly>-->
-        <button type="button" class="btn btn-primary">+</button>
+      <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+        <input style="width: 42px;" type='button' onclick='count("minus")' value='-'/>
+        <div style="border:1px solid; width:109px; text-align: center" id='result'>0</div>
+        <input style="width: 42px;" type='button' onclick='count("plus")' value='+'/>
       </div>
       <!--상품 이름 & 상품 가격-->
       <div class="card-body">
@@ -74,3 +93,4 @@
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>
 </html>
+
