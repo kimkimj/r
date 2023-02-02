@@ -88,7 +88,7 @@ public class RecipeService {
         RecipeEntity recipeEntity = createRecipeEntity(recipeCreateReqDto, userName);
         RecipeEntity saveRecipe = recipeRepository.save(recipeEntity);
         return new RecipeCreateResDto(saveRecipe.getId(), saveRecipe.getRecipeTitle(), saveRecipe.getRecipeBody(),
-                saveRecipe.getUser().getUserName(), saveRecipe.getCreatedDate());
+                saveRecipe.getUser().getUserName(), saveRecipe.getCreatedDate(), saveRecipe.getRecipeItems());
     }
 
     /**
@@ -191,6 +191,7 @@ public class RecipeService {
         RecipeEntity recipeEntity = RecipeEntity.builder()
                 .recipeTitle(recipeCreateReqDto.getRecipeTitle())
                 .recipeBody(recipeCreateReqDto.getRecipeBody())
+                .recipeItems(recipeCreateReqDto.getRecipes())
                 .user(userRepository.findByUserName(userName).orElseThrow(() ->
                         new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()))) // 현재 로그인된 userName으로 userEntity 저장
                 .build();

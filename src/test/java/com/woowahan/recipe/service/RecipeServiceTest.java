@@ -108,7 +108,7 @@ class RecipeServiceTest {
 
         assertDoesNotThrow(
                 () -> recipeService.createRecipe(new RecipeCreateReqDto(
-                        title, body), userName));
+                        title, body, any()), userName));
     }
 
     @Test

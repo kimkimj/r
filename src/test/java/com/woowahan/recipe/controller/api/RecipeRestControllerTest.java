@@ -2,6 +2,7 @@ package com.woowahan.recipe.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
+import com.woowahan.recipe.domain.entity.ItemEntity;
 import com.woowahan.recipe.fixture.TestInfoFixture;
 import com.woowahan.recipe.service.RecipeService;
 import org.junit.jupiter.api.*;
@@ -17,6 +18,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -91,7 +94,7 @@ class RecipeRestControllerTest {
     @Test
     void 레시피_등록_성공() throws Exception {
         //given
-        RecipeCreateReqDto request = new RecipeCreateReqDto("hi", "hello");
+        RecipeCreateReqDto request = new RecipeCreateReqDto("hi", "hello", new ArrayList<>());
         //when
         when(recipeService.createRecipe(any(), any())).thenReturn(RecipeCreateResDto.builder()
                 .recipeId(1L)
@@ -167,7 +170,7 @@ class RecipeRestControllerTest {
 
             // then
             mockMvc.perform(post(String.format("/api/v1/recipes/{id}/likes"), recipeId)
-                    .with(csrf()))
+                            .with(csrf()))
                     .andDo(print())
                     .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
                     .andExpect(jsonPath("$.result").value("좋아요를 눌렀습니다."));
@@ -185,7 +188,7 @@ class RecipeRestControllerTest {
 
             // then
             mockMvc.perform(post(String.format("/api/v1/recipes/{id}/likes"), recipeId)
-                    .with(csrf()))
+                            .with(csrf()))
                     .andDo(print())
                     .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
                     .andExpect(jsonPath("$.result").value("좋아요를 취소합니다."));

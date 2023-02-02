@@ -1,5 +1,6 @@
 package com.woowahan.recipe.domain.dto.recipeDto;
 
+import com.woowahan.recipe.domain.entity.RecipeItemEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,5 +21,5 @@ public class RecipeCreateReqDto {
     private String recipeTitle;
     @NotBlank(message = "내용을 입력해주세요.")
     private String recipeBody;
-    private List<String> recipes;
+    private List<RecipeItemEntity> recipes;
 }
