@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="fragments/header :: headerFragment"/>
 <style>
     * {
@@ -121,8 +121,8 @@
             <!--<div> 전체 레시피 수 : <span : th:text="${#lists.size(allRecipes)}"></span></div>-->
 
             <span style="float: right;">
-                <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>
-                <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/my}'|">내 글 보기</button>
+                <button sec:authorize="isAuthenticated()" type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>
+                <button sec:authorize="isAuthenticated()" type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/my}'|">내 글 보기</button>
             </span>
         </div><br><br>
 
