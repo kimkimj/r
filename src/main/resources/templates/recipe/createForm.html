@@ -120,9 +120,12 @@
 
                 <ul id="item-list">
                 </ul>
-                <!-- Button trigger modal, 재료 등록 버튼 -->
+                <!-- 재료 등록 버튼(modal), 등록한 재료 전체삭제 버튼 -->
                 <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
                   재료 등록
+                </button>
+                <button type="button" class="btn btn-outline-success" onclick="allRemove();">
+                    재료 전체삭제
                 </button>
 
                 <!-- Modal -->
@@ -157,7 +160,6 @@
             </div>
 
         </div>
-
     </div>
 
     <br><br><br><br>
@@ -234,13 +236,12 @@
         itemList.appendChild(itemElement);
     }
 
-    function new_window() {
-        window.open(
-            "recipes/searchItem",
-            "Child",
-            "width=400, height=300, top=50, left=50"
-        );
+    function allRemove() {
+        console.log("삭제 버튼 누르기");
+        let itemList = document.querySelector("#item-list");
+        itemList.innerHTML = "";
     }
+
 </script>
 </body>
 </html>
