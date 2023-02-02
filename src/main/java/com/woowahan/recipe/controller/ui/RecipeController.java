@@ -44,7 +44,6 @@ public class RecipeController {
         if (result.hasErrors()) {
             return "recipe/createForm";
         }
-        System.out.println(form.getRecipeBody() + form.getRecipeTitle());
         String userName = authentication.getName();
         recipeService.createRecipe(form, userName);
         return "redirect:/recipes/list";
