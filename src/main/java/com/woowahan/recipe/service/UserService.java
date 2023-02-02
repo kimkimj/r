@@ -227,4 +227,10 @@ public class UserService {
         user.updatePassword(encoder.encode(password));
         return UserResponse.toUserResponse(user);
     }
+
+    public Long findUserId (String username) {
+        UserEntity user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+        return user.getId();
+    }
 }

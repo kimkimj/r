@@ -3,6 +3,7 @@ package com.woowahan.recipe.controller.ui;
 import com.woowahan.recipe.domain.dto.orderDto.OrderInfoResponse;
 import com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch;
 import com.woowahan.recipe.domain.dto.userDto.UserResponse;
+import com.woowahan.recipe.repository.UserRepository;
 import com.woowahan.recipe.service.OrderService;
 import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,24 +21,30 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequiredArgsConstructor
 public class OrderController {
 
+    private final UserRepository userRepository;
+
     private final OrderService orderService;
     private final UserService userService;
 
-    @GetMapping("{userId}/placeOrder/{orderId}")
-    public String orderForm(@PathVariable Long userId, @PathVariable Long orderId, Model model) {
-        String username = "GordonRamsey";
+    @GetMapping("/placeOrder/{orderId}")
+    public String orderForm(@PathVariable Long orderId, Model model, Authentication authentication) {
+        String username = authentication.getName();
         OrderInfoResponse order = orderService.findOrder(username, orderId);
         model.addAttribute("orderInfoResponse", order);
+
+        Long userId = userService.findUserId(username);
         UserResponse userResponse = userService.findUser(userId);
         model.addAttribute("userResponse", userResponse);
         return "order/orderForm";
     }
 
-    @GetMapping("{userId}/delivery/{orderId}")
-    public String getDeliveryStatus(@PathVariable Long userId, @PathVariable Long orderId, Model model) {
-        String username = "GordonRamsey";
+    @GetMapping("delivery/{orderId}")
+    public String getDeliveryStatus(@PathVariable Long orderId, Model model, Authentication authentication) {
+        String username = authentication.getName();
         OrderInfoResponse order = orderService.findOrder(username, orderId);
         model.addAttribute("orderInfoResponse", order);
+
+        Long userId = userService.findUserId(username);
         UserResponse userResponse = userService.findUser(userId);
         model.addAttribute("userResponse", userResponse);
         return "order/delivery";

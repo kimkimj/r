@@ -139,11 +139,6 @@ public class UserController {
         return "redirect:/users/my";
     }
 
-    @GetMapping("/my/get-reviews")
-    public String myGetReviews() {
-        return "user/my/myGetReview";
-    }
-
     // 내가 작성한 리뷰 목록
     @GetMapping("/my/reviews")
     public String myReviews(Model model, Authentication authentication,
@@ -167,7 +162,7 @@ public class UserController {
 
     // 리뷰 수정
     @GetMapping("/update/{recipeId}/{reviewId}")
-    public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model) {
+    public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model, Authentication authentication) {
         model.addAttribute("previousComment", reviewService.findReviewById(reviewId).getReviewComment());
         model.addAttribute("reviewUpdateRequest", new ReviewCreateRequest());
         model.addAttribute("recipeId", recipeId);
