@@ -18,7 +18,6 @@ public class RecipeCreateReqDto {
     private String recipeTitle;
     @NotBlank(message = "내용을 입력해주세요.")
     private String recipeBody;
-    @NotBlank(message = "재료를 등록해주세요.")
     private List<String> items;
 
 }
