@@ -35,3 +35,6 @@ spring:
 jwt:
   token:
     secret: secret.aa.bb.cc
+logging:
+  level:
+    com.amazonaws.util.EC2MetadataUtils: error
