@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="fragments/header :: headerFragment"/>
 <style>
     * {
@@ -68,8 +68,8 @@
             <div>
                 <h3>Recipe</h3><hr>
                 <span style="float: right;">
-                    <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/update/{recipeId} (recipeId=${recipeId})}'|">레시피 수정</button>
-                    <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/delete/{recipeId} (recipeId=${recipeId})}'|">레시피 삭제(복구 불가)</button>
+                    <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/update/{recipeId} (recipeId=${recipeId})}'|" sec:authorize="isAuthenticated()">레시피 수정</button>
+                    <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/delete/{recipeId} (recipeId=${recipeId})}'|" sec:authorize="isAuthenticated()">레시피 삭제(복구 불가)</button>
                     <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/list}'|">전체 레시피 보기</button>
                 </span>
             </div>
