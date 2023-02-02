@@ -77,4 +77,10 @@ public class RecipeEntity extends BaseEntity {
 //                .thumbnailImagePath(this.recipeImagePath) 썸네일 추가시
                 .build();
     }
+
+    /* 레시피 수정 */
+    public void update(String recipeTitle, String recipeBody) {
+        this.recipeTitle = recipeTitle;
+        this.recipeBody = recipeBody;
+    }
 }

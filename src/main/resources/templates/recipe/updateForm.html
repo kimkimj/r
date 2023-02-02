@@ -48,22 +48,18 @@
                     <div class="form-group col">
                         <label th:for="recipeTitle">레시피 제목</label>
                         <input type="text" th:field="*{recipeTitle}" class="form-control" placeholder="제목을 입력하세요"
-                               th:class="${#fields.hasErrors('recipeTitle')}? 'form-control fieldError' : 'form-control'">
+                               th:class="${#fields.hasErrors('recipeTitle')}? 'form-control fieldError' : 'form-control'" onfocus="this.value=''; return true;">
                         <p th:if="${#fields.hasErrors('recipeTitle')}" th:errors="*{recipeTitle}"></p>
                     </div><br>
                     <!-- 레시피 내용  -->
                     <div class="form-group mb-3">
                         <label th:for="recipeBody" class="form-label">레시피 내용</label>
                         <textarea th:field="*{recipeBody}" class="form-control" rows="3" style="height: 300px;"
-                                  th:class="${#fields.hasErrors('recipeBody')}? 'form-control fieldError' : 'form-control'">
-                                </textarea>
+                                  th:class="${#fields.hasErrors('recipeBody')}? 'form-control fieldError' : 'form-control'" onfocus="this.value=''; return true;">
+                        </textarea>
                         <p th:if="${#fields.hasErrors('recipeBody')}" th:errors="*{recipeBody}"></p>
                     </div>
-                    <button type="submit" class="btn btn-outline-success">작성완료</button>
-                    <!--                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">-->
-                    <!--                            <button class="btn btn-secondary me-md-2" type="button">수정</button>-->
-                    <!--                            <button type="submit" class="btn btn-secondary me-md-2" type="button">삭제</button>-->
-                    <!--                        </div> 수정 삭제는 상세 페이지로 옮길 예정 -->
+                    <button type="submit" class="btn btn-outline-success">수정완료</button>
                 </form>
             </div>
 

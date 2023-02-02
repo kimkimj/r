@@ -18,8 +18,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,19 +51,20 @@ public class RecipeController {
 
     @GetMapping("/update/{recipeId}")
     public String updateForm(Model model,@PathVariable Long recipeId) {
-        model.addAttribute("recipeUpdateReqDto", new RecipeUpdateReqDto());
+        model.addAttribute("recipeUpdateReqDto", recipeService.findRecipe(recipeId));
         model.addAttribute("recipeId", recipeId);
         return "recipe/updateForm";
     }
 
     @PostMapping("/update/{recipeId}")
-    public String update(@Valid @ModelAttribute RecipeUpdateReqDto form, BindingResult result, @PathVariable Long recipeId, Authentication authentication) {
+    public String update(@Valid @ModelAttribute RecipeUpdateReqDto form, BindingResult result, @PathVariable Long recipeId, RedirectAttributes redirectAttributes, Authentication authentication) {
         if (result.hasErrors()) {
             return "recipe/updateForm";
         }
         String userName = authentication.getName();
-        recipeService.updateRecipe(form, recipeId, userName);
-        return "redirect:/recipes/list";
+        RecipeUpdateResDto resDto = recipeService.updateRecipe(form, recipeId, userName);
+        redirectAttributes.addAttribute("recipeId", resDto.getRecipeId());
+        return "redirect:/recipes/update/{recipeId}";
     }
 
     @GetMapping("/delete/{recipeId}")
