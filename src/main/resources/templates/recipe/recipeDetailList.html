@@ -181,35 +181,36 @@
         <div style="text-align: center;">
             <p>이 레시피가 좋으면 좋아요를 눌러 마이페이지에서 따로 확인하실 수 있습니다.</p>
             <div><button class="btn btn-outline-success"  type="submit">좋아요💗</button></div>
-        </div>
-
-        <br><br>
+        </div><br><br>
 
         <!-- 리뷰 -->
         <div><h3>Review</h3><hr></div>
         <div class="row gx-5">
             <div class="col">
-                <div class="p-3 border bg-light">
-                    <h5>리뷰</h5><hr><br>
-                    <div class="row g-2">
-                        <!-- 리뷰 작성자 -->
-                        <div class="col-md-3"> <!-- col-md 만 하면 작성자와 내용의 크기가 반반, 3으로 적용하니 3:7로 변경되었다. -->
-                            <div class="form-floating">
-                                <div>작성자1</div><!--  th:text="${data}" -->
+                <p>리뷰 등록</p>
+                <div class="card">
+                    <div class="card-body">
+                        <textarea class="form-control" rows="1"></textarea>
+                    </div>
+                    <div class="card-footer" style="text-align: right;">
+                        <div><button class="btn btn-outline-success"  type="submit">리뷰쓰기</button></div>
+                    </div>
+                </div><br>
+                <div class="card">
+                    <div class="card-header">댓글 목록</div>
+                    <ul id="comment-box" class="list-group">
+                        <li id="comment--1" class="list-group-item d-flex justify-content-between">
+                            <div>댓글내용</div>
+                            <div class="d-flex">
+                                <div class="font-italic">작성자 : 작성자명 &nbsp;</div>
+                                <button class="btn badge bg-success">삭제</button>
                             </div>
-                        </div>
-                        <!-- 리뷰 내용 -->
-                        <div class="col-md">
-                            <div class="form-floating">
-                                <div>작성자1이 쓴 리뷰 내용</div><!-- th:text="${data}" -->
-                            </div>
-                        </div>
-                    </div><br>
-                </div>
+                        </li>
+                    </ul>
+                </div><br>
             </div>
         </div>
         <br><br><br><br>
-    <!-- container div -->
     </div>
 
     <!-- footer -->
