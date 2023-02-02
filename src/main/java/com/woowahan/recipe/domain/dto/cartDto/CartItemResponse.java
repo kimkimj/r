@@ -24,7 +24,7 @@ public class CartItemResponse {
 
     public static CartItemResponse from(CartItemEntity cartItemEntity) {
         return CartItemResponse.builder()
-                .id(cartItemEntity.getItem().getId())
+                .id(cartItemEntity.getId())
                 .name(cartItemEntity.getItem().getName())
                 .imagePath(cartItemEntity.getItem().getItemImagePath())
                 .price(cartItemEntity.getItem().getItemPrice())

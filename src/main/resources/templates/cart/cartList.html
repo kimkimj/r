@@ -1,9 +1,14 @@
-<head th:replace="fragments/header :: headerFragment"/>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{cart-main}">
+<!--<head th:replace="fragments/header :: headerFragment"/>-->
 <body>
-<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<!--<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>-->
+<div layout:fragment="cart-main" class="container">
     <div>장바구니 페이지</div>
     <div>
-        <table class="cart_table">
+        <table class="cart-table">
             <thead>
             <tr>
                 <th scope="col">Check</th>
@@ -14,7 +19,7 @@
             </tr>
             </thead>
             <tbody class="table-group-divider">
-            <tr class="cartList" th:each="item : ${cartList}">
+            <tr class="cartList" th:each="item : ${cartList}" >
                 <td>
                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked="checked">
                 </td>
@@ -22,7 +27,32 @@
                 <td class="individual_name_input" th:text="${item.name}">상품 이름</td>
                 <td class="individual_cnt_input" th:text="${item.cnt}"></td>
                 <td class=".individual_totalPrice_input" th:text="${item.price}">상품 가격</td>
-                <td><button type="button" class="btn btn-danger" th:onclick="|location.href='@{/carts/{itemId} (itemId=${itemId})}'|">삭제</button></td>
+                <td>
+                    <button type="button" class="btn btn-danger" onclick="deleteItem()">삭제</button>
+                    <th:block layout:fragment="script">
+                        <script type="text/javascript" th:inline="javascript">
+                            /*<![CDATA[*/
+                            function deleteItem() {
+                                const id = [[${item.id}]];
+                                console.log(id);
+                                 let confirm_message = confirm(id + "번 상품을 정말 삭제하시겠습니까?");
+
+                                 if(confirm_message) {
+                                     const formHtml = `
+                                         <form id="deleteForm" action="/carts/${id}" method="post">
+                                             <input type="hidden" id="id" name="id" value="${id}" />
+                                         </form>
+                                         `;
+                                     const doc = new DOMParser().parseFromString(formHtml, 'text/html');
+                                     const form = doc.body.firstChild;
+                                     document.body.append(form);
+                                     document.getElementById('deleteForm').submit();
+                                 }
+                            }
+                            /*]]>*/
+                        </script>
+                    </th:block>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -33,44 +63,7 @@
             <span class="finalTotalPrice_span">0</span>
         </div>
     </div>
+</div>
 </body>
-<script>
-    $(document).ready(function() {
-        function getTotalPrice() {
-            let totalPrice = 0;  // 총 가격
-            let totalCount = 0;  // 총 갯수
-            let deliveryPrice = 0;  // 배송비
-            let finalTotalPrice = 0; 		// 최종 가격(총 가격 + 배송비)
-
-            $(".cartList").each(function (index, element) {
-                if($(".form-check-input").checked()) {
-                    // 총 가격
-                    totalPrice += parseInt($(element).find(".individual_totalPrice_input").val());
-                    // 총 갯수
-                    totalCount += parseInt($(element).find(".individual_cnt_input").val());
-                }
-            });
-
-            // 배송비
-            if (totalPrice >= 50000) {
-                deliveryPrice = 0;
-            } else if (totalPrice == 0) {
-                deliveryPrice = 0;
-            } else {
-                deliveryPrice = 3000;
-            }
-
-            finalTotalPrice = totalPrice + deliveryPrice;
-
-            // 총 가격
-            $(".totalPrice_span").text(totalPrice.toLocaleString());
-            // 총 갯수
-            $(".totalCount_span").text(totalCount);
-            // 배송비
-            $(".delivery_price").text(deliveryPrice.toLocaleString());
-            // 최종 가격(총 가격 + 배송비)
-            $(".finalTotalPrice_span").text(finalTotalPrice.toLocaleString());
-        }
-    })
-</script>
-<div th:replace="fragments/footer :: footerFragment"/>
+<!--<div th:replace="fragments/footer :: footerFragment"/>-->
+</html>
