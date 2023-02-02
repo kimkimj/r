@@ -1,6 +1,7 @@
 package com.woowahan.recipe.repository;
 
 import com.woowahan.recipe.domain.entity.RecipeEntity;
+import com.woowahan.recipe.domain.entity.RecipeItemEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +39,7 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
      */
     Page<RecipeEntity> findRecipeEntitiesByUser(UserEntity user, Pageable pageable);
     Optional<List<RecipeEntity>> findByUser(UserEntity user);
+
 
 
     // 레시피 검색

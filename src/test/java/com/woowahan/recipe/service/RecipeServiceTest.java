@@ -4,16 +4,11 @@ import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateReqDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateReqDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateResDto;
-import com.woowahan.recipe.domain.entity.LikeEntity;
-import com.woowahan.recipe.domain.entity.RecipeEntity;
-import com.woowahan.recipe.domain.entity.UserEntity;
+import com.woowahan.recipe.domain.entity.*;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.fixture.LikeEntityFixture;
-import com.woowahan.recipe.repository.ItemRepository;
-import com.woowahan.recipe.repository.LikeRepository;
-import com.woowahan.recipe.repository.RecipeRepository;
-import com.woowahan.recipe.repository.UserRepository;
+import com.woowahan.recipe.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -23,6 +18,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.test.context.support.WithMockUser;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,6 +37,7 @@ class RecipeServiceTest {
     UserRepository userRepository = mock(UserRepository.class);
     LikeRepository likeRepository = mock(LikeRepository.class);
     ItemRepository itemRepository = mock(ItemRepository.class);
+    RecipeItemRepository recipeItemRepository = mock(RecipeItemRepository.class);
     ApplicationEventPublisher publisher = mock(ApplicationEventPublisher.class);
 
     /**
@@ -67,8 +66,18 @@ class RecipeServiceTest {
     private final Long id = 1L;
     private final String title = "유부초밥";
     private final String body = "이렇게";
+    private final List<String> items = new ArrayList<>();
+
     private final int like = 10;
     private final int view = 12;
+
+    private final RecipeItemEntity recipeItemEntity = RecipeItemEntity.builder()
+            .item(new ItemEntity())
+            .recipe(new RecipeEntity())
+            .build();
+
+    List<RecipeItemEntity> recipeItemEntityList = new ArrayList<>();
+
     private final RecipeEntity recipeEntity = RecipeEntity.builder()
             .id(id)
             .recipeTitle(title)
@@ -76,20 +85,46 @@ class RecipeServiceTest {
             .user(userEntity)
             .recipeLike(like)
             .recipeView(view)
+            .items(recipeItemEntityList)
+            .build();
+
+    private final ItemEntity itemEntity1 = ItemEntity.builder()
+            .id(1L)
+            .name("파")
+            .build();
+
+    private final ItemEntity itemEntity2 = ItemEntity.builder()
+            .id(2L)
+            .name("양파")
+            .build();
+    private final RecipeItemEntity recipeItemEntity1 = RecipeItemEntity.builder()
+            .item(itemEntity1)
+            .recipe(recipeEntity)
+            .build();
+    private final RecipeItemEntity recipeItemEntity2 = RecipeItemEntity.builder()
+            .item(itemEntity2)
+            .recipe(recipeEntity)
             .build();
 
     @BeforeEach
     void beforeEach() {
-        recipeService = new RecipeService(recipeRepository, userRepository, likeRepository, itemRepository, publisher);
+        recipeService = new RecipeService(recipeRepository, userRepository, likeRepository, itemRepository, recipeItemRepository, publisher);
+        items.add(0,"파");
+        items.add(1,"양파");
+        recipeItemEntityList.add(0,recipeItemEntity1);
+        recipeItemEntityList.add(1,recipeItemEntity2);
     }
 
     @Test
     void 레시피_ID_단건_조회_성공() {
-
+        when(userRepository.findByUserName(userName)).thenReturn(Optional.of(userEntity));
         when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
+        when(recipeItemRepository.findRecipeItemEntitiesById(recipeEntity)).thenReturn(Optional.of(recipeItemEntityList));
         RecipeFindResDto recipeFindResDto = recipeService.findRecipe(id);
         assertThat(recipeFindResDto.getRecipeTitle()).isEqualTo("유부초밥");
         assertThat(recipeFindResDto.getUserName()).isEqualTo("bjw");
+        assertThat(recipeFindResDto.getItems().get(0).getItem().getId()).isEqualTo(1);
+        assertThat(recipeFindResDto.getItems().get(1).getItem().getName()).isEqualTo("양파");
     }
 
     @Test
@@ -105,10 +140,10 @@ class RecipeServiceTest {
 
         when(userRepository.findByUserName(userName)).thenReturn(Optional.of(userEntity));
         when(recipeRepository.save(any())).thenReturn(recipeEntity);
-
+        when(recipeItemRepository.save(any())).thenReturn(recipeItemEntity);
         assertDoesNotThrow(
                 () -> recipeService.createRecipe(new RecipeCreateReqDto(
-                        title, body, any()), userName));
+                        title, body, items), userName));
     }
 
     @Test

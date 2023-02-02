@@ -46,13 +46,13 @@ public class RecipeEntity extends BaseEntity {
 */
     @Builder.Default
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
-    private List<RecipeItemEntity> recipeItems = new ArrayList<>();
+    private List<RecipeItemEntity> items = new ArrayList<>();
 
     public static RecipeFindResDto from(RecipeEntity recipeEntity) {
         return new RecipeFindResDto(
                 recipeEntity.getId(), recipeEntity.recipeTitle, recipeEntity.recipeBody
                 ,recipeEntity.user.getUserName(), recipeEntity.getRecipeLike(), recipeEntity.getRecipeView()
-                ,recipeEntity.getCreatedDate(),recipeEntity.getLastModifiedDate()
+                ,recipeEntity.getCreatedDate(),recipeEntity.getLastModifiedDate(), recipeEntity.getItems()
         );
     }
 

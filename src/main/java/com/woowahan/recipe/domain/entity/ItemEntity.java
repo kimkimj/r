@@ -34,7 +34,7 @@ public class ItemEntity extends BaseEntity{
 
     @Builder.Default
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-    private List<RecipeItemEntity> recipeItems = new ArrayList<>();
+    private List<RecipeItemEntity> recipes = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "seller_id")
