@@ -71,13 +71,20 @@ class RecipeServiceTest {
     private final int like = 10;
     private final int view = 12;
 
+    /**
+     * RecipeItemEntity를 먼저 생성
+     */
     private final RecipeItemEntity recipeItemEntity = RecipeItemEntity.builder()
             .item(new ItemEntity())
             .recipe(new RecipeEntity())
             .build();
 
+    // List 형태의 RecipeItemEntity 선언
     List<RecipeItemEntity> recipeItemEntityList = new ArrayList<>();
 
+    /**
+     * RecipeEntity 생성
+     */
     private final RecipeEntity recipeEntity = RecipeEntity.builder()
             .id(id)
             .recipeTitle(title)
@@ -88,6 +95,9 @@ class RecipeServiceTest {
             .items(recipeItemEntityList)
             .build();
 
+    /**
+     * ItemEntity에 아이디값과 네임값을 주기 위해 생성
+     */
     private final ItemEntity itemEntity1 = ItemEntity.builder()
             .id(1L)
             .name("파")
@@ -97,6 +107,9 @@ class RecipeServiceTest {
             .id(2L)
             .name("양파")
             .build();
+    /**
+     * RecipeItemEntity 생성
+     */
     private final RecipeItemEntity recipeItemEntity1 = RecipeItemEntity.builder()
             .item(itemEntity1)
             .recipe(recipeEntity)
