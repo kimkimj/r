@@ -1,8 +1,10 @@
 package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewGetResponse;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewUpdateResponse;
 import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserResponse;
@@ -163,23 +165,19 @@ public class UserController {
     // 리뷰 수정
     @GetMapping("/update/{recipeId}/{reviewId}")
     public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model, Authentication authentication) {
-        model.addAttribute("previousComment", reviewService.findReviewById(reviewId).getReviewComment());
-        model.addAttribute("reviewUpdateRequest", new ReviewCreateRequest());
+        ReviewGetResponse review = reviewService.findReviewById(reviewId);
+        model.addAttribute("review", review);
         model.addAttribute("recipeId", recipeId);
         model.addAttribute("reviewId", reviewId);
         return "review/updateForm";
     }
 
     @PostMapping("/update/{recipeId}/{reviewId}")
-    public String update(@Valid @ModelAttribute ReviewCreateRequest request, BindingResult bindingResult,
-                         @PathVariable Long recipeId, @PathVariable Long reviewId,
-                        Authentication authentication, Model model) {
-        if (bindingResult.hasErrors()) {
-            log.info("bindingResult = {}", bindingResult);
-            return "review/updateForm";
-        }
+    public String update(@PathVariable Long recipeId, @PathVariable Long reviewId,
+                         ReviewCreateRequest request, Authentication authentication, Model model) {
         String username = authentication.getName();
-        reviewService.updateReview(recipeId, reviewId, request, username);
+        ReviewUpdateResponse reviewUpdateResponse = reviewService.updateReview(recipeId, reviewId, request, username);
+        model.addAttribute("review", reviewUpdateResponse);
         return "redirect:/my/reviews";
     }
 
