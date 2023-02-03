@@ -17,7 +17,7 @@ public class ReviewListResponse {
     private Long recipeId;
     private String recipeTitle;
     private String username;
-    private String reviewComment;
+    private String content;
     private LocalDateTime createdDate;
     private LocalDateTime lastModified;
 
@@ -27,7 +27,7 @@ public class ReviewListResponse {
                 .recipeId(review.getRecipe().getId())
                 .recipeTitle(review.getRecipe().getRecipeTitle())
                 .username(review.getUser().getUserName())
-                .reviewComment(review.getReviewComment())
+                .content(review.getContent())
                 .createdDate(review.getCreatedDate())
                 .lastModified(review.getLastModifiedDate())
                 .build();

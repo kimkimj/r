@@ -29,7 +29,7 @@ public class ItemService {
     }
     //[중복 로직] seller 존재 확인 + 가져오기
     private SellerEntity validateSeller(String userName) {
-        return sellerRepository.findByName(userName)
+        return sellerRepository.findBySellerName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.SELLER_NOT_FOUND, ErrorCode.SELLER_NOT_FOUND.getMessage()));
     }
 

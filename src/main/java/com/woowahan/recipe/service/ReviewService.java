@@ -65,19 +65,19 @@ public class ReviewService {
         RecipeEntity recipe = validateRecipe(recipeId);
 
         // 내용이 있는지 확인. 없으면 에러 코드
-        if (reviewCreateRequest.getComment().length() == 0) {
+        if (reviewCreateRequest.getContent().length() == 0) {
             throw new AppException(ErrorCode.EMPTY_CONTENT, ErrorCode.EMPTY_CONTENT.getMessage());
         }
 
         // 리뷰 저장
-        ReviewEntity review = reviewRepository.save(reviewCreateRequest.toEntity(user, recipe, reviewCreateRequest.getComment()));
+        ReviewEntity review = reviewRepository.save(reviewCreateRequest.toEntity(user, recipe, reviewCreateRequest.getContent()));
 
         // 리뷰 작성자와 레시피 작성자가 일치하지 않다면 알람 등록
         if(!user.equals(recipe.getUser())) {
             publisher.publishEvent(AlarmEvent.of(AlarmType.NEW_REVIEW_ON_RECIPE, user, recipe.getUser(), recipe));
         }
 
-        return new ReviewCreateResponse(recipeId, user.getUserName(), reviewCreateRequest.getComment());
+        return new ReviewCreateResponse(recipeId, user.getUserName(), reviewCreateRequest.getContent());
     }
 
     // 리뷰 수정
@@ -97,15 +97,15 @@ public class ReviewService {
         }
 
         // 내용이 있는지 확인
-        if (reviewCreateRequest.getComment().length() == 0) {
+        if (reviewCreateRequest.getContent().length() == 0) {
             throw(new AppException(ErrorCode.EMPTY_CONTENT, ErrorCode.EMPTY_CONTENT.getMessage()));
         }
 
-        review.update(reviewCreateRequest.getComment());
+        review.update(reviewCreateRequest.getContent());
 
         // 저장
         ReviewEntity savedReview = reviewRepository.save(review);
-        return new ReviewUpdateResponse(review.getReviewId(), "댓글이 수정되었습니다");
+        return new ReviewUpdateResponse(review.getReviewId(), review.getContent(), "댓글이 수정되었습니다");
     }
 
     // 리뷰 단건 삭제
