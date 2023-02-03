@@ -32,14 +32,16 @@ class CartServiceTest {
     private CartItemRepository cartItemRepository = mock(CartItemRepository.class);
     private UserRepository userRepository = mock(UserRepository.class);
     private ItemRepository itemRepository = mock(ItemRepository.class);
+    private OrderService orderService = mock(OrderService.class);
     private final String userName = TestInfoFixture.get().getUserName();
     private final String password = TestInfoFixture.get().getPassword();
     private final ItemEntity item = ItemEntityFixture.get();
     private CartItemReq cartItemReq;
 
+
     @BeforeEach
     void setUp() {
-        cartService = new CartService(cartRepository, cartItemRepository, userRepository, itemRepository);
+        cartService = new CartService(cartRepository, cartItemRepository, userRepository, itemRepository, orderService);
         cartItemReq = CartItemReq.builder()
                                     .itemId(item.getId())
                                     .cartItemCnt(3)
@@ -73,7 +75,7 @@ class CartServiceTest {
             when(itemRepository.findById(item.getId())).thenReturn(Optional.empty());
 
             try {
-                cartService.createCartItem(cartItemReq, userName);
+                cartService.addCartItem(cartItemReq, userName);
             } catch (AppException e) {
                 assertEquals("재료가 존재하지 않습니다", e.getMessage());
             }
@@ -95,7 +97,7 @@ class CartServiceTest {
             when(cartRepository.findByUser(user)).thenReturn(Optional.of(cart));
 
             cartService = spy(cartService);
-            doNothing().when(cartService).createCartItem(cartItemReq, userName);
+            doNothing().when(cartService).addCartItem(cartItemReq, userName);
         }
 
         @Test
@@ -113,7 +115,7 @@ class CartServiceTest {
             when(cartRepository.findByUser(user)).thenReturn(Optional.of(cart));
 
             try {
-                cartService.createCartItem(cartItemReq, userName);
+                cartService.addCartItem(cartItemReq, userName);
             } catch (AppException e) {
                 assertEquals("재고 수량이 없습니다.", e.getMessage());
             }
@@ -128,7 +130,7 @@ class CartServiceTest {
             when(itemRepository.findById(any(Long.class))).thenReturn(Optional.of(item));
             when(cartRepository.findByUser(user)).thenReturn(Optional.empty());
 
-            cartService.createCartItem(cartItemReq, userName);
+            cartService.addCartItem(cartItemReq, userName);
 
             verify(cartRepository, atLeastOnce()).save(any(CartEntity.class));  // 장바구니가 생성되는지 확인
         }
