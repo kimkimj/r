@@ -1,6 +1,7 @@
 package com.woowahan.recipe.repository;
 
 import com.woowahan.recipe.domain.entity.RecipeEntity;
+import com.woowahan.recipe.domain.entity.RecipeItemEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,8 +41,11 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
     Optional<List<RecipeEntity>> findByUser(UserEntity user);
 
 
-    // 레시피 검색
-    @Query(value = "SELECT re FROM RecipeEntity re WHERE re.recipeTitle LIKE %:recipeTitle%",
-           countQuery = "SELECT COUNT(re.id) FROM RecipeEntity re WHERE re.recipeTitle LIKE %:recipeTitle%")
-    Page<RecipeEntity> findAllSearch(String recipeTitle, Pageable pageable);
+//    // 레시피 검색
+//    @Query(value = "SELECT re FROM RecipeEntity re WHERE re.recipeTitle LIKE %:recipeTitle%",
+//           countQuery = "SELECT COUNT(re.id) FROM RecipeEntity re WHERE re.recipeTitle LIKE %:recipeTitle%")
+//    Page<RecipeEntity> findAllSearch(String recipeTitle, Pageable pageable);
+
+    Page<RecipeEntity> findByRecipeTitleContaining(String recipeTitle, Pageable pageable);
+
 }
