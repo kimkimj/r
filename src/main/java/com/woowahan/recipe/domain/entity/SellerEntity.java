@@ -25,9 +25,8 @@ public class SellerEntity extends BaseEntity {
     private Long id;
 
     @Column(name = "seller_name")
-    private String name;
+    private String sellerName;
 
-    @Column(name = "")
     private String password;
 
     @Column(name = "company_name")
@@ -42,7 +41,7 @@ public class SellerEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    @Column(name = "seller_no")
-    private String no;  // 사업자 등록번호
+    @Column(name = "business_reg_num")
+    private String businessRegNum;  // 사업자 등록번호
 
 }

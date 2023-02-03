@@ -90,6 +90,7 @@ public class UserService {
         return pages.map(UserResponse::toUserResponse);
     }
 
+    //TODO: Seller Entity가 따로 있으니까 이 메소드는 이제 지워도 되나요?
     /**
      * 회원등급 관리자로 변경
      */

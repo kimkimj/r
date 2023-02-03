@@ -37,7 +37,8 @@
     <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
     <div class="wrapper">
         <h2>리뷰 수정</h2>
-        <form role="form" th:action="@{/update/{recipeId}/{reviewId}(recipeId=${recipeId}, reviewId=${reviewId})}" th:object="${review}" method="post">
+        <form role="form" th:action="@{/update/{recipeId}/{reviewId}(recipeId=${recipeId}, reviewId=${reviewId})}"
+              th:object="${review}" method="post">
             <div class="form-group">
                 <label>리뷰 내용</label>
                 <textarea th:field="*{content}" class="form-control">
