@@ -31,7 +31,7 @@ public class CartRestController {
     @PostMapping
     public Response<String> createCartItem (@RequestBody CartItemReq cartItemCreateReq, Authentication authentication) {
         String userName = authentication.getName();
-        cartService.createCartItem(cartItemCreateReq, userName);
+        cartService.addCartItem(cartItemCreateReq, userName);
         return Response.success("상품이 장바구니에 담겼습니다.");
     }
 
