@@ -1,11 +1,14 @@
 package com.woowahan.recipe.domain.dto.orderDto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.woowahan.recipe.domain.OrderStatus;
 import com.woowahan.recipe.domain.entity.DeliveryStatus;
 import com.woowahan.recipe.domain.entity.OrderEntity;
-import com.woowahan.recipe.domain.OrderStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,15 +20,18 @@ public class OrderInfoResponse {
     private Integer totalPrice;
     private OrderStatus orderStatus;
     private DeliveryStatus deliveryStatus;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDateTime orderDate;
 
     @Builder
-    public OrderInfoResponse(String orderNum, String username, String address, Integer totalPrice, OrderStatus orderStatus, DeliveryStatus deliveryStatus) {
+    public OrderInfoResponse(String orderNum, String username, String address, Integer totalPrice, OrderStatus orderStatus, DeliveryStatus deliveryStatus, LocalDateTime orderDate) {
         this.orderNum = orderNum;
         this.username = username;
         this.address = address;
         this.totalPrice = totalPrice;
         this.orderStatus = orderStatus;
         this.deliveryStatus = deliveryStatus;
+        this.orderDate = orderDate;
     }
 
     public static OrderInfoResponse from(OrderEntity order) {
@@ -36,6 +42,7 @@ public class OrderInfoResponse {
                 .totalPrice(order.getTotalPrice())
                 .orderStatus(order.getOrderStatus())
                 .deliveryStatus(order.getDelivery().getDeliveryStatus())
+                .orderDate(order.getCreatedDate())
                 .build();
     }
 }

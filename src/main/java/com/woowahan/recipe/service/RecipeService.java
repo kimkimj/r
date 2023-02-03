@@ -6,10 +6,7 @@ import com.woowahan.recipe.domain.entity.*;
 import com.woowahan.recipe.event.AlarmEvent;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
-import com.woowahan.recipe.repository.ItemRepository;
-import com.woowahan.recipe.repository.LikeRepository;
-import com.woowahan.recipe.repository.RecipeRepository;
-import com.woowahan.recipe.repository.UserRepository;
+import com.woowahan.recipe.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -20,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,7 +32,12 @@ public class RecipeService {
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
     private final ItemRepository itemRepository;
+    private final RecipeItemRepository recipeItemRepository;
     private final ApplicationEventPublisher publisher;
+
+//    RecipeEntity recipe = recipeRepository.save(new RecipeEntity());
+//    ItemEntity item = itemRepository.save(new ItemEntity());
+//    RecipeItemEntity recipeItem = recipeItemRepository.save(RecipeItemEntity.builder().recipe(recipe).item(item).build());
 
     /**
      * @param recipeId
@@ -44,8 +47,12 @@ public class RecipeService {
      * @description ID로 레시피 단건조회
      **/
     public RecipeFindResDto findRecipe(Long recipeId) {
+        RecipeEntity recipeEntity = validateRecipe(recipeId);
         Optional<RecipeEntity> optRecipe = recipeRepository.findById(recipeId);
         RecipeFindResDto recipeFindResDto = RecipeEntity.from(optRecipe.get());
+        recipeItemRepository.findRecipeItemEntitiesByRecipe(recipeEntity).orElseThrow(() -> {
+            throw new AppException(ErrorCode.RECIPE_ITEM_NOT_FOUND, ErrorCode.RECIPE_ITEM_NOT_FOUND.getMessage());
+        });
         return recipeFindResDto;
     }
 
@@ -87,9 +94,19 @@ public class RecipeService {
     public RecipeCreateResDto createRecipe(@RequestParam RecipeCreateReqDto recipeCreateReqDto, String userName) {
         RecipeEntity recipeEntity = createRecipeEntity(recipeCreateReqDto, userName);
         RecipeEntity saveRecipe = recipeRepository.save(recipeEntity);
+        // 레시피 이름으로부터 id값 빼오면서 RecipeItemEntity에 저장
+        for (int i = 0; i < recipeCreateReqDto.getItems().size(); i++) {
+            ItemEntity itemEntity = itemRepository.findByName(recipeCreateReqDto.getItems().get(i)).orElse(null);
+            RecipeItemEntity recipeItemEntity = RecipeItemEntity.builder()
+                    .item(itemEntity)
+                    .recipe(saveRecipe)
+                    .build();
+            recipeItemRepository.save(recipeItemEntity);
+        }
         return new RecipeCreateResDto(saveRecipe.getId(), saveRecipe.getRecipeTitle(), saveRecipe.getRecipeBody(),
-                saveRecipe.getUser().getUserName(), saveRecipe.getCreatedDate(), saveRecipe.getRecipeItems());
+                saveRecipe.getUser().getUserName(), saveRecipe.getCreatedDate());
     }
+
 
     /**
      * @param recipeUpdateReqDto
@@ -188,10 +205,10 @@ public class RecipeService {
      * @description 레시피 작성 엔티티 생성 (공통로직)
      **/
     public RecipeEntity createRecipeEntity(RecipeCreateReqDto recipeCreateReqDto, String userName) {
+
         RecipeEntity recipeEntity = RecipeEntity.builder()
                 .recipeTitle(recipeCreateReqDto.getRecipeTitle())
                 .recipeBody(recipeCreateReqDto.getRecipeBody())
-                .recipeItems(recipeCreateReqDto.getRecipes())
                 .user(userRepository.findByUserName(userName).orElseThrow(() ->
                         new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()))) // 현재 로그인된 userName으로 userEntity 저장
                 .build();
@@ -262,7 +279,7 @@ public class RecipeService {
      * @description 전체조회 페이지에서 레시피 검색
      **/
     public Page<RecipePageResDto> searchRecipes(String keyword, Pageable pageable) {
-        Page<RecipeEntity> recipeEntities = recipeRepository.findAllSearch(keyword, pageable);
+        Page<RecipeEntity> recipeEntities = recipeRepository.findByRecipeTitleContaining(keyword, pageable);
 
         // 레시피가 없는 경우
         if (recipeEntities.getSize() == 0) {
@@ -280,7 +297,7 @@ public class RecipeService {
      * @description 레시피등록->재료등록->검색->결과페이지
      */
     public Page<ItemListForRecipeResDto> searchItemPage(String keyword, Pageable pageable) {
-        Page<ItemEntity> items = itemRepository.findAllSearch(keyword, pageable);
+        Page<ItemEntity> items = itemRepository.findByNameContaining(keyword, pageable);
         if (items.getSize() == 0) { //재료 검색시 키워드에 맞는 재료가 없으면 에러메세지 출력 -> 나중에 프론트에서 다시 처리 해줘야 할 듯
             throw new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage());
         }

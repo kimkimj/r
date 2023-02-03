@@ -1,8 +1,11 @@
 package com.woowahan.recipe.domain.dto.recipeDto;
 
+import com.woowahan.recipe.domain.entity.RecipeItemEntity;
 import lombok.*;
 
+import javax.swing.text.html.parser.Entity;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -18,4 +21,5 @@ public class RecipeFindResDto {
     private int recipeView;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
+    private List<RecipeItemEntity> items; // 문제가 생긴다면 여기, 연관된곳이 너무 많음
 }

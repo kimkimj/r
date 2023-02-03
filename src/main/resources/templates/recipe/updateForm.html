@@ -42,6 +42,7 @@
             <!-- 내용 -->
             <div class="p-3 border bg-light">
                 <h5>레시피 수정</h5>
+                <h6>제목, 내용, 재료 중 하나라도 입력되지 않으면 레시피가 등록되지 않습니다.</h6>
                 <hr>
                 <form role="form" th:action="@{/recipes/update/{recipeId} (recipeId=${recipeId})}" th:object="${recipeUpdateReqDto}" method="post">
                     <!-- 레시피 제목  -->
@@ -53,9 +54,9 @@
                     </div><br>
                     <!-- 레시피 내용  -->
                     <div class="form-group mb-3">
-                        <label th:for="recipeBody" class="form-label">레시피 내용</label>
+                        <label th:for="recipeBody" class="form-label">레시피 내용  (음식에 필요한 재료와 단위를 먼저 적어주시면 더 완벽한 레시피가 될거에요)</label>
                         <textarea th:field="*{recipeBody}" class="form-control" rows="3" style="height: 300px;"
-                                  th:class="${#fields.hasErrors('recipeBody')}? 'form-control fieldError' : 'form-control'" onfocus="this.value=''; return true;">
+                                  th:class="${#fields.hasErrors('recipeBody')}? 'form-control fieldError' : 'form-control'">
                         </textarea>
                         <p th:if="${#fields.hasErrors('recipeBody')}" th:errors="*{recipeBody}"></p>
                     </div>
@@ -87,16 +88,14 @@
                     <tr>
                         <th scope="col">삭제</th>
                         <th scope="col">재료명</th>
-                        <th scope="col">단위(개/g)</th>
                     </tr>
                     </thead>
                     <!-- th:block -->
-                    <th:block>
+                    <th:block th:each="num : ${#numbers.sequence(0,recipeUpdateReqDto.getItems().size()-1)}">
                         <tbody>
                         <tr>
                             <th scope="row"><button type="button" class="btn btn-secondary btn-sm">X</button></th>
-                            <td>양파</td><!--  th:text="${data}" -->
-                            <td>1개</td><!--  th:text="${data}" -->
+                            <td th:text="${recipeUpdateReqDto.getItems().get(num).item.getName()}"/>
                         </tr>
                         </tbody>
                     </th:block>

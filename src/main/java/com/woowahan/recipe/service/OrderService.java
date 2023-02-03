@@ -1,9 +1,6 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;
-import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
-import com.woowahan.recipe.domain.dto.orderDto.OrderDeleteResDto;
-import com.woowahan.recipe.domain.dto.orderDto.OrderInfoResponse;
+import com.woowahan.recipe.domain.dto.orderDto.*;
 import com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch;
 import com.woowahan.recipe.domain.entity.*;
 import com.woowahan.recipe.exception.AppException;
@@ -16,6 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.woowahan.recipe.exception.ErrorCode.*;
 
@@ -53,6 +54,30 @@ public class OrderService {
         return OrderCreateResDto.from(order);
     }
 
+    // 장바구니에 담긴 상품 데이터를 전달받아서 주문 생성
+    public OrderCreateResDto createOrderCartItem(List<OrderCreateReqDto> orderDtoList, String userName) {
+        UserEntity user = validateUser(userName);
+        List<OrderItemEntity> orderItemList = new ArrayList<>();
+
+        // 주문을 위한 상품 리스트
+        for (OrderCreateReqDto reqDto : orderDtoList) {
+            ItemEntity itemEntity = validateItem(reqDto.getItemId());
+
+            OrderItemEntity orderItem = OrderItemEntity.createOrderItem(itemEntity, itemEntity.getItemPrice(), reqDto.getCount());
+            orderItemList.add(orderItem);
+        }
+
+        // 배송정보 생성
+        DeliveryEntity delivery = new DeliveryEntity();
+        delivery.setAddress(user.getAddress());
+        delivery.setDeliveryStatus(DeliveryStatus.READY);
+
+        OrderEntity order = OrderEntity.createOrder(user, delivery, orderItemList);
+        orderRepository.save(order);
+
+        return OrderCreateResDto.from(order);
+    }
+
     @Transactional(readOnly = true)
     public OrderInfoResponse findOrder(String userName, Long orderId) {
         validateUser(userName);
@@ -76,6 +101,16 @@ public class OrderService {
     }
 
     //= 비지니스 로직 종료 =//
+    public boolean checkOrderUser(Long orderId, String usesrName) {
+        OrderEntity order = validateOrder(orderId);
+        UserEntity user = validateUser(usesrName);
+
+        if (!StringUtils.equals(order.getUser().getUserName(), user.getUserName())) {
+            return false;
+        }
+
+        return true;
+    }
 
     private OrderEntity validateOrder(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(() -> {
