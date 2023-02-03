@@ -2,6 +2,9 @@ package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
+import com.woowahan.recipe.domain.dto.cartDto.CartOrderDto;
+import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;
+import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
 import com.woowahan.recipe.domain.entity.CartEntity;
 import com.woowahan.recipe.domain.entity.CartItemEntity;
 import com.woowahan.recipe.domain.entity.ItemEntity;
@@ -19,6 +22,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.woowahan.recipe.exception.ErrorCode.SELECT_ORDER_ITEM;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -29,7 +37,7 @@ public class CartService {
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
-
+    private final OrderService orderService;
 
     public Page<CartItemResponse> findCartItemList(Pageable pageable, String userName) {
         UserEntity user = validateUser(userName);
@@ -77,6 +85,42 @@ public class CartService {
         validateUser(userName);
 
         cartItemRepository.deleteById(itemId);
+    }
+
+    /**
+     * 장바구니에 담긴 상품을 통한 주문, 주문한 상품들 장바구니에서 제거
+     * @param cartOrderDtoList
+     * @param userName
+     * @return
+     */
+    public OrderCreateResDto orderCartItem(List<CartOrderDto> cartOrderDtoList, String userName) {
+        // 주문 상품이 없을 경우 에러처리
+        if (cartOrderDtoList == null || cartOrderDtoList.size() == 0) {
+            throw new AppException(SELECT_ORDER_ITEM, SELECT_ORDER_ITEM.getMessage());
+        }
+
+        List<OrderCreateReqDto> orderCreateReqDtoList = new ArrayList<>();
+        UserEntity user = validateUser(userName);
+        CartEntity cart = validateCart(user);
+
+        // 주문한 상품을 orderCreateReqDtoList 에 담기
+        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
+            CartItemEntity cartItem = validateCartItem(cart, cartOrderDto.getCartItemId());
+
+            OrderCreateReqDto orderCreateReqDto = new OrderCreateReqDto();
+            orderCreateReqDto.setItemId(cartItem.getId());
+            orderCreateReqDto.setCount(cartItem.getCartItemCnt());
+            orderCreateReqDtoList.add(orderCreateReqDto);
+        }
+
+        // 주문하기
+        OrderCreateResDto orderCartItem = orderService.createOrderCartItem(orderCreateReqDtoList, userName);
+        // 주문한 상품들 장바구니에서 제거
+        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
+            CartItemEntity cartItem = validateCartItem(cart, cartOrderDto.getCartItemId());
+            cartItemRepository.delete(cartItem);
+        }
+        return orderCartItem;
     }
 
     /* 공통 로직 */
