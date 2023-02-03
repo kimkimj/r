@@ -70,6 +70,7 @@
             <!-- 내용 -->
             <div class="p-3 border" style="background-color: #F8FAF9;">
                 <h5>레시피 등록</h5>
+                <h6>제목, 내용, 재료,재료 단위가 등록되지 않으면 레시피가 등록되지 않습니다.</h6>
                 <hr>
                 <form role="form" th:action="@{/recipes/create}" th:object="${recipeCreateReqDto}" method="post">
                     <!-- 레시피 제목  -->
