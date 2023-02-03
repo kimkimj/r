@@ -42,7 +42,7 @@
             <!-- 내용 -->
             <div class="p-3 border bg-light">
                 <h5>레시피 수정</h5>
-                <h6>    제목, 내용, 재료 중 하나라도 입력되지 않으면 레시피가 등록되지 않습니다.</h6>
+                <h6>제목, 내용, 재료 중 하나라도 입력되지 않으면 레시피가 등록되지 않습니다.</h6>
                 <hr>
                 <form role="form" th:action="@{/recipes/update/{recipeId} (recipeId=${recipeId})}" th:object="${recipeUpdateReqDto}" method="post">
                     <!-- 레시피 제목  -->
