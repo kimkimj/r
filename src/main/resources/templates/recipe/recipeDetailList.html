@@ -159,11 +159,11 @@
                         </tr>
                         </thead>
                         <!-- th:block -->
-                        <th:block>
+                        <th:block th:each="num : ${#numbers.sequence(0,recipe.getItems().size()-1)}">
                             <tbody>
                             <tr>
                                 <th scope="row"><input class="form-check-input" type="checkbox" value=""></th>
-                                <td>양파</td><!--  th:text="${data}" -->
+                                <td th:text="${recipe.getItems().get(num).item.getName()}"/>
                                 <td>1개</td><!--  th:text="${data}" -->
                             </tr>
                             </tbody>
