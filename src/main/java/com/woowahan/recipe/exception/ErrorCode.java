@@ -23,7 +23,10 @@ public enum ErrorCode {
     EMPTY_CONTENT(HttpStatus.BAD_REQUEST, "내용이 없습니다."),
     NOT_ENOUGH_STOCK(HttpStatus.BAD_REQUEST, "재고 수량이 없습니다."),
     CART_ITEM_NOT_FOUND(HttpStatus.BAD_REQUEST, "장바구니에 담긴 재료를 찾을 수 없습니다."),
-    RECIPE_ITEM_NOT_FOUND(HttpStatus.BAD_REQUEST, "아이템에 담긴 재료를 찾을 수 없습니다.");
+    RECIPE_ITEM_NOT_FOUND(HttpStatus.BAD_REQUEST, "아이템에 담긴 재료를 찾을 수 없습니다."),
+    ALREADY_ARRIVED(HttpStatus.BAD_REQUEST, "이미 배송된 상품입니다."),
+    SELECT_ORDER_ITEM(HttpStatus.FORBIDDEN, "주문할 상품을 선택해주세요.");
+
 
     private HttpStatus httpStatus;
     private String message;

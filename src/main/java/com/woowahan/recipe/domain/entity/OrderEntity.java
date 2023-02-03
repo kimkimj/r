@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.woowahan.recipe.exception.ErrorCode.NOT_ENOUGH_STOCK;
+import static com.woowahan.recipe.domain.OrderStatus.CANCEL;
+import static com.woowahan.recipe.domain.OrderStatus.ORDER;
+import static com.woowahan.recipe.exception.ErrorCode.ALREADY_ARRIVED;
 
 @Entity
 @Getter
@@ -30,7 +32,7 @@ public class OrderEntity extends BaseEntity{
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItemEntity> orderItems = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -40,6 +42,7 @@ public class OrderEntity extends BaseEntity{
     private String orderNumber;
 
     @Enumerated(EnumType.STRING)
+    @Setter
     private OrderStatus orderStatus;
 
     @Builder
@@ -75,9 +78,24 @@ public class OrderEntity extends BaseEntity{
         order.addDelivery(delivery);
         order.addOrderItem(orderItem);
         order.orderNumber = order.createOrderNumber();
-        order.orderStatus = OrderStatus.ORDER;
+        order.setOrderStatus(ORDER);
         return order;
     }
+
+    // 장바구니 주문
+    public static OrderEntity createOrder(UserEntity user, DeliveryEntity delivery, List<OrderItemEntity> orderItems) {
+        OrderEntity order = new OrderEntity();
+        order.addUser(user);
+        order.addDelivery(delivery);
+
+        for (OrderItemEntity orderItem : orderItems) {
+            order.addOrderItem(orderItem);
+        }
+        order.orderNumber = order.createOrderNumber();
+        order.setOrderStatus(ORDER);
+        return order;
+    }
+    /* 비지니스 로직 */
 
     public String createOrderNumber() {
         String date = String.valueOf(LocalDate.now(ZoneId.of("Asia/Seoul")));
@@ -86,26 +104,12 @@ public class OrderEntity extends BaseEntity{
         return now + substring;
     }
 
-    // 장바구니 주문
-    public static OrderEntity createOrder(UserEntity user, DeliveryEntity delivery, OrderItemEntity... orderItems) {
-        OrderEntity order = new OrderEntity();
-        order.addUser(user);
-        order.addDelivery(delivery);
-
-        for (OrderItemEntity orderItem : orderItems) {
-            order.addOrderItem(orderItem);
-        }
-        order.orderStatus = OrderStatus.ORDER;
-        return order;
-    }
-
-    /* 비지니스 로직 */
     public void cancel() {
         if (delivery.getDeliveryStatus().equals(DeliveryStatus.COMP)) {
-            throw new AppException(NOT_ENOUGH_STOCK, NOT_ENOUGH_STOCK.getMessage());
+            throw new AppException(ALREADY_ARRIVED, ALREADY_ARRIVED.getMessage());
         }
 
-        this.orderStatus = OrderStatus.CANCEL;
+        this.orderStatus = CANCEL;
         for (OrderItemEntity orderItem : orderItems) {
             orderItem.cancel();
         }

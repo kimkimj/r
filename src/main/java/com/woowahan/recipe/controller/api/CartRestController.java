@@ -3,6 +3,8 @@ package com.woowahan.recipe.controller.api;
 import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
+import com.woowahan.recipe.domain.dto.cartDto.CartOrderDto;
+import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
 import com.woowahan.recipe.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -33,6 +37,13 @@ public class CartRestController {
         String userName = authentication.getName();
         cartService.addCartItem(cartItemCreateReq, userName);
         return Response.success("상품이 장바구니에 담겼습니다.");
+    }
+
+    @PostMapping("/orders")
+    public Response<OrderCreateResDto> orderCartItem(@RequestBody CartOrderDto cartOrderDto, Authentication authentication) {
+        List<CartOrderDto> cartOrderDtoList = cartOrderDto.getCartOrderDtoList();
+        OrderCreateResDto orderCreateResDto = cartService.orderCartItem(cartOrderDtoList, authentication.getName());
+        return Response.success(orderCreateResDto);
     }
 
     @PutMapping
