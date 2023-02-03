@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface RecipeItemRepository extends JpaRepository<RecipeItemEntity,Long> {
 
-    Optional<List<RecipeItemEntity>> findRecipeItemEntitiesById(RecipeEntity id);
+    Optional<List<RecipeItemEntity>> findRecipeItemEntitiesByRecipe(RecipeEntity recipeEntity);
 }

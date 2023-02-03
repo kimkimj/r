@@ -50,7 +50,7 @@ public class RecipeService {
         RecipeEntity recipeEntity = validateRecipe(recipeId);
         Optional<RecipeEntity> optRecipe = recipeRepository.findById(recipeId);
         RecipeFindResDto recipeFindResDto = RecipeEntity.from(optRecipe.get());
-        recipeItemRepository.findRecipeItemEntitiesById(recipeEntity).orElseThrow(() -> {
+        recipeItemRepository.findRecipeItemEntitiesByRecipe(recipeEntity).orElseThrow(() -> {
             throw new AppException(ErrorCode.RECIPE_ITEM_NOT_FOUND, ErrorCode.RECIPE_ITEM_NOT_FOUND.getMessage());
         });
         return recipeFindResDto;

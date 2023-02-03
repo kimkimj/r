@@ -132,7 +132,7 @@ class RecipeServiceTest {
     void 레시피_ID_단건_조회_성공() {
         when(userRepository.findByUserName(userName)).thenReturn(Optional.of(userEntity));
         when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
-        when(recipeItemRepository.findRecipeItemEntitiesById(recipeEntity)).thenReturn(Optional.of(recipeItemEntityList));
+        when(recipeItemRepository.findRecipeItemEntitiesByRecipe(recipeEntity)).thenReturn(Optional.of(recipeItemEntityList));
         RecipeFindResDto recipeFindResDto = recipeService.findRecipe(id);
         assertThat(recipeFindResDto.getRecipeTitle()).isEqualTo("유부초밥");
         assertThat(recipeFindResDto.getUserName()).isEqualTo("bjw");
