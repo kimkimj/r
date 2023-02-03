@@ -1,6 +1,9 @@
 package com.woowahan.recipe.controller.ui;
 
+import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.itemDto.*;
+import com.woowahan.recipe.service.CartService;
+import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +26,10 @@ import javax.validation.Valid;
 public class ItemController {
 
     private final ItemService itemService;
+    private final CartService cartService;
+
+    //수정할지 고려해보기
+    private final FindService findService;
 
 
     /**
@@ -51,8 +58,32 @@ public class ItemController {
         ItemDetailResDto resDto = itemService.findItem(id);
         model.addAttribute("id", id);
         model.addAttribute("resDto", resDto);
+        model.addAttribute("cartItemReq", new CartItemReq(id, 1));
         return "item/findForm";
     }
+
+
+    /**
+     * 카트에 상품 수량 업데이트 (카트에 아이템이 없으면 생성)
+     */
+    @PostMapping("/cart")
+    public String addCartItem(@ModelAttribute CartItemReq cartItemReq,
+                              Model model) {
+        log.info("컨트롤러동작 {}:", cartItemReq.getCartItemCnt());
+        String userName = "ididid4"; //동작 확인용, 실제로는 authentication에서 받아와야함.
+
+        model.addAttribute("cartItemReq", cartItemReq);
+//        ItemEntity itemEntity = itemService.validateItem(cartItemReqDto.getItemId());
+//
+////        model.addAttribute("itemCreateReqDto", new ItemCreateReqDto());
+//
+//        cartService.createCartItem(cartItemReq, userName);
+        cartService.addCartItem(cartItemReq, userName);
+        return "redirect:/items/"+cartItemReq.getItemId(); //상품상세보기페이지
+    }
+
+//    수량 선택후 장바구니버튼을 누르면 수량을 -> 저장
+
 
     /**
      * 상품 전체조회
@@ -69,13 +100,12 @@ public class ItemController {
     @GetMapping("/search")
     public String search(Model model, @ModelAttribute ItemSearchReqDto itemSearchReqDto, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<ItemListResDto> searchItems = itemService.searchItem(itemSearchReqDto.getKeyword(), pageable);
-        model.addAttribute("items", searchItems);
-        return "item/findAllForm";
+        return paging(model, searchItems);
     }
 
 
     /**
-     * 재료 등록(관리자, 판매자)
+     * 상품 등록(관리자, 판매자)
      */
     @GetMapping("/create")
     public String createForm(Model model) {
@@ -99,7 +129,7 @@ public class ItemController {
     }
 
     /**
-     * 재료 수정(관리자, 판매자)
+     * 상품 수정(관리자, 판매자)
      */
     @GetMapping("/update/{id}")
     public String updateForm(@PathVariable Long id,  Model model) {
@@ -108,6 +138,7 @@ public class ItemController {
         return "item/updateForm";
     }
 
+//    @PostMapping("/updates/{id}") 로 해도 동작함, html action 도 맞춰줘야 됨
     @PostMapping("/update/{id}")
     //동작 test용
 //    public String update(@PathVariable Long id, @Valid @ModelAttribute ItemUpdateReqDto reqDto, BindingResult bindingResult, Model model, Authentication authentication) {
@@ -124,7 +155,7 @@ public class ItemController {
     }
 
     /**
-     * 재료 삭제(관리자, 판매자)
+     * 상품 삭제(관리자, 판매자)
      */
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
