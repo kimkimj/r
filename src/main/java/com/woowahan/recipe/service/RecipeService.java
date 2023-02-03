@@ -279,7 +279,7 @@ public class RecipeService {
      * @description 전체조회 페이지에서 레시피 검색
      **/
     public Page<RecipePageResDto> searchRecipes(String keyword, Pageable pageable) {
-        Page<RecipeEntity> recipeEntities = recipeRepository.findAllSearch(keyword, pageable);
+        Page<RecipeEntity> recipeEntities = recipeRepository.findByRecipeTitleContaining(keyword, pageable);
 
         // 레시피가 없는 경우
         if (recipeEntities.getSize() == 0) {
