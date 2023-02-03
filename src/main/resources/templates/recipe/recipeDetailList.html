@@ -155,7 +155,6 @@
                         <tr>
                             <th scope="col">✓</th>
                             <th scope="col">재료명</th>
-                            <th scope="col">단위(개/g)</th>
                         </tr>
                         </thead>
                         <!-- th:block -->
@@ -164,7 +163,6 @@
                             <tr>
                                 <th scope="row"><input class="form-check-input" type="checkbox" value=""></th>
                                 <td th:text="${recipe.getItems().get(num).item.getName()}"/>
-                                <td>1개</td><!--  th:text="${data}" -->
                             </tr>
                             </tbody>
                         </th:block>
