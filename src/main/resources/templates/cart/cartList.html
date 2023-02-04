@@ -8,12 +8,12 @@
 <div layout:fragment="cart-main" class="container">
     <div>장바구니 페이지</div>
     <div>
-        <table class="cart-table">
+        <table class="table cart-table">
             <thead>
             <tr>
                 <th scope="col">Check</th>
                 <th scope="col">Image</th>
-                <th scope="g-col-6">Name</th>
+                <th scope="col">Name</th>
                 <th scope="col">Price</th>
                 <th scope="col">Delete</th>
             </tr>
@@ -21,7 +21,7 @@
             <tbody class="table-group-divider">
             <tr class="cartList" th:each="item : ${cartList}" >
                 <td>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked="checked">
+                    <input class="form-check-input" type="checkbox" id="flexCheckDefault">
                 </td>
 <!--                <td class=".individual_image_input" th:text="${item.getImagePath()}">상품 이미지 경로</td>-->
                 <td class="individual_name_input" th:text="${item.name}">상품 이름</td>
@@ -56,11 +56,8 @@
             </tr>
             </tbody>
         </table>
-        <div class="result">
-            <span class="totalPrice_span">0</span>
-            <span class="totalCount_span">0</span>
-            <span class="delivery_price">0</span>
-            <span class="finalTotalPrice_span">0</span>
+        <div>
+            총합 나올 곳
         </div>
     </div>
 </div>
