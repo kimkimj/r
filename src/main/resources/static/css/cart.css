@@ -1,0 +1,12 @@
+.cart-table td {
+    height: 150px;
+}
+
+hr {
+    margin: 0;
+}
+
+.cart-result {
+    background-color: #DDF7F8;
+    height: 200px;
+}

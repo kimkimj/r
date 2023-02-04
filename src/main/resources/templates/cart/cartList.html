@@ -6,26 +6,46 @@
 <body>
 <!--<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>-->
 <div layout:fragment="cart-main" class="container">
-    <div>장바구니 페이지</div>
+    <div class="border-bottom p-2 my-3">
+        <h2>장바구니 페이지</h2>
+        <div>진행상황 띄우기</div>
+    </div>
     <div>
-        <table class="table cart-table">
+        <table class="table cart-table text-center align-middle">
             <thead>
+            <colgroup>
+                <col style="width: 5%" />
+                <col style="width: 30%" />
+                <col style="width: 30%" />
+                <col style="width: 10%" />
+                <col style="width: 15%" />
+                <col style="width: 10%" />
+            </colgroup>
             <tr>
-                <th scope="col">Check</th>
-                <th scope="col">Image</th>
-                <th scope="col">Name</th>
-                <th scope="col">Price</th>
-                <th scope="col">Delete</th>
+                <th>선택</th>
+                <th>상품 이미지</th>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>수량</th>
+                <th scope="col">삭제</th>
             </tr>
             </thead>
             <tbody class="table-group-divider">
             <tr class="cartList" th:each="item : ${cartList}" >
                 <td>
-                    <input class="form-check-input" type="checkbox" id="flexCheckDefault">
+                    <input class="form-check-input" name="item" type="checkbox" id="flexCheckDefault" th:value="${item.price}" onclick="getCheckPrice()">
                 </td>
-<!--                <td class=".individual_image_input" th:text="${item.getImagePath()}">상품 이미지 경로</td>-->
-                <td class="individual_name_input" th:text="${item.name}">상품 이름</td>
-                <td class="individual_cnt_input" th:text="${item.cnt}"></td>
+                <td class=".individual_image_input">
+                    <div class="border d-flex justify-content-center align-items-center">
+                        <img src="..." class="rounded" th:alt="|${{item.name}} 이미지|">
+                    </div>
+                </td>
+                <td class="individual_name_input text-truncate" th:text="${item.name}">상품 이름</td>
+                <td class="individual_cnt_input">
+                    <button type="button" class="btn btn-jelly" onclick="count('minus')" value="-"/>
+                    <input type="number" th:value="${item.cnt}" readonly />
+                    <button type="button" class="btn btn-jelly" onclick="count('plus')" value="+"/>
+                </td>
                 <td class=".individual_totalPrice_input" th:text="${item.price}">상품 가격</td>
                 <td>
                     <button type="button" class="btn btn-danger" onclick="deleteItem()">삭제</button>
@@ -33,9 +53,9 @@
                         <script type="text/javascript" th:inline="javascript">
                             /*<![CDATA[*/
                             function deleteItem() {
-                                const id = [[${item.id}]];
-                                console.log(id);
-                                 let confirm_message = confirm(id + "번 상품을 정말 삭제하시겠습니까?");
+                                const name = [[${item.name}]];
+                                console.log(name);
+                                 let confirm_message = confirm(name + "을(를) 정말 삭제하시겠습니까?");
 
                                  if(confirm_message) {
                                      const formHtml = `
@@ -56,11 +76,26 @@
             </tr>
             </tbody>
         </table>
-        <div>
-            총합 나올 곳
+        <hr />
+        <div class="cart-result rounded-3">
+            <table class="table mx-5">
+                <tr>
+                    <td>주문금액</td>
+                    <td class="order-price"></td>
+                </tr>
+                <tr class="border-bottom">
+                    <td>배송비</td>
+                    <td class="delivery-price"></td>
+                </tr>
+                <tr>
+                    <td>총 결제 예정 금액</td>
+                    <td class="total-price"></td>
+                </tr>
+            </table>
+            <button type="submit" class="btn btn-primary order-btn">주문하기</button>
         </div>
     </div>
 </div>
 </body>
-<!--<div th:replace="fragments/footer :: footerFragment"/>-->
+
 </html>
