@@ -1,6 +1,10 @@
 .cart-table td {
     height: 150px;
 }
+.cart-table .item-cnt {
+    border: none;
+    outline: #DDF7F8;
+}
 
 hr {
     margin: 0;

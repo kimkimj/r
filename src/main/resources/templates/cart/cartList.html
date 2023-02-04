@@ -43,7 +43,7 @@
                 <td class="individual_name_input text-truncate" th:text="${item.name}">상품 이름</td>
                 <td class="individual_cnt_input">
                     <button type="button" class="btn btn-jelly" onclick="count('minus')" value="-"/>
-                    <input type="number" th:value="${item.cnt}" readonly />
+                    <input type="number" class="item-cnt" th:value="${item.cnt}" readonly />
                     <button type="button" class="btn btn-jelly" onclick="count('plus')" value="+"/>
                 </td>
                 <td class=".individual_totalPrice_input" th:text="${item.price}">상품 가격</td>
