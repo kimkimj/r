@@ -34,25 +34,25 @@ class ItemServiceTest {
     void setUp() {
         itemService = new ItemService(sellerRepository, itemRepository);
         seller1 = SellerEntity.builder()
-                .name("user id1")
+                .sellerName("user id1")
                 .password("password1")
                 .companyName("company name1")
                 .address("address1")
                 .email("email1@email")
                 .phoneNum("01098765432")
                 .userRole(UserRole.SELLER)
-                .no("000000000001")
+                .businessRegNum("000000000001")
                 .build();
 
         seller2 = SellerEntity.builder()
-                .name("seller id2")
+                .sellerName("seller id2")
                 .password("password2")
                 .companyName("company name2")
                 .address("address2")
                 .email("email2@email")
                 .phoneNum("01012345678")
                 .userRole(UserRole.SELLER)
-                .no("000000000002")
+                .businessRegNum("000000000002")
                 .build();
 
         itemCreateReqDto = new ItemCreateReqDto("image path", "name", 10000, 200);
@@ -77,22 +77,22 @@ class ItemServiceTest {
             SellerEntity mockSellerEntity = mock(SellerEntity.class);
             ItemEntity mockItemEntity = mock(ItemEntity.class);
 
-            given(sellerRepository.findByName(seller1.getName())).willReturn(Optional.of(mockSellerEntity));
+            given(sellerRepository.findBySellerName(seller1.getSellerName())).willReturn(Optional.of(mockSellerEntity));
             given(itemRepository.save(any())).willReturn(mockItemEntity);
 
             /* when, then */
-            Assertions.assertDoesNotThrow(() -> itemService.createItem(itemCreateReqDto, seller1.getName()));
+            Assertions.assertDoesNotThrow(() -> itemService.createItem(itemCreateReqDto, seller1.getSellerName()));
         }
 
         @Test
         @WithMockUser
         void 아이템_등록_실패_판매자존재안함() {
             /* given */
-            given(sellerRepository.findByName(seller1.getName())).willReturn(Optional.of(seller1));  // 기존에 아이템 등록한 판매자
+            given(sellerRepository.findBySellerName(seller1.getSellerName())).willReturn(Optional.of(seller1));  // 기존에 아이템 등록한 판매자
             given(itemRepository.save(itemCreateReqDto.toEntity())).willReturn(item);
 
             /* when */
-            String errorMessage = Assertions.assertThrows(AppException.class, () -> itemService.createItem(itemCreateReqDto, seller2.getName())).getMessage();
+            String errorMessage = Assertions.assertThrows(AppException.class, () -> itemService.createItem(itemCreateReqDto, seller2.getSellerName())).getMessage();
 
             /* then */
             Assertions.assertEquals(ErrorCode.SELLER_NOT_FOUND.getMessage(), errorMessage);
@@ -106,11 +106,11 @@ class ItemServiceTest {
         @WithMockUser
         void 아이템_수정_실패_아이템존재안함() {
             /* given */
-            given(sellerRepository.findByName(seller2.getName())).willReturn(Optional.of(seller2));
+            given(sellerRepository.findBySellerName(seller2.getSellerName())).willReturn(Optional.of(seller2));
             given(itemRepository.findById(item.getId())).willReturn(Optional.empty());
 
             /* when */
-            String errorMessage = Assertions.assertThrows(AppException.class, () -> itemService.updateItem(item.getId(),itemUpdateReqDto, seller2.getName())).getMessage();
+            String errorMessage = Assertions.assertThrows(AppException.class, () -> itemService.updateItem(item.getId(),itemUpdateReqDto, seller2.getSellerName())).getMessage();
 
             /* then */
             Assertions.assertEquals(ErrorCode.ITEM_NOT_FOUND.getMessage(), errorMessage);
@@ -119,11 +119,11 @@ class ItemServiceTest {
         @WithMockUser
         void 아이템_수정_실패_판매자존재안함() {
             /* given */
-            given(sellerRepository.findByName(seller2.getName())).willReturn(Optional.empty());
+            given(sellerRepository.findBySellerName(seller2.getSellerName())).willReturn(Optional.empty());
             given(itemRepository.findById(item.getId())).willReturn(Optional.of(item));
 
             /* when */
-            String errorMessage = Assertions.assertThrows(AppException.class, () -> itemService.updateItem(item.getId(),itemUpdateReqDto, seller2.getName())).getMessage();
+            String errorMessage = Assertions.assertThrows(AppException.class, () -> itemService.updateItem(item.getId(),itemUpdateReqDto, seller2.getSellerName())).getMessage();
 
             /* then */
             Assertions.assertEquals(ErrorCode.SELLER_NOT_FOUND.getMessage(), errorMessage);
@@ -132,12 +132,12 @@ class ItemServiceTest {
         @WithMockUser
         void 아이템_수정_실패_권한없음() {
             /* given */
-            given(sellerRepository.findByName(seller1.getName())).willReturn(Optional.of(seller1));  // 아이템을 등록한 판매자
-            given(sellerRepository.findByName(seller2.getName())).willReturn(Optional.of(seller2));  // 현재 로그인한 판매자
+            given(sellerRepository.findBySellerName(seller1.getSellerName())).willReturn(Optional.of(seller1));  // 아이템을 등록한 판매자
+            given(sellerRepository.findBySellerName(seller2.getSellerName())).willReturn(Optional.of(seller2));  // 현재 로그인한 판매자
             given(itemRepository.findById(item.getId())).willReturn(Optional.of(item));
 
             /* when */
-            String errorMessage = Assertions.assertThrows(AppException.class, () -> itemService.updateItem(item.getId(),itemUpdateReqDto, seller2.getName())).getMessage();
+            String errorMessage = Assertions.assertThrows(AppException.class, () -> itemService.updateItem(item.getId(),itemUpdateReqDto, seller2.getSellerName())).getMessage();
 
             /* then */
             Assertions.assertEquals(ErrorCode.ROLE_FORBIDDEN.getMessage(), errorMessage);
@@ -151,11 +151,11 @@ class ItemServiceTest {
         @WithMockUser
         void 아이템_삭제_실패_아이템존재안함() {
             /* given */
-            given(sellerRepository.findByName(seller2.getName())).willReturn(Optional.of(seller2));
+            given(sellerRepository.findBySellerName(seller2.getSellerName())).willReturn(Optional.of(seller2));
             given(itemRepository.findById(item.getId())).willReturn(Optional.empty());
 
             /* when */
-            String errorMessage = Assertions.assertThrows(AppException.class, () -> itemService.deleteItem(item.getId(), seller2.getName())).getMessage();
+            String errorMessage = Assertions.assertThrows(AppException.class, () -> itemService.deleteItem(item.getId(), seller2.getSellerName())).getMessage();
 
             /* then */
             Assertions.assertEquals(ErrorCode.ITEM_NOT_FOUND.getMessage(), errorMessage);
@@ -164,11 +164,11 @@ class ItemServiceTest {
         @WithMockUser
         void 아이템_수정_실패_판매자존재안함() {
             /* given */
-            given(sellerRepository.findByName(seller2.getName())).willReturn(Optional.empty());
+            given(sellerRepository.findBySellerName(seller2.getSellerName())).willReturn(Optional.empty());
             given(itemRepository.findById(item.getId())).willReturn(Optional.of(item));
 
             /* when */
-            String errorMessage = Assertions.assertThrows(AppException.class, () -> itemService.deleteItem(item.getId(), seller2.getName())).getMessage();
+            String errorMessage = Assertions.assertThrows(AppException.class, () -> itemService.deleteItem(item.getId(), seller2.getSellerName())).getMessage();
 
             /* then */
             Assertions.assertEquals(ErrorCode.SELLER_NOT_FOUND.getMessage(), errorMessage);
@@ -177,12 +177,12 @@ class ItemServiceTest {
         @WithMockUser
         void 아이템_수정_실패_권한없음() {
             /* given */
-            given(sellerRepository.findByName(seller1.getName())).willReturn(Optional.of(seller1));  // 아이템을 등록한 판매자
-            given(sellerRepository.findByName(seller2.getName())).willReturn(Optional.of(seller2));  // 현재 로그인한 판매자
+            given(sellerRepository.findBySellerName(seller1.getSellerName())).willReturn(Optional.of(seller1));  // 아이템을 등록한 판매자
+            given(sellerRepository.findBySellerName(seller2.getSellerName())).willReturn(Optional.of(seller2));  // 현재 로그인한 판매자
             given(itemRepository.findById(item.getId())).willReturn(Optional.of(item));
 
             /* when */
-            String errorMessage = Assertions.assertThrows(AppException.class, () -> itemService.deleteItem(item.getId(), seller2.getName())).getMessage();
+            String errorMessage = Assertions.assertThrows(AppException.class, () -> itemService.deleteItem(item.getId(), seller2.getSellerName())).getMessage();
 
             /* then */
             Assertions.assertEquals(ErrorCode.ROLE_FORBIDDEN.getMessage(), errorMessage);
@@ -196,7 +196,7 @@ class ItemServiceTest {
         @WithMockUser
         void 아이템_상세조회_실패_아이템존재안함() {
             /* given */
-            given(sellerRepository.findByName(seller2.getName())).willReturn(Optional.of(seller2));
+            given(sellerRepository.findBySellerName(seller2.getSellerName())).willReturn(Optional.of(seller2));
             given(itemRepository.findById(item.getId())).willReturn(Optional.empty());
 
             /* when */
