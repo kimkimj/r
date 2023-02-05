@@ -22,7 +22,7 @@
                 <col style="width: 10%" />
             </colgroup>
             <tr>
-                <th>선택</th>
+                <th><input type="checkbox" name="itemCheck" value="selectAll" checked onclick="selectAll(this)" />전체 선택</th>
                 <th>상품 이미지</th>
                 <th>상품명</th>
                 <th>가격</th>
@@ -33,20 +33,20 @@
             <tbody class="table-group-divider">
             <tr class="cartList" th:each="item : ${cartList}" >
                 <td>
-                    <input class="form-check-input" name="item" type="checkbox" id="flexCheckDefault" th:value="${item.price}" onclick="getCheckPrice()">
+                    <input class="form-check-input" name="item" type="checkbox" id="flexCheckDefault" checked th:value="${item.price}" onclick="getCheckPrice()">
                 </td>
                 <td class=".individual_image_input">
                     <div class="border d-flex justify-content-center align-items-center">
-                        <img src="..." class="rounded" th:alt="|${{item.name}} 이미지|">
+                        <img src="..." class="rounded" th:alt="|${{item.name}} 이미지 준비중|">
                     </div>
                 </td>
                 <td class="individual_name_input text-truncate" th:text="${item.name}">상품 이름</td>
-                <td class="individual_cnt_input">
-                    <button type="button" class="btn btn-jelly" onclick="count('minus')" value="-">-</button>
-                    <input type="number" class="item-cnt" th:value="${item.cnt}" readonly />
-                    <button type="button" class="btn btn-jelly" onclick="count('plus')" value="+">+</button>
+                <td class="individual_cnt_input d-flex flex-row align-items-center">
+                    <button type="button" class="btn btn-jelly cnt-option-btn" onclick="count('minus')" value="-">-</button>
+                    <input type="number" class="item-cnt" width="100px" th:value="${item.cnt}" readonly />
+                    <button type="button" class="btn btn-jelly cnt-option-btn" onclick="count('plus')" value="+">+</button>
                 </td>
-                <td class=".individual_totalPrice_input" th:text="${item.price}">상품 가격</td>
+                <td class="individual_totalPrice_input" th:text="${item.price}">상품 가격</td>
                 <td>
                     <button type="button" class="btn btn-danger" onclick="deleteItem()">삭제</button>
                     <th:block layout:fragment="script">
@@ -78,24 +78,81 @@
         </table>
         <hr />
         <div class="cart-result rounded-3">
-            <table class="table mx-5">
+            <table class="table align-middle">
                 <tr>
                     <td>주문금액</td>
-                    <td class="order-price"></td>
-                </tr>
-                <tr class="border-bottom">
-                    <td>배송비</td>
-                    <td class="delivery-price"></td>
+                    <td class="border"><span class="order-price">0</span> 원</td>
                 </tr>
                 <tr>
+                    <td>배송비</td>
+                    <td class="border"><span class="delivery-price">0</span> 원</td>
+                </tr>
+                <tr style="height: 100px;">
                     <td>총 결제 예정 금액</td>
-                    <td class="total-price"></td>
+                    <td class="border"><span class="total-price">0</span> 원</td>
                 </tr>
             </table>
             <button type="submit" class="btn btn-primary order-btn">주문하기</button>
         </div>
     </div>
 </div>
+<th:block layout:fragment="script">
+    <script type="text/javascript" th:inline="javascript">
+        function writeIndexedDB(itemList) {
+            console.log('writeIndexedDB() 실행');
+            // IndexedDB 지원여부 확인
+            if (!window.indexedDB) {
+                window.alert("해당 브라우저는 IndexedDB를 지원하지 않습니다.");
+            } else {
+                const request = window.indexedDB.open('myCartDB');
+
+                request.onerror = (event) => {
+                    console.log(event);
+                    alert('failed');
+                }
+                request.onupgradeneeded = (event) => {
+                    var db = this.target.result;
+                }
+                request.onsuccess = (event) => {
+                    console.log(event);
+                    var db = this.result;
+                    console.log('db : ' + db);
+
+                    // itemList 객체 저장소에 읽기&쓰기 권한으로 transaction 생성
+                    const transaction = db.transaction(['itemList'], 'readwrite');
+                    console.log('db : ' + db);
+
+                    // 완료, 실패 이벤트 처리
+                    transaction.oncomplete = (event) => {
+                        console.log('success = ' + event);
+                    }
+
+                    transaction.onerror = (event) => {
+                        console.log('fail = ' + event);
+                    }
+
+                    // transaction
+                    const objectStore = transaction.objectStore('itemList');
+                    for (const item of itemList) {
+                        const request = objectStore.add(item);
+                        request.onsuccess = (event) => {
+                            console.log(event.target.result);
+                        }
+                    }
+                }
+            }
+        }
+
+        /*<![CDATA[*/
+        $(document).ready(function() {
+            var itemList = [[ ${cartList} ]].content;
+            console.log(itemList);
+            writeIndexedDB(itemList);
+            getCheckPrice();
+        })
+        /*]]>*/
+    </script>
+</th:block>
 </body>
 
 </html>
