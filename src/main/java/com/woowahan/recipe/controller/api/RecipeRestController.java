@@ -124,15 +124,13 @@ public class RecipeRestController {
     /**
      * @author 이소영
      * @param id
-     * @param authentication
      * @date 2023-01-24
      * @return Response<Integer>
      * @description 좋아요 개수 세기 api
     **/
     @GetMapping("/{id}/likes")
-    public Response<Integer> countLikes(@PathVariable Long id, Authentication authentication) {
-        String userName = authentication.getName();
-        Integer likeCnt = recipeService.countLikes(id, userName);
+    public Response<Integer> countLikes(@PathVariable Long id) {
+        Integer likeCnt = recipeService.countLikes(id);
         return Response.success(likeCnt);
     }
 
