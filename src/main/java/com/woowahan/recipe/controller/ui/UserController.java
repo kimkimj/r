@@ -4,6 +4,7 @@ import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewGetResponse;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewUpdateResponse;
 import com.woowahan.recipe.domain.dto.userDto.*;
 import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.ReviewService;
@@ -139,7 +140,7 @@ public class UserController {
     }
 
     // 내가 작성한 리뷰 목록
-    @GetMapping("/my/reviews")
+    @GetMapping("/users/my/reviews")
     public String myReviews(Model model, Authentication authentication,
                             @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         String username = authentication.getName();
