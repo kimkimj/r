@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.woowahan.recipe.exception.ErrorCode.SELECT_ORDER_ITEM;
 
@@ -51,34 +52,46 @@ public class CartService {
         return cartItemPage;
     }
 
-    public void createCartItem(CartItemReq cartItemCreateReq, String userName) {
-        UserEntity user = validateUser(userName);
-
-        CartEntity cart = validateCart(user);
-
-        ItemEntity item = validateItem(cartItemCreateReq.getItemId());
-
-        if(item.getItemStock() < cartItemCreateReq.getCartItemCnt()) {
-            throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
-        }
-
-        CartItemEntity cartItem = CartItemEntity.createCartItem(cartItemCreateReq.getCartItemCnt(), item, cart);
-
-        cartItemRepository.save(cartItem);
-    }
 
     public void updateCartItem(CartItemReq cartItemUpdateReq, String userName) {
         UserEntity user = validateUser(userName);
 
         CartEntity cart = validateCart(user);
 
-        CartItemEntity cartItem = validateCartItem(cart, cartItemUpdateReq.getItemId());
+        CartItemEntity cartItem = validateCartItem(cart, cartItemUpdateReq.getItemId()); //cart에 item이 들어있는지 검증
 
         if(cartItem.getItem().getItemStock() < cartItemUpdateReq.getCartItemCnt()) {
             throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
         }
 
-        cartItem.updateCartItemCnt(cartItemUpdateReq.getCartItemCnt());
+        cartItem.updateCartItemCnt(cartItemUpdateReq.getCartItemCnt()); //요청받은 아이템수를 db에 저장
+    }
+
+    public void addCartItem(CartItemReq cartItemUpdateReq, String userName) {
+        UserEntity user = validateUser(userName); //user 존재 검증
+        CartEntity cart = validateCart(user); //user의 cart가 있는지, 존재 검증 -> 없으면 카트 생성
+        ItemEntity item = validateItem(cartItemUpdateReq.getItemId()); //카트에 넣으려는 아이템이 존재하는지 확인
+
+
+        Optional<CartItemEntity> cartItem = cartItemRepository.findByCartAndItemId(cart, item.getId());
+
+        if (cartItem.isEmpty()) {
+            if(item.getItemStock() < cartItemUpdateReq.getCartItemCnt()) { //아이템 stock 충분한지 확인
+                throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
+            }
+            CartItemEntity cartItemEntity = CartItemEntity.createCartItem(cartItemUpdateReq.getCartItemCnt(), item, cart); //상품이 없으면 카트에 아이템 create
+            cartItemRepository.save(cartItemEntity);
+        } else {
+            Integer cnt = cartItem.get().getCartItemCnt() + cartItemUpdateReq.getCartItemCnt();
+
+            if(item.getItemStock() < cnt) { //아이템 stock 충분한지 확인
+                throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
+            }
+
+            cartItem.get().updateCartItemCnt(cnt); //상품이 이미 카트에 있으면 아이템수만 db에 update
+        }
+
+        //1일때 -하면 아이템 삭제하기
     }
 
     public void deleteCartItem(Long itemId, String userName) {

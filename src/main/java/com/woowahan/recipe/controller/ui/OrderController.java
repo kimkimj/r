@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Slf4j
 public class OrderController {
 
+    private final UserRepository userRepository;
+
     private final OrderService orderService;
     private final UserService userService;
     private final FindService findService;
@@ -54,11 +56,13 @@ public class OrderController {
         return "order/orderForm";
     }
 
-    @GetMapping("{userId}/delivery/{orderId}")
-    public String getDeliveryStatus(@PathVariable Long userId, @PathVariable Long orderId, Model model) {
-        String username = "GordonRamsey";
+    @GetMapping("delivery/{orderId}")
+    public String getDeliveryStatus(@PathVariable Long orderId, Model model, Authentication authentication) {
+        String username = authentication.getName();
         OrderInfoResponse order = orderService.findOrder(username, orderId);
         model.addAttribute("orderInfoResponse", order);
+
+        Long userId = userService.findUserId(username);
         UserResponse userResponse = userService.findUser(userId);
         model.addAttribute("userResponse", userResponse);
         return "order/delivery";

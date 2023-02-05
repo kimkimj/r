@@ -61,9 +61,9 @@
                 <tbody>
                 <tr class="tr-hover" th:each="review : ${allMyReviews}">
                     <td><a th:href="@{/recipes/{recipeId}(recipeId=${review.recipeId})}" th:utext="${review.recipeTitle}">레시피</a></td>
-                    <td style="width: 160px"><span th:text="${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></span> </td>
-                    <td style="width: 160px"><span th:text="${review.lastModified ==null}? ${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm:ss')}:${#temporals.format(review.lastModified, 'yyyy-MM-dd HH:mm:ss')}"></span> </td>
-                    <td style="width: 300px">[[${review.reviewComment}]]</td>
+                    <td style="width: 160px"><span th:text="${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm')}"></span> </td>
+                    <td style="width: 160px"><span th:text="${review.lastModified ==null}? ${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm')}:${#temporals.format(review.lastModified, 'yyyy-MM-dd HH:mm')}"></span> </td>
+                    <td style="width: 300px">[[${review.content}]]</td>
                     <td>
                         <button type="button" class="btn btn-outline-primary" th:onclick="|location.href='@{/update/{recipeId}/{reviewId}(recipeId=${review.recipeId}, reviewId=${review.reviewId})}'|">수정</button>
                     </td>
