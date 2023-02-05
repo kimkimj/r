@@ -178,7 +178,7 @@
 
         <div style="text-align: center;">
             <p>이 레시피가 좋으면 좋아요를 눌러 마이페이지에서 따로 확인하실 수 있습니다.</p>
-            <div><button class="btn btn-outline-success"  type="submit">좋아요💗</button></div>
+            <div><button class="btn btn-outline-success"  type="button" th:onclick="|location.href='@{/recipes/{recipeId}/likes (recipeId=${recipeId})}'|">좋아요💗</button></div>
         </div><br><br>
 
         <!-- 리뷰 -->

@@ -25,7 +25,9 @@ public enum ErrorCode {
     CART_ITEM_NOT_FOUND(HttpStatus.BAD_REQUEST, "장바구니에 담긴 재료를 찾을 수 없습니다."),
     RECIPE_ITEM_NOT_FOUND(HttpStatus.BAD_REQUEST, "아이템에 담긴 재료를 찾을 수 없습니다."),
     ALREADY_ARRIVED(HttpStatus.BAD_REQUEST, "이미 배송된 상품입니다."),
-    SELECT_ORDER_ITEM(HttpStatus.FORBIDDEN, "주문할 상품을 선택해주세요.");
+    SELECT_ORDER_ITEM(HttpStatus.FORBIDDEN, "주문할 상품을 선택해주세요."),
+    MISMATCH_AMOUNT(HttpStatus.BAD_REQUEST, "결제 금액이 불일치 합니다."),
+    INVALID_ORDER(HttpStatus.BAD_REQUEST, "주문 결제를 취소하셨습니다.");
 
 
     private HttpStatus httpStatus;
