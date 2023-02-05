@@ -1,13 +1,9 @@
 package com.woowahan.recipe.controller.ui;
 
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
-import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
-import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
-import com.woowahan.recipe.domain.dto.userDto.UserResponse;
 import com.woowahan.recipe.domain.dto.userDto.*;
-import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.ReviewService;
 import com.woowahan.recipe.service.UserService;
@@ -21,7 +17,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -102,9 +101,8 @@ public class UserController {
     // 마이페이지
     @GetMapping("/users/my")
     public String myPage(Model model, Authentication authentication) {
-        UserEntity user = findService.findUserName(authentication.getName());
-        UserResponse userResponse = UserResponse.toUserResponse(user);
-        model.addAttribute("user", userResponse);
+        UserResponse user = findService.findUserName(authentication.getName());
+        model.addAttribute("user", user);
         return "user/my/myInfo";
     }
 
@@ -112,7 +110,7 @@ public class UserController {
     @GetMapping("/users/my/update")
     public String updateForm(Model model, Authentication authentication) {
         log.info("user22={}", authentication.getName());
-        UserEntity user = findService.findUserName(authentication.getName());
+        UserResponse user = findService.findUserName(authentication.getName());
         model.addAttribute("user", user);
         // 로그인이 되어있는 유저의 id와 수정페이지에 접속하는 id가 같아야 함
         return "user/updateForm";
