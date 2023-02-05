@@ -56,9 +56,13 @@ class OrderServiceTest {
     @Test
     void 상품주문() throws Exception {
         // given
-        OrderCreateReqDto reqDto = new OrderCreateReqDto(1L, 4);
+        OrderCreateReqDto reqDto = OrderCreateReqDto.builder()
+                .itemId(1L)
+                .count(4)
+                .build();
+
         OrderItemEntity givenOrderItem = OrderItemEntity.createOrderItem(givenItem, givenItem.getItemPrice(), reqDto.getCount());
-        OrderEntity givenOrder = OrderEntity.createOrder(givenUser, delivery, givenOrderItem);
+        OrderEntity givenOrder = OrderEntity.createOrder(givenUser, delivery, givenOrderItem, "imp_uid");
         when(userRepository.findByUserName(givenUser.getUserName())).thenReturn(Optional.of(givenUser));
         when(itemRepository.findById(givenItem.getId())).thenReturn(Optional.of(givenItem));
         when(orderRepository.findById(givenOrderItem.getId())).thenReturn(Optional.of(givenOrder));
@@ -76,7 +80,10 @@ class OrderServiceTest {
     @Test
     void 상품주문_재고수량초과() throws Exception {
         // given
-        OrderCreateReqDto reqDto = new OrderCreateReqDto(1L, 20);
+        OrderCreateReqDto reqDto = OrderCreateReqDto.builder()
+                .itemId(1L)
+                .count(20)
+                .build();
         // when
         NotEnoughStockException notEnoughStockException = assertThrows(NotEnoughStockException.class, () -> {
             OrderItemEntity.createOrderItem(givenItem, givenItem.getItemPrice(), reqDto.getCount());

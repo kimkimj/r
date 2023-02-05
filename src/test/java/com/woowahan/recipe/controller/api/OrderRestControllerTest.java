@@ -8,10 +8,12 @@ import com.woowahan.recipe.domain.dto.orderDto.OrderInfoResponse;
 import com.woowahan.recipe.domain.entity.ItemEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.service.OrderService;
+import com.woowahan.recipe.service.PaymentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,6 +38,9 @@ class OrderRestControllerTest {
 
     @MockBean
     OrderService orderService;
+
+    @MockBean
+    PaymentService paymentService;
 
     UserEntity givenUser = UserEntity.builder()
             .id(1L)
@@ -83,14 +88,14 @@ class OrderRestControllerTest {
     @Test
     @WithMockUser
     void 내주문_조회() throws Exception {
-        /*given(orderService.findMyOrder(any(), any(), any())).willReturn(Page.empty());
+        given(orderService.findMyOrder(any(), any(), any())).willReturn(Page.empty());
 
-        mockMvc.perform(get("/api/v1/users/orders/list")
+        mockMvc.perform(get("/api/v1/orders/users/list")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
-                .andDo(print());*/
+                .andDo(print());
     }
 
     @Test
