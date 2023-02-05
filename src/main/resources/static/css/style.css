@@ -10,7 +10,7 @@ ul, ol {
 }
 
 /* a태그 */
-a, a:visited, a:active, a:focus {
+a, a:visited, a:hover, a:active {
     text-decoration: none;
     color: black;
 }
@@ -25,3 +25,8 @@ header .user-logo {
     position: absolute; right: 50px; top: 0;
 }
 
+/* dropdown */
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0.125em;
+}

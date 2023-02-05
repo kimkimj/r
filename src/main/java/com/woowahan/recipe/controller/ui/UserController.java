@@ -1,11 +1,8 @@
 package com.woowahan.recipe.controller.ui;
 
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
-import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
-import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
-import com.woowahan.recipe.domain.dto.userDto.UserResponse;
 import com.woowahan.recipe.domain.dto.userDto.*;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.service.FindService;
@@ -21,7 +18,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -139,13 +139,13 @@ public class UserController {
         return "redirect:/users/my";
     }
 
-    @GetMapping("/my/get-reviews")
-    public String myGetReviews() {
-        return "user/my/myGetReview";
-    }
+//    @GetMapping("/my/get-reviews")
+//    public String myGetReviews() {
+//        return "user/my/myGetReview";
+//    }
 
     // 내가 작성한 리뷰 목록
-    @GetMapping("/my/reviews")
+    @GetMapping("/users/my/reviews")
     public String myReviews(Model model, Authentication authentication,
                             @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         String username = authentication.getName();
