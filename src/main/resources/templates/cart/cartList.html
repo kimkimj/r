@@ -6,36 +6,56 @@
 <body>
 <!--<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>-->
 <div layout:fragment="cart-main" class="container">
-    <div>장바구니 페이지</div>
+    <div class="border-bottom p-2 my-3">
+        <h2>장바구니 페이지</h2>
+        <div>진행상황 띄우기</div>
+    </div>
     <div>
-        <table class="cart-table">
+        <table class="table cart-table text-center align-middle">
             <thead>
+            <colgroup>
+                <col style="width: 5%" />
+                <col style="width: 30%" />
+                <col style="width: 30%" />
+                <col style="width: 10%" />
+                <col style="width: 15%" />
+                <col style="width: 10%" />
+            </colgroup>
             <tr>
-                <th scope="col">Check</th>
-                <th scope="col">Image</th>
-                <th scope="g-col-6">Name</th>
-                <th scope="col">Price</th>
-                <th scope="col">Delete</th>
+                <th><input type="checkbox" name="itemCheck" value="selectAll" checked onclick="selectAll(this)" />전체 선택</th>
+                <th>상품 이미지</th>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>수량</th>
+                <th scope="col">삭제</th>
             </tr>
             </thead>
             <tbody class="table-group-divider">
             <tr class="cartList" th:each="item : ${cartList}" >
                 <td>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked="checked">
+                    <input class="form-check-input" name="item" type="checkbox" id="flexCheckDefault" checked th:value="${item.price}" onclick="getCheckPrice()">
                 </td>
-<!--                <td class=".individual_image_input" th:text="${item.getImagePath()}">상품 이미지 경로</td>-->
-                <td class="individual_name_input" th:text="${item.name}">상품 이름</td>
-                <td class="individual_cnt_input" th:text="${item.cnt}"></td>
-                <td class=".individual_totalPrice_input" th:text="${item.price}">상품 가격</td>
+                <td class=".individual_image_input">
+                    <div class="border d-flex justify-content-center align-items-center">
+                        <img src="..." class="rounded" th:alt="|${{item.name}} 이미지 준비중|">
+                    </div>
+                </td>
+                <td class="individual_name_input text-truncate" th:text="${item.name}">상품 이름</td>
+                <td class="individual_cnt_input d-flex flex-row align-items-center">
+                    <button type="button" class="btn btn-jelly cnt-option-btn" onclick="count('minus')" value="-">-</button>
+                    <input type="number" class="item-cnt" width="100px" th:value="${item.cnt}" readonly />
+                    <button type="button" class="btn btn-jelly cnt-option-btn" onclick="count('plus')" value="+">+</button>
+                </td>
+                <td class="individual_totalPrice_input" th:text="${item.price}">상품 가격</td>
                 <td>
                     <button type="button" class="btn btn-danger" onclick="deleteItem()">삭제</button>
                     <th:block layout:fragment="script">
                         <script type="text/javascript" th:inline="javascript">
                             /*<![CDATA[*/
                             function deleteItem() {
-                                const id = [[${item.id}]];
-                                console.log(id);
-                                 let confirm_message = confirm(id + "번 상품을 정말 삭제하시겠습니까?");
+                                const name = [[${item.name}]];
+                                console.log(name);
+                                 let confirm_message = confirm(name + "을(를) 정말 삭제하시겠습니까?");
 
                                  if(confirm_message) {
                                      const formHtml = `
@@ -56,14 +76,83 @@
             </tr>
             </tbody>
         </table>
-        <div class="result">
-            <span class="totalPrice_span">0</span>
-            <span class="totalCount_span">0</span>
-            <span class="delivery_price">0</span>
-            <span class="finalTotalPrice_span">0</span>
+        <hr />
+        <div class="cart-result rounded-3">
+            <table class="table align-middle">
+                <tr>
+                    <td>주문금액</td>
+                    <td class="border"><span class="order-price">0</span> 원</td>
+                </tr>
+                <tr>
+                    <td>배송비</td>
+                    <td class="border"><span class="delivery-price">0</span> 원</td>
+                </tr>
+                <tr style="height: 100px;">
+                    <td>총 결제 예정 금액</td>
+                    <td class="border"><span class="total-price">0</span> 원</td>
+                </tr>
+            </table>
+            <button type="submit" class="btn btn-primary order-btn">주문하기</button>
         </div>
     </div>
 </div>
+<th:block layout:fragment="script">
+    <script type="text/javascript" th:inline="javascript">
+        function writeIndexedDB(itemList) {
+            console.log('writeIndexedDB() 실행');
+            // IndexedDB 지원여부 확인
+            if (!window.indexedDB) {
+                window.alert("해당 브라우저는 IndexedDB를 지원하지 않습니다.");
+            } else {
+                const request = window.indexedDB.open('myCartDB');
+
+                request.onerror = (event) => {
+                    console.log(event);
+                    alert('failed');
+                }
+                request.onupgradeneeded = (event) => {
+                    var db = this.target.result;
+                }
+                request.onsuccess = (event) => {
+                    console.log(event);
+                    var db = this.result;
+                    console.log('db : ' + db);
+
+                    // itemList 객체 저장소에 읽기&쓰기 권한으로 transaction 생성
+                    const transaction = db.transaction(['itemList'], 'readwrite');
+                    console.log('db : ' + db);
+
+                    // 완료, 실패 이벤트 처리
+                    transaction.oncomplete = (event) => {
+                        console.log('success = ' + event);
+                    }
+
+                    transaction.onerror = (event) => {
+                        console.log('fail = ' + event);
+                    }
+
+                    // transaction
+                    const objectStore = transaction.objectStore('itemList');
+                    for (const item of itemList) {
+                        const request = objectStore.add(item);
+                        request.onsuccess = (event) => {
+                            console.log(event.target.result);
+                        }
+                    }
+                }
+            }
+        }
+
+        /*<![CDATA[*/
+        $(document).ready(function() {
+            var itemList = [[ ${cartList} ]].content;
+            console.log(itemList);
+            writeIndexedDB(itemList);
+            getCheckPrice();
+        })
+        /*]]>*/
+    </script>
+</th:block>
 </body>
-<!--<div th:replace="fragments/footer :: footerFragment"/>-->
+
 </html>

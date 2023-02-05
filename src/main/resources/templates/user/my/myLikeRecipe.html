@@ -2,50 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: headerFragment"/>
 <style>
-    /* pagination 색상 변경 */
-    .page-link {
-        color: #000;
-        background-color: #fff;
-        border: 1px solid #ccc;
-    }
-
-    .page-item.active .page-link {
-        z-index: 1;
-        color: #555;
-        font-weight:bold;
-        background-color: #f1f1f1;
-        border-color: #ccc;
-
-    }
-
-    .page-link:focus, .page-link:hover {
-        color: #000;
-        background-color: #fafafa;
-        border-color: #ccc;
-    }
-
     a { text-decoration:none !important; color:black; }
     a:hover { text-decoration:none !important; color:black;}
 
     /* 테이블 tr 색상 */
     .tr-hover:hover {
         background-color: #E3F4EA;
-    }
-
-    /*.my-nev {
-        border-radius: 5px;
-        padding: 13px;
-        background-color: rgba(218, 226, 182, 0.38);
-    }*/
-
-    /* 마이 메뉴바 스타일 */
-    .detail-box {
-        border: 1px solid #DFE7E8;
-        padding: 8px;
-        border-radius: 7px;
-        font-size: large;
-        margin-bottom: 5px;
-        color: black;
     }
 </style>
 <body>
@@ -60,25 +22,8 @@
 
     <div class="container"><br>
         <!-- 상단 메뉴바 -->
-        <div class="container2 px-4 text-center my-nev">
-            <div class="row gx-5">
-                <div class="col">
-                    <div class="p-3 border detail-box"><a href="/recipes/my">레시피</a></div>
-                </div>
-                <div class="col">
-                    <div class="p-3 border detail-box"><a href="/users/my/get-reviews">댓글</a></div>
-                </div>
-                <div class="col">
-                    <div class="p-3 border detail-box"><a href="/orders/my">주문목록</a></div>
-                </div>
-                <div class="col">
-                    <div class="p-3 border detail-box"><a href="/recipes/likes/my">찜한 레시피</a></div>
-                </div>
-                <div class="col">
-                    <div class="p-3 border detail-box"><a href="/users/my/update">회원 정보 수정</a></div>
-                </div>
-            </div>
-        </div><br><br>
+        <div th:replace="fragments/myPageNav :: myPageFragment"/>
+        <br><br>
 
         <table class="table table-hover" style="text-align: center;">
             <thead>
