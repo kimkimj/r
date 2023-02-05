@@ -45,13 +45,16 @@ public class OrderEntity extends BaseEntity{
     @Setter
     private OrderStatus orderStatus;
 
+    private String impUid;
+
     @Builder
-    public OrderEntity(Long id, UserEntity user, DeliveryEntity delivery, OrderStatus orderStatus) {
+    public OrderEntity(Long id, UserEntity user, DeliveryEntity delivery, OrderStatus orderStatus, String imp_uid) {
         this.id = id;
         this.orderNumber = createOrderNumber();
         this.user = user;
         this.delivery = delivery;
         this.orderStatus = orderStatus;
+        this.impUid = imp_uid;
     }
 
     /* 연관관계 메서드 */
@@ -72,13 +75,14 @@ public class OrderEntity extends BaseEntity{
 
     /* 생성 메서드 */
     // 개별 주문
-    public static OrderEntity createOrder(UserEntity user, DeliveryEntity delivery, OrderItemEntity orderItem) {
+    public static OrderEntity createOrder(UserEntity user, DeliveryEntity delivery, OrderItemEntity orderItem, String imp_uid) {
         OrderEntity order = new OrderEntity();
         order.addUser(user);
         order.addDelivery(delivery);
         order.addOrderItem(orderItem);
         order.orderNumber = order.createOrderNumber();
         order.setOrderStatus(ORDER);
+        order.impUid = imp_uid;
         return order;
     }
 

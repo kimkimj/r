@@ -101,6 +101,7 @@
                 <th style="width: 50px">이름</th>
                 <th style="width: 250px">주소</th>
                 <th style="width: 100px">총 가격</th>
+                <th style="width: 100px">주문 날짜</th>
                 <th style="width: 100px">주문 상태</th>
             </tr>
             </thead>
@@ -111,6 +112,7 @@
                 <td th:text="${order.username}"/>
                 <td th:text="${order.address}"/>
                 <td th:text="${order.totalPrice}"/>
+                <td th:text="${order.orderDate}"/>
                 <td th:text="${order.orderStatus}"/>
             </tr>
             </tbody>
