@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ItemDetailResDto {
 
+    private Long itemId;
     private String itemImagePath;
     private String itemName;
     private Integer itemPrice;
@@ -21,6 +22,7 @@ public class ItemDetailResDto {
 
     public static ItemDetailResDto from(ItemEntity item) {
         return ItemDetailResDto.builder()
+                .itemId(item.getId())
                 .itemImagePath(item.getItemImagePath())
                 .itemName(item.getName())
                 .itemPrice(item.getItemPrice())

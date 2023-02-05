@@ -2,9 +2,10 @@ package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewGetResponse;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewUpdateResponse;
 import com.woowahan.recipe.domain.dto.userDto.*;
-import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.ReviewService;
 import com.woowahan.recipe.service.UserService;
@@ -102,9 +103,8 @@ public class UserController {
     // 마이페이지
     @GetMapping("/users/my")
     public String myPage(Model model, Authentication authentication) {
-        UserEntity user = findService.findUserName(authentication.getName());
-        UserResponse userResponse = UserResponse.toUserResponse(user);
-        model.addAttribute("user", userResponse);
+        UserResponse user = findService.findUserName(authentication.getName());
+        model.addAttribute("user", user);
         return "user/my/myInfo";
     }
 
@@ -112,7 +112,7 @@ public class UserController {
     @GetMapping("/users/my/update")
     public String updateForm(Model model, Authentication authentication) {
         log.info("user22={}", authentication.getName());
-        UserEntity user = findService.findUserName(authentication.getName());
+        UserResponse user = findService.findUserName(authentication.getName());
         model.addAttribute("user", user);
         // 로그인이 되어있는 유저의 id와 수정페이지에 접속하는 id가 같아야 함
         return "user/updateForm";
@@ -139,11 +139,6 @@ public class UserController {
         return "redirect:/users/my";
     }
 
-//    @GetMapping("/my/get-reviews")
-//    public String myGetReviews() {
-//        return "user/my/myGetReview";
-//    }
-
     // 내가 작성한 리뷰 목록
     @GetMapping("/users/my/reviews")
     public String myReviews(Model model, Authentication authentication,
@@ -167,24 +162,20 @@ public class UserController {
 
     // 리뷰 수정
     @GetMapping("/update/{recipeId}/{reviewId}")
-    public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model) {
-        model.addAttribute("previousComment", reviewService.findReviewById(reviewId).getReviewComment());
-        model.addAttribute("reviewUpdateRequest", new ReviewCreateRequest());
+    public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model, Authentication authentication) {
+        ReviewGetResponse review = reviewService.findReviewById(reviewId);
+        model.addAttribute("review", review);
         model.addAttribute("recipeId", recipeId);
         model.addAttribute("reviewId", reviewId);
         return "review/updateForm";
     }
 
     @PostMapping("/update/{recipeId}/{reviewId}")
-    public String update(@Valid @ModelAttribute ReviewCreateRequest request, BindingResult bindingResult,
-                         @PathVariable Long recipeId, @PathVariable Long reviewId,
-                        Authentication authentication, Model model) {
-        if (bindingResult.hasErrors()) {
-            log.info("bindingResult = {}", bindingResult);
-            return "review/updateForm";
-        }
+    public String update(@PathVariable Long recipeId, @PathVariable Long reviewId,
+                         ReviewCreateRequest request, Authentication authentication, Model model) {
         String username = authentication.getName();
-        reviewService.updateReview(recipeId, reviewId, request, username);
+        ReviewUpdateResponse reviewUpdateResponse = reviewService.updateReview(recipeId, reviewId, request, username);
+        model.addAttribute("review", reviewUpdateResponse);
         return "redirect:/my/reviews";
     }
 

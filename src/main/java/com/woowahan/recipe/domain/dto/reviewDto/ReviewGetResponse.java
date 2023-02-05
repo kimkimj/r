@@ -13,17 +13,17 @@ import java.time.LocalDateTime;
 public class ReviewGetResponse {
     private Long reviewId;
     private String username;
-    private String reviewComment;
+    private String content;
     private LocalDateTime createdDate;
-    private LocalDateTime last_modified;
+    private LocalDateTime lastModified;
 
     public static ReviewGetResponse toReviewGetResponse(ReviewEntity review) {
         return ReviewGetResponse.builder()
                 .reviewId(review.getReviewId())
                 .username(review.getUser().getUserName())
-                .reviewComment(review.getReviewComment())
+                .content(review.getContent())
                 .createdDate(review.getCreatedDate())
-                .last_modified(review.getLastModifiedDate())
+                .lastModified(review.getLastModifiedDate())
                 .build();
     }
 

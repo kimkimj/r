@@ -96,7 +96,7 @@ class ReviewRestControllerTest {
             when(reviewService.createReview(any(), any(), any()))
                     .thenReturn(ReviewCreateResponse.builder()
                             .reviewId(1l)
-                            .comment("comment")
+                            .content("comment")
                             .username("username")
                             .build());
             //then
@@ -107,7 +107,7 @@ class ReviewRestControllerTest {
                             .content(objectMapper.writeValueAsBytes(request)))
                     .andExpect(jsonPath("$.result.reviewId").exists())
                     .andExpect(jsonPath("$.result.username").exists())
-                    .andExpect(jsonPath("$.result.comment").exists())
+                    .andExpect(jsonPath("$.result.content").exists())
                     .andExpect(status().isOk())
                     .andDo(print());
         }

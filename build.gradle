@@ -59,6 +59,10 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'com.h2database:h2:1.4.200'
 
+    // gson
+    implementation 'com.google.code.gson:gson:2.9.0'
+
+
     // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
