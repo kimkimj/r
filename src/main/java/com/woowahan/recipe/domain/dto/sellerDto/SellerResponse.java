@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class SellerResponse {
     private String sellerName;
+    private String password;
     private String companyName;
     private String address;
     private String email;
@@ -21,6 +22,7 @@ public class SellerResponse {
     public static SellerResponse toSellerResponse(SellerEntity seller) {
         return SellerResponse.builder()
                 .sellerName(seller.getSellerName())
+                .password(seller.getPassword())
                 .companyName(seller.getCompanyName())
                 .address(seller.getAddress())
                 .email(seller.getEmail())

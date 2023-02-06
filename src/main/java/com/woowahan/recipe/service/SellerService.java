@@ -33,8 +33,8 @@ public class SellerService {
 
     private long expiredTimeMs = 60 * 60 * 1000; //토큰 유효시간: 1시간
 
-    public SellerEntity validateSeller(Long id) {
-        SellerEntity seller = sellerRepository.findById(id)
+    public SellerEntity validateSeller(String sellerName) {
+        SellerEntity seller = sellerRepository.findBySellerName(sellerName)
                 .orElseThrow(() -> new AppException(ErrorCode.SELLER_NOT_FOUND, ErrorCode.SELLER_NOT_FOUND.getMessage()));
         return seller;
     }
@@ -74,16 +74,14 @@ public class SellerService {
         return JwtTokenUtils.createToken(sellerName, secretKey, expiredTimeMs);
     }
 
-    public SellerResponse findById(Long id) {
-        SellerEntity seller = sellerRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.SELLER_NOT_FOUND, ErrorCode.SELLER_NOT_FOUND.getMessage()));
-
+    public SellerResponse findBySellerName(String sellerName) {
+        SellerEntity seller = validateSeller(sellerName);
         return SellerResponse.toSellerResponse(seller);
     }
 
-    public SellerResponse update(Long id, SellerUpdateRequest sellerUpdateRequest) {
+    public SellerResponse update(String sellerName, SellerUpdateRequest sellerUpdateRequest) {
         // seller가 존재하는지 확인
-        SellerEntity seller = validateSeller(id);
+        SellerEntity seller = validateSeller(sellerName);
 
         // 본인이거나 ADMIN이 아니면 에러
         if (!seller.getSellerName().equals(seller.getSellerName()) && seller.getUserRole() != UserRole.ADMIN) {
@@ -120,8 +118,8 @@ public class SellerService {
         return SellerResponse.toSellerResponse(seller);
     }
 
-    public SellerDeleteResponse deleteSeller(Long id) {
-        SellerEntity seller = validateSeller(id);
+    public SellerDeleteResponse deleteSeller(String sellerName) {
+        SellerEntity seller = validateSeller(sellerName);
 
         // 본인이거나 ADMIN이 아니면 에러
         if (!seller.getSellerName().equals(seller.getSellerName()) && seller.getUserRole() != UserRole.ADMIN) {
@@ -129,7 +127,7 @@ public class SellerService {
         }
 
         sellerRepository.delete(seller);
-        return new SellerDeleteResponse(id, "회원 삭제가 완료되었습니다");
+        return new SellerDeleteResponse(seller.getId(), "회원 삭제가 완료되었습니다");
     }
 
     public Page<SellerListResponse> findAll(Pageable pageable) {
