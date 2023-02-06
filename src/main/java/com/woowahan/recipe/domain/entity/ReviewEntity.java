@@ -34,4 +34,6 @@ public class ReviewEntity extends BaseEntity{
         this.content = content;
     }
 
+
+
 }
