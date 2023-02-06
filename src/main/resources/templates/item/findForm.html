@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="fragments/header :: headerFragment"/>
 <style>
   .back-ground {
@@ -43,14 +43,14 @@
 </script>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 <div class="container" style="border: 1px solid white">
-  <div>
+  <div sec:authorize="hasRole('SELLER')">
     <input style="width: 100px; float: right;"
            th:onclick="|location.href='@{/items/delete/{id}(id=${id})}'|" type="button" value="상품 삭제"/>
     <input style="width: 100px; float: right;"
            onclick="location.href='updateForm.html'"
            th:onclick="|location.href='@{/items/update/{id}(id=${id})}'|" type="button" value="상품 수정"/>
   </div>
-  <div style="margin-top: 70px; border: 1px solid white" class = "row">
+  <div style="margin-top: 120px; border: 1px solid white" class = "row">
     <div class = "col">
       <p th:align="center" ><img src="..." class="card-img-top" alt="이미지 준비중입니다.">
     </div>
@@ -64,7 +64,6 @@
       <form role = "form" th:action="@{/items/cart}" th:object="${cartItemReq}" method="post">
         <div class="back-ground">
         <input type="hidden" th:field="${cartItemReq.itemId}"/>
-<!--        <input type="hidden" th:field="${cartItemReq.itemId}"/>-->
 
         <!--장바구니 수량 버튼-->
           <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
@@ -83,6 +82,7 @@
                  onclick="location.href='findAllForm.html'"
                  th:onclick="|location.href='@{/items}'|" type="button" value="목록으로" />
           <input type="submit" value="장바구니" style="width: 100px; float: right;"/>
+<!--          <input type="submit" value="바로구매" style="width: 100px; float: right;"/>-->
 
         </div>
       </form>
