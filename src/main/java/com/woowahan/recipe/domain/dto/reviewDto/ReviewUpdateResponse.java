@@ -9,5 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 public class ReviewUpdateResponse {
     private Long reviewId;
+    private String content;
     private String message;
 }

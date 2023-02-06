@@ -63,12 +63,12 @@ public class ReviewServiceTest {
 
     // review entity 생성
     private final Long reviewId = 1L;
-    private final String review_comment = "너무 맛있어용";
+    private final String content = "너무 맛있어용";
 
     private final ReviewEntity review = ReviewEntity.builder()
             .recipe(recipe)
             .reviewId(reviewId)
-            .reviewComment(review_comment)
+            .content(content)
             .user(user)
             .build();
 
@@ -90,7 +90,7 @@ public class ReviewServiceTest {
             when(reviewRepository.save(any())).thenReturn(review);
 
             assertDoesNotThrow(() -> reviewService.createReview(
-                    recipeId, new ReviewCreateRequest(review_comment), username));
+                    recipeId, new ReviewCreateRequest(content), username));
         }
 
         @Test
@@ -102,7 +102,7 @@ public class ReviewServiceTest {
             when(reviewRepository.save(any())).thenReturn(review);
 
             AppException exception = Assertions.assertThrows(AppException.class, () -> reviewService.createReview(
-                    recipeId, new ReviewCreateRequest(review_comment), username));
+                    recipeId, new ReviewCreateRequest(content), username));
             assertEquals(ErrorCode.USERNAME_NOT_FOUND, exception.getErrorCode());
         }
     }
@@ -221,7 +221,7 @@ public class ReviewServiceTest {
         ReviewEntity review2 = ReviewEntity.builder()
                 .reviewId(2l)
                 .recipe(recipe)
-                .review_comment("comment1")
+                .content("comment1")
                 .build();
 
         PageImpl<ReviewEntity> reviewList = new PageImpl<>(List.of(review, review2));

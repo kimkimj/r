@@ -1,6 +1,9 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.orderDto.*;
+import com.woowahan.recipe.domain.dto.orderDto.OrderCancelResponse;
+import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;
+import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
+import com.woowahan.recipe.domain.dto.orderDto.OrderInfoResponse;
 import com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch;
 import com.woowahan.recipe.domain.entity.*;
 import com.woowahan.recipe.exception.AppException;
@@ -9,11 +12,11 @@ import com.woowahan.recipe.repository.OrderCustomRepository;
 import com.woowahan.recipe.repository.OrderRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,7 @@ import static com.woowahan.recipe.exception.ErrorCode.*;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -32,7 +36,6 @@ public class OrderService {
 
     //= 비지니스 로직 시작 =//
     public OrderCreateResDto createOrder(String username, OrderCreateReqDto reqDto) {
-
         // 유저 확인
         UserEntity user = validateUser(username);
         // 상품 확인
@@ -45,9 +48,12 @@ public class OrderService {
 
         // 주문 상품 생성
         OrderItemEntity orderItem = OrderItemEntity.createOrderItem(item, item.getItemPrice(), reqDto.getCount());
-
+        log.info("orderItem.getTotalPrice={}", orderItem.getTotalPrice());
+        log.info("orderItem.getCount={}", orderItem.getCount());
         // 주문 생성
-        OrderEntity order = OrderEntity.createOrder(user, delivery, orderItem);
+        OrderEntity order = OrderEntity.createOrder(user, delivery, orderItem, reqDto.getImp_uid());
+        log.info("order.getTotalPrice={}", order.getTotalPrice());
+        log.info("order.getTotalCounts={}", order.getTotalCounts());
 
         // 주문 저장
         orderRepository.save(order);
@@ -79,9 +85,18 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderInfoResponse findOrder(String userName, Long orderId) {
+    public OrderInfoResponse findOrderById(String userName, Long orderId) {
         validateUser(userName);
         OrderEntity order = validateOrder(orderId);
+        return OrderInfoResponse.from(order);
+    }
+
+    @Transactional(readOnly = true)
+    public OrderInfoResponse findOrderByOrderNum(String userName, String orderNum) {
+        validateUser(userName);
+        OrderEntity order = orderRepository.findByOrderNumber(orderNum).orElseThrow(() -> {
+            throw new AppException(ORDER_NOT_FOUND, ORDER_NOT_FOUND.getMessage());
+        });
         return OrderInfoResponse.from(order);
     }
 
@@ -92,25 +107,14 @@ public class OrderService {
         return pages.map(OrderInfoResponse::from);
     }
 
-    public OrderDeleteResDto cancelOrder(String username, Long orderId) {
+    public OrderCancelResponse cancelOrder(String username, Long orderId) {
         validateUser(username);
         OrderEntity order = validateOrder(orderId);
         order.cancel();
-//        orderRepository.delete(order);
-        return OrderDeleteResDto.from(order);
-    }
 
+        return OrderCancelResponse.from(order);
+    }
     //= 비지니스 로직 종료 =//
-    public boolean checkOrderUser(Long orderId, String usesrName) {
-        OrderEntity order = validateOrder(orderId);
-        UserEntity user = validateUser(usesrName);
-
-        if (!StringUtils.equals(order.getUser().getUserName(), user.getUserName())) {
-            return false;
-        }
-
-        return true;
-    }
 
     private OrderEntity validateOrder(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(() -> {

@@ -10,5 +10,5 @@ import lombok.*;
 public class ReviewCreateResponse {
     private Long reviewId;
     private String username;
-    private String comment;
+    private String content;
 }

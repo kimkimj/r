@@ -1,13 +1,11 @@
 package com.woowahan.recipe.controller.ui;
 
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
-import com.woowahan.recipe.domain.dto.userDto.UserJoinReqDto;
-import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
-import com.woowahan.recipe.domain.dto.userDto.UserResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewGetResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewUpdateResponse;
 import com.woowahan.recipe.domain.dto.userDto.*;
-import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.ReviewService;
 import com.woowahan.recipe.service.UserService;
@@ -21,7 +19,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -45,13 +46,18 @@ public class UserController {
     }
 
     // 회원가입
-    @GetMapping("/join")
+    @GetMapping("/users/join")
     public String joinForm(Model model) {
         model.addAttribute("userJoinReqDto", new UserJoinReqDto());
         return "user/joinForm";
     }
 
-    @PostMapping("/join")
+    @GetMapping("/login")
+    public String chooseLoginType() {
+        return "loginType";
+    }
+
+    @PostMapping("/users/join")
     public String join(@Valid UserJoinReqDto form, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "user/joinForm";
@@ -62,13 +68,13 @@ public class UserController {
     }
 
     // 로그인
-    @GetMapping("/login")
+    @GetMapping("/users/login")
     public String loginForm(Model model) {
         model.addAttribute("userLoginReqDto", new UserLoginReqDto());
         return "user/loginForm";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/users/login")
     public String login(@Valid @ModelAttribute UserLoginReqDto userLoginReqDto, BindingResult result,
                         HttpServletRequest httpServletRequest){
         if (result.hasErrors()) {
@@ -102,9 +108,8 @@ public class UserController {
     // 마이페이지
     @GetMapping("/users/my")
     public String myPage(Model model, Authentication authentication) {
-        UserEntity user = findService.findUserName(authentication.getName());
-        UserResponse userResponse = UserResponse.toUserResponse(user);
-        model.addAttribute("user", userResponse);
+        UserResponse user = findService.findUserName(authentication.getName());
+        model.addAttribute("user", user);
         return "user/my/myInfo";
     }
 
@@ -112,7 +117,7 @@ public class UserController {
     @GetMapping("/users/my/update")
     public String updateForm(Model model, Authentication authentication) {
         log.info("user22={}", authentication.getName());
-        UserEntity user = findService.findUserName(authentication.getName());
+        UserResponse user = findService.findUserName(authentication.getName());
         model.addAttribute("user", user);
         // 로그인이 되어있는 유저의 id와 수정페이지에 접속하는 id가 같아야 함
         return "user/updateForm";
@@ -139,13 +144,8 @@ public class UserController {
         return "redirect:/users/my";
     }
 
-    @GetMapping("/my/get-reviews")
-    public String myGetReviews() {
-        return "user/my/myGetReview";
-    }
-
     // 내가 작성한 리뷰 목록
-    @GetMapping("/my/reviews")
+    @GetMapping("/users/my/reviews")
     public String myReviews(Model model, Authentication authentication,
                             @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         String username = authentication.getName();
@@ -167,24 +167,20 @@ public class UserController {
 
     // 리뷰 수정
     @GetMapping("/update/{recipeId}/{reviewId}")
-    public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model) {
-        model.addAttribute("previousComment", reviewService.findReviewById(reviewId).getReviewComment());
-        model.addAttribute("reviewUpdateRequest", new ReviewCreateRequest());
+    public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model, Authentication authentication) {
+        ReviewGetResponse review = reviewService.findReviewById(reviewId);
+        model.addAttribute("review", review);
         model.addAttribute("recipeId", recipeId);
         model.addAttribute("reviewId", reviewId);
         return "review/updateForm";
     }
 
     @PostMapping("/update/{recipeId}/{reviewId}")
-    public String update(@Valid @ModelAttribute ReviewCreateRequest request, BindingResult bindingResult,
-                         @PathVariable Long recipeId, @PathVariable Long reviewId,
-                        Authentication authentication, Model model) {
-        if (bindingResult.hasErrors()) {
-            log.info("bindingResult = {}", bindingResult);
-            return "review/updateForm";
-        }
+    public String update(@PathVariable Long recipeId, @PathVariable Long reviewId,
+                         ReviewCreateRequest request, Authentication authentication, Model model) {
         String username = authentication.getName();
-        reviewService.updateReview(recipeId, reviewId, request, username);
+        ReviewUpdateResponse reviewUpdateResponse = reviewService.updateReview(recipeId, reviewId, request, username);
+        model.addAttribute("review", reviewUpdateResponse);
         return "redirect:/my/reviews";
     }
 

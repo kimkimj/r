@@ -3,14 +3,15 @@ package com.woowahan.recipe.controller.ui;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.itemDto.*;
 import com.woowahan.recipe.service.CartService;
-import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.ItemService;
+import com.woowahan.recipe.service.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,8 +29,7 @@ public class ItemController {
     private final ItemService itemService;
     private final CartService cartService;
 
-    //수정할지 고려해보기
-    private final FindService findService;
+    private final S3Uploader s3Uploader;
 
 
     /**
@@ -58,7 +58,7 @@ public class ItemController {
         ItemDetailResDto resDto = itemService.findItem(id);
         model.addAttribute("id", id);
         model.addAttribute("resDto", resDto);
-        model.addAttribute("cartItemReq", new CartItemReq(id, 1));
+        model.addAttribute("cartItemReq", new CartItemReq(id, 0));
         return "item/findForm";
     }
 
@@ -68,17 +68,11 @@ public class ItemController {
      */
     @PostMapping("/cart")
     public String addCartItem(@ModelAttribute CartItemReq cartItemReq,
-                              Model model) {
-        log.info("컨트롤러동작 {}:", cartItemReq.getCartItemCnt());
-        String userName = "ididid4"; //동작 확인용, 실제로는 authentication에서 받아와야함.
+                              Model model, Authentication authentication) {
 
         model.addAttribute("cartItemReq", cartItemReq);
-//        ItemEntity itemEntity = itemService.validateItem(cartItemReqDto.getItemId());
-//
-////        model.addAttribute("itemCreateReqDto", new ItemCreateReqDto());
-//
-//        cartService.createCartItem(cartItemReq, userName);
-        cartService.addCartItem(cartItemReq, userName);
+        cartService.addCartItem(cartItemReq, authentication.getName());
+
         return "redirect:/items/"+cartItemReq.getItemId(); //상품상세보기페이지
     }
 
@@ -115,18 +109,26 @@ public class ItemController {
 
     @PostMapping("/create")
     //동작 test용
-//    public String create(@Valid ItemCreateReqDto reqDto, BindingResult bindingResult, Model model, Authentication authentication) {
-    public String create(@Valid @ModelAttribute ItemCreateReqDto reqDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String create(@Valid @ModelAttribute ItemCreateReqDto reqDto, BindingResult bindingResult, RedirectAttributes redirectAttributes, Authentication authentication) {
 
         if (bindingResult.hasErrors()) {
             log.info("bindingResult = {}", bindingResult);
             return "item/createForm";
         }
-        ItemCreateResDto resDto = itemService.createItem(reqDto, "ididid4");
-
+        ItemCreateResDto resDto = itemService.createItem(reqDto, authentication.getName());
         redirectAttributes.addAttribute("id", resDto.getId());
+
         return "redirect:/items/{id}";
     }
+    /**
+     * 상품 등록(관리자, 판매자) - 이미지 업로드
+     */
+//    @PostMapping("/update")
+//    @ResponseBody
+//    public String upload(@RequestParam("data") MultipartFile multipartFile) throws IOException {
+//        return s3Uploader.upload(multipartFile, "static");
+//    }
+
 
     /**
      * 상품 수정(관리자, 판매자)
@@ -138,18 +140,17 @@ public class ItemController {
         return "item/updateForm";
     }
 
-//    @PostMapping("/updates/{id}") 로 해도 동작함, html action 도 맞춰줘야 됨
     @PostMapping("/update/{id}")
     //동작 test용
-//    public String update(@PathVariable Long id, @Valid @ModelAttribute ItemUpdateReqDto reqDto, BindingResult bindingResult, Model model, Authentication authentication) {
     public String update(@Valid @ModelAttribute ItemUpdateReqDto reqDto, BindingResult bindingResult,
                          @PathVariable Long id,
-                         RedirectAttributes redirectAttributes) {
+                         RedirectAttributes redirectAttributes, Authentication authentication) {
+
         if (bindingResult.hasErrors()) {
             log.info("bindingResult = {}", bindingResult);
             return "item/updateForm";
         }
-        ItemUpdateResDto resDto = itemService.updateItem(id, reqDto, "ididid4");
+        ItemUpdateResDto resDto = itemService.updateItem(id, reqDto, authentication.getName());
         redirectAttributes.addAttribute("id", resDto.getId());
         return "redirect:/items/{id}";
     }
@@ -158,8 +159,8 @@ public class ItemController {
      * 상품 삭제(관리자, 판매자)
      */
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        itemService.deleteItem(id, "ididid");
+    public String delete(@PathVariable Long id, Authentication authentication) {
+        itemService.deleteItem(id, authentication.getName());
         return "redirect:/items";
     }
 

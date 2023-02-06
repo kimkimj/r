@@ -38,21 +38,18 @@ public class RecipeEntity extends BaseEntity {
     @OneToMany(mappedBy = "recipe")
     private List<LikeEntity> likes;
 
- /* 리뷰 개발
-    @Builder.Default
-    @OneToMany(mappedBy = "recipeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @OrderBy("id asc") // 리뷰 정렬
-    private List<ReviewEntity> reivews;
-*/
-    @Builder.Default
+    @OneToMany(mappedBy = "recipe")
+    private List<ReviewEntity> reviews;
+
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
-    private List<RecipeItemEntity> items = new ArrayList<>();
+    private List<RecipeItemEntity> items;
 
     public static RecipeFindResDto from(RecipeEntity recipeEntity) {
         return new RecipeFindResDto(
                 recipeEntity.getId(), recipeEntity.recipeTitle, recipeEntity.recipeBody
                 ,recipeEntity.user.getUserName(), recipeEntity.getRecipeLike(), recipeEntity.getRecipeView()
-                ,recipeEntity.getCreatedDate(),recipeEntity.getLastModifiedDate(), recipeEntity.getItems()
+                ,recipeEntity.getCreatedDate(),recipeEntity.getLastModifiedDate(), recipeEntity.getItems(),
+                recipeEntity.getReviews()
         );
     }
 

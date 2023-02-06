@@ -15,12 +15,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewCreateRequest {
-    private String comment;
+    private String content;
 
     public ReviewEntity toEntity(UserEntity user, RecipeEntity recipe, String content) {
         return ReviewEntity.builder()
                 .user(user)
-                .reviewComment(content)
+                .content(content)
                 .recipe(recipe)
                 .build();
     }

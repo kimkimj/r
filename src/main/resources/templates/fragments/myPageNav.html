@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="myPageFragment">
+  <div class="container2 px-4 text-center my-nev mt-5">
+    <div class="row gx-5">
+      <div class="col">
+        <div class="p-3 border detail-box"><a href="/users/my">회원 정보 수정</a></div>
+      </div>
+      <div class="col">
+        <div class="p-3 border detail-box"><a href="/recipes/my">레시피</a></div>
+      </div>
+      <div class="col">
+        <div class="p-3 border detail-box"><a href="/recipes/likes/my">찜한 레시피</a></div>
+      </div>
+      <div class="col">
+        <div class="p-3 border detail-box"><a href="/users/my/reviews">댓글</a></div>
+      </div>
+      <div class="col">
+        <div class="p-3 border detail-box"><a href="/orders/my">주문목록</a></div>
+      </div>
+    </div>
+  </div>
+</th:block>
+</html>

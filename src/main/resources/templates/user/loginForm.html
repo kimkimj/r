@@ -2,12 +2,39 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: headerFragment"/>
 
+<style>
+
+    h2 {
+        text-align: center;
+    }
+
+    .wrapper {
+        width: 33%;
+        min-height: 400px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .button-container {
+        margin-top: 50px;
+        height: 50px;
+        text-align: center;
+    }
+
+    .button {
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-<div class="container">
-    <h2>로그인 화면</h2>
+<div class="wrapper">
+    <br><br><br>
+    <h2>로그인</h2>
     <!--/*@thymesVar id="userLoginReqDto" type="com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto"*/-->
-    <form role="form" th:action="@{/login}" th:object="${userLoginReqDto}" method="post">
+    <br>
+    <form role="form" th:action="@{/users/login}" th:object="${userLoginReqDto}" method="post">
         <div th:if="${#fields.hasGlobalErrors()}">
             <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${err}">글로벌 오류 메세지</p>
         </div>
@@ -25,13 +52,14 @@
                    th:errorclass="field-error">
             <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
         </div>
-        <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        <div class="button-container">
+            <div class="button">
+                <button type="submit" class="btn btn-primary">로그인</button>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">로그인</button>
-    </form>
 
+    </form>
+    <br><br>
 </div>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>

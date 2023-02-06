@@ -28,10 +28,12 @@ public class ReviewEntity extends BaseEntity{
     @JoinColumn(name = "recipe_id")
     private RecipeEntity recipe;
 
-    private String reviewComment;
+    private String content;
 
-    public void update(String reviewComment) {
-        this.reviewComment = reviewComment;
+    public void update(String content) {
+        this.content = content;
     }
+
+
 
 }
