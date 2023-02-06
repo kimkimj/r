@@ -51,9 +51,8 @@
             </tr>
             </thead>
             <tbody>
-<!--                th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'-->
             <tr th:each="order : ${orderList}">
-                <td th:text="${order.orderNum}"/>
+                <td th:text="${order.orderNum}" th:onclick="|location.href='@{/orders/{orderNum}(orderNum=${order.getOrderNum})}'|">
                 <td th:text="${order.username}"/>
                 <td th:text="${order.address}"/>
                 <td th:text="${order.totalPrice}"/>

@@ -1,6 +1,9 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.orderDto.*;
+import com.woowahan.recipe.domain.dto.orderDto.OrderCancelResponse;
+import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;
+import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
+import com.woowahan.recipe.domain.dto.orderDto.OrderInfoResponse;
 import com.woowahan.recipe.domain.dto.orderDto.search.OrderSearch;
 import com.woowahan.recipe.domain.entity.*;
 import com.woowahan.recipe.exception.AppException;
@@ -14,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,14 +39,12 @@ public class OrderService {
         // 유저 확인
         UserEntity user = validateUser(username);
         // 상품 확인
-        log.info("reqDto.getId()");
         ItemEntity item = validateItem(reqDto.getItemId());
 
         // 배송정보 생성
         DeliveryEntity delivery = new DeliveryEntity();
         delivery.setAddress(user.getAddress());
         delivery.setDeliveryStatus(DeliveryStatus.READY);
-        log.info("delivery address={}", delivery.getAddress());
 
         // 주문 상품 생성
         OrderItemEntity orderItem = OrderItemEntity.createOrderItem(item, item.getItemPrice(), reqDto.getCount());
@@ -85,9 +85,18 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderInfoResponse findOrder(String userName, Long orderId) {
+    public OrderInfoResponse findOrderById(String userName, Long orderId) {
         validateUser(userName);
         OrderEntity order = validateOrder(orderId);
+        return OrderInfoResponse.from(order);
+    }
+
+    @Transactional(readOnly = true)
+    public OrderInfoResponse findOrderByOrderNum(String userName, String orderNum) {
+        validateUser(userName);
+        OrderEntity order = orderRepository.findByOrderNumber(orderNum).orElseThrow(() -> {
+            throw new AppException(ORDER_NOT_FOUND, ORDER_NOT_FOUND.getMessage());
+        });
         return OrderInfoResponse.from(order);
     }
 
@@ -98,25 +107,14 @@ public class OrderService {
         return pages.map(OrderInfoResponse::from);
     }
 
-    public OrderDeleteResDto cancelOrder(String username, Long orderId) {
+    public OrderCancelResponse cancelOrder(String username, Long orderId) {
         validateUser(username);
         OrderEntity order = validateOrder(orderId);
         order.cancel();
-//        orderRepository.delete(order);
-        return OrderDeleteResDto.from(order);
-    }
 
+        return OrderCancelResponse.from(order);
+    }
     //= 비지니스 로직 종료 =//
-    public boolean checkOrderUser(Long orderId, String userName) {
-        OrderEntity order = validateOrder(orderId);
-        UserEntity user = validateUser(userName);
-
-        if (!StringUtils.equals(order.getUser().getUserName(), user.getUserName())) {
-            return false;
-        }
-
-        return true;
-    }
 
     private OrderEntity validateOrder(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(() -> {
