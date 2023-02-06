@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: headerFragment"/>
+<body>
+<!-- jQuery -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<!-- swal 적용 -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div class="container">
+    <h3><b>주문 취소 상세</b></h3>
+    <table class="container">
+        <tr>
+            <td>주문날짜</td>
+            <td>[[${order.orderDate}]]</td>
+        </tr>
+        <tr>
+            <td>주문 번호</td>
+            <td>[[${order.orderNum}]]</td>
+        </tr>
+        <tr>
+            <td>주문 상품</td>
+            <td>[[${order.itemName}]]</td>
+        </tr>
+        </tr>
+    </table>
+
+    <h3><b>결제 취소 정보</b></h3>
+    <table class="container">
+        <tr>
+            <td>취소 날짜</td>
+            <td>[[${order.updateDate}]]</td>
+        </tr>
+        <tr>
+            <td>총 결제 금액</td>
+            <td id="sum">[[${order.totalPrice}]]원</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

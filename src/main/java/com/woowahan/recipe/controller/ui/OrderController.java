@@ -1,5 +1,6 @@
 package com.woowahan.recipe.controller.ui;
 
+import com.woowahan.recipe.domain.OrderStatus;
 import com.woowahan.recipe.domain.dto.itemDto.ItemDetailResDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderInfoResponse;
@@ -37,7 +38,7 @@ public class OrderController {
      * @param authentication    인증된 사용자 검증
      * @return
      */
-    @GetMapping("/item/{id}/order")
+    @GetMapping("/items/{id}/order")
     public String orderForm(@PathVariable Long id, Model model, @ModelAttribute OrderCreateReqDto orderCreateReqDto, Authentication authentication) {
 
         UserResponse userResponse = findService.findUserName(authentication.getName());
@@ -56,7 +57,7 @@ public class OrderController {
     @GetMapping("delivery/{orderId}")
     public String getDeliveryStatus(@PathVariable Long orderId, Model model, Authentication authentication) {
         String username = authentication.getName();
-        OrderInfoResponse order = orderService.findOrder(username, orderId);
+        OrderInfoResponse order = orderService.findOrderById(username, orderId);
         model.addAttribute("orderInfoResponse", order);
 
         Long userId = userService.findUserId(username);
@@ -67,7 +68,7 @@ public class OrderController {
 
     @GetMapping("/orders/my")
     public String myOrders(Model model, OrderSearch orderSearch, Authentication authentication,
-                           @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+                           @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<OrderInfoResponse> orderList = orderService.findMyOrder(authentication.getName(), orderSearch, pageable);
 
         int nowPage = orderList.getPageable().getPageNumber() + 1;
@@ -84,5 +85,21 @@ public class OrderController {
 
         return "user/my/myOrder";
 
+    }
+
+    @GetMapping("/orders/{orderNum}")
+    public String findOrder(@PathVariable String orderNum, Model model, Authentication authentication) {
+        log.info("orderNum={}", orderNum);
+        UserResponse user = findService.findUserName(authentication.getName());
+        OrderInfoResponse order = orderService.findOrderByOrderNum(authentication.getName(), orderNum);
+        log.info("controller.id={}", order.getId());
+
+        model.addAttribute("user", user);
+        model.addAttribute("order", order);
+        if (order.getOrderStatus().equals(OrderStatus.ORDER)) {
+            return "order/detail";
+        } else {
+            return "order/cancel";
+        }
     }
 }

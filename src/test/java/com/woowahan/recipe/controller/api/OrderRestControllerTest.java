@@ -68,7 +68,7 @@ class OrderRestControllerTest {
                 .totalPrice(10000)
                 .build();
 
-        given(orderService.findOrder(any(), any()))
+        given(orderService.findOrderById(any(), any()))
                 .willReturn(orderInfoResponse);
 
         mockMvc.perform(get("/api/v1/orders/1")
