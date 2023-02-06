@@ -246,16 +246,26 @@
                     <th scpoe="col">ID</th>
                     <th scope="col">내용</th>
                     <th scope="col">작성자명</th>
+                    <th scope="col">   </th>
                 </tr>
                 </thead>
+                <div>
+                    <td th:if="${recipe.getReviews().size() == 0}">댓글이 없습니다. 가장 먼저 댓글을 달아보세요</td>
+                </div>
                 <!-- th:block -->
-                <th:block th:each="num : ${#numbers.sequence(0,recipe.getReviews().size()-1)}">
+                <th:block th:unless="${recipe.getReviews().size() == 0}"
+                          th:each="num : ${#numbers.sequence(0,recipe.getReviews().size()-1)}">
                     <tbody>
                     <tr>
                         <td th:text="${recipe.getReviews().get(num).getReviewId()}"/>
                         <td th:text="${recipe.getReviews().get(num).getContent()}"/>
                         <td th:text="${recipe.getReviews().get(num).getUser().getUserName()}"/>
-                        <button type="button" style="width: 50px;" th:onclick="|location.href='@{/recipes/{recipeId}/reviews/{reviewId} (recipeId=${recipeId}, reviewId=${recipe.getReviews().get(num).getReviewId()})}'|">삭제</button>
+                        <td>
+                            <button type="button" style="width: 50px;"
+                                    th:onclick="|location.href='@{/recipes/{recipeId}/reviews/{reviewId} (recipeId=${recipeId}, reviewId=${recipe.getReviews().get(num).getReviewId()})}'|">
+                                삭제
+                            </button>
+                        </td>
                     </tr>
                     </tbody>
                 </th:block>
@@ -264,10 +274,10 @@
         </div>
     </div>
     <br><br><br><br>
-<!-- footer -->
-<div th:replace="fragments/footer :: footerFragment"/>
-<br><br>
-<!-- 전체 틀 섹션 div 끝 태그 -->
+    <!-- footer -->
+    <div th:replace="fragments/footer :: footerFragment"/>
+    <br><br>
+    <!-- 전체 틀 섹션 div 끝 태그 -->
 </div>
 </body>
 </html>
