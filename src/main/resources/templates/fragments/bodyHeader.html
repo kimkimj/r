@@ -6,32 +6,32 @@
             <div class="container d-flex flex-wrap">
                 <ul class="nav me-auto">
                     <li class="nav-item"><a href="/" class="nav-link link-dark px-2 active" aria-current="page">Home</a></li>
-                    <li class="nav-item"><a href="/items" class="nav-link link-dark px-2">상품</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Pricing</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link link-dark px-2">FAQs</a></li>
-                    <!--로그인만 가능-->
-                    <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/users/my" class="nav-link link-dark px-2">내 정보</a></li>
+                    <li class="nav-item"><a href="/recipes/list" class="nav-link link-dark px-2">레시피 찾기</a></li>
+                    <li class="nav-item"><a href="/items" class="nav-link link-dark px-2">재료 구매</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link link-dark px-2" onclick="alert('해당 서비스는 아직 준비중입니다.')">FAQs</a></li>
                 </ul>
-                <ul class="nav">
+                <ul class="nav me-auto justify-content-end">
                     <!--비로그인도 가능-->
                     <li class="nav-item" sec:authorize="isAnonymous()"><a href="/login" class="nav-link link-dark px-2">Login</a></li>
                     <li class="nav-item" sec:authorize="isAnonymous()"><a href="/join" class="nav-link link-dark px-2">Sign up</a></li>
                     <!--로그인만 가능-->
+                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                        <a class="nav-link dropdown-toggle" href="/users/my" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            마이페이지
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/users/my">회원 정보</a></li>
+                            <li><a class="dropdown-item" href="/recipes/my">나의 레시피</a></li>
+                            <li><a class="dropdown-item" href="/recipes/likes/my">찜한 레시피</a></li>
+                            <li><a class="dropdown-item" href="/users/my/reviews">나의 리뷰</a></li>
+                            <li><a class="dropdown-item" href="/orders/my">주문 조회</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/carts" class="nav-link link-dark px-2">장바구니</a></li>
                     <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/users/logout" class="nav-link link-dark px-2">LogOut</a></li>
                 </ul>
             </div>
         </nav>
-        <header class="py-3 mb-4 border-bottom">
-            <div class="container d-flex flex-wrap justify-content-center">
-                <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
-                    <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-                    <span class="fs-4">Double header</span>
-                </a>
-                <form class="col-12 col-lg-auto mb-3 mb-lg-0" role="search">
-                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-                </form>
-            </div>
-        </header>
     </header>
 </th:block>
 </html>

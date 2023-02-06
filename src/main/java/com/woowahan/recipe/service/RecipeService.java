@@ -184,13 +184,12 @@ public class RecipeService {
 
     /**
      * @param id
-     * @param userName
      * @return Integer
      * @author 이소영
      * @date 2023-01-24
      * @description 좋아요 개수를 반환
      **/
-    public Integer countLikes(Long id, String userName) {
+    public Integer countLikes(Long id) {
         RecipeEntity recipe = validateRecipe(id);
         Integer likeCnt = likeRepository.countByRecipe(recipe);
         return likeCnt;

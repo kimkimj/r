@@ -25,9 +25,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequiredArgsConstructor
 @Slf4j
 public class OrderController {
-
-    private final UserRepository userRepository;
-
     private final OrderService orderService;
     private final UserService userService;
     private final FindService findService;
