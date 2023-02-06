@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 public class SellerLoginRequest {
 
     @NotBlank(message = "아이디를 입력해주세요.")
-    private String userName;
+    private String sellerName;
 
     @NotBlank(message = "비밀번호를 입력해주세요.")
     private String password;
