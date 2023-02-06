@@ -16,7 +16,6 @@
     .main {
         width: 60%;
         min-height: 400px;
-        background-color: seashell;
         margin: auto;
     }
 
@@ -82,6 +81,7 @@
         </div>
     </div>
     <div class="box">
+        <br><br>
         <h5><b>배송지 정보</b></h5>
         <div class="content">
             <table>
@@ -101,6 +101,7 @@
         </div>
     </div>
     <div class="box">
+        <br><br>
         <h5><b>주문 정보</b></h5>
         <div class="content">
             <div id="itemName">결제 예정 상품: <span th:text="${item.itemName}"></span></div>
@@ -109,7 +110,7 @@
     </div>
     <div class="button-container">
         <div class="button">
-            <button type="submit" class="btn btn-warning" onclick="requestPay()">결제하기</button>
+            <button type="submit" class="btn btn-outline-primary" onclick="requestPay()">결제하기</button>
             <script th:inline="javascript">
                 // 결제 금액, 구매자의 이름, 이메일
                 function requestPay() {
