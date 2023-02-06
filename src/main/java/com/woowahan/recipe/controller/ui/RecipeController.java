@@ -1,9 +1,12 @@
 package com.woowahan.recipe.controller.ui;
 
+import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.itemDto.ItemListForRecipeResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
 import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.RecipeService;
+import com.woowahan.recipe.service.ReviewService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +35,7 @@ public class RecipeController {
 
     private final RecipeService recipeService;
     private final FindService findService;
+    private final ReviewService reviewService;
 
     @GetMapping("/create")
     public String createForm(Model model) {
@@ -188,6 +192,19 @@ public class RecipeController {
         model.addAttribute("endPage", endPage);
         model.addAttribute("lastPage", lastPage);
         return "recipe/recipeList";
+    }
+
+    @GetMapping("/{recipeId}/reviews")
+    public String getAllReviews(@PathVariable Long recipeId, Pageable pageable) {
+        Page<ReviewListResponse> reviews = reviewService.findAllReviews(recipeId, pageable);
+        return "";
+    }
+
+    @GetMapping ("/{recipeId}/reviews/{reviewId}")
+    public String deleteReview(@PathVariable Long recipeId, @PathVariable Long reviewId,
+                                                       Authentication authentication) {
+        reviewService.deleteReview(recipeId, reviewId, authentication.getName());
+        return "redirect:/recipes/{recipeId}";
     }
 }
 
