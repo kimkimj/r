@@ -28,7 +28,7 @@ public class OrderRestController {
     //** 주문 **//
     @GetMapping("/{id}")
     public Response<OrderInfoResponse> findOrder(@PathVariable Long id, Authentication authentication) {
-        OrderInfoResponse orderInfoResponse = orderService.findOrder(authentication.getName(), id);
+        OrderInfoResponse orderInfoResponse = orderService.findOrderById(authentication.getName(), id);
         return Response.success(orderInfoResponse);
     }
 
@@ -42,12 +42,6 @@ public class OrderRestController {
     public Response<OrderCreateResDto> order(@RequestBody OrderCreateReqDto reqDto, Authentication authentication) {
         OrderCreateResDto orderCreateResDto = orderService.createOrder(authentication.getName(), reqDto);
         return Response.success(orderCreateResDto);
-    }
-
-    @DeleteMapping("/{id}")
-    public Response<OrderDeleteResDto> deleteOrder(@PathVariable Long id, Authentication authentication) {
-        OrderDeleteResDto orderDeleteResDto = orderService.cancelOrder(authentication.getName(), id);
-        return Response.success(orderDeleteResDto);
     }
 
     //** 주문 및 결제**//
@@ -69,14 +63,38 @@ public class OrderRestController {
             }
             // 5. 주문하기
             OrderCreateResDto orderResponse = orderService.createOrder(authentication.getName(), orderDto);
-            log.info("주문성공했습니다.");
+            log.info("컨트롤러 주문성공했습니다.");
             return Response.success(orderResponse);
         } catch (Exception e) {
             // 6. 결제에러시 결제 취소
             paymentService.paymentCancel(token, orderDto.getImp_uid(), amount, "결제 에러");
-            log.info("주문실패했습니다.");
+            log.info("컨트롤러 주문실패했습니다.");
             return Response.error(new ErrorResult(ErrorCode.INVALID_ORDER, ErrorCode.INVALID_ORDER.getMessage()));
         }
+    }
+
+    //** 주문 취소 **//
+    @PatchMapping("/{id}/cancel")
+    public Response<OrderCancelResponse> cancelOrder(@PathVariable Long id, Authentication authentication) {
+        OrderCancelResponse orderCancelResponse = orderService.cancelOrder(authentication.getName(), id);
+        return Response.success(orderCancelResponse);
+    }
+
+    //** 결제 취소 **//
+    @PostMapping("/payment/cancel")
+    public Response<OrderCancelResponse> paymentCancel(@RequestBody PayCancelVo payCancelVo, Authentication authentication) throws IOException {
+        // 1. 아임포트 시크릿 키 가져오기
+        String token = paymentService.getToken();
+        log.info("imp_uid={}", payCancelVo.getImp_uid());
+        // 2. 주문 취소
+        if (payCancelVo.getImp_uid() != null) {
+            // 3. 토큰을 통해 결제 완료된 금액 확인
+            int amount = paymentService.paymentInfo(payCancelVo.getImp_uid(), token);
+            log.info("paymentCancel.amount={}", amount);
+            paymentService.paymentCancel(token, payCancelVo.getImp_uid(), amount, "유저가 결제 취소");
+        }
+        OrderCancelResponse orderCancelResponse = orderService.cancelOrder(authentication.getName(), payCancelVo.getOrderId());
+        return Response.success(orderCancelResponse);
     }
 
 }
