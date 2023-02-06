@@ -4,6 +4,7 @@
 .cart-table .item-cnt {
     border: none;
     outline: #DDF7F8;
+    width: 100px;
 }
 .cart-table .cnt-option-btn {
     background-color: #DDF7F8;

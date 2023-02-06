@@ -31,49 +31,55 @@
             </tr>
             </thead>
             <tbody class="table-group-divider">
-            <tr class="cartList" th:each="item : ${cartList}" >
-                <td>
-                    <input class="form-check-input" name="item" type="checkbox" id="flexCheckDefault" checked th:value="${item.price}" onclick="getCheckPrice()">
-                </td>
-                <td class=".individual_image_input">
-                    <div class="border d-flex justify-content-center align-items-center">
-                        <img src="..." class="rounded" th:alt="|${{item.name}} 이미지 준비중|">
-                    </div>
-                </td>
-                <td class="individual_name_input text-truncate" th:text="${item.name}">상품 이름</td>
-                <td class="individual_cnt_input d-flex flex-row align-items-center">
-                    <button type="button" class="btn btn-jelly cnt-option-btn" onclick="count('minus')" value="-">-</button>
-                    <input type="number" class="item-cnt" width="100px" th:value="${item.cnt}" readonly />
-                    <button type="button" class="btn btn-jelly cnt-option-btn" onclick="count('plus')" value="+">+</button>
-                </td>
-                <td class="individual_totalPrice_input" th:text="${item.price}">상품 가격</td>
-                <td>
-                    <button type="button" class="btn btn-danger" onclick="deleteItem()">삭제</button>
-                    <th:block layout:fragment="script">
-                        <script type="text/javascript" th:inline="javascript">
-                            /*<![CDATA[*/
-                            function deleteItem() {
-                                const name = [[${item.name}]];
-                                console.log(name);
-                                 let confirm_message = confirm(name + "을(를) 정말 삭제하시겠습니까?");
+            <th:block th:if="${#lists.size(cartList) == 0}">
+                <div>현재 장바구니에 등록된 상품이 없습니다.</div>
+            </th:block>
+            <th:block th:unless="${#lists.size(cartList) == 0}">
+                <tr class="cartList" th:each="item, i : ${cartList}">
+                    <td>
+                        <input class="form-check-input" name="item" type="checkbox" id="flexCheckDefault" checked th:value="${item.cnt} * ${item.price}" onclick="getCheckPrice()">
+                    </td>
+                    <td class=".individual_image_input">
+                        <div class="border d-flex justify-content-center align-items-center">
+                            <img src="..." class="rounded" th:alt="|${{item.name}} 이미지 준비중|">
+                        </div>
+                    </td>
+                    <td class="individual_name_input text-truncate" th:text="${item.name}">상품 이름</td>
+                    <input type="hidden" class="individual_stock_input" th:value="${item.stock}">상품 재고</input>
+                    <td class="individual_cnt_input d-flex flex-row align-items-center">
+                        <button type="button" class="btn btn-jelly cnt-option-btn" th:onclick="'javascript:count(' + 'minus' + ',' + ${i.index} + ')'">-</button>
+                        <input type="number" class="item-cnt m-2 text-center" th:class="item-cnt" min="1" width="50" th:value="${item.cnt}" readonly />
+                        <button type="button" class="btn btn-jelly cnt-option-btn" th:onclick="'javascript:count(' + 'plus' + ',' + ${i.index} + ')'">+</button>
+                    </td>
+                    <td class="individual_totalPrice_input" th:text="${item.price}">상품 가격</td>
+                    <td>
+                        <button type="button" class="btn btn-danger" onclick="deleteItem()">삭제</button>
+                        <th:block layout:fragment="script">
+                            <script type="text/javascript" th:inline="javascript">
+                                /*<![CDATA[*/
+                                function deleteItem() {
+                                    const name = [[${item.name}]];
+                                    console.log(name);
+                                     let confirm_message = confirm(name + "을(를) 정말 삭제하시겠습니까?");
 
-                                 if(confirm_message) {
-                                     const formHtml = `
-                                         <form id="deleteForm" action="/carts/${id}" method="post">
-                                             <input type="hidden" id="id" name="id" value="${id}" />
-                                         </form>
-                                         `;
-                                     const doc = new DOMParser().parseFromString(formHtml, 'text/html');
-                                     const form = doc.body.firstChild;
-                                     document.body.append(form);
-                                     document.getElementById('deleteForm').submit();
-                                 }
-                            }
-                            /*]]>*/
-                        </script>
-                    </th:block>
-                </td>
-            </tr>
+                                     if(confirm_message) {
+                                         const formHtml = `
+                                             <form id="deleteForm" action="/carts/${id}" method="post">
+                                                 <input type="hidden" id="id" name="id" value="${id}" />
+                                             </form>
+                                             `;
+                                         const doc = new DOMParser().parseFromString(formHtml, 'text/html');
+                                         const form = doc.body.firstChild;
+                                         document.body.append(form);
+                                         document.getElementById('deleteForm').submit();
+                                     }
+                                }
+                                /*]]>*/
+                            </script>
+                        </th:block>
+                    </td>
+                </tr>
+            </th:block>
             </tbody>
         </table>
         <hr />
@@ -98,7 +104,8 @@
 </div>
 <th:block layout:fragment="script">
     <script type="text/javascript" th:inline="javascript">
-        function writeIndexedDB(itemList) {
+
+        /*function writeIndexedDB(itemList) {
             console.log('writeIndexedDB() 실행');
             // IndexedDB 지원여부 확인
             if (!window.indexedDB) {
@@ -132,7 +139,7 @@
                     }
 
                     // transaction
-                    const objectStore = transaction.objectStore('itemList');
+                    const objectStore = transaction.objectStore('itemList') ;
                     for (const item of itemList) {
                         const request = objectStore.add(item);
                         request.onsuccess = (event) => {
@@ -141,13 +148,13 @@
                     }
                 }
             }
-        }
+        }*/
 
-        /*<![CDATA[*/
+    /*<![CDATA[*/
         $(document).ready(function() {
             var itemList = [[ ${cartList} ]].content;
             console.log(itemList);
-            writeIndexedDB(itemList);
+            // writeIndexedDB(itemList);  // indexedDB 적용 보류
             getCheckPrice();
         })
         /*]]>*/
