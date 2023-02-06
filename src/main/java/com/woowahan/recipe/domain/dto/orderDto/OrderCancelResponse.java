@@ -6,21 +6,23 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class OrderDeleteResDto {
-
-    private String orderNum;
+public class OrderCancelResponse {
+    private Long id;
     private String message;
+    private String orderNum;
     private OrderStatus orderStatus;
 
     @Builder
-    public OrderDeleteResDto(String orderNum, String message, OrderStatus orderStatus) {
+    public OrderCancelResponse(Long id, String orderNum, String message, OrderStatus orderStatus) {
+        this.id = id;
         this.orderNum = orderNum;
         this.message = message;
         this.orderStatus = orderStatus;
     }
 
-    public static OrderDeleteResDto from(OrderEntity order) {
-        return OrderDeleteResDto.builder()
+    public static OrderCancelResponse from(OrderEntity order) {
+        return OrderCancelResponse.builder()
+                .id(order.getId())
                 .orderNum(order.getOrderNumber())
                 .message("주문이 취소되었습니다.")
                 .orderStatus(order.getOrderStatus())
