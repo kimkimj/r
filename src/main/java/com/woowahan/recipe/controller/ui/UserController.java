@@ -46,13 +46,18 @@ public class UserController {
     }
 
     // 회원가입
-    @GetMapping("/join")
+    @GetMapping("/users/join")
     public String joinForm(Model model) {
         model.addAttribute("userJoinReqDto", new UserJoinReqDto());
         return "user/joinForm";
     }
 
-    @PostMapping("/join")
+    @GetMapping("/login")
+    public String chooseLoginType() {
+        return "loginType";
+    }
+
+    @PostMapping("/users/join")
     public String join(@Valid UserJoinReqDto form, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "user/joinForm";
@@ -63,13 +68,13 @@ public class UserController {
     }
 
     // 로그인
-    @GetMapping("/login")
+    @GetMapping("/users/login")
     public String loginForm(Model model) {
         model.addAttribute("userLoginReqDto", new UserLoginReqDto());
         return "user/loginForm";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/users/login")
     public String login(@Valid @ModelAttribute UserLoginReqDto userLoginReqDto, BindingResult result,
                         HttpServletRequest httpServletRequest){
         if (result.hasErrors()) {
