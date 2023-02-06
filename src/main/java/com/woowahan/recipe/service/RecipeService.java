@@ -120,10 +120,18 @@ public class RecipeService {
     public RecipeUpdateResDto updateRecipe(@RequestParam RecipeUpdateReqDto recipeUpdateReqDto, Long recipeId, String userName) {
         RecipeEntity recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage()));
         validateWriterAndUserName(userName, recipe); // 동일 유저인지 검증
-        // TODO: 2023-01-24 _를 사용하는 SnakeCase보다는 CamelCase가 Java 프로그래밍에서 권장되는 표기법이라고 합니다 :)
+        // TODO: 2023-01-24 를 사용하는 SnakeCase보다는 CamelCase가 Java 프로그래밍에서 권장되는 표기법이라고 합니다 🙂
         recipe.setRecipeTitle(recipeUpdateReqDto.getRecipeTitle());
         recipe.setRecipeBody(recipeUpdateReqDto.getRecipeBody());
-        recipeRepository.saveAndFlush(recipe);
+        RecipeEntity saveRecipe = recipeRepository.saveAndFlush(recipe);
+        for (int i = 0; i < recipeUpdateReqDto.getItems().size(); i++) {
+            ItemEntity itemEntity = itemRepository.findByName(recipeUpdateReqDto.getItems().get(i)).orElse(null);
+            RecipeItemEntity recipeItemEntity = RecipeItemEntity.builder()
+                    .item(itemEntity)
+                    .recipe(saveRecipe)
+                    .build();
+            recipeItemRepository.save(recipeItemEntity);
+        }
         return new RecipeUpdateResDto(recipe.getId(), recipe.getRecipeTitle(), recipe.getRecipeBody(),
                 recipe.getUser().getUserName(), recipe.getLastModifiedDate());
     }

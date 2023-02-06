@@ -72,7 +72,7 @@ public class RecipeController {
         String userName = authentication.getName();
         RecipeUpdateResDto resDto = recipeService.updateRecipe(form, recipeId, userName);
         redirectAttributes.addAttribute("recipeId", resDto.getRecipeId());
-        return "redirect:/recipes/update/{recipeId}";
+        return "redirect:/recipes/{recipeId}";
     }
 
     @GetMapping("/delete/{recipeId}")
