@@ -14,7 +14,9 @@ import java.time.LocalDateTime;
 @Setter
 public class OrderInfoResponse {
 
+    private Long id;
     private String orderNum;
+    private String itemName;
     private String username;
     private String address;
     private Integer totalPrice;
@@ -22,27 +24,35 @@ public class OrderInfoResponse {
     private DeliveryStatus deliveryStatus;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDateTime orderDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDateTime updateDate;
 
     @Builder
-    public OrderInfoResponse(String orderNum, String username, String address, Integer totalPrice, OrderStatus orderStatus, DeliveryStatus deliveryStatus, LocalDateTime orderDate) {
+    public OrderInfoResponse(Long id, String orderNum, String itemName, String username, String address, Integer totalPrice, OrderStatus orderStatus, DeliveryStatus deliveryStatus, LocalDateTime orderDate, LocalDateTime updateDate) {
+        this.id = id;
         this.orderNum = orderNum;
+        this.itemName = itemName;
         this.username = username;
         this.address = address;
         this.totalPrice = totalPrice;
         this.orderStatus = orderStatus;
         this.deliveryStatus = deliveryStatus;
         this.orderDate = orderDate;
+        this.updateDate = updateDate;
     }
 
     public static OrderInfoResponse from(OrderEntity order) {
         return OrderInfoResponse.builder()
+                .id(order.getId())
                 .orderNum(order.getOrderNumber())
-                .username(order.getUser().getUserName())
+                .itemName(order.getOrderItems().get(0).getItem().getName())
+                .username(order.getUser().getName())
                 .address(order.getUser().getAddress())
                 .totalPrice(order.getTotalPrice())
                 .orderStatus(order.getOrderStatus())
                 .deliveryStatus(order.getDelivery().getDeliveryStatus())
                 .orderDate(order.getCreatedDate())
+                .updateDate(order.getLastModifiedDate())
                 .build();
     }
 }

@@ -104,7 +104,7 @@
         <h5><b>주문 정보</b></h5>
         <div class="content">
             <div id="itemName">결제 예정 상품: <span th:text="${item.itemName}"></span></div>
-            <div>결제 예정 금액: <span id="cost" th:text="${totalCost}"></span></div>
+            <div>결제 예정 금액: <span id="cost" th:text="${totalCost}"></span>원</div>
         </div>
     </div>
     <div class="button-container">
@@ -121,7 +121,7 @@
                         phoneNum: [[${userResponse.phoneNum}]],
                         email: [[${userResponse.email}]],
                         address: [[${userResponse.address}]],
-                        itemId: [[${item.itemId}]]
+                        itemId: [[${item.itemId}]],
                     }
                     console.log(data.itemName);
                     console.log(data.orderNum);
@@ -171,18 +171,22 @@
                         method: "POST",
                         contentType: 'application/json',
                         data: JSON.stringify(data),
-                    }).done(function (result) {
+                    }).done(function () {
                         // 성공시 응답 메세지
                         swal({
                             text: '주문이 완료되었습니다.',
                             closeOnClickOutside: false
                         }) // 에러 메세지 창 닫으면 실행될 함수
                             .then(function () {
-                                location.replace("/orders/orderNum")
+                                location.replace("/my")
                             })
-                    }).fail(function () {
-                        alert("결제 실패하였습니다.");
-                        // location.replace("/carts")
+                    }).fail(function (result) {
+                        var responseText = result.responseText;
+                        var message = responseText.split('\"')[13];
+                        console.log(message);
+                        alert(message);
+
+                        location.replace("/items/" + [[${item.itemId}]] + "/order")
                     })
                 }
 
@@ -198,7 +202,13 @@
                   }
                   return orderNum;
                 }
+
+                function cancel() {
+                    alert("주문이 취소되었습니다.");
+                    location.replace("/items/" + [[${item.itemId}]])
+                }
             </script>
+            <button type="submit" class="btn btn-secondary" onclick="cancel()">취소하기</button>
         </div>
     </div>
 </div>
