@@ -44,4 +44,15 @@ public class SellerEntity extends BaseEntity {
     @Column(name = "business_reg_num")
     private String businessRegNum;  // 사업자 등록번호
 
+    public void updateUser(String sellerName, String password, String companyName,
+                           String address, String email, String phoneNum, String businessRegNum) {
+        this.sellerName = sellerName;
+        this.password = password;
+        this.companyName = companyName;
+        this.address = address;
+        this.email = email;
+        this.phoneNum = phoneNum;
+        this.businessRegNum = businessRegNum;
+    }
+
 }

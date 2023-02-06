@@ -4,11 +4,11 @@ import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.sellerDto.*;
 import com.woowahan.recipe.service.SellerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1")
 public class SellerRestController {
     private final SellerService sellerService;
 
@@ -32,24 +32,24 @@ public class SellerRestController {
         return Response.success(sellerService.findById(id));
     }
 
-    /*
+
     // 판배자 정보 수정
-    @PutMapping("/seller")
+    @PutMapping("/seller/{id}")
     public Response<SellerResponse> update(@RequestBody SellerUpdateRequest sellerUpdateRequest,
-                                           Authentication authentication) {
-        String sellerName = authentication.getName();
-        SellerResponse sellerResponse= sellerService.update(sellerName, sellerUpdateRequest);
+                                           @PathVariable Long id) {
+        SellerResponse sellerResponse= sellerService.update(id, sellerUpdateRequest);
         return Response.success(sellerResponse);
-    }*/
+    }
 
 
-    @DeleteMapping("/seller")
-    public Response<SellerDeleteResponse> delete(Authentication authentication) {
-        String sellerName = authentication.getName();
-        SellerDeleteResponse sellerDeleteResponse = sellerService.deleteSeller(sellerName);
+    @DeleteMapping("/seller/{id}}")
+    public Response<SellerDeleteResponse> delete(@PathVariable Long id) {
+        SellerDeleteResponse sellerDeleteResponse = sellerService.deleteSeller(id);
         return Response.success(sellerDeleteResponse);
 
     }
+
+
 
 
 }
