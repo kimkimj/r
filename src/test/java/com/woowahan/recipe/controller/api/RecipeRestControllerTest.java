@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -117,7 +117,7 @@ class RecipeRestControllerTest {
     @Test
     void 레시피_수정_성공() throws Exception {
         //given
-        RecipeUpdateReqDto recipeUpdateReqDto = new RecipeUpdateReqDto("수정제목", "수정내용");
+        RecipeUpdateReqDto recipeUpdateReqDto = new RecipeUpdateReqDto("수정제목", "수정내용", Collections.singletonList(""));
         //when
         when(recipeService.updateRecipe(any(), any(), any())).thenReturn(RecipeUpdateResDto.builder()
                 .recipeId(1L)

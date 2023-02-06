@@ -162,7 +162,7 @@ class RecipeServiceTest {
     @Test
     void 레시피_수정_성공() {
 
-        RecipeUpdateReqDto recipeUpdateReqDto = new RecipeUpdateReqDto("수정제목", "수정내용");
+        RecipeUpdateReqDto recipeUpdateReqDto = new RecipeUpdateReqDto("수정제목", "수정내용", items);
         when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
         RecipeUpdateResDto recipeUpdateResDto = recipeService.updateRecipe(recipeUpdateReqDto, id, userName);
         assertThat(recipeUpdateResDto.getRecipeTitle()).isEqualTo("수정제목");
@@ -173,7 +173,7 @@ class RecipeServiceTest {
     @Test
     void 레시피_수정_실패_다른유저가_시도한경우() {
 
-        RecipeUpdateReqDto recipeUpdateReqDto = new RecipeUpdateReqDto("수정제목", "수정내용");
+        RecipeUpdateReqDto recipeUpdateReqDto = new RecipeUpdateReqDto("수정제목", "수정내용", items);
         when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeEntity));
         AppException appException = assertThrows(AppException.class, () -> {
             recipeService.updateRecipe(recipeUpdateReqDto, id, userName2);
