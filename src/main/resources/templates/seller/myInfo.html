@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: headerFragment"/>
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<title>마이 페이지</title>
+</head>
+<style>
+
+  .container {
+    margin: auto;
+  }
+
+  .wrapper {
+    width: 45%;
+  }
+
+  table {
+    width: 450px;
+  }
+
+  tr {
+    padding-bottom: 1em;
+  }
+
+  .button-container {
+    margin-top: 50px;
+    height: 50px;
+    text-align: center;
+  }
+
+  .button {
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
+
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+  <div class="wrapper">
+    <div class="container">
+      <br><br>
+      <div class="container_etc mt-5" style="width: 460px">
+        <h2>판매자 정보 수정</h2>
+        <br>
+
+        <form role="form" th:action="@{/seller/my/update}" th:object="${seller}" method="get">
+          <div class="mb-3">
+            <table>
+              <tr>
+                <td>아이디</td>
+                <td>[[${seller.sellerName}]]</td>
+              </tr>
+              <tr>
+                <td>비밀번호</td>
+                <td><a href="/seller/my/update/password">비밀번호 변경하기</a></td>
+              </tr>
+              <tr>
+                <td>업체명</td>
+                <td>[[${seller.companyName}]]</td>
+              </tr>
+              <tr>
+                <td>주소</td>
+                <td>[[${seller.address}]]</td>
+              </tr>
+              <tr>
+                <td>이메일</td>
+                <td>[[${seller.email}]]</td>
+              </tr>
+              <tr>
+                <td>핸드폰 번호</td>
+                <td>[[${seller.phoneNum}]]</td>
+              </tr>
+
+            </table>
+          </div>
+          <div class="button-container">
+            <div class="button">
+              <button type="submit" class="btn btn-outline-primary">판매자 정보 수정하기</button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+  <br><br>
+  <div th:replace="fragments/footer :: footerFragment"/>
+</div>
+
+</body>
+</html>

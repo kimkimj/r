@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="fragments/header :: headerFragment"/>
+<meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
 <style>
     * {
         margin: 0;
@@ -168,7 +169,7 @@
                     <hr>
                     <br>
                     <h5>구매하실 재료를 선택해주세요.</h5>
-                    <table class="table " style="width: 800px;">
+                    <table class="table " style="width: 100%;">
                         <thead>
                         <tr>
                             <th scope="col">✓</th>
@@ -202,7 +203,7 @@
         <div style="text-align: center;">
             <p>이 레시피가 좋으면 좋아요를 눌러 마이페이지에서 따로 확인하실 수 있습니다.</p>
             <div>
-                <button class="btn btn-outline-success" type="button"
+                <button class="btn btn-outline-success" type="button" id="like-btn"
                         th:onclick="|location.href='@{/recipes/{recipeId}/likes (recipeId=${recipeId})}'|">좋아요💗
                 </button>
             </div>
@@ -215,38 +216,40 @@
         </div>
         <!--        <div class="row gx-5">-->
         <!--            <div class="col">-->
-        <p>리뷰 등록</p>
-        <!--                <form role="form" th:action="@{/recipes/create}" th:object="${recipeCreateReqDto}" method="post">-->
-        <!--                    &lt;!&ndash; 레시피 제목  &ndash;&gt;-->
-        <!--                    <div class="form-group col">-->
-        <!--                        <label th:for="recipeTitle">레시피 제목</label>-->
-        <!--                        <input type="text" th:field="*{recipeTitle}" class="form-control" placeholder="예) 소고기 미역국"-->
-        <!--                               th:class="${#fields.hasErrors('recipeTitle')}? 'form-control fieldError' : 'form-control'">-->
-        <!--                        <p th:if="${#fields.hasErrors('recipeTitle')}" th:errors="*{recipeTitle}"></p>-->
-        <!--                    </div><br>-->
-        <!--                </form>-->
+<!--        <p>리뷰 등록</p>-->
+
         <div class="card">
             <div class="card-body">
-                <textarea class="form-control" rows="1"></textarea>
+<!--                <textarea class="form-control" rows="1"></textarea>-->
+                <form role="form" th:action="@{/recipes/{recipeId}/reviews (recipeId=${recipeId})}" th:object="${reviewCreateRequest}" method="post" content>
+                    <!-- 리뷰 내용  -->
+                    <div class="form-group col">
+                        <label th:for="content">리뷰 내용</label>
+                        <input type="text" th:field="*{content}" class="form-control" placeholder="리뷰 내용을 입력해주세요"
+                               th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">
+                        <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
+                    </div>
+                    <br>
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn btn-outline-success">리뷰 작성완료</button>
+                    </div><br>
+                </form>
             </div>
             <div class="card-footer" style="text-align: right;">
-                <div>
-                    <button class="btn btn-outline-success" type="submit"
-                            th:onclick="|location.href='@{/recipes/{recipeId}/likes (recipeId=${recipeId})}'|">리뷰쓰기
-                    </button>
-                </div>
+
             </div>
         </div>
         <br>
         <div class="card">
             <!--                    <div class="card-header">댓글 목록</div>-->
-            <table class="table " style="width: 800px;">
+            <table class="table " style="width: 100%;">
                 <thead>
                 <tr>
                     <th scpoe="col">ID</th>
                     <th scope="col">내용</th>
                     <th scope="col">작성자명</th>
-                    <th scope="col">   </th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <div>
@@ -266,18 +269,45 @@
                                 삭제
                             </button>
                         </td>
+                        <td style="border: 1px solid;">
+                            <form role="form" th:action="@{/recipes/update/{recipeId}/reviews/{reviewId} (recipeId=${recipeId}, reviewId=${recipe.getReviews().get(num).getReviewId()})}" th:object="${reviewCreateRequest}" method="post" content>
+                                <!-- 리뷰 내용  -->
+                                <div class="form-group col">
+                                    <input type="text" th:field="*{content}" class="form-control" placeholder="수정할 리뷰내용 입력"
+                                           th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">
+                                    <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
+                                </div>
+                                <br>
+                                <div style="text-align: center;">
+                                    <button type="submit" class="btn btn-outline-success">수정 완료</button>
+                                </div><br>
+                            </form>
+                        </td>
                     </tr>
                     </tbody>
                 </th:block>
             </table>
             <br>
         </div>
+        <br><br>
+        <div style="text-align: center;">
+            <button class="btn btn-outline-success" onclick="location.href='recipeList.html'" th:onclick="|location.href='@{/recipes/list}'|">목록가기</button>
+        </div>
     </div>
-    <br><br><br><br>
+    <br><br><br>
     <!-- footer -->
     <div th:replace="fragments/footer :: footerFragment"/>
     <br><br>
     <!-- 전체 틀 섹션 div 끝 태그 -->
 </div>
+<!--
+<script>
+    $(document).ready(function(){
+        $("#like-btn").click(function(){
+            if(alert("좋아요를 눌렀습니다. 한번 더 누를 경우 좋아요가 취소됩니다.");
+        });
+    });
+</script>
+-->
 </body>
 </html>

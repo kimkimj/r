@@ -6,6 +6,7 @@ import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.security.JwtTokenFilter;
 import com.woowahan.recipe.security.JwtTokenUtils;
 import com.woowahan.recipe.security.exception.JwtExceptionFilter;
+import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +39,7 @@ public class SecurityConfig {
     @Value("${jwt.token.secret}")
     private String secretKey;
     private final JwtTokenUtils jwtTokenUtils;
+    private final UserService userService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -48,8 +50,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .antMatchers(HttpMethod.GET, "/api/v1/recipes/my, /api/v1/alarms, /api/v1/carts").authenticated()
                 .antMatchers(HttpMethod.GET).permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1/users/join", "/api/v1/users/login", "/api/v1/items/search").permitAll()
-                .antMatchers(HttpMethod.GET, "/users/**").authenticated() //추가
+                .antMatchers(HttpMethod.POST, "/api/v1/users/join", "/api/v1/users/login",
+                        "/api/v1/seller/join", "/api/v1/seller/login",
+                        "/api/v1/items/search").permitAll()
+                .antMatchers(HttpMethod.GET, "/users/**", "seller/**").authenticated() //추가
                 .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.PUT).authenticated()
                 .antMatchers(HttpMethod.DELETE).authenticated()
@@ -57,7 +61,7 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new JwtTokenFilter(secretKey, jwtTokenUtils), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtTokenFilter(secretKey, jwtTokenUtils, userService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtExceptionFilter(), JwtTokenFilter.class)
                 .exceptionHandling()
                 // 인증 실패 시 INVALID_PERMISSION 에러 발생

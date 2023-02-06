@@ -3,7 +3,10 @@ package com.woowahan.recipe.controller.ui;
 import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.itemDto.ItemListForRecipeResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateResponse;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewUpdateResponse;
 import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.RecipeService;
 import com.woowahan.recipe.service.ReviewService;
@@ -55,6 +58,7 @@ public class RecipeController {
 
     @GetMapping("/update/{recipeId}")
     public String updateForm(Model model, @PathVariable Long recipeId) {
+
         model.addAttribute("recipeUpdateReqDto", recipeService.findRecipe(recipeId));
         model.addAttribute("recipeId", recipeId);
         return "recipe/updateForm";
@@ -68,7 +72,7 @@ public class RecipeController {
         String userName = authentication.getName();
         RecipeUpdateResDto resDto = recipeService.updateRecipe(form, recipeId, userName);
         redirectAttributes.addAttribute("recipeId", resDto.getRecipeId());
-        return "redirect:/recipes/update/{recipeId}";
+        return "redirect:/recipes/{recipeId}";
     }
 
     @GetMapping("/delete/{recipeId}")
@@ -82,6 +86,7 @@ public class RecipeController {
     public String findRecipe(@PathVariable Long recipeId, Model model) {
         recipeService.updateView(recipeId);
         RecipeFindResDto recipe = recipeService.findRecipe(recipeId);
+        model.addAttribute("reviewCreateRequest", new ReviewCreateRequest());
         model.addAttribute("recipeId", recipeId);
         model.addAttribute("recipe", recipe);
         return "recipe/recipeDetailList";
@@ -194,15 +199,32 @@ public class RecipeController {
         return "recipe/recipeList";
     }
 
-    @GetMapping("/{recipeId}/reviews")
-    public String getAllReviews(@PathVariable Long recipeId, Pageable pageable) {
-        Page<ReviewListResponse> reviews = reviewService.findAllReviews(recipeId, pageable);
-        return "";
+    @PostMapping("/{recipeId}/reviews")
+    public String createReview(@PathVariable Long recipeId,
+                               @Valid @ModelAttribute ReviewCreateRequest reviewCreateRequest
+            , BindingResult result,
+                               Authentication authentication) {
+        if (result.hasErrors()) {
+            return "recipe/createForm";
+        }
+        String userName = authentication.getName();
+        reviewService.createReview(recipeId, reviewCreateRequest, userName);
+        return "redirect:/recipes/{recipeId}";
     }
 
-    @GetMapping ("/{recipeId}/reviews/{reviewId}")
+    @PostMapping("/update/{recipeId}/reviews/{reviewId}")
+    public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId,
+                               @Valid @ModelAttribute ReviewCreateRequest reviewCreateRequest,
+                               BindingResult result,
+                               Authentication authentication) {
+        String userName = authentication.getName();
+        reviewService.updateReview(recipeId, reviewId, reviewCreateRequest, userName);
+        return "redirect:/recipes/{recipeId}";
+    }
+
+    @GetMapping("/{recipeId}/reviews/{reviewId}")
     public String deleteReview(@PathVariable Long recipeId, @PathVariable Long reviewId,
-                                                       Authentication authentication) {
+                               Authentication authentication) {
         reviewService.deleteReview(recipeId, reviewId, authentication.getName());
         return "redirect:/recipes/{recipeId}";
     }

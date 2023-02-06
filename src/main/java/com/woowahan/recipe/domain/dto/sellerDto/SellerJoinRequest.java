@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.catalina.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -39,6 +40,8 @@ public class SellerJoinRequest {
 
     @NotBlank(message = "사업자 등록번호를 입력해주세요.")
     private String businessRegNum;
+
+    private UserRole userRole = UserRole.SELLER;
 
 
     public SellerEntity toEntity(String encodedPassword) {

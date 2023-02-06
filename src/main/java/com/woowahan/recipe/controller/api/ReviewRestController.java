@@ -32,7 +32,7 @@ public class ReviewRestController {
     public Response<ReviewCreateResponse> createReview(@PathVariable Long recipeId,
                                                      @RequestBody ReviewCreateRequest reviewCreateRequest,
                                                      Authentication authentication) {
-        ReviewCreateResponse reviewCreateResponse = reviewService.createReview(recipeId, reviewCreateRequest, "messi");
+        ReviewCreateResponse reviewCreateResponse = reviewService.createReview(recipeId, reviewCreateRequest, authentication.getName());
         return Response.success(reviewCreateResponse);
     }
 
