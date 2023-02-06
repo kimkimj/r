@@ -6,6 +6,7 @@ import com.woowahan.recipe.domain.dto.recipeDto.*;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateResponse;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewUpdateResponse;
 import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.RecipeService;
 import com.woowahan.recipe.service.ReviewService;
@@ -201,13 +202,23 @@ public class RecipeController {
     @PostMapping("/{recipeId}/reviews")
     public String createReview(@PathVariable Long recipeId,
                                @Valid @ModelAttribute ReviewCreateRequest reviewCreateRequest
-                               ,BindingResult result,
+            , BindingResult result,
                                Authentication authentication) {
         if (result.hasErrors()) {
             return "recipe/createForm";
         }
         String userName = authentication.getName();
         reviewService.createReview(recipeId, reviewCreateRequest, userName);
+        return "redirect:/recipes/{recipeId}";
+    }
+
+    @PostMapping("/update/{recipeId}/reviews/{reviewId}")
+    public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId,
+                               @Valid @ModelAttribute ReviewCreateRequest reviewCreateRequest,
+                               BindingResult result,
+                               Authentication authentication) {
+        String userName = authentication.getName();
+        reviewService.updateReview(recipeId, reviewId, reviewCreateRequest, userName);
         return "redirect:/recipes/{recipeId}";
     }
 
