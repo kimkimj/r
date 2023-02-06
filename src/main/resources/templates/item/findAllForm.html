@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="fragments/header :: headerFragment"/>
 <style>
   .container {
@@ -35,9 +35,12 @@
   <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
   <!--상품 등록 버튼 & 상품 검색 창-->
   <div style="margin: 60px 180px 60px auto;">
+<!--  <div sec:authentication="principal" />-->
+  <div sec:authorize="hasRole('SELLER')">
   <button style="margin: auto 0px 10px auto;display:block;" type="button" class="btn btn-primary"
           onclick="location.href='createForm.html'"
           th:onclick="|location.href='@{/items/create}'|">상품 등록</button>
+  </div>
   <form style="text-align: right" th:action="@{/items/search}" method="get">
     <input type="text" name = "keyword" placeholder="상품 검색">
     <button type="submit">검색</button>
