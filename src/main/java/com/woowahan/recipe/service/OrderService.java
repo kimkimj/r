@@ -9,6 +9,7 @@ import com.woowahan.recipe.repository.OrderCustomRepository;
 import com.woowahan.recipe.repository.OrderRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import static com.woowahan.recipe.exception.ErrorCode.*;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -32,22 +34,26 @@ public class OrderService {
 
     //= 비지니스 로직 시작 =//
     public OrderCreateResDto createOrder(String username, OrderCreateReqDto reqDto) {
-
         // 유저 확인
         UserEntity user = validateUser(username);
         // 상품 확인
+        log.info("reqDto.getId()");
         ItemEntity item = validateItem(reqDto.getItemId());
 
         // 배송정보 생성
         DeliveryEntity delivery = new DeliveryEntity();
         delivery.setAddress(user.getAddress());
         delivery.setDeliveryStatus(DeliveryStatus.READY);
+        log.info("delivery address={}", delivery.getAddress());
 
         // 주문 상품 생성
         OrderItemEntity orderItem = OrderItemEntity.createOrderItem(item, item.getItemPrice(), reqDto.getCount());
-
+        log.info("orderItem.getTotalPrice={}", orderItem.getTotalPrice());
+        log.info("orderItem.getCount={}", orderItem.getCount());
         // 주문 생성
-        OrderEntity order = OrderEntity.createOrder(user, delivery, orderItem);
+        OrderEntity order = OrderEntity.createOrder(user, delivery, orderItem, reqDto.getImp_uid());
+        log.info("order.getTotalPrice={}", order.getTotalPrice());
+        log.info("order.getTotalCounts={}", order.getTotalCounts());
 
         // 주문 저장
         orderRepository.save(order);
@@ -101,9 +107,9 @@ public class OrderService {
     }
 
     //= 비지니스 로직 종료 =//
-    public boolean checkOrderUser(Long orderId, String usesrName) {
+    public boolean checkOrderUser(Long orderId, String userName) {
         OrderEntity order = validateOrder(orderId);
-        UserEntity user = validateUser(usesrName);
+        UserEntity user = validateUser(userName);
 
         if (!StringUtils.equals(order.getUser().getUserName(), user.getUserName())) {
             return false;

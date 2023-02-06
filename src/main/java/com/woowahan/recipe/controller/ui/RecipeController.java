@@ -50,7 +50,7 @@ public class RecipeController {
     }
 
     @GetMapping("/update/{recipeId}")
-    public String updateForm(Model model,@PathVariable Long recipeId) {
+    public String updateForm(Model model, @PathVariable Long recipeId) {
         model.addAttribute("recipeUpdateReqDto", recipeService.findRecipe(recipeId));
         model.addAttribute("recipeId", recipeId);
         return "recipe/updateForm";
@@ -83,6 +83,13 @@ public class RecipeController {
         return "recipe/recipeDetailList";
     }
 
+    @GetMapping("/{recipeId}/likes")
+    public String pushLike(@PathVariable Long recipeId, Authentication authentication) {
+        String userName = authentication.getName();
+        recipeService.pushLikes(recipeId, userName);
+        return "redirect:/recipes/{recipeId}";
+    }
+
     @GetMapping("/list")
     public String list(Model model, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<RecipePageResDto> allRecipes = recipeService.findAllRecipes(pageable);
@@ -110,7 +117,7 @@ public class RecipeController {
     }
 
     @GetMapping("/likes/my")
-    public String myLikeRecipe(Model model, Authentication authentication, @PageableDefault(size = 20)Pageable pageable) {
+    public String myLikeRecipe(Model model, Authentication authentication, @PageableDefault(size = 20) Pageable pageable) {
         Page<RecipeFindResDto> myLikeRecipeList = findService.findMyLikeRecipe(authentication.getName(), pageable);
 
         int nowPage = myLikeRecipeList.getPageable().getPageNumber() + 1;
@@ -146,6 +153,7 @@ public class RecipeController {
 
     /**
      * 재료검색
+     *
      * @param keyword
      * @return
      */
@@ -163,6 +171,7 @@ public class RecipeController {
 
     /**
      * TODO : 2023-01-31 레시피 페이징 중복 코드 정리
+     *
      * @param model
      * @param allRecipes
      * @return
