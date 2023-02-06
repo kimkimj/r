@@ -34,7 +34,7 @@
     <h2>로그인</h2>
     <!--/*@thymesVar id="userLoginReqDto" type="com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto"*/-->
     <br>
-    <form role="form" th:action="@{/login}" th:object="${userLoginReqDto}" method="post">
+    <form role="form" th:action="@{/users/login}" th:object="${userLoginReqDto}" method="post">
         <div th:if="${#fields.hasGlobalErrors()}">
             <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${err}">글로벌 오류 메세지</p>
         </div>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: headerFragment"/>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .wrapper {
+        margin: auto;
+        width: 40%;
+    }
+
+    .button-container {
+        margin-top: 50px;
+        height: 50px;
+        text-align: center;
+    }
+
+    .button {
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div class="wrapper">
+    <div class="button-container">
+        <div class="button">
+            <button class="w-100 btn btn-secondary btn-lg"
+                    th:onclick="|location.href='@{/users/login}'|"
+                    type="button" >회원 로그인
+            </button>
+            <button class="w-100 btn btn-secondary btn-lg"
+                    th:onclick="|location.href='@{/seller/login}'|"
+                    type="button">판매자 로그인
+            </button>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footerFragment"/>
+</body>
+</html>
