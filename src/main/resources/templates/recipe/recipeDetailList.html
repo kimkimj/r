@@ -203,7 +203,7 @@
         <div style="text-align: center;">
             <p>이 레시피가 좋으면 좋아요를 눌러 마이페이지에서 따로 확인하실 수 있습니다.</p>
             <div>
-                <button class="btn btn-outline-success" type="button"
+                <button class="btn btn-outline-success" type="button" id="like-btn"
                         th:onclick="|location.href='@{/recipes/{recipeId}/likes (recipeId=${recipeId})}'|">좋아요💗
                 </button>
             </div>
@@ -289,12 +289,25 @@
             </table>
             <br>
         </div>
+        <br><br>
+        <div style="text-align: center;">
+            <button class="btn btn-outline-success" onclick="location.href='recipeList.html'" th:onclick="|location.href='@{/recipes/list}'|">목록가기</button>
+        </div>
     </div>
-    <br><br><br><br>
+    <br><br><br>
     <!-- footer -->
     <div th:replace="fragments/footer :: footerFragment"/>
     <br><br>
     <!-- 전체 틀 섹션 div 끝 태그 -->
 </div>
+<!--
+<script>
+    $(document).ready(function(){
+        $("#like-btn").click(function(){
+            if(alert("좋아요를 눌렀습니다. 한번 더 누를 경우 좋아요가 취소됩니다.");
+        });
+    });
+</script>
+-->
 </body>
 </html>

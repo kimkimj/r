@@ -96,11 +96,7 @@
                     <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
                         <h5>레시피 이미지</h5>
                         <hr>
-                        <!--
-                        <br>
-                        <img src="" class="img-fluid" alt="..." style="">
-                        <br><br>
-                        -->
+                        <!--<br><img src="" class="img-fluid" alt="..." style=""><br><br>-->
                         <!-- File input -->
                         <div class="input-group mb-3">
                             <input type="file" class="form-control" id="inputGroupFile02">
@@ -110,7 +106,7 @@
 
                     <!-- 재료 목록 -->
                     <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
-                        <h5>재료 목록</h5><hr>
+                        <h5>레시피 재료</h5><hr>
                         <!-- 선택한 재료들이 보이는 부분 -->
                         <ul id="item-list"></ul>
                         <!-- 재료 등록 버튼(modal), 등록한 재료 전체삭제 버튼 -->
@@ -241,9 +237,7 @@
         let itemList = document.querySelector("#item-list");
         itemList.innerHTML = "";
     }
-</script>
 
-<script>
     $(document).ready(function(){
         $("#submit-btn").click(function(){
             if($("#recipeTitle").val().length==0){ alert("제목을 입력해주세요."); setTimeout(function (){$("#recipeTitle").focus();}, 1); return false; }
