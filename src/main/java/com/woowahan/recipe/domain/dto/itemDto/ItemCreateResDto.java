@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class ItemCreateResDto {
 
     private Long id;
+    private String sellerName;
     private String itemName;
     private String message;
 
@@ -20,6 +21,7 @@ public class ItemCreateResDto {
         return ItemCreateResDto.builder()
                 .id(item.getId())
                 .itemName(item.getName())
+                .sellerName(item.getSeller().getSellerName())
                 .message("상품 등록 완료")
                 .build();
     }
