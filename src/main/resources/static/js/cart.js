@@ -1,5 +1,5 @@
 // 상품 수량 변경하기
-function count(type, idx)  {
+async function count(type, idx)  {
     const idElements = document.getElementsByClassName('individual_id_input');
     const cntElements = document.getElementsByClassName('item-cnt');
     const stockElements = document.getElementsByClassName('individual_stock_input');
@@ -51,9 +51,11 @@ function count(type, idx)  {
         console.log("장바구니 아이템 수정 기능 호출 완료");
     })
 
-    document.getElementsByClassName('form-check-input')[idx].value = price * item.cartItemCnt;
+    // document.getElementsByClassName('form-check-input')[idx].value = price * item.cartItemCnt;
+    document.getElementsByClassName('form-check-input')[idx].setAttribute('cnt', item.cartItemCnt);
+    document.getElementsByClassName('form-check-input')[idx].setAttribute('price', price);
 
-    getCheckPrice();
+    await getCheckPrice();
     document.getElementsByClassName('item-cnt')[idx].value = item.cartItemCnt;
     // 결과 출력
 }
@@ -97,8 +99,11 @@ function getCheckPrice() {
     let result = 0;
     console.log(typeof(result));
     selectElements.forEach((el) => {
-        console.log('el.value : ' + el.value);
-        result += parseInt(el.value);
+        console.log(el);
+        const cnt = parseInt(el.getAttribute('cnt'));
+        const price = parseInt(el.getAttribute('price'));
+
+        result += (cnt * price);
         console.log("총합 = " + result);
     });
 

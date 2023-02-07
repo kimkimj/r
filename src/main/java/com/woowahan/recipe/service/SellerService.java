@@ -1,14 +1,8 @@
 package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.UserRole;
-import com.woowahan.recipe.domain.dto.Response;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
 import com.woowahan.recipe.domain.dto.sellerDto.*;
-import com.woowahan.recipe.domain.dto.userDto.UserLoginResDto;
-import com.woowahan.recipe.domain.entity.RecipeEntity;
-import com.woowahan.recipe.domain.entity.ReviewEntity;
 import com.woowahan.recipe.domain.entity.SellerEntity;
-import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.SellerRepository;
@@ -53,9 +47,9 @@ public class SellerService {
                         throw new AppException(ErrorCode.DUPLICATED_EMAIL, ErrorCode.DUPLICATED_EMAIL.getMessage());
                 });
 
-        SellerEntity seller = sellerRepository.save(sellerJoinRequest.toEntity(
-                encoder.encode(sellerJoinRequest.getPassword())
-        ));
+        SellerEntity seller = sellerJoinRequest.toEntity(encoder.encode(sellerJoinRequest.getPassword()));
+        seller.setUserRole(UserRole.SELLER);
+        seller = sellerRepository.save(seller);
 
         return new SellerJoinResponse(seller.getSellerName(),
                 String.format("%s님의 회원가입이 완료되었습니다.", seller.getSellerName()));
@@ -83,23 +77,19 @@ public class SellerService {
         // seller가 존재하는지 확인
         SellerEntity seller = validateSeller(sellerName);
 
+        /*
         // 본인이거나 ADMIN이 아니면 에러
-        if (!seller.getSellerName().equals(seller.getSellerName()) && seller.getUserRole() != UserRole.ADMIN) {
+        if (!sellerName.equals(seller.getSellerName()) && seller.getUserRole() != UserRole.ADMIN) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
-        }
+        }*/
 
         // request로 받은 sellerName과 저장되어 있는 sellerName과 다르다면 중복체크를 한다
-        if (!seller.getSellerName().equals(sellerUpdateRequest.getSellerName())) {
+        if (!sellerUpdateRequest.getSellerName().equals(seller.getSellerName())) {
             sellerRepository.findBySellerName(sellerUpdateRequest.getSellerName())
                     .ifPresent(sellerEntity -> {
                         throw new AppException(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage());
                     });
         }
-
-        // password encoding 하기
-        String password = sellerUpdateRequest.getPassword();
-        password = encoder.encode(sellerUpdateRequest.getPassword());
-
 
         // request로 받은 이메일이 저장되어 있는 이메일과 다르다면 중복체크를 한다
         if (!seller.getEmail().equals(sellerUpdateRequest.getEmail())) {
@@ -110,13 +100,26 @@ public class SellerService {
         }
 
 
-        seller.updateUser(sellerUpdateRequest.getSellerName(), password, sellerUpdateRequest.getCompanyName(),
-                sellerUpdateRequest.getAddress(),sellerUpdateRequest.getEmail(), sellerUpdateRequest.getPhoneNum(), sellerUpdateRequest.getBusinessRegNum());
-
+        seller.updateUser(sellerUpdateRequest.getSellerName(), sellerUpdateRequest.getCompanyName(),
+                sellerUpdateRequest.getAddress(), sellerUpdateRequest.getEmail(), sellerUpdateRequest.getPhoneNum());
         sellerRepository.save(seller);
 
         return SellerResponse.toSellerResponse(seller);
     }
+
+    public SellerResponse updatePassword(String sellerName, SellerPasswordUpdateRequest request) {
+        SellerEntity seller = validateSeller(sellerName);
+
+        // password encoding 하기
+        String password = request.getPassword();
+        password = encoder.encode(password);
+
+        seller.updatePassword(password);
+        sellerRepository.save(seller);
+
+        return SellerResponse.toSellerResponse(seller);
+    }
+
 
     public SellerDeleteResponse deleteSeller(String sellerName) {
         SellerEntity seller = validateSeller(sellerName);

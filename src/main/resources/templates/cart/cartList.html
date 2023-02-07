@@ -37,7 +37,7 @@
             <th:block th:unless="${#lists.size(cartList) == 0}">
                 <tr class="cartList" th:each="item : ${cartList}">
                     <td>
-                        <input class="form-check-input" name="item" type="checkbox" id="flexCheckDefault" th:idx="${itemStat.index}" checked th:value="${item.price}" onclick="getCheckPrice()">
+                        <input class="form-check-input" name="item" type="checkbox" id="flexCheckDefault" th:idx="${itemStat.index}" checked th:cnt="${item.cnt}" th:price="${item.price}" onclick="getCheckPrice()">
                     </td>
                     <td class=".individual_image_input">
                         <div class="border d-flex justify-content-center align-items-center">
@@ -48,9 +48,9 @@
                     <input type="hidden" class="individual_id_input" th:value="${item.id}">상품 아이디</input>
                     <input type="hidden" class="individual_stock_input" th:value="${item.stock}">상품 재고</input>
                     <td class="individual_cnt_input d-flex flex-row align-items-center">
-                        <button type="button" class="btn btn-jelly cnt-option-btn minus" th:idx="${itemStat.index}" th:onclick="count('minus', this.getAttribute('idx'))">-</button>
+                        <button type="button" class="btn btn-jelly cnt-option-btn minus" th:idx="${itemStat.index}" onclick="count('minus', this.getAttribute('idx'))">-</button>
                         <input type="number" class="item-cnt m-2 text-center" min="1" width="50" th:idx="${itemStat.index}" th:value="${item.cnt}" readonly />
-                        <button type="button" class="btn btn-jelly cnt-option-btn plus" th:idx="${itemStat.index}" th:onclick="count('plus', this.getAttribute('idx'))">+</button>
+                        <button type="button" class="btn btn-jelly cnt-option-btn plus" th:idx="${itemStat.index}" onclick="count('plus', this.getAttribute('idx'))">+</button>
                     </td>
                     <td class="individual_price_input" th:idx="${itemStat.index}" th:text="${item.price}">상품 가격</td>
                     <td>
