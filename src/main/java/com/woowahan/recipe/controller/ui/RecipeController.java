@@ -1,12 +1,15 @@
 package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.Response;
+import com.woowahan.recipe.domain.dto.cartDto.CartItemListReqDto;
+import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.itemDto.ItemListForRecipeResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateResponse;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewUpdateResponse;
+import com.woowahan.recipe.service.CartService;
 import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.RecipeService;
 import com.woowahan.recipe.service.ReviewService;
@@ -39,6 +42,7 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final FindService findService;
     private final ReviewService reviewService;
+    private final CartService cartService;
 
     @GetMapping("/create")
     public String createForm(Model model) {
@@ -87,6 +91,7 @@ public class RecipeController {
         recipeService.updateView(recipeId);
         RecipeFindResDto recipe = recipeService.findRecipe(recipeId);
         model.addAttribute("reviewCreateRequest", new ReviewCreateRequest());
+        model.addAttribute("cartItemListReqDto", new CartItemListReqDto());
         model.addAttribute("recipeId", recipeId);
         model.addAttribute("recipe", recipe);
         return "recipe/recipeDetailList";
@@ -217,6 +222,9 @@ public class RecipeController {
                                @Valid @ModelAttribute ReviewCreateRequest reviewCreateRequest,
                                BindingResult result,
                                Authentication authentication) {
+        if (result.hasErrors()) {
+            return "recipe/createForm";
+        }
         String userName = authentication.getName();
         reviewService.updateReview(recipeId, reviewId, reviewCreateRequest, userName);
         return "redirect:/recipes/{recipeId}";
@@ -226,6 +234,14 @@ public class RecipeController {
     public String deleteReview(@PathVariable Long recipeId, @PathVariable Long reviewId,
                                Authentication authentication) {
         reviewService.deleteReview(recipeId, reviewId, authentication.getName());
+        return "redirect:/recipes/{recipeId}";
+    }
+
+    @PostMapping("/cart/{recipeId}")
+    public String addCartItemList(@PathVariable Long recipeId, @ModelAttribute CartItemListReqDto cartItemListReqDto,
+                              Authentication authentication) {
+        cartService.addCartItemList(cartItemListReqDto, authentication.getName());
+
         return "redirect:/recipes/{recipeId}";
     }
 }
