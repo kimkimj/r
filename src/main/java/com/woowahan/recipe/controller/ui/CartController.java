@@ -24,10 +24,18 @@ public class CartController {
 
     private final CartService cartService;
 
+    /*@GetMapping("/order")
+    public String orderForm(Model model, @ModelAttribute CartOrderDto cartOrderDto, Authentication authentication) {
+        log.info("cartOrderDtoList={}", cartOrderDto.getCartOrderDtoList().toString());
+        UserResponse userResponse = findService.findUserName(authentication.getName());
+        model.addAttribute("user", userResponse);
+        model.addAttribute("cartOrderList", cartOrderDto.getCartOrderDtoList());
+        return "cart/orderForm";
+    }*/
+
     @GetMapping
     public String cartItemList(Model model, @PageableDefault(sort = "itemName", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
         log.debug("cartItemList() 실행");
-        String userName = "user";
         Page<CartItemResponse> cartList = cartService.findCartItemList(pageable, authentication.getName());
 
         // pagination

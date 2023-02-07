@@ -61,7 +61,7 @@ class OrderServiceTest {
                 .count(4)
                 .build();
 
-        OrderItemEntity givenOrderItem = OrderItemEntity.createOrderItem(givenItem, givenItem.getItemPrice(), reqDto.getCount());
+        OrderItemEntity givenOrderItem = OrderItemEntity.createOrderItem(givenItem, reqDto.getCount());
         OrderEntity givenOrder = OrderEntity.createOrder(givenUser, delivery, givenOrderItem, "imp_uid");
         when(userRepository.findByUserName(givenUser.getUserName())).thenReturn(Optional.of(givenUser));
         when(itemRepository.findById(givenItem.getId())).thenReturn(Optional.of(givenItem));
@@ -86,7 +86,7 @@ class OrderServiceTest {
                 .build();
         // when
         NotEnoughStockException notEnoughStockException = assertThrows(NotEnoughStockException.class, () -> {
-            OrderItemEntity.createOrderItem(givenItem, givenItem.getItemPrice(), reqDto.getCount());
+            OrderItemEntity.createOrderItem(givenItem, reqDto.getCount());
         });
         // then
         assertEquals(ErrorCode.NOT_ENOUGH_STOCK.getMessage(), notEnoughStockException.getMessage());

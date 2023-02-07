@@ -103,7 +103,17 @@
         <br><br>
         <h5><b>주문 정보</b></h5>
         <div class="content">
-            <div id="itemName">결제 예정 상품: <span th:text="${item.itemName}"></span></div>
+            <form th:object="${cartOrderList}">
+                <table class="table">
+                    <thead>
+                        <tr>상품 이름</tr>
+                    </thead>
+                    <tbody>
+                    <!--<tr th:each="item : ${cartOrderList}"></tr>
+                    <td th:text="${item.}"></td>-->
+                    </tbody>
+                </table>
+            </form>
             <div>결제 예정 금액: <span id="cost" th:text="${totalCost}"></span>원</div>
         </div>
     </div>
@@ -114,16 +124,16 @@
                 // 결제 금액, 구매자의 이름, 이메일
                 function requestPay() {
                     const data = {
-                        itemName: [[${item.itemName}]],
+                        // itemName: [[${item.itemName}]],
                         orderNum: createOrderNum(),
                         totalCost: document.getElementById('cost').innerText,
                         userName: [[${userResponse.name}]],
                         phoneNum: [[${userResponse.phoneNum}]],
                         email: [[${userResponse.email}]],
                         address: [[${userResponse.address}]],
-                        itemId: [[${item.itemId}]],
+                        // itemId: [[${item.itemId}]],
                     }
-                    console.log(data.itemName);
+                    // console.log(data.itemName);
                     console.log(data.orderNum);
                     console.log(data.totalCost);
                     console.log([[${userResponse.name}]]);
