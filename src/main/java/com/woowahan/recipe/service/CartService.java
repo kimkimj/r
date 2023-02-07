@@ -59,7 +59,7 @@ public class CartService {
 
         CartEntity cart = validateCart(user);
 
-        CartItemEntity cartItem = validateCartItem(cart, cartItemUpdateReq.getItemId()); //cart에 item이 들어있는지 검증
+        CartItemEntity cartItem = validateCartItem(cart, cartItemUpdateReq.getCartItemId()); //cart에 cartItem이 들어있는지 검증
 
         if(cartItem.getItem().getItemStock() < cartItemUpdateReq.getCartItemCnt()) {
             throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
@@ -72,7 +72,7 @@ public class CartService {
     public void addCartItem(CartItemReq cartItemUpdateReq, String userName) {
         UserEntity user = validateUser(userName); //user 존재 검증
         CartEntity cart = validateCart(user); //user의 cart가 있는지, 존재 검증 -> 없으면 카트 생성
-        ItemEntity item = validateItem(cartItemUpdateReq.getItemId()); //카트에 넣으려는 아이템이 존재하는지 확인
+        ItemEntity item = validateItem(cartItemUpdateReq.getCartItemId()); //카트에 넣으려는 아이템이 존재하는지 확인
 
 
         Optional<CartItemEntity> cartItem = cartItemRepository.findByCartAndItemId(cart, item.getId());
@@ -150,18 +150,10 @@ public class CartService {
 
     private CartEntity validateCart(UserEntity user) {
         return cartRepository.findByUser(user).orElseGet(() -> cartRepository.save(CartEntity.createCart(user)));
-
-        /*Optional<CartEntity> optCart = cartRepository.findByUser(user);
-
-        if(cartRepository.findByUser(user).isPresent()) {
-            return optCart.get();
-        } else {
-            return cartRepository.save(CartEntity.builder().user(user).build());
-        }*/
     }
 
-    private CartItemEntity validateCartItem(CartEntity cart, Long itemId) {
-        return cartItemRepository.findByCartAndItemId(cart, itemId)
+    private CartItemEntity validateCartItem(CartEntity cart, Long cartItemId) {
+        return cartItemRepository.findByCartAndId(cart, cartItemId)
                 .orElseThrow(() -> new AppException(ErrorCode.CART_ITEM_NOT_FOUND, ErrorCode.CART_ITEM_NOT_FOUND.getMessage()));
     }
 

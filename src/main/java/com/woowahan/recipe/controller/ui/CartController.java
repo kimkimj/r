@@ -1,6 +1,5 @@
 package com.woowahan.recipe.controller.ui;
 
-import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
 import com.woowahan.recipe.service.CartService;
 import lombok.RequiredArgsConstructor;
@@ -9,11 +8,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @Slf4j
@@ -51,10 +52,4 @@ public class CartController {
         return "redirect:/carts";
     }
 
-    @PatchMapping("/update/{itemId}")
-    public ResponseEntity<Integer> updateCartItem(@PathVariable Long itemId, CartItemReq cartItemReq, @PageableDefault(sort = "itemName", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
-        log.debug("updateCartItem() 실행");
-        Integer cnt = cartService.updateCartItem(cartItemReq, authentication.getName());
-        return ResponseEntity.ok(cnt);
-    }
 }

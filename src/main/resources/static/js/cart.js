@@ -1,40 +1,61 @@
 // 상품 수량 변경하기
 function count(type, idx)  {
-    console.log('count() 실행');
-    console.log(idx);
-    // 장바구니에 담긴 수량
-    let number = parseInt(document.getElementsByClassName('item-cnt')[idx].value);
-    // 상품 재고
-    let stock = parseInt(document.getElementsByClassName('individual_stock_input')[idx].value);
-    // 상품 가격
-    let price = parseInt(document.getElementsByClassName('individual_price_input')[idx].innerText);
-    console.log('재고 = ' + stock);
+    const idElements = document.getElementsByClassName('individual_id_input');
+    const cntElements = document.getElementsByClassName('item-cnt');
+    const stockElements = document.getElementsByClassName('individual_stock_input');
+    const priceElements = document.getElementsByClassName('individual_price_input');
+
+    const item = {
+        cartItemId: parseInt(idElements[idx].value), // 장바구니에 담긴 아이템 id ( != 상품 아이디)
+        cartItemCnt: parseInt(cntElements[idx].value)  // 장바구니에 담은 수량 (변경한 수량)
+    }
+    const stock = parseInt(stockElements[idx].value);
+    const price = parseInt(priceElements[idx].innerText);
+
     // 더하기/빼기
     if(type === 'plus') {
-        number = number + 1;
-        if(number > 10) {
+        if(item.cartItemCnt >= 10) {
             alert("수량은 10개 이하이어야 합니다.");
-            document.getElementsByClassName('item-cnt')[idx].value = 10;
+            item.cartItemCnt = 10;
             return;
-        }  else if (number > stock) {
+        }  else if (item.cartItemCnt >= stock) {
             alert("구매할 수 있는 개수를 초과하였습니다.");
             return;
         }
+        item.cartItemCnt += 1;
     }else if(type === 'minus')  {
-        number = number - 1;
-        if(number <=0) {
+        if(item.cartItemCnt <= 1) {
             alert("수량은 1개 이상이어야 합니다.");
-            document.getElementsByClassName('item-cnt')[idx].value = 1;
+            item.cartItemCnt = 1;
             return;
         }
+        item.cartItemCnt -= 1;
     }
 
-    console.log("현재 담은 수량 = " + number);
-    document.getElementsByClassName('form-check-input')[idx].value = price * number;
+    console.log(item);
+    console.log(item.cartItemId);
+    console.log(JSON.stringify(item));
+    $.ajax({
+        url: `/api/v1/carts`,
+        method: "PUT",
+        dataType: "json",
+        contentType: 'application/json',
+        data: JSON.stringify(item)
+    }).done((data) => {
+        // console.log(data);
+        alert(data.result);
+    }).fail((error) => {
+        // console.log(error);
+        alert(error.result);
+    }).always(() => {
+        console.log("장바구니 아이템 수정 기능 호출 완료");
+    })
+
+    document.getElementsByClassName('form-check-input')[idx].value = price * item.cartItemCnt;
 
     getCheckPrice();
+    document.getElementsByClassName('item-cnt')[idx].value = item.cartItemCnt;
     // 결과 출력
-    document.getElementsByClassName('item-cnt')[idx].value = number;
 }
 
 function deleteItem(idx) {
@@ -74,10 +95,11 @@ function getCheckPrice() {
     const selectElements = document.querySelectorAll(checkValue);
 
     let result = 0;
+    console.log(typeof(result));
     selectElements.forEach((el) => {
         console.log('el.value : ' + el.value);
         result += parseInt(el.value);
-        console.log(result);
+        console.log("총합 = " + result);
     });
 
     let deliveryPrice = 3000;
