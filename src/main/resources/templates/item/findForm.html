@@ -63,16 +63,16 @@
       </div>
       <form role = "form" th:action="@{/items/cart}" th:object="${cartItemReq}" method="post">
         <div class="back-ground">
-        <input type="hidden" th:field="${cartItemReq.itemId}"/>
+        <input type="hidden" th:field="${cartItemReq.cartItemCnt}"/>
 
         <!--장바구니 수량 버튼-->
           <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-            <input style="width: 40px" type='button' th:disabled="${cartItemCnt == 0} ? 'disabled'" onclick='count("minus")' value="-" />
+            <input style="width: 40px" type='button' th:disabled="${cartItemReq.cartItemCnt == 0} ? 'disabled'" onclick='count("minus")' value="-" />
 <!--            <div style="width: 100px; border:1px solid; text-align: center; background-color: white" id='result'>0</div>-->
             <input style="width: 100px; border:1px solid; text-align: center; background-color: white" id='cartItemCnt'
                    name="cartItemCnt" th:value="${cartItemReq.cartItemCnt}"  />
 <!--            th:field="*{cartItemReq.cartItemCnt}"-->
-            <input style="width: 40px" type='button' th:disabled="${cartItemCnt == 0} ? 'disabled'" onclick='count("plus")' value="+" />
+            <input style="width: 40px" type='button' th:disabled="${cartItemReq.cartItemCnt == 10} ? 'disabled'" onclick='count("plus")' value="+" />
           </div>
 
           <div style="margin-right: 30px; float: right" th:text="원">총 합계 금액</div>

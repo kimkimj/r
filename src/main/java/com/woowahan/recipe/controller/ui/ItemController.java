@@ -73,7 +73,7 @@ public class ItemController {
         model.addAttribute("cartItemReq", cartItemReq);
         cartService.addCartItem(cartItemReq, authentication.getName());
 
-        return "redirect:/items/"+cartItemReq.getItemId(); //상품상세보기페이지
+        return "redirect:/items/"+cartItemReq.getCartItemId(); //상품상세보기페이지
     }
 
 //    수량 선택후 장바구니버튼을 누르면 수량을 -> 저장
