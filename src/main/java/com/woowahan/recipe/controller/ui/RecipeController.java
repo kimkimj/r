@@ -1,14 +1,9 @@
 package com.woowahan.recipe.controller.ui;
 
-import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemListReqDto;
-import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.itemDto.ItemListForRecipeResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateResponse;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewUpdateResponse;
 import com.woowahan.recipe.service.CartService;
 import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.RecipeService;
@@ -88,6 +83,7 @@ public class RecipeController {
 
     @GetMapping("/{recipeId}")
     public String findRecipe(@PathVariable Long recipeId, Model model) {
+        log.info("삭제 시도");
         recipeService.updateView(recipeId);
         RecipeFindResDto recipe = recipeService.findRecipe(recipeId);
         model.addAttribute("reviewCreateRequest", new ReviewCreateRequest());

@@ -7,6 +7,7 @@ import com.woowahan.recipe.domain.entity.ItemEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
+import com.woowahan.recipe.fixture.CartItemEntityFixture;
 import com.woowahan.recipe.fixture.ItemEntityFixture;
 import com.woowahan.recipe.fixture.TestInfoFixture;
 import com.woowahan.recipe.fixture.UserEntityFixture;
@@ -36,6 +37,7 @@ class CartServiceTest {
     private final String userName = TestInfoFixture.get().getUserName();
     private final String password = TestInfoFixture.get().getPassword();
     private final ItemEntity item = ItemEntityFixture.get();
+    private final CartItemEntity cartItem = CartItemEntityFixture.get(userName, password);
     private CartItemReq cartItemReq;
 
 
@@ -43,7 +45,7 @@ class CartServiceTest {
     void setUp() {
         cartService = new CartService(cartRepository, cartItemRepository, userRepository, itemRepository, orderService);
         cartItemReq = CartItemReq.builder()
-                                    .itemId(item.getId())
+                                    .cartItemId(item.getId())
                                     .cartItemCnt(3)
                                     .build();
     }
@@ -106,7 +108,7 @@ class CartServiceTest {
             UserEntity user = mock(UserEntity.class);
             CartEntity cart = mock(CartEntity.class);
             cartItemReq = CartItemReq.builder()
-                                            .itemId(item.getId())
+                                            .cartItemId(item.getId())
                                             .cartItemCnt(10)
                                             .build();
 
@@ -166,17 +168,12 @@ class CartServiceTest {
         void notEnoughStock() {
             UserEntity user = mock(UserEntity.class);
             CartEntity cart = mock(CartEntity.class);
-            CartItemEntity cartItem = CartItemEntity.builder()
-                                                    .id(1L)
-                                                    .cartItemCnt(10)
-                                                    .item(item)
-                                                    .build();
 
             when(userRepository.findByUserName(userName)).thenReturn(Optional.of(user));
             when(cartRepository.findByUser(user)).thenReturn(Optional.of(cart));
-            when(cartItemRepository.findByCartAndItemId(cart, cartItem.getItem().getId())).thenReturn(Optional.of(cartItem));
+            when(cartItemRepository.findByCartAndId(cart, cartItemReq.getCartItemId())).thenReturn(Optional.of(cartItem));
 
-            assertTrue(item.getItemStock() < cartItem.getCartItemCnt());
+            assertTrue(cartItem.getItem().getItemStock() < cartItem.getCartItemCnt());
             try {
                 cartService.updateCartItem(cartItemReq, userName);
             } catch (AppException e) {
@@ -187,17 +184,16 @@ class CartServiceTest {
         @Test
         @DisplayName("장바구니 수량 변경 성공")
         void updateItemCnt() {
-            Long itemId = TestInfoFixture.get().getItemId();
-            Integer itemCnt = 10;
             UserEntity user = mock(UserEntity.class);
             CartEntity cart = mock(CartEntity.class);
 
             when(userRepository.findByUserName(userName)).thenReturn(Optional.of(user));
-            when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
             when(cartRepository.findByUser(user)).thenReturn(Optional.of(cart));
+            when(cartItemRepository.findByCartAndId(cart, cartItemReq.getCartItemId())).thenReturn(Optional.of(cartItem));
 
-            cartService = spy(cartService);
-            doNothing().when(cartService).updateCartItem(cartItemReq, userName);
+            Integer cnt = cartService.updateCartItem(cartItemReq, userName);
+
+            assertEquals(cartItemReq.getCartItemCnt(), cnt);
         }
     }
 

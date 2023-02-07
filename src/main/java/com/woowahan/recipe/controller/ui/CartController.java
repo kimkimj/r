@@ -54,13 +54,10 @@ public class CartController {
     }
 
     @PostMapping("/{itemId}")
-    public String deleteCartItem(@PathVariable Long itemId, Model model, @PageableDefault(sort = "itemName", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+    public String deleteCartItem(@PathVariable Long itemId, Authentication authentication) {
         log.info("itemId : {}", itemId);
         cartService.deleteCartItem(itemId, authentication.getName());
-        Page<CartItemResponse> cartList = cartService.findCartItemList(pageable, authentication.getName());
-
-        model.addAttribute("cartList", cartList);
-        model.addAttribute("message", "장바구니에서 아이템이 삭제되었습니다.");
-        return "/cart/cartList";
+        return "redirect:/carts";
     }
+
 }
