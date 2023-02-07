@@ -18,6 +18,7 @@ public class ItemDetailResDto {
     private String itemName;
     private Integer itemPrice;
     private Integer itemStock;
+    private String sellerName;
     private String message;
 
     public static ItemDetailResDto from(ItemEntity item) {
@@ -26,6 +27,7 @@ public class ItemDetailResDto {
                 .itemImagePath(item.getItemImagePath())
                 .itemName(item.getName())
                 .itemPrice(item.getItemPrice())
+                .sellerName(item.getSeller().getSellerName())
                 .itemStock(item.getItemStock())
                 .build();
     }

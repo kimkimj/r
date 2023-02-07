@@ -128,8 +128,7 @@ public class UserService {
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
 
         // ID(userName)가 없는 경우
-        userRepository.findByUserName(userName)
-                .orElseThrow(() -> new AppException(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage()));
+        validateUser(userName);
 
         // TODO: 2023-01-24 생각해봐야 할 사항 - 애초에 ID는 수정이 되면 안된다.
         // 회원가입과 동일하게 정보 수정시에도 ID(userName)이 중복되지 않게 처리
