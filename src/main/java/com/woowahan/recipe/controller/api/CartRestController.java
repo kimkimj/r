@@ -49,8 +49,8 @@ public class CartRestController {
     @PutMapping
     public Response<String> updateCartItem (@RequestBody CartItemReq cartItemUpdateReq, Authentication authentication) {
         String userName = authentication.getName();
-        cartService.updateCartItem(cartItemUpdateReq, userName);
-        return Response.success("수량이 변경되었습니다.");
+        Integer cnt = cartService.updateCartItem(cartItemUpdateReq, userName);
+        return Response.success(cnt + "개로 수량이 변경되었습니다.");
     }
 
     @DeleteMapping("/{itemId}")

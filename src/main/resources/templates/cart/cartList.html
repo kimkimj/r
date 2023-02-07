@@ -35,48 +35,25 @@
                 <div>현재 장바구니에 등록된 상품이 없습니다.</div>
             </th:block>
             <th:block th:unless="${#lists.size(cartList) == 0}">
-                <tr class="cartList" th:each="item, i : ${cartList}">
+                <tr class="cartList" th:each="item : ${cartList}">
                     <td>
-                        <input class="form-check-input" name="item" type="checkbox" id="flexCheckDefault" checked th:value="${item.cnt} * ${item.price}" onclick="getCheckPrice()">
+                        <input class="form-check-input idx" name="item" type="checkbox" id="flexCheckDefault" th:idx="${itemStat.index}" checked th:value="${item.cnt} * ${item.price}" onclick="getCheckPrice()">
                     </td>
                     <td class=".individual_image_input">
                         <div class="border d-flex justify-content-center align-items-center">
                             <img src="..." class="rounded" th:alt="|${{item.name}} 이미지 준비중|">
                         </div>
                     </td>
-                    <td class="individual_name_input text-truncate" th:text="${item.name}">상품 이름</td>
+                    <td class="individual_name_input text-truncate" th:idx="${itemStat.index}" th:text="${item.name}">상품 이름</td>
                     <input type="hidden" class="individual_stock_input" th:value="${item.stock}">상품 재고</input>
                     <td class="individual_cnt_input d-flex flex-row align-items-center">
-                        <button type="button" class="btn btn-jelly cnt-option-btn" th:onclick="'javascript:count(' + 'minus' + ',' + ${i.index} + ')'">-</button>
-                        <input type="number" class="item-cnt m-2 text-center" th:class="item-cnt" min="1" width="50" th:value="${item.cnt}" readonly />
-                        <button type="button" class="btn btn-jelly cnt-option-btn" th:onclick="'javascript:count(' + 'plus' + ',' + ${i.index} + ')'">+</button>
+                        <button type="button" class="btn btn-jelly cnt-option-btn minus" th:idx="${itemStat.index}" th:onclick="count('minus', this.getAttribute('idx'))">-</button>
+                        <input type="number" class="item-cnt m-2 text-center" min="1" width="50" th:idx="${itemStat.index}" th:value="${item.cnt}" readonly />
+                        <button type="button" class="btn btn-jelly cnt-option-btn plus" th:idx="${itemStat.index}" th:onclick="count('plus', this.getAttribute('idx'))">+</button>
                     </td>
-                    <td class="individual_totalPrice_input" th:text="${item.price}">상품 가격</td>
+                    <td class="individual_price_input" th:idx="${itemStat.index}" th:text="${item.price}">상품 가격</td>
                     <td>
-                        <button type="button" class="btn btn-danger" onclick="deleteItem()">삭제</button>
-                        <th:block layout:fragment="script">
-                            <script type="text/javascript" th:inline="javascript">
-                                /*<![CDATA[*/
-                                function deleteItem() {
-                                    const name = [[${item.name}]];
-                                    console.log(name);
-                                     let confirm_message = confirm(name + "을(를) 정말 삭제하시겠습니까?");
-
-                                     if(confirm_message) {
-                                         const formHtml = `
-                                             <form id="deleteForm" action="/carts/${id}" method="post">
-                                                 <input type="hidden" id="id" name="id" value="${id}" />
-                                             </form>
-                                             `;
-                                         const doc = new DOMParser().parseFromString(formHtml, 'text/html');
-                                         const form = doc.body.firstChild;
-                                         document.body.append(form);
-                                         document.getElementById('deleteForm').submit();
-                                     }
-                                }
-                                /*]]>*/
-                            </script>
-                        </th:block>
+                        <button type="button" class="btn btn-danger delete-btn" th:idx="${itemStat.index}" th:value="${item.id}" th:onclick="deleteItem(this.getAttribute('idx'))">삭제</button>
                     </td>
                 </tr>
             </th:block>
@@ -102,64 +79,6 @@
         </div>
     </div>
 </div>
-<th:block layout:fragment="script">
-    <script type="text/javascript" th:inline="javascript">
-
-        /*function writeIndexedDB(itemList) {
-            console.log('writeIndexedDB() 실행');
-            // IndexedDB 지원여부 확인
-            if (!window.indexedDB) {
-                window.alert("해당 브라우저는 IndexedDB를 지원하지 않습니다.");
-            } else {
-                const request = window.indexedDB.open('myCartDB');
-
-                request.onerror = (event) => {
-                    console.log(event);
-                    alert('failed');
-                }
-                request.onupgradeneeded = (event) => {
-                    var db = this.target.result;
-                }
-                request.onsuccess = (event) => {
-                    console.log(event);
-                    var db = this.result;
-                    console.log('db : ' + db);
-
-                    // itemList 객체 저장소에 읽기&쓰기 권한으로 transaction 생성
-                    const transaction = db.transaction(['itemList'], 'readwrite');
-                    console.log('db : ' + db);
-
-                    // 완료, 실패 이벤트 처리
-                    transaction.oncomplete = (event) => {
-                        console.log('success = ' + event);
-                    }
-
-                    transaction.onerror = (event) => {
-                        console.log('fail = ' + event);
-                    }
-
-                    // transaction
-                    const objectStore = transaction.objectStore('itemList') ;
-                    for (const item of itemList) {
-                        const request = objectStore.add(item);
-                        request.onsuccess = (event) => {
-                            console.log(event.target.result);
-                        }
-                    }
-                }
-            }
-        }*/
-
-    /*<![CDATA[*/
-        $(document).ready(function() {
-            var itemList = [[ ${cartList} ]].content;
-            console.log(itemList);
-            // writeIndexedDB(itemList);  // indexedDB 적용 보류
-            getCheckPrice();
-        })
-        /*]]>*/
-    </script>
-</th:block>
 </body>
 
 </html>

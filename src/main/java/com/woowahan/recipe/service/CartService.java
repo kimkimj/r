@@ -54,7 +54,7 @@ public class CartService {
     }
 
 
-    public void updateCartItem(CartItemReq cartItemUpdateReq, String userName) {
+    public Integer updateCartItem(CartItemReq cartItemUpdateReq, String userName) {
         UserEntity user = validateUser(userName);
 
         CartEntity cart = validateCart(user);
@@ -66,6 +66,7 @@ public class CartService {
         }
 
         cartItem.updateCartItemCnt(cartItemUpdateReq.getCartItemCnt()); //요청받은 아이템수를 db에 저장
+        return cartItem.getCartItemCnt();
     }
 
     public void addCartItem(CartItemReq cartItemUpdateReq, String userName) {
