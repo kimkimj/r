@@ -40,9 +40,10 @@
   <div class="wrapper">
     <div class="container">
       <div class="container_etc mt-5" style="width: 460px">
-        <h2>판매자 정보 수정</h2>
+        <h2>판매자 정보</h2>
         <br>
-        <form role="form" th:action="@{/seller/my/update}" th:object="${seller}" method="get">
+
+        <form role="form" th:object="${seller}" method="get">
           <div class="mb-3">
             <table>
               <tr>
@@ -66,19 +67,16 @@
                 <td>[[${seller.phoneNum}]]</td>
               </tr>
               <tr>
-                <td>비밀번호</td>
-                <td><a href="/seller/my/password">비밀번호 변경하기</a></td>
+                <td>사업자등록번호</td>
+                <td>[[${seller.businessRegNum}]]</td>
               </tr>
-
             </table>
           </div>
           <div class="button-container">
             <div class="button">
-              <button type="submit" class="btn btn-outline-primary">판매자 정보 수정하기</button>
+              <button type="button" th:onclick="|location.href='@{/seller/my/update}'|" class="btn btn-outline-primary">판매자 정보 수정하기</button>
             </div>
           </div>
-        </form>
-
       </div>
     </div>
   </div>
