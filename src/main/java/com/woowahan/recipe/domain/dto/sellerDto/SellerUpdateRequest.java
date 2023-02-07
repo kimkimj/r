@@ -17,21 +17,10 @@ import javax.validation.constraints.Size;
 public class SellerUpdateRequest {
 
     private String sellerName;
-    private String password;
     private String companyName;
     private String address;
     private String email;
     private String phoneNum;
     private String businessRegNum;
 
-    public SellerEntity toEntity(String encodedPassword) {
-        return SellerEntity.builder()
-                .sellerName(sellerName)
-                .password(encodedPassword)
-                .companyName(companyName)
-                .email(email)
-                .phoneNum(phoneNum)
-                .businessRegNum(businessRegNum)
-                .build();
-    }
 }

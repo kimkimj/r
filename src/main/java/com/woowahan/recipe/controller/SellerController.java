@@ -1,9 +1,7 @@
 package com.woowahan.recipe.controller;
 
-import com.woowahan.recipe.domain.dto.sellerDto.SellerJoinRequest;
-import com.woowahan.recipe.domain.dto.sellerDto.SellerLoginRequest;
-import com.woowahan.recipe.domain.dto.sellerDto.SellerResponse;
-import com.woowahan.recipe.domain.dto.sellerDto.SellerUpdateRequest;
+import com.woowahan.recipe.domain.dto.sellerDto.*;
+import com.woowahan.recipe.domain.dto.userDto.UserPasswordReqDto;
 import com.woowahan.recipe.domain.dto.userDto.UserResponse;
 import com.woowahan.recipe.service.SellerService;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +32,10 @@ public class SellerController {
     }
 
     @PostMapping("/seller/login")
-    public String login(Model model, HttpServletRequest httpServletRequest, @Valid @ModelAttribute SellerLoginRequest sellerLoginRequest) {
+    public String login(Model model, HttpServletRequest httpServletRequest,
+                        @Valid @ModelAttribute SellerLoginRequest sellerLoginRequest) {
 
-        // 새션 넣기
+        // 세션 넣기
         httpServletRequest.getSession().invalidate();
         HttpSession session = httpServletRequest.getSession(true);
 
@@ -70,9 +69,6 @@ public class SellerController {
         return "redirect:/";
     }
 
-
-
-
     // 마이 페이지
     @GetMapping("/seller/my")
     public String myPage(Model model, Authentication authentication) {
@@ -91,11 +87,26 @@ public class SellerController {
     }
 
     @PostMapping("/seller/my/update")
-    public String update(Model model, Authentication authentication, @ModelAttribute SellerUpdateRequest request) {
+    public String update(Model model, Authentication authentication, SellerUpdateRequest request) {
         String sellerName = authentication.getName();
         SellerResponse seller = sellerService.update(sellerName, request);
         model.addAttribute("seller", seller);
         return "redirect:/seller/my";
+    }
+
+    @GetMapping("/seller/my/password")
+    public String passwordForm(Model model) {
+        model.addAttribute("sellerPasswordUpdateRequest", new SellerPasswordUpdateRequest());
+        return "seller/passwordUpdate";
+    }
+
+    @PostMapping("/seller/my/password")
+    public String updatePassword(Model model, Authentication authentication,
+                                 @ModelAttribute SellerPasswordUpdateRequest request) {
+        model.addAttribute("sellerPasswordUpdateRequest", request);
+       sellerService.updatePassword(authentication.getName(), request);
+       return "redirect:/seller/my";
+
     }
 
 }

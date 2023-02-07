@@ -1,10 +1,7 @@
 package com.woowahan.recipe.domain.entity;
 
 import com.woowahan.recipe.domain.UserRole;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -12,6 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,15 +42,17 @@ public class SellerEntity extends BaseEntity {
     @Column(name = "business_reg_num")
     private String businessRegNum;  // 사업자 등록번호
 
-    public void updateUser(String sellerName, String password, String companyName,
-                           String address, String email, String phoneNum, String businessRegNum) {
+    public void updateUser(String sellerName, String companyName,
+                           String address, String email, String phoneNum) {
         this.sellerName = sellerName;
-        this.password = password;
         this.companyName = companyName;
         this.address = address;
         this.email = email;
         this.phoneNum = phoneNum;
-        this.businessRegNum = businessRegNum;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 
 }
