@@ -1,5 +1,6 @@
 package com.woowahan.recipe.controller;
 
+import com.woowahan.recipe.domain.dto.sellerDto.SellerJoinRequest;
 import com.woowahan.recipe.domain.dto.sellerDto.SellerLoginRequest;
 import com.woowahan.recipe.domain.dto.sellerDto.SellerResponse;
 import com.woowahan.recipe.domain.dto.sellerDto.SellerUpdateRequest;
@@ -47,6 +48,18 @@ public class SellerController {
         session.setMaxInactiveInterval(1800);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/seller/join")
+    public String joinForm(Model model) {
+        model.addAttribute("sellerJoinRequest", new SellerJoinRequest());
+        return "seller/joinForm";
+    }
+
+    @PostMapping("/seller/join")
+    public String join(Model model) {
+        model.addAttribute("sellerLoginRequest", new SellerLoginRequest());
+        return "seller/joinForm";
     }
 
     @GetMapping("/seller/logout")
