@@ -1,7 +1,10 @@
 package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
+import com.woowahan.recipe.domain.dto.cartDto.CartOrderList;
+import com.woowahan.recipe.domain.dto.userDto.UserResponse;
 import com.woowahan.recipe.service.CartService;
+import com.woowahan.recipe.service.FindService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -11,10 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @Slf4j
@@ -23,15 +23,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class CartController {
 
     private final CartService cartService;
+    private final FindService findService;
 
-    /*@GetMapping("/order")
-    public String orderForm(Model model, @ModelAttribute CartOrderDto cartOrderDto, Authentication authentication) {
-        log.info("cartOrderDtoList={}", cartOrderDto.getCartOrderDtoList().toString());
+    @GetMapping("/order")
+    public String orderForm(Model model,@RequestBody CartOrderList cartOrderListDto, Authentication authentication) {
+        log.info("cartOrderDtoList={}", cartOrderListDto.getGetCartOrderList().toString());
         UserResponse userResponse = findService.findUserName(authentication.getName());
         model.addAttribute("user", userResponse);
-        model.addAttribute("cartOrderList", cartOrderDto.getCartOrderDtoList());
+        model.addAttribute("cartOrderList", cartOrderListDto.getGetCartOrderList());
         return "cart/orderForm";
-    }*/
+    }
 
     @GetMapping
     public String cartItemList(Model model, @PageableDefault(sort = "itemName", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {

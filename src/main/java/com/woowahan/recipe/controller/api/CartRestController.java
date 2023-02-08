@@ -3,7 +3,8 @@ package com.woowahan.recipe.controller.api;
 import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
-import com.woowahan.recipe.domain.dto.cartDto.CartOrderDto;
+import com.woowahan.recipe.domain.dto.cartDto.CartOrderList;
+import com.woowahan.recipe.domain.dto.orderDto.CartOrderDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.exception.ErrorResult;
@@ -45,29 +46,29 @@ public class CartRestController {
     }
 
     @PostMapping("/orders")
-    public Response<OrderCreateResDto> orderCartItem(@RequestBody CartOrderDto cartOrderDto, Authentication authentication) {
-        List<CartOrderDto> cartOrderDtoList = cartOrderDto.getCartOrderDtoList();
-        OrderCreateResDto orderCreateResDto = cartService.orderCartItem(cartOrderDtoList, authentication.getName());
+    public Response<OrderCreateResDto> orderCartItem(@RequestBody CartOrderList cartOrderListDto, Authentication authentication) {
+        List<CartOrderDto> cartOrderList = cartOrderListDto.getGetCartOrderList();
+        OrderCreateResDto orderCreateResDto = cartService.orderCartItem(cartOrderList, authentication.getName());
         return Response.success(orderCreateResDto);
     }
 
     @PostMapping("/orders/payment/complete")
-    public Response<?> paymentComplete(@RequestBody CartOrderDto cartOrderDto, Authentication authentication) throws IOException {
-        log.info("orderDto.getImpUid", cartOrderDto.getImp_uid());
+    public Response<?> paymentComplete(@RequestBody CartOrderList cartOrderListDto, Authentication authentication) throws IOException {
+        log.info("orderDto.getImpUid", cartOrderListDto.getImp_uid());
         String token = paymentService.getToken();
         log.info("iamport token={}", token);
-        int amount = paymentService.paymentInfo(cartOrderDto.getImp_uid(), token);
+        int amount = paymentService.paymentInfo(cartOrderListDto.getImp_uid(), token);
         log.info("amount={}", amount);
         try {
-            if (amount != cartOrderDto.getTotalCost()) {
-                paymentService.paymentCancel(token, cartOrderDto.getImp_uid(), amount, "결제 금액 불일치");
+            if (amount != cartOrderListDto.getTotalCost()) {
+                paymentService.paymentCancel(token, cartOrderListDto.getImp_uid(), amount, "결제 금액 불일치");
                 return Response.error(new ErrorResult(ErrorCode.MISMATCH_AMOUNT, ErrorCode.MISMATCH_AMOUNT.getMessage()));
             }
-            OrderCreateResDto orderResponse = cartService.orderCartItem(cartOrderDto.getCartOrderDtoList(), authentication.getName());
+            OrderCreateResDto orderResponse = cartService.orderCartItem(cartOrderListDto.getGetCartOrderList(), authentication.getName());
             log.info("장바구니 컨트롤러 주문성공했습니다.");
             return Response.success(orderResponse);
         } catch (Exception e) {
-            paymentService.paymentCancel(token, cartOrderDto.getImp_uid(), amount, "장바구니 결제 에러");
+            paymentService.paymentCancel(token, cartOrderListDto.getImp_uid(), amount, "장바구니 결제 에러");
             log.info("장바구니 컨트롤러 결제 에러입니다.");
             return Response.error(new ErrorResult(ErrorCode.INVALID_ORDER, ErrorCode.INVALID_ORDER.getMessage()));
         }

@@ -39,7 +39,7 @@ async function count(type, idx)  {
         url: `/api/v1/carts`,
         method: "PUT",
         dataType: "json",
-        contentType: 'application/json',
+        contentType: 'application/json;charset=utf-8',
         data: JSON.stringify(item)
     }).done((data) => {
         // console.log(data);
@@ -120,6 +120,46 @@ function getCheckPrice() {
         document.getElementsByClassName('total-price')[0].innerText = result;
     else
         document.getElementsByClassName('total-price')[0].innerText = parseInt(result) + deliveryPrice;
+}
+
+function purchaseOrder() {
+    console.log('purchaseOrder() 실행');
+    const checkValue = 'input[name="item"]:checked';
+    const selectElements = document.querySelectorAll(checkValue);
+    var orderItems = [];
+    selectElements.forEach((el) => {
+        console.log(el);
+        orderItems.push({
+            // id: parseInt(el.getAttribute('itemId')),
+            id: parseInt(el.getAttribute('cartItemId')),
+            cnt: parseInt(el.getAttribute('cnt')),
+            // price: parseInt(el.getAttribute('price'))
+        });
+    });
+    console.log(typeof(orderItems));
+    console.log(orderItems);
+    const totalPrice = document.getElementsByClassName("total-price")[0].innerText;
+    console.log(totalPrice);
+    const orderSheet = {
+        imp_uid: '',
+        orderItems: orderItems,
+        totalPrice: totalPrice
+    }
+    console.log(JSON.stringify(orderSheet));
+
+    $.ajax({
+        url: "/carts/order",
+        method: "GET",
+        dataType: "json",
+        contentType: 'application/json;charset=utf-8',
+        data: JSON.stringify(orderSheet)
+    }).done((data) => {
+        console.log(data);
+    }).fail((error) => {
+        console.log(error);
+    }).always(() => {
+        console.log("주문 ajax 실행 완료");
+    })
 }
 
 $(document).ready(function() {
