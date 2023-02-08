@@ -111,7 +111,7 @@ public class CartService {
      */
     public OrderCreateResDto orderCartItem(CartOrderList cartOrderListDto, String userName) {
         // 주문 상품이 없을 경우 에러처리
-        List<CartOrderDto> cartOrderList = cartOrderListDto.getGetCartOrderList();
+        List<CartOrderDto> cartOrderList = cartOrderListDto.getCartOrderList();
         if (cartOrderListDto == null || cartOrderList.size() == 0) {
             throw new AppException(SELECT_ORDER_ITEM, SELECT_ORDER_ITEM.getMessage());
         }

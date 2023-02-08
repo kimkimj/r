@@ -12,6 +12,7 @@ import lombok.Setter;
 public class CartOrderDto {
 
     private Long id;  // 장바구니에 담긴 상품의 아이디 (!= 상품 자체 아이디)
+    private String name;
     private Integer cnt;
 
 }

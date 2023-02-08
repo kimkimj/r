@@ -93,9 +93,8 @@ function selectAll(selectAll)  {
 // 총 결제 예정 금액 구하기
 function getCheckPrice() {
     console.log('getCheckPrice() 실행');
-    const checkValue = 'input[name="item"]:checked';
+    const checkValue = 'input[class="form-check-input"]:checked';
     const selectElements = document.querySelectorAll(checkValue);
-
     let result = 0;
     console.log(typeof(result));
     selectElements.forEach((el) => {
@@ -124,7 +123,7 @@ function getCheckPrice() {
 
 function purchaseOrder() {
     console.log('purchaseOrder() 실행');
-    const checkValue = 'input[name="item"]:checked';
+    const checkValue = 'input[class="form-check-input"]:checked';
     const selectElements = document.querySelectorAll(checkValue);
     var orderItems = [];
     selectElements.forEach((el) => {
@@ -134,6 +133,7 @@ function purchaseOrder() {
             id: parseInt(el.getAttribute('cartItemId')),
             cnt: parseInt(el.getAttribute('cnt')),
             // price: parseInt(el.getAttribute('price'))
+            name: el.getAttribute('name')
         });
     });
     console.log(typeof(orderItems));
@@ -142,21 +142,25 @@ function purchaseOrder() {
     console.log(totalPrice);
     const orderSheet = {
         imp_uid: '',
-        orderItems: orderItems,
-        totalPrice: totalPrice
+        cartOrderList: orderItems,
+        totalCost: totalPrice
     }
     console.log(JSON.stringify(orderSheet));
 
     $.ajax({
         url: "/carts/order",
-        method: "GET",
-        dataType: "json",
+        method: "POST",
+        // dataType: "json",
         contentType: 'application/json;charset=utf-8',
         data: JSON.stringify(orderSheet)
     }).done((data) => {
         console.log(data);
+        location.href = "/carts/order";
     }).fail((error) => {
         console.log(error);
+        if(error.result) {
+            alert(error.result);
+        }
     }).always(() => {
         console.log("주문 ajax 실행 완료");
     })

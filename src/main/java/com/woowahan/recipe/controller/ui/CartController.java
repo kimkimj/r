@@ -2,6 +2,7 @@ package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
 import com.woowahan.recipe.domain.dto.cartDto.CartOrderList;
+import com.woowahan.recipe.domain.dto.orderDto.CartOrderDto;
 import com.woowahan.recipe.domain.dto.userDto.UserResponse;
 import com.woowahan.recipe.service.CartService;
 import com.woowahan.recipe.service.FindService;
@@ -25,12 +26,38 @@ public class CartController {
     private final CartService cartService;
     private final FindService findService;
 
-    @GetMapping("/order")
-    public String orderForm(Model model,@RequestBody CartOrderList cartOrderListDto, Authentication authentication) {
-        log.info("cartOrderDtoList={}", cartOrderListDto.getGetCartOrderList().toString());
+    @PostMapping("/order")  // 장바구니에서 주문하기를 누를 때 주문 결제 페이지로 이동
+    public String orderForm(Model model,@RequestBody CartOrderList cartOrderListDto) {
+        log.info("cartOrderDtoList={}", cartOrderListDto.getCartOrderList().toString());
+        for (CartOrderDto dto :cartOrderListDto.getCartOrderList()) {
+            log.info("id = {}", dto.getId());
+            log.info("name = {}", dto.getName());
+            log.info("cnt = {}", dto.getCnt());
+        }
+        log.info("imp={}", cartOrderListDto.getImp_uid());
+        log.info("cost={}", cartOrderListDto.getTotalCost());
+//        UserResponse userResponse = findService.findUserName(authentication.getName());
+//        model.addAttribute("userResponse", userResponse);
+        model.addAttribute("cartOrderList", cartOrderListDto.getCartOrderList());
+        model.addAttribute("totalCost", cartOrderListDto.getTotalCost());
+        model.addAttribute("authentication", cartOrderListDto.getTotalCost());
+        return "redirect:/carts/orderForm";
+    }
+
+    @GetMapping("/orderForm")
+    public String moveOrderForm(Model model, CartOrderList cartOrderListDto, Authentication authentication) {
+        log.info("cartOrderDtoList={}", cartOrderListDto.getCartOrderList().toString());
+        for (CartOrderDto dto :cartOrderListDto.getCartOrderList()) {
+            log.info("id = {}", dto.getId());
+            log.info("name = {}", dto.getName());
+            log.info("cnt = {}", dto.getCnt());
+        }
+        log.info("imp={}", cartOrderListDto.getImp_uid());
+        log.info("cost={}", cartOrderListDto.getTotalCost());
+
         UserResponse userResponse = findService.findUserName(authentication.getName());
-        model.addAttribute("user", userResponse);
-        model.addAttribute("cartOrderList", cartOrderListDto.getGetCartOrderList());
+        model.addAttribute("userResponse", userResponse);
+        model.addAttribute("cartOrderList", cartOrderListDto.getCartOrderList());
         return "cart/orderForm";
     }
 
