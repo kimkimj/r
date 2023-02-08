@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
-<head th:replace="fragments/header :: headerFragment"/>
-<meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="fragments/header :: headerFragment"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/recipe.css}" />
+    <script type="text/javascript" th:src="@{/js/review.js}"></script>
+</head>
 <style>
     * {
         margin: 0;
@@ -109,7 +112,7 @@
 
                     <div class="col">
                         <div>
-                            <div class="detail-box">레시피 정보 ID : <span th:text="${recipe.getRecipeId()}">ID</span></div>
+                            <div class="detail-box">레시피 정보 ID : <span id="recipe-id" th:text="${recipe.getRecipeId()}">ID</span></div>
                             <div class="detail-box">작성자 : &nbsp;<span th:text="${recipe.getUserName()}">작성자</span></div>
                         </div>
                     </div>
@@ -275,6 +278,9 @@
                         <td th:text="${recipe.getReviews().get(num).getContent()}"/>
                         <td th:text="${recipe.getReviews().get(num).getUser().getUserName()}"/>
                         <td>
+                            <button type="button" style="width: 50px;" onclick="updateReview()">
+                                수정
+                            </button>
                             <button type="button" style="width: 50px;"
                                     th:onclick="|location.href='@{/recipes/{recipeId}/reviews/{reviewId} (recipeId=${recipeId}, reviewId=${recipe.getReviews().get(num).getReviewId()})}'|">
                                 삭제
@@ -297,6 +303,20 @@
                                 </div>
                                 <br>
                             </form>
+                        </td>
+                    </tr>
+                    <tr th:each="review : ${recipe.reviews}">
+                        <td class="individual-review-id" th:text="${review.reviewId}"/>
+                        <td><input class="individual-content-input" th:value="${review.content}" readonly></td>
+                        <td th:text="${review.user.userName}"/>
+                        <td>
+                            <button type="button" class="btn btn-warning edit-btn btn-jelly" th:idx="${reviewStat.index}" onclick="updateReview(this.getAttribute('idx'))">
+                                수정
+                            </button>
+                            <button type="button" style="width: 50px;"
+                                    th:onclick="|location.href='@{/recipes/{recipeId}/reviews/{reviewId} (recipeId=${recipeId}, reviewId=${recipe.getReviews().get(num).getReviewId()})}'|">
+                                삭제
+                            </button>
                         </td>
                     </tr>
                     </tbody>
