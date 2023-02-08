@@ -27,6 +27,18 @@ public class UserService {
 
     private long expiredTimeMs = 60 * 60 * 1000; // 토큰 유효시간: 1시간
 
+
+    /**
+     * 중복로직 리팩토링 - 2/6 11:10pm
+     */
+    //[중복 로직] user 존재 확인 + 가져오기
+    public UserEntity validateUser(String userName) {
+        UserEntity user = userRepository.findByUserName(userName)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+        return user;
+    }
+
+
     public UserJoinResDto join(UserJoinReqDto userJoinReqDto) {
 
         // userName(ID) 중복확인
@@ -57,8 +69,7 @@ public class UserService {
     public String login(String userName, String password) {
 
         // userName(ID)가 없는 경우
-        UserEntity user = userRepository.findByUserName(userName)
-                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+        UserEntity user = validateUser(userName);
 
         // password가 맞지 않는 경우
         if(!encoder.matches(password, user.getPassword())) { // 날것과 DB(복호화된 패스워드)를 비교
@@ -95,8 +106,7 @@ public class UserService {
      * 회원등급 관리자로 변경
      */
     public void updateToSeller(String username, Long id) {
-        UserEntity admin = userRepository.findByUserName(username)
-                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+        UserEntity admin = validateUser(username);
 
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
@@ -118,8 +128,7 @@ public class UserService {
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
 
         // ID(userName)가 없는 경우
-        userRepository.findByUserName(userName)
-                .orElseThrow(() -> new AppException(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage()));
+        validateUser(userName);
 
         // TODO: 2023-01-24 생각해봐야 할 사항 - 애초에 ID는 수정이 되면 안된다.
         // 회원가입과 동일하게 정보 수정시에도 ID(userName)이 중복되지 않게 처리
@@ -211,9 +220,7 @@ public class UserService {
 
     @Transactional
     public UserResponse updateInfo(UserUpdateReqDto reqDto, String userName) {
-        UserEntity user = userRepository.findByUserName(userName).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage());
-        });
+        UserEntity user = validateUser(userName);
 
         user.updateInfo(reqDto);
         return UserResponse.toUserResponse(user);
@@ -221,17 +228,14 @@ public class UserService {
 
     @Transactional
     public UserResponse updatePassword(String password, String userName) {
-        UserEntity user = userRepository.findByUserName(userName).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage());
-        });
+        UserEntity user = validateUser(userName);
 
         user.updatePassword(encoder.encode(password));
         return UserResponse.toUserResponse(user);
     }
 
     public Long findUserId (String username) {
-        UserEntity user = userRepository.findByUserName(username)
-                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+        UserEntity user = validateUser(username);
         return user.getId();
     }
 }

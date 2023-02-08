@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: headerFragment"/>
+<style>
+  .container {
+    margin: auto;
+    width: 50%;
+  }
+
+  h2 {
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .button {
+    margin: auto;
+    width: 60%;
+  }
+
+  .row {
+    margin-top: 35px;
+    height: 50px;
+    text-align: center;
+  }
+
+  .col {
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div class="container">
+  <br>
+  <h2>판매자 회원가입</h2>
+  <br>
+  <form role="form" th:action="@{/seller/join}" th:object="${sellerJoinRequest}" method="post">
+    <div th:if="${#fields.hasGlobalErrors()}">
+      <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}">글로벌 오류 메세지</p>
+    </div>
+    <div class="form-group">
+      <label th:for="sellerName">아이디</label>
+      <input type="text" th:field="*{sellerName}" class="form-control" placeholder="아이디 입력하세요"
+             th:errorclass="field-error">
+      <div class="field-error" th:errors="*{sellerName}">아이디 오류</div>
+    </div>
+    <br/>
+    <div class="form-group">
+      <label th:for="password">비밀번호</label>
+      <input type="text" th:field="*{password}" class="form-control" placeholder="비밀번호를 입력하세요"
+             th:errorclass="field-error">
+      <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
+    </div>
+    <br/>
+    <div class="form-group">
+      <label th:for="name">업체명</label>
+      <input type="text" th:field="*{companyName}" class="form-control" placeholder="업체명을 입력하세요"
+             th:errorclass="field-error">
+      <div class="field-error" th:errors="*{companyName}">업체명 오류</div>
+    </div>
+    <br/>
+    <div class="form-group">
+      <label th:for="address">주소</label>
+      <input type="text" th:field="*{address}" class="form-control" placeholder="주소 입력하세요"
+             th:errorclass="field-error">
+      <div class="field-error" th:errors="*{address}">주소 오류</div>
+    </div>
+    <br/>
+    <div class="form-group">
+      <label th:for="email" th:text="#{label.email}">이메일</label>
+      <input type="text" th:field="*{email}" class="form-control" placeholder="이메일을 입력하세요"
+             th:errorclass="field-error">
+      <div class="field-error" th:errors="*{email}">이메일 오류</div>
+    </div>
+    <br/>
+    <div class="form-group">
+      <label th:for="phoneNum" th:text="#{label.phoneNum}">핸드폰 번호</label>
+      <input type="text" th:field="*{phoneNum}" class="form-control" placeholder="핸드폰 번호를 입력하세요"
+             th:errorclass="field-error">
+      <div class="field-error" th:errors="*{phoneNum}">핸드폰 번호 오류</div>
+    </div>
+    <br/>
+    <div class="form-group">
+      <label th:for="businessRegNum">사업자등록번호</label>
+      <input type="text" th:field="*{businessRegNum}" class="form-control" placeholder="사업자등록번호를 입력하세요"
+             th:errorclass="field-error">
+      <div class="field-error" th:errors="*{businessRegNum}">사업자등록번호 오류</div>
+    </div>
+
+    <div class="button">
+      <div class="row">
+        <div class="col">
+          <button class="w-100 btn btn-primary" type="submit">회원가입</button>
+        </div>
+        <div class="col">
+          <button class="w-100 btn btn-secondary"
+                  th:onclick="|location.href='@{/}'|"
+                  type="button" th:text="#{button.cancel}">취소
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+  <br/>
+</div>
+<div th:replace="fragments/footer :: footerFragment"/>
+</body>
+</html>

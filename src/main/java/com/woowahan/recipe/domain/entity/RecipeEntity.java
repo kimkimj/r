@@ -2,19 +2,15 @@ package com.woowahan.recipe.domain.entity;
 
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipePageResDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Builder
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class RecipeEntity extends BaseEntity {
 
@@ -29,6 +25,7 @@ public class RecipeEntity extends BaseEntity {
     private int recipeLike;
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int recipeView;
+    @Column(columnDefinition = "TEXT")
     private String recipeImagePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,7 +46,7 @@ public class RecipeEntity extends BaseEntity {
                 recipeEntity.getId(), recipeEntity.recipeTitle, recipeEntity.recipeBody
                 ,recipeEntity.user.getUserName(), recipeEntity.getRecipeLike(), recipeEntity.getRecipeView()
                 ,recipeEntity.getCreatedDate(),recipeEntity.getLastModifiedDate(), recipeEntity.getItems(),
-                recipeEntity.getReviews()
+                recipeEntity.getReviews(), recipeEntity.getRecipeImagePath()
         );
     }
 
@@ -71,7 +68,7 @@ public class RecipeEntity extends BaseEntity {
                 .recipeLike(this.recipeLike)
                 .createdDate(this.getCreatedDate())
                 .lastModifiedDate(this.getLastModifiedDate())
-//                .thumbnailImagePath(this.recipeImagePath) 썸네일 추가시
+                .recipeImagePath(this.recipeImagePath)
                 .build();
     }
 
@@ -79,5 +76,11 @@ public class RecipeEntity extends BaseEntity {
     public void update(String recipeTitle, String recipeBody) {
         this.recipeTitle = recipeTitle;
         this.recipeBody = recipeBody;
+    }
+
+    @Builder
+    public RecipeEntity(Long id, String recipeImagePath) {
+        this.id = id;
+        this.recipeImagePath = recipeImagePath;
     }
 }

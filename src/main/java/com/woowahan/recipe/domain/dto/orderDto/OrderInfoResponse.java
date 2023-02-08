@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class OrderInfoResponse {
 
     private Long id;
+    private String impUid;
     private String orderNum;
     private String itemName;
     private String username;
@@ -28,8 +29,9 @@ public class OrderInfoResponse {
     private LocalDateTime updateDate;
 
     @Builder
-    public OrderInfoResponse(Long id, String orderNum, String itemName, String username, String address, Integer totalPrice, OrderStatus orderStatus, DeliveryStatus deliveryStatus, LocalDateTime orderDate, LocalDateTime updateDate) {
+    public OrderInfoResponse(Long id, String impUid, String orderNum, String itemName, String username, String address, Integer totalPrice, OrderStatus orderStatus, DeliveryStatus deliveryStatus, LocalDateTime orderDate, LocalDateTime updateDate) {
         this.id = id;
+        this.impUid = impUid;
         this.orderNum = orderNum;
         this.itemName = itemName;
         this.username = username;
@@ -44,6 +46,7 @@ public class OrderInfoResponse {
     public static OrderInfoResponse from(OrderEntity order) {
         return OrderInfoResponse.builder()
                 .id(order.getId())
+                .impUid(order.getImpUid())
                 .orderNum(order.getOrderNumber())
                 .itemName(order.getOrderItems().get(0).getItem().getName())
                 .username(order.getUser().getName())

@@ -45,16 +45,24 @@ public class UserController {
         return "user/admin";
     }
 
+    // 회원이나 판매자로 로그인
+    @GetMapping("/login")
+    public String chooseLoginType() {
+        return "loginType";
+    }
+
+    // 회원이나 판매자로 회원가입
+    @GetMapping("/join")
+    public String chooseJoinType() {
+        return "joinType";
+    }
+
+
     // 회원가입
     @GetMapping("/users/join")
     public String joinForm(Model model) {
         model.addAttribute("userJoinReqDto", new UserJoinReqDto());
         return "user/joinForm";
-    }
-
-    @GetMapping("/login")
-    public String chooseLoginType() {
-        return "loginType";
     }
 
     @PostMapping("/users/join")

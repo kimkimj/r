@@ -10,7 +10,7 @@
 
   .wrapper {
     width: 33%;
-    min-height: 400px;
+    min-height: 450px;
     margin: auto;
     padding: 20px;
   }
@@ -32,7 +32,6 @@
 <div class="wrapper">
   <br><br><br>
   <h2>판매자 로그인</h2>
-  <!--/*@thymesVar id="userLoginReqDto" type="com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto"*/-->
   <br>
   <form role="form" th:action="@{/seller/login}" th:object="${sellerLoginRequest}" method="post">
     <div class="mb-3">

@@ -21,7 +21,7 @@
     }
 
     .modal-search img {
-        position : absolute;
+        position: absolute;
         width: 19px;
         height: 22px;
         top: 10px;
@@ -40,12 +40,15 @@
 <div class="container"><br>
 
     <div>
-        <h1>레시피 등록 페이지</h1><hr>
+        <h1>레시피 등록 페이지</h1>
+        <hr>
     </div>
     <div>
         <button type="button" class="btn btn-outline-success" style="float: right;"
-                th:onclick="|location.href='@{/recipes/list}'|">목록가기</button>
-    </div><br><br>
+                th:onclick="|location.href='@{/recipes/list}'|">목록가기
+        </button>
+    </div>
+    <br><br>
 
     <!--        &lt;!&ndash; 카테고리 선택 &ndash;&gt;-->
     <!--        <div>-->
@@ -76,71 +79,89 @@
                     <!-- 레시피 제목  -->
                     <div class="form-group col">
                         <label th:for="recipeTitle">레시피 제목</label>
-                        <input type="text" th:field="*{recipeTitle}" class="form-control" id="recipeTitle" placeholder="예) 소고기 미역국"
+                        <input type="text" th:field="*{recipeTitle}" class="form-control" id="recipeTitle"
+                               placeholder="예) 소고기 미역국"
                                th:class="${#fields.hasErrors('recipeTitle')}? 'form-control fieldError' : 'form-control'">
                         <p th:if="${#fields.hasErrors('recipeTitle')}" th:errors="*{recipeTitle}"></p>
-                    </div><br>
+                    </div>
+                    <br>
                     <!-- 레시피 내용  -->
                     <div class="form-group mb-3">
-                        <label th:for="recipeBody" class="form-label">레시피 내용 (음식에 필요한 재료와 단위를 먼저 적어주시면 더 완벽한 레시피가 될거에요)</label>
-                        <textarea th:field="*{recipeBody}" class="form-control" id="recipeBody" rows="3" style="height: 300px; resize:none;"
+                        <label th:for="recipeBody" class="form-label">레시피 내용 (음식에 필요한 재료와 단위를 먼저 적어주시면 더 완벽한 레시피가
+                            될거에요)</label>
+                        <textarea th:field="*{recipeBody}" class="form-control" id="recipeBody" rows="3"
+                                  style="height: 300px; resize:none;"
                                   th:class="${#fields.hasErrors('recipeBody')}? 'form-control fieldError' : 'form-control'"
                                   placeholder="이 레시피의 내용을 적어주세요.">
                         </textarea>
                         <p th:if="${#fields.hasErrors('recipeBody')}" th:errors="*{recipeBody}"></p>
                     </div>
+                    <br>
                     <div id="recipe-form-list">
-                    </div>
-
-                    <!-- 레시피 이미지 첨부파일 -->
-                    <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
-                        <h5>레시피 이미지</h5>
-                        <hr>
-                        <!--<br><img src="" class="img-fluid" alt="..." style=""><br><br>-->
-                        <!-- File input -->
-                        <div class="input-group mb-3">
-                            <input type="file" class="form-control" id="inputGroupFile02">
-                            <label class="input-group-text" for="inputGroupFile02">Upload</label>
-                        </div>
                     </div>
 
                     <!-- 재료 목록 -->
                     <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
-                        <h5>레시피 재료</h5><hr>
+                        <h5>레시피 재료</h5>
+                        <hr>
                         <!-- 선택한 재료들이 보이는 부분 -->
                         <ul id="item-list"></ul>
                         <!-- 재료 등록 버튼(modal), 등록한 재료 전체삭제 버튼 -->
                         <div style="text-align: right;">
-                            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
                                 재료 등록
                             </button>
                             <button type="button" class="btn btn-outline-success" onclick="allRemove();">
                                 재료 전체삭제
                             </button>
                         </div>
-                    </div><br><br>
+                    </div>
+                    <br>
 
                     <!-- form 태그 전송하는 버튼 -->
                     <div style="text-align: center;">
                         <button id="submit-btn" type="submit" class="btn btn-outline-success">레시피 작성완료</button>
-                    </div><br>
+                    </div>
+                    <br>
+
+                    <!-- 레시피 이미지 첨부파일 -->
+                    <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
+                        <h5>레시피 이미지</h5>
+                        <hr>
+
+                        <div th:object="${recipeCreateReqDto}" th:field="*{recipeImagePath}" method="post" enctype="multipart/form-data">
+                            파일 : <input type="file" name="file" onclick=""><br><br>
+                        </div>
+                        <!--<br><img src="" class="img-fluid" alt="..." style=""><br><br>-->
+                        <!-- File input -->
+                        <!--<div class="input-group mb-3">
+                            <input type="file" class="form-control" id="inputGroupFile02">
+                            <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                        </div>-->
+                    </div>
+                    <br><br>
                 </form>
             </div>
 
+
             <!-- 모달창 부분을 밖으로 빼준 이유는 form태그 안에 있을 경우 재료목록 데이터가 전송이 되지 않아서다. -->
             <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">재료 등록</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div><br>
+                        </div>
+                        <br>
                         <div class="modal-body">
                             <!-- search -->
                             <div class="modal-search">
                                 <input id="keyword" type="text" name="keyword" placeholder="재료 검색">
-                                <button style="border:none; background:none;" onclick="searchAndShowItems(document.querySelector('#keyword').value)">
+                                <button style="border:none; background:none;"
+                                        onclick="searchAndShowItems(document.querySelector('#keyword').value)">
                                     <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png">
                                 </button>
                             </div>
@@ -154,7 +175,8 @@
                         </div>
                     </div>
                 </div>
-            </div><br>
+            </div>
+            <br>
         </div>
     </div>
 
@@ -238,11 +260,25 @@
         itemList.innerHTML = "";
     }
 
-    $(document).ready(function(){
-        $("#submit-btn").click(function(){
-            if($("#recipeTitle").val().length==0){ alert("제목을 입력해주세요."); setTimeout(function (){$("#recipeTitle").focus();}, 1); return false; }
-            if($("#recipeBody").val().length==0){ alert("내용을 입력해주세요."); $("#recipeBody").focus(); return false; }
-            if($("#item-list").find("li").length==0){ alert("재료를 입력해주세요."); $("#item-list").focus(); return false; }
+    $(document).ready(function () {
+        $("#submit-btn").click(function () {
+            if ($("#recipeTitle").val().length == 0) {
+                alert("제목을 입력해주세요.");
+                setTimeout(function () {
+                    $("#recipeTitle").focus();
+                }, 1);
+                return false;
+            }
+            if ($("#recipeBody").val().length == 0) {
+                alert("내용을 입력해주세요.");
+                $("#recipeBody").focus();
+                return false;
+            }
+            if ($("#item-list").find("li").length == 0) {
+                alert("재료를 입력해주세요.");
+                $("#item-list").focus();
+                return false;
+            }
         });
     });
 </script>

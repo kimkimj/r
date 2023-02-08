@@ -2,6 +2,7 @@ package com.woowahan.recipe.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowahan.recipe.service.CartService;
+import com.woowahan.recipe.service.PaymentService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,9 @@ class CartRestControllerTest {
 
     @MockBean
     CartService cartService;
+
+    @MockBean
+    PaymentService paymentService;
 
     @Autowired
     ObjectMapper objectMapper;

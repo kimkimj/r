@@ -47,7 +47,7 @@ public class OrderService {
         delivery.setDeliveryStatus(DeliveryStatus.READY);
 
         // 주문 상품 생성
-        OrderItemEntity orderItem = OrderItemEntity.createOrderItem(item, item.getItemPrice(), reqDto.getCount());
+        OrderItemEntity orderItem = OrderItemEntity.createOrderItem(item, reqDto.getCount());
         log.info("orderItem.getTotalPrice={}", orderItem.getTotalPrice());
         log.info("orderItem.getCount={}", orderItem.getCount());
         // 주문 생성
@@ -66,10 +66,10 @@ public class OrderService {
         List<OrderItemEntity> orderItemList = new ArrayList<>();
 
         // 주문을 위한 상품 리스트
-        for (OrderCreateReqDto reqDto : orderDtoList) {
-            ItemEntity itemEntity = validateItem(reqDto.getItemId());
+        for (OrderCreateReqDto orderDto : orderDtoList) {
+            ItemEntity item = validateItem(orderDto.getItemId());
 
-            OrderItemEntity orderItem = OrderItemEntity.createOrderItem(itemEntity, itemEntity.getItemPrice(), reqDto.getCount());
+            OrderItemEntity orderItem = OrderItemEntity.createOrderItem(item, orderDto.getCount());
             orderItemList.add(orderItem);
         }
 

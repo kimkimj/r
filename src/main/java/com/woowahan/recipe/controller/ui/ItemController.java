@@ -4,6 +4,7 @@ import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.itemDto.*;
 import com.woowahan.recipe.service.CartService;
 import com.woowahan.recipe.service.ItemService;
+import com.woowahan.recipe.service.OrderService;
 import com.woowahan.recipe.service.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
@@ -28,6 +30,7 @@ public class ItemController {
 
     private final ItemService itemService;
     private final CartService cartService;
+    private final OrderService orderService;
 
     private final S3Uploader s3Uploader;
 
@@ -57,8 +60,8 @@ public class ItemController {
     public String findForm(Model model, @PathVariable Long id) {
         ItemDetailResDto resDto = itemService.findItem(id);
         model.addAttribute("id", id);
-        model.addAttribute("resDto", resDto);
-        model.addAttribute("cartItemReq", new CartItemReq(id, 0));
+        model.addAttribute("resDto", resDto); // -> sellerName도 들어있음
+        model.addAttribute("cartItemReq", new CartItemReq(id, 1));
         return "item/findForm";
     }
 
@@ -66,17 +69,32 @@ public class ItemController {
     /**
      * 카트에 상품 수량 업데이트 (카트에 아이템이 없으면 생성)
      */
+    @ResponseBody
     @PostMapping("/cart")
     public String addCartItem(@ModelAttribute CartItemReq cartItemReq,
-                              Model model, Authentication authentication) {
+                              Model model, Authentication authentication,
+                              HttpServletRequest request, Integer cnt) {
 
         model.addAttribute("cartItemReq", cartItemReq);
         cartService.addCartItem(cartItemReq, authentication.getName());
+//        log.info("수량 들어오는지 확인: {}", request.getParameter(String.valueOf(cnt)));
 
-        return "redirect:/items/"+cartItemReq.getItemId(); //상품상세보기페이지
+        return "redirect:/items/"+cartItemReq.getCartItemId(); //상품상세보기페이지로 return
     }
 
-//    수량 선택후 장바구니버튼을 누르면 수량을 -> 저장
+    /**
+     * 상품 바로 구매 (주문 페이지로 바로 이동)
+     */
+    @PostMapping("/order")
+    public String orderItem(@ModelAttribute CartItemReq cartItemReq,
+                              Model model, Authentication authentication) {
+
+        model.addAttribute("cartItemReq", cartItemReq);
+//        orderService.createOrder()
+
+        return "redirect:/items/"+cartItemReq.getCartItemId()+"/order"; //상품상세보기페이지로 return
+    }
+
 
 
     /**

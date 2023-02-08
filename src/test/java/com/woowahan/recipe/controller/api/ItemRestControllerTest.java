@@ -10,7 +10,9 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
@@ -48,7 +50,7 @@ class ItemRestControllerTest {
         /* given */
         ItemCreateReqDto itemCreateReqDto = new ItemCreateReqDto("imagepath", "name", 1000, 5);
         given(itemService.createItem(any(ItemCreateReqDto.class), any()))
-                .willReturn(new ItemCreateResDto(1L, "name", "상품 등록 완료"));
+                .willReturn(new ItemCreateResDto(1L, "itemName", "상품 등록 완료"));
         /* when */
         ResultActions resultActions = mockMvc.perform(post("/api/v1/items")
                                         .with(csrf())
@@ -58,7 +60,7 @@ class ItemRestControllerTest {
         /* then */
         resultActions.andExpect(status().isOk())
                         .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
-                        .andExpect(jsonPath("$.result.itemName").value("name"))
+                        .andExpect(jsonPath("$.result.itemName").value("itemName"))
                         .andExpect(jsonPath("$.result.message").value("상품 등록 완료"));
     }
 

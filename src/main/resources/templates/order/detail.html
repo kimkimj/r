@@ -116,10 +116,17 @@
 </div>
 </body>
 </html>
+
 <script th:inline="javascript">
+    /*<![CDATA[*/
     function cancel() {
+        console.log('실행');
         if ([[${order.orderStatus}]] == 'CANCEL') {
             alert('이미 취소된 주문입니다.');
+            return false;
+        }
+        if ([[${order.deliveryStatus}]] == 'COMP') {
+            alert('이미 배송 완료되었습니다.')
             return false;
         }
         if (confirm("정말 취소하시겠습니까?") == true) {
@@ -145,7 +152,7 @@
                         closeOnClickOutside: false
                     })
                         .then(function () {
-                            location.replace("/orders/" + [[${order.id}]])
+                            location.replace("/orders/" + [[${order.orderNum}]])
                         })
                 }).fail(function (result) {
                     console.log(result);
@@ -161,4 +168,5 @@
             return;
         }
     }
+    /*]]>*/
 </script>

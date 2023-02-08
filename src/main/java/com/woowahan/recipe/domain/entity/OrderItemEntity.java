@@ -35,10 +35,10 @@ public class OrderItemEntity {
     }
 
     /* 생성 메서드 */
-    public static OrderItemEntity createOrderItem(ItemEntity item, int orderPrice, int count) {
+    public static OrderItemEntity createOrderItem(ItemEntity item, int count) {
         OrderItemEntity orderItem = OrderItemEntity.builder()
                 .item(item)
-                .orderPrice(orderPrice)
+                .orderPrice(item.getItemPrice())
                 .count(count)
                 .build();
 
