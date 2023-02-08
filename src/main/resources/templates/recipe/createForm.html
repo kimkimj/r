@@ -107,7 +107,7 @@
                         <!-- 재료 등록 버튼(modal), 등록한 재료 전체삭제 버튼 -->
                         <div style="text-align: right;">
                             <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal">
+                                    data-bs-target="#exampleModal" onclick="searchAndShowItems(document.querySelector('#keyword').value)">
                                 재료 등록
                             </button>
                             <button type="button" class="btn btn-outline-success" onclick="allRemove();">
@@ -158,7 +158,7 @@
                                     <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png">
                                 </button>
                             </div>
-                            <div>
+                            <div style="overflow:scroll; width: 100%; height: 500px; overflow-x: hidden; overflow-y: auto; position:relative">
                                 <ul id="search-list">
                                 </ul>
                             </div>
@@ -181,6 +181,7 @@
 <div th:replace="fragments/footer :: footerFragment"/>
 <br><br>
 <script>
+    const selectItem = new Set();
     async function searchAndShowItems(keyword) {
         // <ul id="search-list" ...> 가져온다.
         let itemList = document.querySelector("#search-list")
@@ -194,22 +195,27 @@
         clearSearchResult();
 
         for (let item of items) {
-            let itemElement = document.createElement("li");
+            if(!selectItem.has(item)) {
+                let itemElement = document.createElement("li");
 
-            // text 추가
-            itemElement.appendChild(document.createTextNode(item))
+                // text 추가
+                itemElement.appendChild(document.createTextNode(item))
 
-            // button 추가
-            let addItemButton = document.createElement("button");
-            addItemButton.innerHTML = "선택";
-            addItemButton.onclick = () => {
-                addItem(item);
-                addFormItem(item);
-            };
-            itemElement.appendChild(addItemButton);
+                // button 추가
+                let addItemButton = document.createElement("button");
+                addItemButton.className += 'item-add-btn';
+                addItemButton.innerHTML = "선택";
+                addItemButton.onclick = () => {
+                    console.log('selectItem에 item을 담을 수 있습니다.' + item);
+                    addItem(item);
+                    addFormItem(item);
+                    itemElement.remove();  // 선택된 Element 제거
+                };
+                itemElement.appendChild(addItemButton);
 
-            // search list 에 추가
-            itemList.appendChild(itemElement);
+                // search list 에 추가
+                itemList.appendChild(itemElement);
+            }
         }
     }
 
@@ -241,16 +247,22 @@
     }
 
     function addItem(item) {
+        console.log('addItem');
         let itemList = document.querySelector("#item-list");
         let itemElement = document.createElement("li");
         itemElement.appendChild(document.createTextNode(item))
         itemList.appendChild(itemElement);
+        selectItem.add(item);
+        console.log('selectItem에 item이 추가되었습니다.' + selectItem);
     }
 
     function allRemove() {
         console.log("삭제 버튼 누르기");
+        let recipeFormList = document.querySelector("#recipe-form-list");
         let itemList = document.querySelector("#item-list");
+        recipeFormList.innerHTML = "";
         itemList.innerHTML = "";
+        console.log('선택한 Item을 모두 지웁니다. selectItem.clear()' + selectItem.clear());
     }
 
     $(document).ready(function () {
