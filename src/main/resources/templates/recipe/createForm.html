@@ -89,10 +89,8 @@
                     <div class="form-group mb-3">
                         <label th:for="recipeBody" class="form-label">레시피 내용 (음식에 필요한 재료와 단위를 먼저 적어주시면 더 완벽한 레시피가
                             될거에요)</label>
-                        <textarea th:field="*{recipeBody}" class="form-control" id="recipeBody" rows="3"
-                                  style="height: 300px; resize:none;"
-                                  th:class="${#fields.hasErrors('recipeBody')}? 'form-control fieldError' : 'form-control'"
-                                  placeholder="이 레시피의 내용을 적어주세요.">
+                        <textarea th:field="*{recipeBody}" class="form-control" id="recipeBody" rows="3" style="height: 300px; resize:none;"
+                                  th:class="${#fields.hasErrors('recipeBody')}? 'form-control fieldError' : 'form-control'" placeholder="이 레시피의 내용을 적어주세요.">
                         </textarea>
                         <p th:if="${#fields.hasErrors('recipeBody')}" th:errors="*{recipeBody}"></p>
                     </div>
