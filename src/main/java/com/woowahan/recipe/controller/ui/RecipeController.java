@@ -48,14 +48,14 @@ public class RecipeController {
     }
 
     @PostMapping("/create")
-    public String create(@Valid @ModelAttribute RecipeCreateReqDto form, BindingResult result, Authentication authentication, MultipartFile file) throws IOException {
+    public String create(@Valid @ModelAttribute RecipeCreateReqDto form, BindingResult result, Authentication authentication,MultipartFile file) throws IOException {
         if (result.hasErrors()) {
             return "recipe/createForm";
         }
         String userName = authentication.getName();
         // image upload
-        String upload = s3Uploader.upload(file, file.getOriginalFilename());
-        String recipeImagePath = upload;
+        String filePath = "recipes"; // 파일경로
+        String recipeImagePath = s3Uploader.upload(file, filePath);
         form.setFilePath(recipeImagePath);
         recipeService.createRecipe(form, userName);
         return "redirect:/recipes/list";
@@ -245,7 +245,7 @@ public class RecipeController {
         model.addAttribute("cartItemListReqDto", new CartItemListReqDto());
         model.addAttribute("recipeId", recipeId);
         model.addAttribute("recipe", recipe);
-        model.addAttribute("cartItemReq", new CartItemReq(recipe.getItems().get(0).getItem().getId() ,1)); // 장바구니 담기 위해 필요
+        model.addAttribute("cartItemReq", new CartItemReq(recipe.getItems().get(0).getItem().getId(), 1)); // 장바구니 담기 위해 필요
         return "recipe/recipeDetailList";
     }
 

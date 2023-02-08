@@ -19,7 +19,6 @@ public class RecipeCreateReqDto {
     private String recipeBody;
     @NotNull(message = "재료를 등록해주세요.")
     private List<String> items;
-    @NotNull(message = "이미지를 등록해주세요.")
     private String recipeImagePath;
 
     // 레시피 수정을 위한 set메서드
