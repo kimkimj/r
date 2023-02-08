@@ -219,6 +219,7 @@ public class RecipeService {
                 .recipeBody(recipeCreateReqDto.getRecipeBody())
                 .user(userRepository.findByUserName(userName).orElseThrow(() ->
                         new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()))) // 현재 로그인된 userName으로 userEntity 저장
+                .recipeImagePath(recipeCreateReqDto.getRecipeImagePath())
                 .build();
         return recipeEntity;
     }

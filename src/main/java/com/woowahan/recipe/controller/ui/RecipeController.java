@@ -19,9 +19,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,18 +46,16 @@ public class RecipeController {
     }
 
     @PostMapping("/create")
-    public String create(@Valid @ModelAttribute RecipeCreateReqDto form, BindingResult result, Authentication authentication) {
+    public String create(@Valid @ModelAttribute RecipeCreateReqDto form, BindingResult result, Authentication authentication, MultipartFile file) throws IOException {
         if (result.hasErrors()) {
             return "recipe/createForm";
         }
         String userName = authentication.getName();
-        recipeService.createRecipe(form, userName);
-
         // image upload
-/*        String upload = s3Uploader.upload();
+        String upload = s3Uploader.upload(file, file.getOriginalFilename());
         String recipeImagePath = upload;
         form.setFilePath(recipeImagePath);
-        RecipeCreateResDto recipe = recipeService.createRecipe(form, userName);*/
+        recipeService.createRecipe(form, userName);
         return "redirect:/recipes/list";
     }
 
