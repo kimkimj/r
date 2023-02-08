@@ -94,7 +94,7 @@ class RecipeRestControllerTest {
     @Test
     void 레시피_등록_성공() throws Exception {
         //given
-        RecipeCreateReqDto request = new RecipeCreateReqDto("hi", "hello", new ArrayList<>());
+        RecipeCreateReqDto request = new RecipeCreateReqDto("hi", "hello", new ArrayList<>(), "");
         //when
         when(recipeService.createRecipe(any(), any())).thenReturn(RecipeCreateResDto.builder()
                 .recipeId(1L)

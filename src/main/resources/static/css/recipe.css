@@ -1,0 +1,12 @@
+.individual-content-input {
+    border: none;
+}
+.individual-content-input:focus {
+    outline: none;
+}
+
+
+.edit-btn {
+    width: 90px;
+    border-radius: 0.5em;
+}

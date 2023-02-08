@@ -1,18 +1,10 @@
 package com.woowahan.recipe.controller.ui;
 
-import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemListReqDto;
-import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.itemDto.ItemListForRecipeResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateResponse;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewUpdateResponse;
-import com.woowahan.recipe.service.CartService;
-import com.woowahan.recipe.service.FindService;
-import com.woowahan.recipe.service.RecipeService;
-import com.woowahan.recipe.service.ReviewService;
+import com.woowahan.recipe.service.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +35,7 @@ public class RecipeController {
     private final FindService findService;
     private final ReviewService reviewService;
     private final CartService cartService;
+    private final S3Uploader s3Uploader;
 
     @GetMapping("/create")
     public String createForm(Model model) {
@@ -57,6 +50,12 @@ public class RecipeController {
         }
         String userName = authentication.getName();
         recipeService.createRecipe(form, userName);
+
+        // image upload
+/*        String upload = s3Uploader.upload();
+        String recipeImagePath = upload;
+        form.setFilePath(recipeImagePath);
+        RecipeCreateResDto recipe = recipeService.createRecipe(form, userName);*/
         return "redirect:/recipes/list";
     }
 
@@ -88,6 +87,7 @@ public class RecipeController {
 
     @GetMapping("/{recipeId}")
     public String findRecipe(@PathVariable Long recipeId, Model model) {
+        log.info("삭제 시도");
         recipeService.updateView(recipeId);
         RecipeFindResDto recipe = recipeService.findRecipe(recipeId);
         model.addAttribute("reviewCreateRequest", new ReviewCreateRequest());

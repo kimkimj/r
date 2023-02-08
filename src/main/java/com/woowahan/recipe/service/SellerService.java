@@ -1,14 +1,8 @@
 package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.UserRole;
-import com.woowahan.recipe.domain.dto.Response;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
 import com.woowahan.recipe.domain.dto.sellerDto.*;
-import com.woowahan.recipe.domain.dto.userDto.UserLoginResDto;
-import com.woowahan.recipe.domain.entity.RecipeEntity;
-import com.woowahan.recipe.domain.entity.ReviewEntity;
 import com.woowahan.recipe.domain.entity.SellerEntity;
-import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.SellerRepository;
@@ -107,7 +101,7 @@ public class SellerService {
 
 
         seller.updateUser(sellerUpdateRequest.getSellerName(), sellerUpdateRequest.getCompanyName(),
-                sellerUpdateRequest.getAddress(),sellerUpdateRequest.getEmail(), sellerUpdateRequest.getPhoneNum());
+                sellerUpdateRequest.getAddress(), sellerUpdateRequest.getEmail(), sellerUpdateRequest.getPhoneNum());
         sellerRepository.save(seller);
 
         return SellerResponse.toSellerResponse(seller);

@@ -79,7 +79,7 @@ public class ItemController {
         cartService.addCartItem(cartItemReq, authentication.getName());
 //        log.info("수량 들어오는지 확인: {}", request.getParameter(String.valueOf(cnt)));
 
-        return "redirect:/items/"+cartItemReq.getItemId(); //상품상세보기페이지로 return
+        return "redirect:/items/"+cartItemReq.getCartItemId(); //상품상세보기페이지로 return
     }
 
     /**
@@ -92,7 +92,7 @@ public class ItemController {
         model.addAttribute("cartItemReq", cartItemReq);
 //        orderService.createOrder()
 
-        return "redirect:/items/"+cartItemReq.getItemId()+"/order"; //상품상세보기페이지로 return
+        return "redirect:/items/"+cartItemReq.getCartItemId()+"/order"; //상품상세보기페이지로 return
     }
 
 

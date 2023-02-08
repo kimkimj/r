@@ -5,7 +5,10 @@ import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
 import com.woowahan.recipe.domain.dto.cartDto.CartOrderDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
+import com.woowahan.recipe.exception.ErrorCode;
+import com.woowahan.recipe.exception.ErrorResult;
 import com.woowahan.recipe.service.CartService;
+import com.woowahan.recipe.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -15,6 +18,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -24,6 +28,7 @@ import java.util.List;
 public class CartRestController {
 
     private final CartService cartService;
+    private final PaymentService paymentService;
 
     @GetMapping
     public Response<Page<CartItemResponse>> findCartList(@PageableDefault(sort = "itemName", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
@@ -46,11 +51,34 @@ public class CartRestController {
         return Response.success(orderCreateResDto);
     }
 
+    @PostMapping("/orders/payment/complete")
+    public Response<?> paymentComplete(@RequestBody CartOrderDto cartOrderDto, Authentication authentication) throws IOException {
+        log.info("orderDto.getImpUid", cartOrderDto.getImp_uid());
+        String token = paymentService.getToken();
+        log.info("iamport token={}", token);
+        int amount = paymentService.paymentInfo(cartOrderDto.getImp_uid(), token);
+        log.info("amount={}", amount);
+        try {
+            if (amount != cartOrderDto.getTotalCost()) {
+                paymentService.paymentCancel(token, cartOrderDto.getImp_uid(), amount, "결제 금액 불일치");
+                return Response.error(new ErrorResult(ErrorCode.MISMATCH_AMOUNT, ErrorCode.MISMATCH_AMOUNT.getMessage()));
+            }
+            OrderCreateResDto orderResponse = cartService.orderCartItem(cartOrderDto.getCartOrderDtoList(), authentication.getName());
+            log.info("장바구니 컨트롤러 주문성공했습니다.");
+            return Response.success(orderResponse);
+        } catch (Exception e) {
+            paymentService.paymentCancel(token, cartOrderDto.getImp_uid(), amount, "장바구니 결제 에러");
+            log.info("장바구니 컨트롤러 결제 에러입니다.");
+            return Response.error(new ErrorResult(ErrorCode.INVALID_ORDER, ErrorCode.INVALID_ORDER.getMessage()));
+        }
+    }
+
     @PutMapping
     public Response<String> updateCartItem (@RequestBody CartItemReq cartItemUpdateReq, Authentication authentication) {
         String userName = authentication.getName();
-        cartService.updateCartItem(cartItemUpdateReq, userName);
-        return Response.success("수량이 변경되었습니다.");
+        log.info("cartItemId = {}", cartItemUpdateReq.getCartItemId());
+        Integer cnt = cartService.updateCartItem(cartItemUpdateReq, userName);
+        return Response.success(cnt + "개로 수량이 수정되었습니다.");
     }
 
     @DeleteMapping("/{itemId}")
