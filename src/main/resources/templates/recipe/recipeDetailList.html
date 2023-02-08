@@ -177,10 +177,11 @@
                         </tr>
                         </thead>
                         <!-- th:block -->
-                        <th:block th:each="num : ${#numbers.sequence(0,recipe.getItems().size()-1)}">
+                        <td th:if="${recipe.getItems().size() == 0}">등록된 재료가 없습니다.</td>
+                        <th:block th:unless="${recipe.getItems().size()== 0}" th:each="num : ${#numbers.sequence(0,recipe.getItems().size()-1)}">
                             <tbody>
                             <tr>
-                                <th scope="row"><input class="form-check-input" name="check" type="checkbox" value=""></th>
+                                <th scope="row"><input class="form-check-input" name="check" type="checkbox" value="${recipe.getItems().get(num).item.getName()}"></th>
                                 <td th:text="${recipe.getItems().get(num).item.getName()}"/>
                             </tr>
                             </tbody>
@@ -256,7 +257,7 @@
                 <thead>
                 <tr>
                     <th scpoe="col">ID</th>
-                    <th scope="col">내용</th>
+                    <th scope="col" style="width: 50%">내용</th>
                     <th scope="col">작성자명</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
@@ -338,24 +339,9 @@
                 arr.push(check[i].value);
             }
         }
-        addFormItem(arr);
+        // 결과를 표시
+        return document.getElementById("#recipe-form-list").textContent = arr;
     }
-
-    function addFormItem(item) {
-        let itemFormList = document.querySelector("#recipe-form-list");
-
-        // input 태그 생성
-        let itemElement = document.createElement("input");
-        itemElement.type = "text";
-        itemElement.name = "items[]";
-        itemElement.value = item;
-        itemElement.hidden = true;
-
-        // input 태그 추가
-        itemFormList.appendChild(itemElement);
-    }
-
-
 </script>
 </body>
 </html>
