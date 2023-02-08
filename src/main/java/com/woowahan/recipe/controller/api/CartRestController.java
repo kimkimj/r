@@ -4,7 +4,6 @@ import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
 import com.woowahan.recipe.domain.dto.cartDto.CartOrderList;
-import com.woowahan.recipe.domain.dto.orderDto.CartOrderDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.exception.ErrorResult;
@@ -20,7 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -47,8 +45,8 @@ public class CartRestController {
 
     @PostMapping("/orders")
     public Response<OrderCreateResDto> orderCartItem(@RequestBody CartOrderList cartOrderListDto, Authentication authentication) {
-        List<CartOrderDto> cartOrderList = cartOrderListDto.getGetCartOrderList();
-        OrderCreateResDto orderCreateResDto = cartService.orderCartItem(cartOrderList, authentication.getName());
+//        List<CartOrderDto> cartOrderList = cartOrderListDto.getGetCartOrderList();
+        OrderCreateResDto orderCreateResDto = cartService.orderCartItem(cartOrderListDto, authentication.getName());
         return Response.success(orderCreateResDto);
     }
 
@@ -64,7 +62,7 @@ public class CartRestController {
                 paymentService.paymentCancel(token, cartOrderListDto.getImp_uid(), amount, "결제 금액 불일치");
                 return Response.error(new ErrorResult(ErrorCode.MISMATCH_AMOUNT, ErrorCode.MISMATCH_AMOUNT.getMessage()));
             }
-            OrderCreateResDto orderResponse = cartService.orderCartItem(cartOrderListDto.getGetCartOrderList(), authentication.getName());
+            OrderCreateResDto orderResponse = cartService.orderCartItem(cartOrderListDto, authentication.getName());
             log.info("장바구니 컨트롤러 주문성공했습니다.");
             return Response.success(orderResponse);
         } catch (Exception e) {

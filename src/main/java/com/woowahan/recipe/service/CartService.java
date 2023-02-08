@@ -3,6 +3,7 @@ package com.woowahan.recipe.service;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemListReqDto;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
+import com.woowahan.recipe.domain.dto.cartDto.CartOrderList;
 import com.woowahan.recipe.domain.dto.orderDto.CartOrderDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
@@ -104,13 +105,14 @@ public class CartService {
 
     /**
      * 장바구니에 담긴 상품을 통한 주문, 주문한 상품들 장바구니에서 제거
-     * @param cartOrderList
+     * @param cartOrderListDto
      * @param userName
      * @return
      */
-    public OrderCreateResDto orderCartItem(List<CartOrderDto> cartOrderList, String userName) {
+    public OrderCreateResDto orderCartItem(CartOrderList cartOrderListDto, String userName) {
         // 주문 상품이 없을 경우 에러처리
-        if (cartOrderList == null || cartOrderList.size() == 0) {
+        List<CartOrderDto> cartOrderList = cartOrderListDto.getGetCartOrderList();
+        if (cartOrderListDto == null || cartOrderList.size() == 0) {
             throw new AppException(SELECT_ORDER_ITEM, SELECT_ORDER_ITEM.getMessage());
         }
 
@@ -123,7 +125,12 @@ public class CartService {
             CartItemEntity cartItem = validateCartItem(cart, dto.getId());
 
             OrderCreateReqDto orderCreateReqDto = new OrderCreateReqDto();
-            orderCreateReqDto.setItemId(cartItem.getId());
+
+            CartItemEntity cartItemEntity = cartItemRepository.findById(cartItem.getId()).orElseThrow(() -> {
+                throw new AppException(ErrorCode.CART_ITEM_NOT_FOUND, ErrorCode.CART_ITEM_NOT_FOUND.getMessage());
+            });
+
+            orderCreateReqDto.setItemId(cartItemEntity.getItem().getId());
             orderCreateReqDto.setCount(cartItem.getCartItemCnt());
             orderCreateReqDtoList.add(orderCreateReqDto);
         }
