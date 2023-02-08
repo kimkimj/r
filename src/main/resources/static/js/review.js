@@ -54,3 +54,22 @@ function updateReview(idx) {
         }
     }
 }
+
+function deleteReview(idx) {
+    console.log(idx);
+    const recipeId = document.getElementById('recipe-id').innerText;
+    const reviewId = document.getElementsByClassName('individual-review-id')[idx].innerText;
+    let confirm_massage = confirm("해당 리뷰를 정말 삭제하시겠습니까?");
+    if(confirm_massage) {
+        const formHtml = `
+            <form id="deleteForm" action="/recipes/${recipeId}/reviews/${reviewId}" method="post">
+                <input type="hidden" id="recipeId" name="recipeId" value="${recipeId}" />
+                <input type="hidden" id="reviewId" name="reviewId" value="${reviewId}" />
+            </form>
+            `;
+        const doc = new DOMParser().parseFromString(formHtml, 'text/html');
+        const form = doc.body.firstChild;
+        document.body.append(form);
+        document.getElementById('deleteForm').submit();
+    }
+}

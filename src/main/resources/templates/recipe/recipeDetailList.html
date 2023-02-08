@@ -256,9 +256,16 @@
         <br>
         <div class="card">
             <!--                    <div class="card-header">댓글 목록</div>-->
-            <table class="table " style="width: 100%;">
+            <table class="table" style="width: 100%;">
                 <thead>
                 <tr>
+                    <colgroup>
+                        <col style="width: 5%" />
+                        <col style="width: 70%" />
+                        <col style="width: 15%" />
+                        <col style="width: 5%" />
+                        <col style="width: 5%" />
+                    </colgroup>
                     <th scpoe="col">ID</th>
                     <th scope="col" style="width: 50%">내용</th>
                     <th scope="col">작성자명</th>
@@ -266,61 +273,26 @@
                     <th scope="col"></th>
                 </tr>
                 </thead>
-                <div>
-                    <td th:if="${recipe.getReviews().size() == 0}">댓글이 없습니다. 가장 먼저 댓글을 달아보세요</td>
-                </div>
-                <!-- th:block -->
-                <th:block th:unless="${recipe.getReviews().size() == 0}"
-                          th:each="num : ${#numbers.sequence(0,recipe.getReviews().size()-1)}">
-                    <tbody>
-                    <tr>
-                        <td th:text="${recipe.getReviews().get(num).getReviewId()}"/>
-                        <td th:text="${recipe.getReviews().get(num).getContent()}"/>
-                        <td th:text="${recipe.getReviews().get(num).getUser().getUserName()}"/>
-                        <td>
-                            <button type="button" style="width: 50px;" onclick="updateReview()">
-                                수정
-                            </button>
-                            <button type="button" style="width: 50px;"
-                                    th:onclick="|location.href='@{/recipes/{recipeId}/reviews/{reviewId} (recipeId=${recipeId}, reviewId=${recipe.getReviews().get(num).getReviewId()})}'|">
-                                삭제
-                            </button>
-                        </td>
-                        <td style="border: 1px solid;">
-                            <form role="form"
-                                  th:action="@{/recipes/update/{recipeId}/reviews/{reviewId} (recipeId=${recipeId}, reviewId=${recipe.getReviews().get(num).getReviewId()})}"
-                                  th:object="${reviewCreateRequest}" method="post" content>
-                                <!-- 리뷰 내용  -->
-                                <div class="form-group col">
-                                    <input type="text" th:field="*{content}" class="form-control"
-                                           placeholder="수정할 리뷰내용 입력"
-                                           th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">
-                                    <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
-                                </div>
-                                <br>
-                                <div style="text-align: center;">
-                                    <button type="submit" class="btn btn-outline-success">수정 완료</button>
-                                </div>
-                                <br>
-                            </form>
-                        </td>
-                    </tr>
+                <tbody>
+                <th:block th:if="${#lists.size(recipe.reviews) == 0}">
+                    <td colspan="5" class="text-center" style="border: none;">댓글이 없습니다. 가장 먼저 댓글을 달아보세요</td>
+                </th:block>
+                <th:block th:unless="${#lists.size(recipe.reviews) == 0}">
                     <tr th:each="review : ${recipe.reviews}">
                         <td class="individual-review-id" th:text="${review.reviewId}"/>
-                        <td><input class="individual-content-input" th:value="${review.content}" readonly></td>
+                        <td><input class="individual-content-input" placeholder="수정할 리뷰내용 입력" th:value="${review.content}" readonly></td>
                         <td th:text="${review.user.userName}"/>
                         <td>
-                            <button type="button" class="btn btn-warning edit-btn btn-jelly" th:idx="${reviewStat.index}" onclick="updateReview(this.getAttribute('idx'))">
+                            <button type="button" class="edit-btn btn-jelly" th:idx="${reviewStat.index}" onclick="updateReview(this.getAttribute('idx'))">
                                 수정
                             </button>
-                            <button type="button" style="width: 50px;"
-                                    th:onclick="|location.href='@{/recipes/{recipeId}/reviews/{reviewId} (recipeId=${recipeId}, reviewId=${recipe.getReviews().get(num).getReviewId()})}'|">
+                            <button type="button" class="btn-jelly" style="width: 50px;" th:idx="${reviewStat.index}" onclick="deleteReview(this.getAttribute('idx'))">
                                 삭제
                             </button>
                         </td>
                     </tr>
-                    </tbody>
                 </th:block>
+                </tbody>
             </table>
             <br>
         </div>

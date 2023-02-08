@@ -32,7 +32,7 @@
             </thead>
             <tbody class="table-group-divider">
             <th:block th:if="${#lists.size(cartList) == 0}">
-                <div>현재 장바구니에 등록된 상품이 없습니다.</div>
+                <td colspan="6" class="text-center" style="border: none;">현재 장바구니에 등록된 상품이 없습니다.</td>
             </th:block>
             <th:block th:unless="${#lists.size(cartList) == 0}">
                 <tr class="cartList" th:each="item : ${cartList}">

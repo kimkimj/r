@@ -230,7 +230,7 @@ public class RecipeController {
         return "redirect:/recipes/{recipeId}";
     }
 
-    @GetMapping("/{recipeId}/reviews/{reviewId}")
+    @PostMapping("/{recipeId}/reviews/{reviewId}")
     public String deleteReview(@PathVariable Long recipeId, @PathVariable Long reviewId,
                                Authentication authentication) {
         reviewService.deleteReview(recipeId, reviewId, authentication.getName());
