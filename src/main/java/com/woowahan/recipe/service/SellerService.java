@@ -36,6 +36,7 @@ public class SellerService {
 
     public SellerJoinResponse join(SellerJoinRequest sellerJoinRequest) {
         // sellerName (ID) 중복확인
+
         sellerRepository.findBySellerName(sellerJoinRequest.getSellerName())
                 .ifPresent(seller -> {
                             throw new AppException(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage());
