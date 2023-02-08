@@ -103,14 +103,16 @@
         <br><br>
         <h5><b>주문 정보</b></h5>
         <div class="content">
-            <form th:object="${cartOrderList}">
+            <form>
                 <table class="table">
                     <thead>
-                        <tr>상품 이름</tr>
+                        <th th:width="300">상품 이름</th>
+                        <th th:width="100">상품 수량</th>
                     </thead>
                     <tbody>
-                    <!--<tr th:each="item : ${cartOrderList}"></tr>
-                    <td th:text="${item.}"></td>-->
+                    <tr th:each="cartItem : ${cartOrderDtoList}"></tr>
+                    <td th:text="${cartItem.name}">이름</td>
+                    <td th:text="${cartItem.cnt}">수량</td>
                     </tbody>
                 </table>
             </form>
@@ -124,16 +126,13 @@
                 // 결제 금액, 구매자의 이름, 이메일
                 function requestPay() {
                     const data = {
-                        // itemName: [[${item.itemName}]],
                         orderNum: createOrderNum(),
                         totalCost: document.getElementById('cost').innerText,
                         userName: [[${userResponse.name}]],
                         phoneNum: [[${userResponse.phoneNum}]],
                         email: [[${userResponse.email}]],
                         address: [[${userResponse.address}]],
-                        // itemId: [[${item.itemId}]],
                     }
-                    // console.log(data.itemName);
                     console.log(data.orderNum);
                     console.log(data.totalCost);
                     console.log([[${userResponse.name}]]);
@@ -177,7 +176,7 @@
 
                 function paymentComplete(data) {
                     $.ajax({
-                        url: "/api/v1/orders/payment/complete",
+                        url: "/api/v1/carts/orders/payment/complete",
                         method: "POST",
                         contentType: 'application/json',
                         data: JSON.stringify(data),
@@ -196,7 +195,7 @@
                         console.log(message);
                         alert(message);
 
-                        location.replace("/items/" + [[${item.itemId}]] + "/order")
+                        location.replace("/carts/order")
                     })
                 }
 
@@ -215,7 +214,7 @@
 
                 function cancellation() {
                     alert("주문이 취소되었습니다.");
-                    location.replace("/items/" + [[${item.itemId}]])
+                    location.replace("/carts")
                 }
             </script>
             <button type="submit" class="btn btn-secondary" onclick="cancellation()">취소하기</button>

@@ -54,6 +54,29 @@ public class CartService {
         return cartItemPage;
     }
 
+    public CartOrderList findCartItemOrder(String userName) {
+        UserEntity user = validateUser(userName);
+        CartEntity cart = validateCart(user);
+
+        List<CartOrderDto> orderList = new ArrayList<>();
+        List<CartItemEntity> cartItemList = cart.getCartItems();
+
+        int totalCost = 0;
+        for (CartItemEntity cartItemEntity : cartItemList) {
+            validateCartItem(cart, cartItemEntity.getId());
+
+            ItemEntity itemEntity = validateItem(cartItemEntity.getItem().getId());
+            CartOrderDto cartOrderDto = new CartOrderDto(cartItemEntity.getId(), itemEntity.getName(), cartItemEntity.getCartItemCnt());
+            orderList.add(cartOrderDto);
+            totalCost += itemEntity.getItemPrice() * cartItemEntity.getCartItemCnt();
+        }
+
+        CartOrderList cartOrderList = new CartOrderList();
+        cartOrderList.setCartOrderList(orderList);
+        cartOrderList.setTotalCost(totalCost);
+        return cartOrderList;
+    }
+
 
     public Integer updateCartItem(CartItemReq cartItemUpdateReq, String userName) {
         UserEntity user = validateUser(userName);
@@ -111,7 +134,7 @@ public class CartService {
      */
     public OrderCreateResDto orderCartItem(CartOrderList cartOrderListDto, String userName) {
         // 주문 상품이 없을 경우 에러처리
-        List<CartOrderDto> cartOrderList = cartOrderListDto.getGetCartOrderList();
+        List<CartOrderDto> cartOrderList = cartOrderListDto.getCartOrderList();
         if (cartOrderListDto == null || cartOrderList.size() == 0) {
             throw new AppException(SELECT_ORDER_ITEM, SELECT_ORDER_ITEM.getMessage());
         }

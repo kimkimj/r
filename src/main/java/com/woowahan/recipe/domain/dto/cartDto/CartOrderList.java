@@ -15,7 +15,7 @@ import java.util.List;
 public class CartOrderList {
 
     private String imp_uid;
-    private List<CartOrderDto> getCartOrderList;
+    private List<CartOrderDto> CartOrderList;
     private int totalCost;
 
 }
