@@ -22,14 +22,6 @@ public class RecipeCreateReqDto {
     @NotNull(message = "이미지를 등록해주세요.")
     private String recipeImagePath;
 
-    public RecipeEntity toEntity(){
-        RecipeEntity build = RecipeEntity.builder()
-                .id(toEntity().getId())
-                .recipeImagePath(recipeImagePath)
-                .build();
-        return build;
-    }
-
     // 레시피 수정을 위한 set메서드
     public void setFilePath(String recipeImagePath) {
         this.recipeImagePath = recipeImagePath;
