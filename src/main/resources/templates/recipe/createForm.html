@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" >
 <head th:replace="fragments/header :: headerFragment"/>
 <style>
     /* search */
@@ -88,20 +88,8 @@
                                   placeholder="이 레시피의 내용을 적어주세요.">
                         </textarea>
                         <p th:if="${#fields.hasErrors('recipeBody')}" th:errors="*{recipeBody}"></p>
-                    </div>
+                    </div><br>
                     <div id="recipe-form-list">
-                    </div>
-
-                    <!-- 레시피 이미지 첨부파일 -->
-                    <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
-                        <h5>레시피 이미지</h5>
-                        <hr>
-                        <!--<br><img src="" class="img-fluid" alt="..." style=""><br><br>-->
-                        <!-- File input -->
-                        <div class="input-group mb-3">
-                            <input type="file" class="form-control" id="inputGroupFile02">
-                            <label class="input-group-text" for="inputGroupFile02">Upload</label>
-                        </div>
                     </div>
 
                     <!-- 재료 목록 -->
@@ -118,7 +106,7 @@
                                 재료 전체삭제
                             </button>
                         </div>
-                    </div><br><br>
+                    </div><br>
 
                     <!-- form 태그 전송하는 버튼 -->
                     <div style="text-align: center;">
@@ -126,6 +114,23 @@
                     </div><br>
                 </form>
             </div>
+
+            <!-- 레시피 이미지 첨부파일 -->
+            <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
+                <h5>레시피 이미지</h5><hr>
+
+                <form th:object="${recipeCreateReqDto}" method="post" enctype="multipart/form-data">
+                    파일 : <input type="file" name="file" onclick=""><br><br>
+                    <button>등록하기</button><!-- onclick 안에 자바스크립트 작성해야 한다. -->
+                </form>
+
+                <!--<br><img src="" class="img-fluid" alt="..." style=""><br><br>-->
+                <!-- File input -->
+                <!--<div class="input-group mb-3">
+                    <input type="file" class="form-control" id="inputGroupFile02">
+                    <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                </div>-->
+            </div><br><br>
 
             <!-- 모달창 부분을 밖으로 빼준 이유는 form태그 안에 있을 경우 재료목록 데이터가 전송이 되지 않아서다. -->
             <!-- Modal -->
