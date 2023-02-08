@@ -69,7 +69,7 @@
       <div>
         <h3 th:text="${resDto.getItemPrice()}+원">상품 가격</h3>
       </div>
-<!--      <form role = "form" th:action="@{/items/cart}" th:object="${cartItemReq}" method="post">-->
+      <form role = "form" th:action="@{/items/cart}" th:object="${cartItemReq}" method="post">
         <div class="back-ground">
             <input type="hidden" th:field="${cartItemReq.cartItemId}"/>
             <input type="hidden" id="itemPrice" th:value="${resDto.getItemPrice()}"/>
@@ -88,17 +88,25 @@
 <!--          <div style="margin-right: 30px; float: right" th:text="원">총 합계 금액</div>-->
           <div style="margin-right: 30px; float: right"><span id="totalPrice" th:text="${resDto.getItemPrice()}+원">0</span></div>
         </div>
+<!--        <div style="border: 1px solid;">-->
+<!--          <input style="width: 100px; float: right;"-->
+<!--                 onclick="location.href='findAllForm.html'"-->
+<!--                 th:onclick="|location.href='@{/items}'|" type="button" value="목록으로" />-->
+<!--          <input type="submit" value="장바구니" style="width: 100px; float: right;"-->
+<!--                 onclick='ajax()'/>-->
+<!--          <input type="button" value="바로구매" style="width: 100px; float: right;"-->
+<!--                 onclick='ajax()'>-->
+<!--            -->
+<!--        </div>-->
         <div style="border: 1px solid;">
-          <input style="width: 100px; float: right;"
-                 onclick="location.href='findAllForm.html'"
-                 th:onclick="|location.href='@{/items}'|" type="button" value="목록으로" />
-          <input type="submit" value="장바구니" style="width: 100px; float: right;"
-                 onclick='ajax()'/>
-          <input type="button" value="바로구매" style="width: 100px; float: right;"
-                 onclick='ajax()'>
+            <input style="width: 100px; float: right;"
+                   onclick="location.href='findAllForm.html'"
+                   th:onclick="|location.href='@{/items}'|" type="button" value="목록으로" />
+            <input type="submit" value="장바구니" style="width: 100px; float: right;"/>
 
         </div>
-<!--      </form>-->
+
+      </form>
     </div>
   </div>
   <hr>
