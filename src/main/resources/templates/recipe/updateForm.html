@@ -88,6 +88,8 @@
                         </textarea>
                         <p th:if="${#fields.hasErrors('recipeBody')}" th:errors="*{recipeBody}"></p>
                     </div>
+                    <div id="recipe-form-list">
+                    </div>
 
                     <!-- 레시피 이미지 첨부파일 -->
                     <div class="p-3 border bg-light" style="margin-top: 20px;">
@@ -124,7 +126,8 @@
                         </table><br>-->
 
                         <!-- 선택한 재료들이 보이는 부분 -->
-                        <th:block th:each="num : ${#numbers.sequence(0,recipeUpdateReqDto.getItems().size()-1)}">
+                        <td th:if="${recipeUpdateReqDto.getItems().size() == 0}">등록된 재료가 없습니다.</td>
+                        <th:block th:unless="${recipeUpdateReqDto.getItems().size() == 0}" th:each="num : ${#numbers.sequence(0,recipeUpdateReqDto.getItems().size()-1)}">
                         <ul id="item-list">
                             <span th:text="${recipeUpdateReqDto.getItems().get(num).item.getName()}"></span>
                             <span scope="row"><button type="button" class="btn btn-sm" style="border: 1px solid;">X</button></span>
@@ -250,7 +253,7 @@
 
     function allRemove() {
         console.log("삭제 버튼 누르기");
-        let itemList = document.querySelector("#item-list");
+        let itemList = document.querySelector("#recipe-form-list");
         itemList.innerHTML = "";
     }
 
@@ -258,7 +261,7 @@
         $("#submit-btn").click(function(){
             if($("#updateTitle").val().length==0){ alert("제목을 입력해주세요."); setTimeout(function (){$("#updateTitle").focus();}, 1); return false; }
             if($("#updateBody").val().length==0){ alert("내용을 입력해주세요."); $("#updateBody").focus(); return false; }
-            if($("#item-list").find("li").length==0){ alert("재료를 입력해주세요."); $("#item-list").focus(); return false; }
+            if($("#recipe-form-list").li().length==0){ alert("재료를 입력해주세요."); $("#recipe-form-list").focus(); return false; }
         });
     });
 </script>
