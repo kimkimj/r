@@ -44,7 +44,7 @@ public class SellerJoinRequest {
     @NotBlank(message = "사업자 등록번호를 입력해주세요.")
     private String businessRegNum;
 
-    private UserRole userRole = UserRole.SELLER;
+    private final UserRole userRole = UserRole.SELLER;
 
 
     public SellerEntity toEntity(String encodedPassword) {

@@ -172,7 +172,7 @@
             <br>
         </div>
     </div>
-
+    <i class="fa-solid fa-trash-can"></i>
     <br><br><br><br>
 
 </div>
@@ -250,7 +250,17 @@
         console.log('addItem');
         let itemList = document.querySelector("#item-list");
         let itemElement = document.createElement("li");
-        itemElement.appendChild(document.createTextNode(item))
+        itemElement.className += 'itemTag';
+        itemElement.appendChild(document.createTextNode(item));
+        const btnElement = `
+            <button type="button" class="btn btn-secondary btn-sm mx-3 my-1">x</button>
+        `;
+        // const deleteBtn = document.createElement('button');
+        // deleteBtn.innerHTML = 'x';
+        const doc = new DOMParser().parseFromString(btnElement, 'text/html');
+        const deleteBtn = doc.body.firstChild;
+        console.log(deleteBtn);
+        itemElement.appendChild(deleteBtn);
         itemList.appendChild(itemElement);
         selectItem.add(item);
         console.log('selectItem에 item이 추가되었습니다.' + selectItem);

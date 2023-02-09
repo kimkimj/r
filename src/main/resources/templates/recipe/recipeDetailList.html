@@ -147,9 +147,8 @@
             <div class="">
                 <div class="p-3 border bg-light margin-10">
                     <h5>레시피 이미지</h5><hr><br>
-                    <!--
-                    <img src="" class="img-fluid" alt="...">
-                    -->
+                    <img th:src="${recipe.recipeImagePath}" class="img-fluid" alt="..." th:if="${recipe.recipeImagePath != null}">
+                    <img src="https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/noimage.gif" class="img-fluid" alt="..." th:if="${recipe.recipeImagePath == null}">
                 </div>
 
                 <div class="p-3 border bg-light margin-10" style="margin-top: 20px;">
