@@ -68,7 +68,7 @@ public class OrderController {
 
     @GetMapping("/orders/my")
     public String myOrders(Model model, OrderSearch orderSearch, Authentication authentication,
-                           @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+                           @PageableDefault(size = 30, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<OrderInfoResponse> orderList = orderService.findMyOrder(authentication.getName(), orderSearch, pageable);
 
         int nowPage = orderList.getPageable().getPageNumber() + 1;

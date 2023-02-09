@@ -3,7 +3,7 @@ package com.woowahan.recipe.controller.api;
 import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
-import com.woowahan.recipe.domain.dto.cartDto.CartOrderList;
+import com.woowahan.recipe.domain.dto.cartDto.CartOrderListDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.exception.ErrorResult;
@@ -44,15 +44,15 @@ public class CartRestController {
     }
 
     @PostMapping("/orders")
-    public Response<OrderCreateResDto> orderCartItem(@RequestBody CartOrderList cartOrderListDto, Authentication authentication) {
+    public Response<OrderCreateResDto> orderCartItem(@RequestBody CartOrderListDto cartOrderListDto, Authentication authentication) {
 //        List<CartOrderDto> cartOrderList = cartOrderListDto.getGetCartOrderList();
         OrderCreateResDto orderCreateResDto = cartService.orderCartItem(cartOrderListDto, authentication.getName());
         return Response.success(orderCreateResDto);
     }
 
     @PostMapping("/orders/payment/complete")
-    public Response<?> paymentComplete(@RequestBody CartOrderList cartOrderListDto, Authentication authentication) throws IOException {
-        log.info("orderDto.getImpUid", cartOrderListDto.getImp_uid());
+    public Response<?> paymentComplete(@RequestBody CartOrderListDto cartOrderListDto, Authentication authentication) throws IOException {
+        log.info("orderDto.getImpUid={}", cartOrderListDto.getImp_uid());
         String token = paymentService.getToken();
         log.info("iamport token={}", token);
         int amount = paymentService.paymentInfo(cartOrderListDto.getImp_uid(), token);
@@ -62,11 +62,14 @@ public class CartRestController {
                 paymentService.paymentCancel(token, cartOrderListDto.getImp_uid(), amount, "결제 금액 불일치");
                 return Response.error(new ErrorResult(ErrorCode.MISMATCH_AMOUNT, ErrorCode.MISMATCH_AMOUNT.getMessage()));
             }
+            log.info("장바구니 컨트롤러 주문중");
             OrderCreateResDto orderResponse = cartService.orderCartItem(cartOrderListDto, authentication.getName());
             log.info("장바구니 컨트롤러 주문성공했습니다.");
             return Response.success(orderResponse);
         } catch (Exception e) {
             paymentService.paymentCancel(token, cartOrderListDto.getImp_uid(), amount, "장바구니 결제 에러");
+            log.warn("메세지={}", e.getMessage());
+            log.warn("추적={}", e.getStackTrace());
             log.info("장바구니 컨트롤러 결제 에러입니다.");
             return Response.error(new ErrorResult(ErrorCode.INVALID_ORDER, ErrorCode.INVALID_ORDER.getMessage()));
         }
