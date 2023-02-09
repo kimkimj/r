@@ -1,10 +1,17 @@
 package com.woowahan.recipe.controller.ui;
 
+import com.woowahan.recipe.domain.dto.itemDto.ItemListResDto;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
 import com.woowahan.recipe.domain.dto.sellerDto.*;
 import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
+import com.woowahan.recipe.service.ItemService;
 import com.woowahan.recipe.service.SellerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +30,30 @@ import javax.validation.Valid;
 public class SellerController {
 
     private final SellerService sellerService;
+    private final ItemService itemService;
+
+    // 판매자 홈페이지
+    @GetMapping("/sellerIndex")
+    public String home() {
+        return "seller/sellerIndex";
+    }
+
+    // 판매자 회원 가입
+    @GetMapping("/seller/join")
+    public String joinForm(Model model) {
+        model.addAttribute("sellerJoinRequest", new SellerJoinRequest());
+        return "seller/joinForm";
+    }
+
+    @PostMapping("/seller/join")
+    public String join(Model model, @Valid SellerJoinRequest sellerJoinRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            return "seller/joinForm";
+        }
+        model.addAttribute("sellerJoinRequest", new SellerJoinRequest());
+        sellerService.join(sellerJoinRequest);
+        return "redirect:/seller/login";
+    }
 
     // 로그인
     @GetMapping("/seller/login")
@@ -51,24 +82,7 @@ public class SellerController {
         log.info("token={}", token);
         session.setMaxInactiveInterval(1800);
 
-        return "redirect:/";
-    }
-
-
-    @GetMapping("/seller/join")
-    public String joinForm(Model model) {
-        model.addAttribute("sellerJoinRequest", new SellerJoinRequest());
-        return "seller/joinForm";
-    }
-
-    @PostMapping("/seller/join")
-    public String join(Model model, @Valid SellerJoinRequest sellerJoinRequest, BindingResult result) {
-        if (result.hasErrors()) {
-            return "seller/joinForm";
-        }
-        model.addAttribute("sellerJoinRequest", new SellerJoinRequest());
-        sellerService.join(sellerJoinRequest);
-        return "redirect:/seller/login";
+        return "redirect:/sellerIndex";
     }
 
     @GetMapping("/seller/logout")
@@ -104,6 +118,7 @@ public class SellerController {
         return "redirect:/seller/my";
     }
 
+    // 비밀번호 수정 페이지
     @GetMapping("/seller/my/password")
     public String passwordForm(Model model) {
         model.addAttribute("sellerPasswordUpdateRequest", new SellerPasswordUpdateRequest());
@@ -118,4 +133,24 @@ public class SellerController {
        return "redirect:/seller/my";
     }
 
+    // 내 상품 리스트
+    @GetMapping("/seller/my/items")
+    public String myItems(Model model, Authentication authentication,
+                            @PageableDefault(size = 5, sort = "name", direction = Sort.Direction.DESC) Pageable pageable) {
+        String username = authentication.getName();
+        Page<ItemListResDto> itemList = itemService.findAllBySeller(authentication.getName(), pageable);
+
+        int nowPage = itemList.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4, 1);
+        int endPage = Math.min(nowPage + 5, itemList.getTotalPages());
+        int lastPage = itemList.getTotalPages();
+
+        model.addAttribute("myItemList", itemList);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("lastPage", lastPage);
+
+        return "seller/myItems";
+    }
 }
