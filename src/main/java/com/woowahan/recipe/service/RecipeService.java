@@ -124,6 +124,7 @@ public class RecipeService {
         // TODO: 2023-01-24 를 사용하는 SnakeCase보다는 CamelCase가 Java 프로그래밍에서 권장되는 표기법이라고 합니다 🙂
         recipe.setRecipeTitle(recipeUpdateReqDto.getRecipeTitle());
         recipe.setRecipeBody(recipeUpdateReqDto.getRecipeBody());
+        recipe.setRecipeImagePath(recipeUpdateReqDto.getRecipeImagePath());
         RecipeEntity saveRecipe = recipeRepository.saveAndFlush(recipe);
         for (int i = 0; i < recipeUpdateReqDto.getItems().size(); i++) {
             ItemEntity itemEntity = itemRepository.findByName(recipeUpdateReqDto.getItems().get(i)).orElse(null);
