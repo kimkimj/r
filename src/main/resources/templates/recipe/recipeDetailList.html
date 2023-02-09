@@ -173,24 +173,25 @@
                         <input type="hidden" style="width: 100px; border:1px solid; text-align: center; background-color: white" id='cartItemCnt'
                                name="cartItemCnt" th:value="${cartItemReq.cartItemCnt}"  />
 
-                        <table class="table" style="width: 100%;">
+                        <table class="table" style="width: 250px; text-align: center;">
                             <thead>
-                                <tr>
-                                    <th scope="col">V</th>
-                                    <th scope="col">재료명</th>
-                                </tr>
+                            <tr>
+                                <th><input class="form-check-input" type="checkbox"  id="chkAll" name="chkAll"/></th>
+                                <th scope="col">재료명</th>
+                            </tr>
                             </thead>
                             <!-- th:block -->
                             <td th:if="${recipe.getItems().size() == 0}">등록된 재료가 없습니다.</td>
                             <th:block th:unless="${recipe.getItems().size()== 0}" th:each="num : ${#numbers.sequence(0,recipe.getItems().size()-1)}">
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            <input class="form-check-input" name="check" type="checkbox"
-                                                   value="${recipe.getItems().get(num).item.getName()}">
-                                        </td>
-                                        <td th:text="${recipe.getItems().get(num).item.getName()}"/>
-                                    </tr>
+                                <tr>
+                                    <!--<td>
+                                        <input class="form-check-input" name="check" type="checkbox"
+                                               value="${recipe.getItems().get(num).item.getName()}">
+                                    </td>-->
+                                    <td><input class="form-check-input" type="checkbox" id="chk" name="chk" value="${recipe.getItems().get(num).item.getName()}"></td>
+                                    <td th:text="${recipe.getItems().get(num).item.getName()}"/>
+                                </tr>
                                 </tbody>
                             </th:block>
                         </table>
@@ -201,23 +202,9 @@
 
                         <!-- form 태그 전송하는 버튼 -->
                         <div style="text-align: center;">
-                            <button class="btn btn-outline-success" type="submit" onclick="clickBtn();">장바구니에 담기</button>
-                        </div><br>
-                    </form><br>
-
-                    <!--<div class="d-grid gap-2 mx-auto">
-                        &lt;!&ndash; 원래 form 태그 자리 &ndash;&gt;
-                        <form role="form" th:action="@{/recipes/carts}" th:object="${cartItemListReqDto}" th:field="*{items}" method="post" content>
-                        &lt;!&ndash; 재료 리스트 &ndash;&gt;
-                        <div id="item-form-list"></div>
-                        <br>
-                        &lt;!&ndash; form 태그 전송하는 버튼 &ndash;&gt;
-                        <div style="text-align: center;">
-                            <button class="btn btn-outline-success" type="button" >장바구니에 담기</button>&lt;!&ndash;onclick="clickBtn();"&ndash;&gt;
+                            <button class="btn btn-outline-success" id="form-btn" type="submit" onclick="clickBtn();">장바구니에 담기</button>
                         </div><br>
                     </form>
-                    </div>-->
-                    <br>
                 </div>
             </div>
         </div>
@@ -234,13 +221,9 @@
         <br><br>
 
         <!-- 리뷰 -->
-        <div><h3>Review</h3>
-            <hr>
+        <div>
+            <h3>Review</h3><hr>
         </div>
-        <!--        <div class="row gx-5">-->
-        <!--            <div class="col">-->
-        <!--        <p>리뷰 등록</p>-->
-
         <div class="card">
             <div class="card-body">
                 <!--                <textarea class="form-control" rows="1"></textarea>-->
@@ -318,7 +301,6 @@
     <!-- footer -->
     <div th:replace="fragments/footer :: footerFragment"/>
     <br><br>
-    <!-- 전체 틀 섹션 div 끝 태그 -->
 </div>
 <!--
 <script>
@@ -331,8 +313,34 @@
 -->
 <script>
 
+    // checkbox 선택/해제
+    $(document).ready(function() {
+        $("#chkAll").click(function() {
+            if($("#chkAll").is(":checked")) $("input[name=chk]").prop("checked", true);
+            else $("input[name=chk]").prop("checked", false);
+        });
+
+        $("input[name=chk]").click(function() {
+            var total = $("input[name=chk]").length;
+            var checked = $("input[name=chk]:checked").length;
+
+            if(total != checked) $("#chkAll").prop("checked", false);
+            else $("#chkAll").prop("checked", true);
+        });
+    });
+
+    // 장바구니담기 버튼을 누르면 값을 가져오는 메서드
+    $(document).ready(function() {
+        $('#form-btn').click(function() {
+            alert($('#chk').val());
+            // alert($("input[type=checkbox][name=chk]:checked").val());
+        });
+    });
+</script>
+
+<!--<script>
     // 장바구니 담기 시도 1
-    /*function clickBtn() {
+    function clickBtn() {
         // 체크한 데이터를 담을 배열 선언
         const arr = [];
         // Name이 check인 속성 취득
@@ -346,13 +354,12 @@
         }
         // 결과를 표시
         return document.getElementById("#recipe-form-list").textContent = arr;
-    }*/
+    }
 
     // 장바구니 담기 시도 2
     function clickBtn() {
-
-        alert("장바구니에 상품이 담겼습니다.");
-/*        // checked 여부 확인하기
+        // alert("장바구니에 재료가 담겼습니다.");
+        // checked 여부 확인하기
         $('input:checkbox[name="check"]').is(":checked") == true
 
         // checked 처리 하기
@@ -367,27 +374,6 @@
         // checkbox value 값 확인
         $('input:checkbox[name="check"]').val();*/
     }
-</script>
-<!--<script>
-    $(".checkbox-test").click(function() {
-        let chekObj = document.getElementsByClassName("checkbox-test");
-        let lenth = chekObj.length;
-        let checked = 0;
-        let checkboxTest;
-
-        for (i = 0; i < lenth; i++) {
-            if (chekObj[i].checked === true) {
-                checked += 1;
-                checkboxTest = chekObj[i].getAttribute("id");
-                console.log(checkboxTest);
-            }
-        }
-
-        if (checked >= 2){
-            alert("체크 해제 후 한 가지만 선택해 주세요");
-            return false;
-        }
-    });
 </script>-->
 </body>
 </html>
