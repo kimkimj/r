@@ -43,7 +43,7 @@ async function count(type, idx)  {
         data: JSON.stringify(item)
     }).done((data) => {
         // console.log(data);
-        alert(data.result);
+        // alert(data.result);
     }).fail((error) => {
         // console.log(error);
         alert(error.result);

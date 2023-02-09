@@ -39,6 +39,8 @@ public class CartController {
             log.info("cartItemCnt={}", cartOrderDto.getCnt());
         }
         String firstItem = cartOrderDtoList.get(0).getName();
+
+        log.info("firstItem = {}", firstItem);
         model.addAttribute("userResponse", userResponse);
         model.addAttribute("cartOrderDtoList", cartOrderDtoList);
         model.addAttribute("cartOrderListDto", cartOrderListDto);
