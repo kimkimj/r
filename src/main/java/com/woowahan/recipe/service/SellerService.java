@@ -8,6 +8,7 @@ import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.SellerRepository;
 import com.woowahan.recipe.security.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SellerService {
@@ -57,6 +59,7 @@ public class SellerService {
     }
 
     public String login(String sellerName , String password) {
+        log.info("로그인 입력");
         // userName(ID)가 없는 경우
         SellerEntity seller = sellerRepository.findBySellerName(sellerName)
                 .orElseThrow(() -> new AppException(ErrorCode.SELLER_NOT_FOUND, ErrorCode.SELLER_NOT_FOUND.getMessage()));

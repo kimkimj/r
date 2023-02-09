@@ -25,7 +25,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final String secretKey;
     private final JwtTokenUtils jwtTokenUtils;
-    private final UserService userService;
+    //private final UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -64,12 +64,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
 
         String userName = jwtTokenUtils.getUserName(token, secretKey);
-        UserRole userRole = userService.validateUser(userName).getUserRole();
+        //UserRole userRole = userService.validateUser(userName).getUserRole();
 
         // 통과
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(userName, null, List.of(new SimpleGrantedAuthority(userRole.getValue())));
-
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(userName, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
 
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
