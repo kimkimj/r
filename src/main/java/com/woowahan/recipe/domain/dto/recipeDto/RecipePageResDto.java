@@ -19,5 +19,5 @@ public class RecipePageResDto {
     private int recipeLike;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
-//    private String thumbnailImagePath; 썸네일 추가시
+    private String recipeImagePath;
 }

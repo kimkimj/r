@@ -50,7 +50,7 @@ class ItemRestControllerTest {
         /* given */
         ItemCreateReqDto itemCreateReqDto = new ItemCreateReqDto("imagepath", "name", 1000, 5);
         given(itemService.createItem(any(ItemCreateReqDto.class), any()))
-                .willReturn(new ItemCreateResDto(1L, "sellerName", "itemName", "상품 등록 완료"));
+                .willReturn(new ItemCreateResDto(1L, "itemName", "상품 등록 완료"));
         /* when */
         ResultActions resultActions = mockMvc.perform(post("/api/v1/items")
                                         .with(csrf())
@@ -60,7 +60,6 @@ class ItemRestControllerTest {
         /* then */
         resultActions.andExpect(status().isOk())
                         .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
-                        .andExpect(jsonPath("$.result.sellerName").value("sellerName"))
                         .andExpect(jsonPath("$.result.itemName").value("itemName"))
                         .andExpect(jsonPath("$.result.message").value("상품 등록 완료"));
     }

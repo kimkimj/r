@@ -1,5 +1,8 @@
 server:
   port: 8080
+  servlet:
+    session:
+      timeout: 43200m      # 60m * 24h * 30d
 servlet:
   encoding:
     force-response: true

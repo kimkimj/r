@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
