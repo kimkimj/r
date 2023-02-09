@@ -13,4 +13,6 @@ public class CartItemReq {
 
     private Integer cartItemCnt;
 
+    private boolean isChecked;
+
 }
