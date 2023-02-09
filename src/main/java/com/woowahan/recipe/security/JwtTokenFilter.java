@@ -1,5 +1,7 @@
 package com.woowahan.recipe.security;
 
+import com.woowahan.recipe.domain.UserRole;
+import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
