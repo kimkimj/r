@@ -204,8 +204,18 @@
                 // button 추가
                 let addItemButton = document.createElement("button");
                 addItemButton.className += 'item-add-btn';
-                addItemButton.innerHTML = "선택";
+
+                // button style
+                addItemButton.innerHTML = "&nbsp;&nbsp;선택&nbsp;&nbsp;";
+                addItemButton.style.color = 'black';
+                addItemButton.style.fontWeight = '600';
+                addItemButton.style.fontSize = '15px';
+                addItemButton.style.backgroundColor = '#e6f3e5';
+                addItemButton.style.borderStyle = 'none';
+                addItemButton.style.borderRadius= '15px';
+
                 addItemButton.onclick = () => {
+
                     console.log('selectItem에 item을 담을 수 있습니다.' + item);
                     addItem(item);
                     addFormItem(item);
