@@ -75,7 +75,7 @@
                 <h5>레시피 등록</h5>
                 <h6>제목, 내용, 재료 중 하나라도 입력되지 않으면 레시피가 등록되지 않습니다.</h6>
                 <hr>
-                <form role="form" th:action="@{/recipes/create}" th:object="${recipeCreateReqDto}" method="post">
+                <form role="form" th:action="@{/recipes/create}" th:object="${recipeCreateReqDto}" method="post" enctype="multipart/form-data">
                     <!-- 레시피 제목  -->
                     <div class="form-group col">
                         <label th:for="recipeTitle">레시피 제목</label>
@@ -89,10 +89,8 @@
                     <div class="form-group mb-3">
                         <label th:for="recipeBody" class="form-label">레시피 내용 (음식에 필요한 재료와 단위를 먼저 적어주시면 더 완벽한 레시피가
                             될거에요)</label>
-                        <textarea th:field="*{recipeBody}" class="form-control" id="recipeBody" rows="3"
-                                  style="height: 300px; resize:none;"
-                                  th:class="${#fields.hasErrors('recipeBody')}? 'form-control fieldError' : 'form-control'"
-                                  placeholder="이 레시피의 내용을 적어주세요.">
+                        <textarea th:field="*{recipeBody}" class="form-control" id="recipeBody" rows="3" style="height: 300px; resize:none;"
+                                  th:class="${#fields.hasErrors('recipeBody')}? 'form-control fieldError' : 'form-control'" placeholder="이 레시피의 내용을 적어주세요.">
                         </textarea>
                         <p th:if="${#fields.hasErrors('recipeBody')}" th:errors="*{recipeBody}"></p>
                     </div>
@@ -109,7 +107,7 @@
                         <!-- 재료 등록 버튼(modal), 등록한 재료 전체삭제 버튼 -->
                         <div style="text-align: right;">
                             <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal">
+                                    data-bs-target="#exampleModal" onclick="searchAndShowItems(document.querySelector('#keyword').value)">
                                 재료 등록
                             </button>
                             <button type="button" class="btn btn-outline-success" onclick="allRemove();">
@@ -119,28 +117,23 @@
                     </div>
                     <br>
 
+
+                    <!-- 레시피 이미지 첨부파일 -->
+                    <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
+                        <h5>레시피 이미지</h5>
+                        <hr>
+                        <div>
+                            파일 : <input type="file" name="file"><br><br>
+                        </div>
+                    </div>
+
+                    <br><br>
                     <!-- form 태그 전송하는 버튼 -->
                     <div style="text-align: center;">
                         <button id="submit-btn" type="submit" class="btn btn-outline-success">레시피 작성완료</button>
                     </div>
                     <br>
 
-                    <!-- 레시피 이미지 첨부파일 -->
-                    <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
-                        <h5>레시피 이미지</h5>
-                        <hr>
-
-                        <div th:object="${recipeCreateReqDto}" th:field="*{recipeImagePath}" method="post" enctype="multipart/form-data">
-                            파일 : <input type="file" name="file" onclick=""><br><br>
-                        </div>
-                        <!--<br><img src="" class="img-fluid" alt="..." style=""><br><br>-->
-                        <!-- File input -->
-                        <!--<div class="input-group mb-3">
-                            <input type="file" class="form-control" id="inputGroupFile02">
-                            <label class="input-group-text" for="inputGroupFile02">Upload</label>
-                        </div>-->
-                    </div>
-                    <br><br>
                 </form>
             </div>
 
@@ -165,7 +158,7 @@
                                     <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png">
                                 </button>
                             </div>
-                            <div>
+                            <div style="overflow:scroll; width: 100%; height: 500px; overflow-x: hidden; overflow-y: auto; position:relative">
                                 <ul id="search-list">
                                 </ul>
                             </div>
@@ -179,7 +172,7 @@
             <br>
         </div>
     </div>
-
+    <i class="fa-solid fa-trash-can"></i>
     <br><br><br><br>
 
 </div>
@@ -188,6 +181,7 @@
 <div th:replace="fragments/footer :: footerFragment"/>
 <br><br>
 <script>
+    const selectItem = new Set();
     async function searchAndShowItems(keyword) {
         // <ul id="search-list" ...> 가져온다.
         let itemList = document.querySelector("#search-list")
@@ -201,22 +195,37 @@
         clearSearchResult();
 
         for (let item of items) {
-            let itemElement = document.createElement("li");
+            if(!selectItem.has(item)) {
+                let itemElement = document.createElement("li");
 
-            // text 추가
-            itemElement.appendChild(document.createTextNode(item))
+                // text 추가
+                itemElement.appendChild(document.createTextNode(item))
 
-            // button 추가
-            let addItemButton = document.createElement("button");
-            addItemButton.innerHTML = "선택";
-            addItemButton.onclick = () => {
-                addItem(item);
-                addFormItem(item);
-            };
-            itemElement.appendChild(addItemButton);
+                // button 추가
+                let addItemButton = document.createElement("button");
+                addItemButton.className += 'item-add-btn';
 
-            // search list 에 추가
-            itemList.appendChild(itemElement);
+                // button style
+                addItemButton.innerHTML = "&nbsp;&nbsp;선택&nbsp;&nbsp;";
+                addItemButton.style.color = 'black';
+                addItemButton.style.fontWeight = '600';
+                addItemButton.style.fontSize = '15px';
+                addItemButton.style.backgroundColor = '#e6f3e5';
+                addItemButton.style.borderStyle = 'none';
+                addItemButton.style.borderRadius= '15px';
+
+                addItemButton.onclick = () => {
+
+                    console.log('selectItem에 item을 담을 수 있습니다.' + item);
+                    addItem(item);
+                    addFormItem(item);
+                    itemElement.remove();  // 선택된 Element 제거
+                };
+                itemElement.appendChild(addItemButton);
+
+                // search list 에 추가
+                itemList.appendChild(itemElement);
+            }
         }
     }
 
@@ -248,16 +257,32 @@
     }
 
     function addItem(item) {
+        console.log('addItem');
         let itemList = document.querySelector("#item-list");
         let itemElement = document.createElement("li");
-        itemElement.appendChild(document.createTextNode(item))
+        itemElement.className += 'itemTag';
+        itemElement.appendChild(document.createTextNode(item));
+        const btnElement = `
+            <button type="button" class="btn btn-secondary btn-sm mx-3 my-1">x</button>
+        `;
+        // const deleteBtn = document.createElement('button');
+        // deleteBtn.innerHTML = 'x';
+        const doc = new DOMParser().parseFromString(btnElement, 'text/html');
+        const deleteBtn = doc.body.firstChild;
+        console.log(deleteBtn);
+        itemElement.appendChild(deleteBtn);
         itemList.appendChild(itemElement);
+        selectItem.add(item);
+        console.log('selectItem에 item이 추가되었습니다.' + selectItem);
     }
 
     function allRemove() {
         console.log("삭제 버튼 누르기");
+        let recipeFormList = document.querySelector("#recipe-form-list");
         let itemList = document.querySelector("#item-list");
+        recipeFormList.innerHTML = "";
         itemList.innerHTML = "";
+        console.log('선택한 Item을 모두 지웁니다. selectItem.clear()' + selectItem.clear());
     }
 
     $(document).ready(function () {

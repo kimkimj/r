@@ -87,7 +87,7 @@ public class OrderEntity extends BaseEntity{
     }
 
     // 장바구니 주문
-    public static OrderEntity createOrder(UserEntity user, DeliveryEntity delivery, List<OrderItemEntity> orderItems) {
+    public static OrderEntity createOrder(UserEntity user, DeliveryEntity delivery, List<OrderItemEntity> orderItems, String imp_uid) {
         OrderEntity order = new OrderEntity();
         order.addUser(user);
         order.addDelivery(delivery);
@@ -97,6 +97,7 @@ public class OrderEntity extends BaseEntity{
         }
         order.orderNumber = order.createOrderNumber();
         order.setOrderStatus(ORDER);
+        order.impUid = imp_uid;
         return order;
     }
     /* 비지니스 로직 */

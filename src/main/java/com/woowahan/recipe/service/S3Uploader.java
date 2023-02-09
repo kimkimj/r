@@ -26,7 +26,16 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    // MultipartFile을 전달받아 File로 전환
+    /**
+     * S3에서 이미지 가져오기
+     */
+    public String getImagePath(String path) {
+        return amazonS3Client.getUrl(bucket, path).toString();
+    }
+
+    /**
+     * MultipartFile을 File로 전환(로컬에 File 생성)
+     */
     public String upload(MultipartFile multipartFile, String dirName) throws IOException {
         File uploadFile = convert(multipartFile)
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File 전환 실패"));
@@ -37,21 +46,27 @@ public class S3Uploader {
         String fileName = dirName + "/" + uploadFile.getName();
         String uploadImageUrl = putS3(uploadFile, fileName);
 
-        removeNewFile(uploadFile);  // 로컬에 생성된 File 삭제 (MultipartFile -> File 전환 하며 로컬에 파일 생성됨)
+        removeNewFile(uploadFile);  // 로컬에 생성된 File 삭제
+        log.info("이미지 url : {}", uploadImageUrl);
 
-        return uploadImageUrl;      // 업로드된 파일의 S3 URL 주소 반환
+        return uploadImageUrl;
     }
 
-//    S3에 이미지 업로드하기
+    /**
+     * S3에 이미지 업로드
+     */
     private String putS3(File uploadFile, String fileName) {
         amazonS3Client.putObject(
                 new PutObjectRequest(bucket, fileName, uploadFile)
                         .withCannedAcl(CannedAccessControlList.PublicRead)	// PublicRead 권한으로 업로드 됨
         );
+        log.info("파일이름: {}", fileName);
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
-//    로컬에 저장된 이미지 삭제하기
+    /**
+     * 로컬에 저장된 이미지 삭제
+     */
     private void removeNewFile(File targetFile) {
         if(targetFile.delete()) {
             log.info("파일이 삭제되었습니다.");

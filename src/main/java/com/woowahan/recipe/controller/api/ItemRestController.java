@@ -2,6 +2,7 @@ package com.woowahan.recipe.controller.api;
 
 import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.itemDto.*;
+import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;
 import com.woowahan.recipe.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,14 @@ import org.springframework.web.bind.annotation.*;
 public class ItemRestController {
 
     private final ItemService itemService;
+
+    /**
+     * 주문 페이지에 데이터 전달
+     */
+    @PostMapping("/add")
+    public Response<?> addData(@RequestBody OrderCreateReqDto orderCreateReqDto) {
+        return Response.success("");
+    }
 
     /**
      * 재료 전체 조회
@@ -45,9 +54,9 @@ public class ItemRestController {
     }
 
     // 특정 판매자가 등록한 재료  전체 조회
-    @GetMapping("/items/{sellerId}")
-    public Response<Page<ItemListResDto>> findAllBySeller(@PathVariable Long sellerId, Pageable pageable) {
-        return Response.success(itemService.findAllBySeller(sellerId, pageable));
+    @GetMapping("/items/{sellerName}")
+    public Response<Page<ItemListResDto>> findAllBySeller(@PathVariable String sellerName, Pageable pageable) {
+        return Response.success(itemService.findAllBySeller(sellerName, pageable));
     }
 
     /**

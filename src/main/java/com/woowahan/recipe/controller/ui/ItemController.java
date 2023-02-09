@@ -17,10 +17,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 @RequiredArgsConstructor
@@ -59,8 +61,12 @@ public class ItemController {
     @GetMapping("/{id}")
     public String findForm(Model model, @PathVariable Long id) {
         ItemDetailResDto resDto = itemService.findItem(id);
+        String imgPath = s3Uploader.getImagePath(resDto.getItemImagePath());
+        log.info("이미지 상품 상세보기 화면: {}", imgPath);
+
         model.addAttribute("id", id);
         model.addAttribute("resDto", resDto); // -> sellerName도 들어있음
+        model.addAttribute("imgPath", imgPath);
         model.addAttribute("cartItemReq", new CartItemReq(id, 1));
         return "item/findForm";
     }
@@ -69,7 +75,7 @@ public class ItemController {
     /**
      * 카트에 상품 수량 업데이트 (카트에 아이템이 없으면 생성)
      */
-    @ResponseBody
+//    @ResponseBody  버튼 구현 ajax로 할 경우에 사용
     @PostMapping("/cart")
     public String addCartItem(@ModelAttribute CartItemReq cartItemReq,
                               Model model, Authentication authentication,
@@ -77,7 +83,6 @@ public class ItemController {
 
         model.addAttribute("cartItemReq", cartItemReq);
         cartService.addCartItem(cartItemReq, authentication.getName());
-//        log.info("수량 들어오는지 확인: {}", request.getParameter(String.valueOf(cnt)));
 
         return "redirect:/items/"+cartItemReq.getCartItemId(); //상품상세보기페이지로 return
     }
@@ -126,18 +131,34 @@ public class ItemController {
     }
 
     @PostMapping("/create")
+//    @ResponseBody
     //동작 test용
-    public String create(@Valid @ModelAttribute ItemCreateReqDto reqDto, BindingResult bindingResult, RedirectAttributes redirectAttributes, Authentication authentication) {
+    public String create(@Valid @ModelAttribute ItemCreateReqDto reqDto, BindingResult bindingResult,
+                         @RequestPart MultipartFile multipartFile,
+                         RedirectAttributes redirectAttributes, Authentication authentication) {
 
         if (bindingResult.hasErrors()) {
             log.info("bindingResult = {}", bindingResult);
             return "item/createForm";
         }
+        String fileName = multipartFile.getOriginalFilename();
+        reqDto.setItemImagePath("item-image/"+fileName);
         ItemCreateResDto resDto = itemService.createItem(reqDto, authentication.getName());
         redirectAttributes.addAttribute("id", resDto.getId());
 
+        log.info("dto 저장 확인 : {}", reqDto.getItemImagePath());
+
         return "redirect:/items/{id}";
     }
+
+    @ResponseBody
+    @PostMapping("/create/image")
+    public String createImage(@RequestParam("data") MultipartFile multipartFile) throws IOException {
+        log.info("이미지:{}",multipartFile.getOriginalFilename());
+        return s3Uploader.upload(multipartFile, "item-image");
+    }
+
+
     /**
      * 상품 등록(관리자, 판매자) - 이미지 업로드
      */

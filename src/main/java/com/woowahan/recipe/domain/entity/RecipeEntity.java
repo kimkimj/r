@@ -59,6 +59,10 @@ public class RecipeEntity extends BaseEntity {
         this.recipeBody = recipeBody;
     }
 
+    public void setRecipeImagePath(String recipeImagePath) {
+        this.recipeImagePath = recipeImagePath;
+    }
+
     public RecipePageResDto toResponse() {
         return RecipePageResDto.builder()
                 .recipeId(this.id)

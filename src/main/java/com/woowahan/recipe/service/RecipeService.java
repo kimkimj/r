@@ -10,6 +10,7 @@ import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,7 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,10 +38,7 @@ public class RecipeService {
     private final ItemRepository itemRepository;
     private final RecipeItemRepository recipeItemRepository;
     private final ApplicationEventPublisher publisher;
-
-//    RecipeEntity recipe = recipeRepository.save(new RecipeEntity());
-//    ItemEntity item = itemRepository.save(new ItemEntity());
-//    RecipeItemEntity recipeItem = recipeItemRepository.save(RecipeItemEntity.builder().recipe(recipe).item(item).build());
+    private final S3Uploader s3Uploader;
 
     /**
      * @param recipeId
@@ -124,6 +124,9 @@ public class RecipeService {
         // TODO: 2023-01-24 를 사용하는 SnakeCase보다는 CamelCase가 Java 프로그래밍에서 권장되는 표기법이라고 합니다 🙂
         recipe.setRecipeTitle(recipeUpdateReqDto.getRecipeTitle());
         recipe.setRecipeBody(recipeUpdateReqDto.getRecipeBody());
+        if(recipeUpdateReqDto.getRecipeImagePath() != null) {
+            recipe.setRecipeImagePath(recipeUpdateReqDto.getRecipeImagePath());
+        }
         RecipeEntity saveRecipe = recipeRepository.saveAndFlush(recipe);
         for (int i = 0; i < recipeUpdateReqDto.getItems().size(); i++) {
             ItemEntity itemEntity = itemRepository.findByName(recipeUpdateReqDto.getItems().get(i)).orElse(null);
@@ -313,4 +316,14 @@ public class RecipeService {
         return items.map(ItemListForRecipeResDto::from);
     }
 
+    @Transactional
+    public String keepRecipe(MultipartFile image, RecipeEntity recipe) throws IOException {
+        System.out.println("Recipe service saveRecipe");
+        if(!image.isEmpty()) {
+            String storedFileName = s3Uploader.upload(image,"images");
+            recipe.setRecipeImagePath(storedFileName);
+        }
+        RecipeEntity savedRecipe = recipeRepository.save(recipe);
+        return savedRecipe.getRecipeImagePath();
+    }
 }

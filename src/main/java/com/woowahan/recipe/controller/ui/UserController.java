@@ -197,7 +197,7 @@ public class UserController {
     public String delete(@PathVariable Long recipeId, @PathVariable Long reviewId, Authentication authentication) {
         String username = authentication.getName();
         reviewService.deleteReview(recipeId, reviewId, username);
-        return "redirect:/my/reviews";
+        return "redirect:/users/my/reviews";
     }
 
     @GetMapping("/users/my/recipe-like")

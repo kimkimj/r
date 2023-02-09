@@ -12,6 +12,8 @@ public class CartItemResponse {
 
     private Long id;
 
+    private Long itemId;
+
     private String name;
 
     private String imagePath;
@@ -25,6 +27,7 @@ public class CartItemResponse {
     public static CartItemResponse from(CartItemEntity cartItemEntity) {
         return CartItemResponse.builder()
                 .id(cartItemEntity.getId())
+                .itemId(cartItemEntity.getItem().getId())
                 .name(cartItemEntity.getItem().getName())
                 .imagePath(cartItemEntity.getItem().getItemImagePath())
                 .price(cartItemEntity.getItem().getItemPrice())
