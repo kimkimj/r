@@ -1,6 +1,7 @@
 package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.sellerDto.*;
+import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
 import com.woowahan.recipe.service.SellerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ public class SellerController {
 
     private final SellerService sellerService;
 
+    // 로그인
     @GetMapping("/seller/login")
     public String loginForm(Model model) {
         model.addAttribute("sellerLoginRequest", new SellerLoginRequest());
@@ -30,8 +32,13 @@ public class SellerController {
     }
 
     @PostMapping("/seller/login")
-    public String login(Model model, HttpServletRequest httpServletRequest,
-                        @Valid @ModelAttribute SellerLoginRequest sellerLoginRequest) {
+    public String login(@Valid @ModelAttribute SellerLoginRequest sellerLoginRequest, BindingResult result,
+                        HttpServletRequest httpServletRequest){
+        if (result.hasErrors()) {
+            result.getFieldErrors().stream().forEach(err ->
+                    log.info("field={} value={} msg={}", err.getField(), err.getRejectedValue(), err.getDefaultMessage()));
+            return "seller/loginForm";
+        }
 
         // 세션 넣기
         httpServletRequest.getSession().invalidate();

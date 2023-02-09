@@ -61,7 +61,7 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new JwtTokenFilter(secretKey, jwtTokenUtils, userService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtTokenFilter(secretKey, jwtTokenUtils), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtExceptionFilter(), JwtTokenFilter.class)
                 .exceptionHandling()
                 // 인증 실패 시 INVALID_PERMISSION 에러 발생

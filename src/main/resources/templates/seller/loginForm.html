@@ -31,9 +31,14 @@
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 <div class="wrapper">
   <br><br><br>
-  <h2>판매자 로그인</h2>
+  <h2>로그인</h2>
+
   <br>
   <form role="form" th:action="@{/seller/login}" th:object="${sellerLoginRequest}" method="post">
+    <div th:if="${#fields.hasGlobalErrors()}">
+      <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${err}">글로벌 오류 메세지</p>
+    </div>
+
     <div class="mb-3">
       <label th:for="sellerName" class="form-label">아이디</label>
       <input type="text" th:field="*{sellerName}" class="form-control" placeholder="아이디를 입력해주세요"
