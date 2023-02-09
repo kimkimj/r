@@ -18,67 +18,6 @@
 <body>
 <script type="text/javascript">
 
-  // let cnt = document.getElementById('cartItemCnt');
-
-  // function order()  {
-  //   console.log('count() 실행');
-  //
-  //   $.ajaxSetup({
-  //     headers: {
-  //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  //     }
-  //   });
-  //
-  //   let item = {
-  //     "itemId": parseInt($('.individual_id_input').val()), // 장바구니에 담긴 아이템 id ( != 상품 아이디)
-  //     "itemCnt": parseInt($('.item-cnt').val())  // 장바구니에 담은 수량 (변경한 수량)
-  //   }
-  //   let stock = parseInt($('.individual_stock_input').val());
-  //   let price = parseInt($('.individual_price_input').text());
-  //
-  //
-  //   console.log(item);
-  //   console.log(item.itemId);
-  //   $.ajax({
-  //     url : /carts/${item.itemId},
-  //     method: "patch",
-  //     dataType: "json",
-  //     contentType: 'application/json; charset=utf-8',
-  //     data: JSON.stringify(item),
-  //     success: (data) => {
-  //       console.log(data);
-  //     },
-  //     error : (error) => {
-  //       console.log(error);
-  //       alert(error.responseJSON.result);
-  //     },
-  //     complete: () => {
-  //       console.log("호출 완료");
-  //     }
-  //   })
-  //
-  //   console.log("현재 담은 수량 = " + item.itemCnt);
-  //   document.getElementsByClassName('form-check-input')[idx].value = price * item.itemCnt;
-  //
-  //   getCheckPrice();
-  //   // 결과 출력
-  //   document.getElementsByClassName('item-cnt')[idx].value = item.itemCnt;
-  // }
-
-  // function ajax(){
-  //
-  //   $.ajax({
-  //     url: "items/cart",
-  //     data: "cnt=" + cnt,
-  //     type: "POST",
-  //     success : function(data){
-  //       alert("성공")
-  //     },
-  //     error : function(){
-  //       alert("에러")
-  //     }
-  //   });
-  // }
   /**
    * 장바구니 상품 담김 알림
    */
@@ -112,10 +51,23 @@
         }
         number -= 1;
     }
-    document.getElementById('totalPrice').innerText = (itemPrice*number).toString()+"원";
+    document.getElementById('totalPrice').innerText = (itemPrice*number).toString();
     // 결과 출력
     resultCntElement.value = number;
   }
+  function transferData() {
+      const orderCreateReqDto = {
+          itemId: [[${id}]],
+          count: document.getElementById('cartItemCnt').value,
+          totalCost: document.getElementById('totalPrice').innerText,
+      }
+      console.log(orderCreateReqDto.itemId)
+      console.log(orderCreateReqDto.count)
+      console.log(orderCreateReqDto.totalCost)
+      sessionStorage.setItem("orderCreateReqDto", JSON.stringify(orderCreateReqDto));
+      window.location.href = "/items/" + [[${id}]] + "/order"
+  }
+
 </script>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 <div class="container" style="border: 1px solid white">
@@ -135,7 +87,7 @@
         <h1 th:text="${resDto.getItemName()}">상품명</h1>
       </div>
       <div>
-        <h3 th:text="${resDto.getItemPrice()}+원">상품 가격</h3>
+          <h3><span th:text="${resDto.getItemPrice()}">상품 가격</span>원</h3>
       </div>
       <form role = "form" th:action="@{/items/cart}" th:object="${cartItemReq}" method="post">
         <div class="back-ground">
@@ -154,25 +106,16 @@
             </div>
 
 <!--          <div style="margin-right: 30px; float: right" th:text="원">총 합계 금액</div>-->
-          <div style="margin-right: 30px; float: right"><span id="totalPrice" th:text="${resDto.getItemPrice()}+원">0</span></div>
+          <div style="margin-right: 30px; float: right"><span id="totalPrice" th:text="${resDto.getItemPrice()}">0</span>원</div>
         </div>
-<!--        <div style="border: 1px solid;">-->
-<!--          <input style="width: 100px; float: right;"-->
-<!--                 onclick="location.href='findAllForm.html'"-->
-<!--                 th:onclick="|location.href='@{/items}'|" type="button" value="목록으로" />-->
-<!--          <input type="submit" value="장바구니" style="width: 100px; float: right;"-->
-<!--                 onclick='ajax()'/>-->
-<!--          <input type="button" value="바로구매" style="width: 100px; float: right;"-->
-<!--                 onclick='ajax()'>-->
-<!--            -->
-<!--        </div>-->
+
         <div style="border: 1px solid;">
           <input style="width: 100px; float: right;"
                  onclick="location.href='findAllForm.html'"
                  th:onclick="|location.href='@{/items}'|" type="button" value="목록으로" />
           <input type="submit" value="장바구니" style="width: 100px; float: right;"/>
           <input type="button" value="바로구매" style="width: 100px; float: right;"
-                 onclick='ajax()'>
+                 onclick='transferData()'>
 
         </div>
       </form>

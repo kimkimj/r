@@ -40,17 +40,13 @@ public class OrderController {
      */
     @GetMapping("/items/{id}/order")
     public String orderForm(@PathVariable Long id, Model model, @ModelAttribute OrderCreateReqDto orderCreateReqDto, Authentication authentication) {
-
         UserResponse userResponse = findService.findUserName(authentication.getName());
         ItemDetailResDto item = findService.findItemName(id);
-        int count = 1; // 상품 상세보기에서 주문할 때, 들어올 상품 개수
-        int totalCost = item.getItemPrice() * count;
-        log.info("totalCost={}", totalCost);
-        log.info("itemName", item.getItemName());
+        log.info("totalCost={}", orderCreateReqDto.getTotalCost());
+        log.info("itemName={}", item.getItemName());
 
-        model.addAttribute("userResponse", userResponse);
-        model.addAttribute("totalCost", totalCost);
         model.addAttribute("item", item);
+        model.addAttribute("userResponse", userResponse);
         return "order/orderForm";
     }
 
