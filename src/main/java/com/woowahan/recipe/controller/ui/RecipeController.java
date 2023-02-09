@@ -70,11 +70,17 @@ public class RecipeController {
     }
 
     @PostMapping("/update/{recipeId}")
-    public String update(@Valid @ModelAttribute RecipeUpdateReqDto form, BindingResult result, @PathVariable Long recipeId, RedirectAttributes redirectAttributes, Authentication authentication) {
+    public String update(@Valid @ModelAttribute RecipeUpdateReqDto form, BindingResult result, @PathVariable Long recipeId, RedirectAttributes redirectAttributes, Authentication authentication, MultipartFile file) throws IOException {
         if (result.hasErrors()) {
             return "recipe/updateForm";
         }
         String userName = authentication.getName();
+        // image upload
+        String filePath = "recipes"; // 파일경로
+        if(!file.getOriginalFilename().isBlank()) {
+            String recipeImagePath = s3Uploader.upload(file, filePath);
+            form.setRecipeImagePath(recipeImagePath);
+        }
         RecipeUpdateResDto resDto = recipeService.updateRecipe(form, recipeId, userName);
         redirectAttributes.addAttribute("recipeId", resDto.getRecipeId());
         return "redirect:/recipes/{recipeId}";
@@ -254,12 +260,17 @@ public class RecipeController {
      */
     @PostMapping("/carts")
     public String addCartItemList(@ModelAttribute CartItemReq cartItemReq, Model model,
-                                  Authentication authentication, HttpServletRequest request) {
+                                  Authentication authentication, HttpServletRequest request) throws IOException {
+        try{
+            authentication.isAuthenticated();
+        }catch (NullPointerException e){
+            return "recipe/alert";
+        }
         model.addAttribute("cartItemReq", cartItemReq);
         log.info("장바구니 아이템 요청");
         cartService.addCartItem(cartItemReq, authentication.getName());
         log.info("장바구니 서비스 다녀옴");
-        return "redirect:/carts";
+        return "recipe/alertCart";
     }
 }
 

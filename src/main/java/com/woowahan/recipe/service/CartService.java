@@ -54,6 +54,37 @@ public class CartService {
         return cartItemPage;
     }
 
+    public CartOrderListDto findCartItemOrder(String userName, String imp_uid) {
+        UserEntity user = validateUser(userName);
+        CartEntity cart = validateCart(user);
+
+        List<CartOrderDto> orderList = new ArrayList<>();
+        List<CartItemEntity> cartItemList = cart.getCartItems();
+
+        int itemCost = 0;
+        int deliveryCost = 0;
+        int totalCost = 0;
+        for (CartItemEntity cartItemEntity : cartItemList) {
+            validateCartItem(cart, cartItemEntity.getId());
+
+            ItemEntity itemEntity = validateItem(cartItemEntity.getItem().getId());
+            CartOrderDto cartOrderDto = new CartOrderDto(cartItemEntity.getId(), itemEntity.getName(), cartItemEntity.getCartItemCnt());
+            orderList.add(cartOrderDto);
+            itemCost += itemEntity.getItemPrice() * cartItemEntity.getCartItemCnt();
+        }
+
+        // 50000원 미만일 경우 배송비 추가
+        if (itemCost < 50000) {
+            deliveryCost = 3000;
+            totalCost = itemCost + deliveryCost;
+        } else {
+            totalCost = itemCost;
+        }
+
+        CartOrderListDto cartOrderListDto = new CartOrderListDto(imp_uid, orderList, itemCost, deliveryCost, totalCost);
+        return cartOrderListDto;
+    }
+
 
     public Integer updateCartItem(CartItemReq cartItemUpdateReq, String userName) {
         UserEntity user = validateUser(userName);
@@ -127,7 +158,7 @@ public class CartService {
      * @param userName
      * @return
      */
-    public OrderCreateResDto orderCartItem(CartOrderList cartOrderListDto, String userName) {
+    public OrderCreateResDto orderCartItem(CartOrderListDto cartOrderListDto, String userName) {
         // 주문 상품이 없을 경우 에러처리
         List<CartOrderDto> cartOrderList = cartOrderListDto.getCartOrderList();
         if (cartOrderListDto == null || cartOrderList.size() == 0) {
@@ -154,7 +185,7 @@ public class CartService {
         }
 
         // 주문하기
-        OrderCreateResDto orderCartItem = orderService.createOrderCartItem(orderCreateReqDtoList, userName);
+        OrderCreateResDto orderCartItem = orderService.createOrderCartItem(orderCreateReqDtoList, userName, cartOrderListDto.getImp_uid());
         // 주문한 상품들 장바구니에서 제거
         for (CartOrderDto dto : cartOrderList) {
             CartItemEntity cartItem = validateCartItem(cart, dto.getId());

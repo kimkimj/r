@@ -21,4 +21,9 @@ public class RecipeUpdateReqDto {
     private String recipeBody;
     @NotNull(message =" 재료를 입력해주세요.")
     private List<String> items;
+    private String recipeImagePath;
+
+    public void setRecipeImagePath(String recipeImagePath) {
+        this.recipeImagePath = recipeImagePath;
+    }
 }

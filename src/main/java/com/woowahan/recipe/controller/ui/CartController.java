@@ -1,6 +1,9 @@
 package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
+import com.woowahan.recipe.domain.dto.cartDto.CartOrderListDto;
+import com.woowahan.recipe.domain.dto.orderDto.CartOrderDto;
+import com.woowahan.recipe.domain.dto.userDto.UserResponse;
 import com.woowahan.recipe.service.CartService;
 import com.woowahan.recipe.service.FindService;
 import lombok.RequiredArgsConstructor;
@@ -12,10 +15,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -27,8 +29,20 @@ public class CartController {
     private final FindService findService;
 
     @GetMapping("/order")
-    public String orderForm(Authentication authentication) {
+    public String orderForm(Model model, @ModelAttribute CartOrderListDto orderDto, Authentication authentication) {
         System.out.println("들어왔습니다.");
+        UserResponse userResponse = findService.findUserName(authentication.getName());
+        CartOrderListDto cartOrderListDto = cartService.findCartItemOrder(authentication.getName(), orderDto.getImp_uid());
+        List<CartOrderDto> cartOrderDtoList = cartOrderListDto.getCartOrderList();
+        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
+            log.info("cartItemName={}", cartOrderDto.getName());
+            log.info("cartItemCnt={}", cartOrderDto.getCnt());
+        }
+        String firstItem = cartOrderDtoList.get(0).getName();
+        model.addAttribute("userResponse", userResponse);
+        model.addAttribute("cartOrderDtoList", cartOrderDtoList);
+        model.addAttribute("cartOrderListDto", cartOrderListDto);
+        model.addAttribute("firstItem", firstItem);
         return "cart/orderForm";
     }
 

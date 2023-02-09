@@ -12,10 +12,11 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartOrderList {
+public class CartOrderListDto {
 
     private String imp_uid;
-    private List<CartOrderDto> cartOrderList;
+    private List<CartOrderDto> CartOrderList;
+    private int itemCost;
+    private int deliveryCost;
     private int totalCost;
-
 }

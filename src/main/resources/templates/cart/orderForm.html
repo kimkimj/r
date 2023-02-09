@@ -104,21 +104,20 @@
         <h5><b>주문 정보</b></h5>
         <div class="content">
             <form>
-                <table class="table">
+                <table class="table" th:each="cartItem : ${cartOrderDtoList}">
                     <thead>
-                        <tr>상품 이름</tr>
-                        <tr>상품 수량</tr>
+                    <th th:width="300">상품 이름</th>
+                    <th th:width="100">상품 수량</th>
                     </thead>
                     <tbody>
-                        <tr th:each="item : ${cartOrderList}">
-                            <td th:text="${item.name}"></td>
-                            <td th:text="${item.cnt}"></td>
-                        </tr>
-<!--                    <td th:text="${item.}"></td>-->
+                    <td><span th:text="${cartItem.name}"></span></td>
+                    <td><span th:text="${cartItem.cnt}"></span></td>
                     </tbody>
                 </table>
             </form>
-            <div>결제 예정 금액: <span id="cost" th:text="${totalCost}"></span>원</div>
+            <div>총 아이템 금액: <span th:text="${cartOrderListDto.itemCost}"></span>원</div>
+            <div>배송비: <span th:text="${cartOrderListDto.deliveryCost}"></span>원</div>
+            <div>결제 예정 금액: <span id="cost" th:text="${cartOrderListDto.totalCost}"></span>원</div>
         </div>
     </div>
     <div class="button-container">
@@ -134,7 +133,9 @@
                         userName: [[${userResponse.name}]],
                         phoneNum: [[${userResponse.phoneNum}]],
                         email: [[${userResponse.email}]],
-                        address: [[${userResponse.address}]]
+                        address: [[${userResponse.address}]],
+                        itemName: [[${firstItem}]],
+                        cartOrderList: [[${cartOrderDtoList}]]
                     }
                     console.log(data.orderNum);
                     console.log(data.totalCost);
@@ -142,6 +143,7 @@
                     console.log([[${userResponse.phoneNum}]]);
                     console.log([[${userResponse.email}]]);
                     console.log([[${userResponse.address}]]);
+                    console.log(data.itemName)
 
                     paymentCard(data);
                 }
@@ -178,7 +180,7 @@
 
                 function paymentComplete(data) {
                     $.ajax({
-                        url: "/api/v1/orders/payment/complete",
+                        url: "/api/v1/carts/orders/payment/complete",
                         method: "POST",
                         contentType: 'application/json',
                         data: JSON.stringify(data),
@@ -197,25 +199,26 @@
                         console.log(message);
                         alert(message);
 
-                        location.replace("/carts");
+                        location.replace("/carts/order")
                     })
                 }
 
-                function createOrderNum(){
-                  const date = new Date();
-                  const year = date.getFullYear();
-                  const month = String(date.getMonth() + 1).padStart(2, "0");
-                  const day = String(date.getDate()).padStart(2, "0");
+                function createOrderNum() {
+                    const date = new Date();
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, "0");
+                    const day = String(date.getDate()).padStart(2, "0");
 
-                  let orderNum = year + month + day;
-                  for(let i=0;i<10;i++) {
-                    orderNum += Math.floor(Math.random() * 8);
-                  }
-                  return orderNum;
+                    let orderNum = year + month + day;
+                    for (let i = 0; i < 10; i++) {
+                        orderNum += Math.floor(Math.random() * 8);
+                    }
+                    return orderNum;
                 }
 
                 function cancellation() {
                     alert("주문이 취소되었습니다.");
+
                     location.replace("/carts");
                 }
                 /*]]>*/
