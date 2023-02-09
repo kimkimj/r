@@ -61,7 +61,7 @@ public class OrderService {
     }
 
     // 장바구니에 담긴 상품 데이터를 전달받아서 주문 생성
-    public OrderCreateResDto createOrderCartItem(List<OrderCreateReqDto> orderDtoList, String userName) {
+    public OrderCreateResDto createOrderCartItem(List<OrderCreateReqDto> orderDtoList, String userName, String imp_uid) {
         UserEntity user = validateUser(userName);
         List<OrderItemEntity> orderItemList = new ArrayList<>();
 
@@ -78,7 +78,7 @@ public class OrderService {
         delivery.setAddress(user.getAddress());
         delivery.setDeliveryStatus(DeliveryStatus.READY);
 
-        OrderEntity order = OrderEntity.createOrder(user, delivery, orderItemList);
+        OrderEntity order = OrderEntity.createOrder(user, delivery, orderItemList, imp_uid);
         orderRepository.save(order);
 
         return OrderCreateResDto.from(order);

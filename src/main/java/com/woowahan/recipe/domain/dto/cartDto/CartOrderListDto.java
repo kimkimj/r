@@ -1,5 +1,6 @@
 package com.woowahan.recipe.domain.dto.cartDto;
 
+import com.woowahan.recipe.domain.dto.orderDto.CartOrderDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +12,11 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartOrderDto {
+public class CartOrderListDto {
 
     private String imp_uid;
-    private Long cartItemId;
-    private List<CartOrderDto> cartOrderDtoList;
+    private List<CartOrderDto> CartOrderList;
+    private int itemCost;
+    private int deliveryCost;
     private int totalCost;
 }
