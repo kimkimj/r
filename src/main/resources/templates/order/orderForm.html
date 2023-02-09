@@ -104,13 +104,21 @@
         <h5><b>주문 정보</b></h5>
         <div class="content">
             <div id="itemName">결제 예정 상품: <span th:text="${item.itemName}"></span></div>
-            <div>결제 예정 금액: <span id="cost" th:text="${totalCost}"></span>원</div>
+            <div id="itemCount">상품 개수: <span id="cnt">0</span></div>
+            <div>결제 예정 금액: <span id="cost">0</span>원</div>
         </div>
     </div>
     <div class="button-container">
         <div class="button">
             <button type="submit" class="btn btn-outline-primary" onclick="requestPay()">결제하기</button>
             <script th:inline="javascript">
+                var orderCreateReqDto = JSON.parse(sessionStorage.getItem("orderCreateReqDto"))
+                var itemCount = orderCreateReqDto.count;
+                var totalPrice = orderCreateReqDto.totalCost;
+                document.getElementById("cnt").innerText = itemCount;
+                document.getElementById("cost").innerText = totalPrice;
+                console.log(itemCount);
+                console.log(totalPrice);
                 // 결제 금액, 구매자의 이름, 이메일
                 function requestPay() {
                     const data = {
@@ -122,10 +130,12 @@
                         email: [[${userResponse.email}]],
                         address: [[${userResponse.address}]],
                         itemId: [[${item.itemId}]],
+                        count: itemCount
                     }
+                    console.log(orderCreateReqDto.count)
                     console.log(data.itemName);
                     console.log(data.orderNum);
-                    console.log(data.totalCost);
+                    console.log(orderCreateReqDto.count);
                     console.log([[${userResponse.name}]]);
                     console.log([[${userResponse.phoneNum}]]);
                     console.log([[${userResponse.email}]]);
@@ -147,6 +157,7 @@
                         buyer_name: data.userName,
                         buyer_tel: data.phoneNum,
                         buyer_addr: data.address,
+                        count: data.count
                         // buyer_postcode: data.buyer_postcode
                     }, function (rsp) { // callback
                         if (rsp.success) {
@@ -155,6 +166,7 @@
                             data.imp_uid = rsp.imp_uid; // 고유 ID
                             data.merchant_uid = rsp.merchant_uid; // 거래 ID
                             // 결제 성공 시 검증 로직
+                            sessionStorage.removeItem("orderCreateReqDto")
                             paymentComplete(data);
                         } else {
                             var msg = '결제에 실패하였습니다';
@@ -204,6 +216,7 @@
                 }
 
                 function cancellation() {
+                    sessionStorage.removeItem("orderCreateReqDto")
                     alert("주문이 취소되었습니다.");
                     location.replace("/items/" + [[${item.itemId}]])
                 }

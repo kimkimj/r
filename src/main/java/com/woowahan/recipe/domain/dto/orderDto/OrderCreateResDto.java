@@ -6,10 +6,12 @@ import com.woowahan.recipe.domain.entity.OrderEntity;
 import com.woowahan.recipe.domain.OrderStatus;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 public class OrderCreateResDto {
 
     private Long id;
