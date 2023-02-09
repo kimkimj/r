@@ -45,9 +45,9 @@ public class ItemRestController {
     }
 
     // 특정 판매자가 등록한 재료  전체 조회
-    @GetMapping("/items/{sellerId}")
-    public Response<Page<ItemListResDto>> findAllBySeller(@PathVariable Long sellerId, Pageable pageable) {
-        return Response.success(itemService.findAllBySeller(sellerId, pageable));
+    @GetMapping("/items/{sellerName}")
+    public Response<Page<ItemListResDto>> findAllBySeller(@PathVariable String sellerName, Pageable pageable) {
+        return Response.success(itemService.findAllBySeller(sellerName, pageable));
     }
 
     /**

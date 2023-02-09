@@ -44,10 +44,10 @@ public class ItemService {
     }
 
     // 특정 판매자의 재료 전체 조회
-    public Page<ItemListResDto> findAllBySeller(Long id, Pageable pageable) {
+    public Page<ItemListResDto> findAllBySeller(String sellerName, Pageable pageable) {
         pageable = PageRequest.of(0, 20, Sort.by("createdDate").descending());
         // seller가 존재하는지 확인
-        SellerEntity seller = sellerRepository.findById(id)
+        SellerEntity seller = sellerRepository.findBySellerName(sellerName)
                 .orElseThrow(() -> new AppException(ErrorCode.SELLER_NOT_FOUND, ErrorCode.SELLER_NOT_FOUND.getMessage()));
         Page<ItemEntity> items = itemRepository.findAllBySeller(seller, pageable);
         return items.map(ItemListResDto::from);
