@@ -253,7 +253,7 @@ public class RecipeController {
         model.addAttribute("cartItemListReqDto", new CartItemListReqDto());
         model.addAttribute("recipeId", recipeId);
         model.addAttribute("recipe", recipe);
-        model.addAttribute("cartItemReq", new CartItemReq(recipe.getItems().get(0).getItem().getId(), 1)); // 장바구니 담기 위해 필요
+        model.addAttribute("cartItemReq", new CartItemReq(recipe.getItems().get(0).getItem().getId(), 1, true)); // 장바구니 담기 위해 필요
         return "recipe/recipeDetailList";
     }
 
