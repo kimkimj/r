@@ -77,8 +77,10 @@ public class RecipeController {
         String userName = authentication.getName();
         // image upload
         String filePath = "recipes"; // 파일경로
-        String recipeImagePath = s3Uploader.upload(file, filePath);
-        form.setRecipeImagePath(recipeImagePath);
+        if(!file.getOriginalFilename().isBlank()) {
+            String recipeImagePath = s3Uploader.upload(file, filePath);
+            form.setRecipeImagePath(recipeImagePath);
+        }
         RecipeUpdateResDto resDto = recipeService.updateRecipe(form, recipeId, userName);
         redirectAttributes.addAttribute("recipeId", resDto.getRecipeId());
         return "redirect:/recipes/{recipeId}";
