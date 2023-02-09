@@ -4,6 +4,7 @@ import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
 import com.woowahan.recipe.domain.dto.cartDto.CartOrderList;
+import com.woowahan.recipe.domain.dto.cartDto.CheckCartItemDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.exception.ErrorResult;
@@ -19,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -42,6 +44,18 @@ public class CartRestController {
         cartService.addCartItem(cartItemCreateReq, userName);
         return Response.success("상품이 장바구니에 담겼습니다.");
     }
+
+    @PostMapping("/checkOrder")
+    public Response<String> updateCheckItem (@RequestBody List<CheckCartItemDto> checkCartItemDtoList, Authentication authentication) {
+        String userName = authentication.getName();
+        for (CheckCartItemDto itemDto : checkCartItemDtoList) {
+            log.info("item id = {}", itemDto.getId());
+            log.info("item isChecked = {}", itemDto.isChecked());
+        }
+        cartService.updateCheckItem(checkCartItemDtoList, userName);
+        return Response.success("장바구니 상품 체크 완료");
+    }
+
 
     @PostMapping("/orders")
     public Response<OrderCreateResDto> orderCartItem(@RequestBody CartOrderList cartOrderListDto, Authentication authentication) {

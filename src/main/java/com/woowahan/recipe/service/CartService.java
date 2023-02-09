@@ -1,9 +1,6 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.cartDto.CartItemListReqDto;
-import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
-import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
-import com.woowahan.recipe.domain.dto.cartDto.CartOrderList;
+import com.woowahan.recipe.domain.dto.cartDto.*;
 import com.woowahan.recipe.domain.dto.orderDto.CartOrderDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
@@ -50,6 +47,9 @@ public class CartService {
         log.info("cart : {}" , cart.getId());
         Page<CartItemResponse> cartItemPage = cartItemRepository.findByCart(cart, pageable).map(CartItemResponse::from);
         log.info("cart : {}" , cart.getId());
+        for (CartItemResponse cartItem : cartItemPage.getContent()) {
+            System.out.println(cartItem.getId());
+        }
 
         return cartItemPage;
     }
@@ -95,6 +95,24 @@ public class CartService {
         }
 
         //1일때 -하면 아이템 삭제하기
+    }
+
+    public void updateCheckItem(List<CheckCartItemDto> checkCartItemDtoList, String userName) {
+        UserEntity user = validateUser(userName);
+
+        CartEntity cart = validateCart(user);
+
+        for (CheckCartItemDto dto : checkCartItemDtoList) {
+            log.info("cartItemEntity 검증");
+            CartItemEntity cartItem = validateCartItem(cart, dto.getId());
+            if(cartItem.isChecked() != dto.isChecked()) {
+                log.info("cartItemEntity 바꾸기");
+                log.info("cartItem.isChecked : {}", cartItem.isChecked());
+                log.info("dto.isChecked : {}", dto.isChecked());
+                cartItem.updateCheckItem();
+                log.info("변경된 cartItem.isChecked : {}", cartItem.isChecked());
+            }
+        }
     }
 
     public void deleteCartItem(Long itemId, String userName) {
@@ -144,12 +162,12 @@ public class CartService {
         }
         return orderCartItem;
     }
-
     /* 공통 로직 */
     private UserEntity validateUser(String userName) {
         return userRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
     }
+
     private ItemEntity validateItem(Long itemId) {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage()));
@@ -163,7 +181,6 @@ public class CartService {
         return cartItemRepository.findByCartAndId(cart, cartItemId)
                 .orElseThrow(() -> new AppException(ErrorCode.CART_ITEM_NOT_FOUND, ErrorCode.CART_ITEM_NOT_FOUND.getMessage()));
     }
-
     public void addCartItemList(CartItemListReqDto cartItemListReqDto, String userName) {
         UserEntity user = validateUser(userName); //user 존재 검증
         CartEntity cart = validateCart(user); //user의 cart가 있는지, 존재 검증 -> 없으면 카트 생성
@@ -193,4 +210,5 @@ public class CartService {
         return itemRepository.findByName(item)
                 .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage()));
     }
+
 }

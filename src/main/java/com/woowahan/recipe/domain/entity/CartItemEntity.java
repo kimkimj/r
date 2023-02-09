@@ -29,16 +29,24 @@ public class CartItemEntity extends BaseEntity {
     @JoinColumn(name = "cart_id")
     private CartEntity cart;
 
+    @Column(name = "order_check")
+    private boolean isChecked;
 
     public static CartItemEntity createCartItem(Integer itemCnt, ItemEntity item, CartEntity cart) {
         return CartItemEntity.builder()
                 .cartItemCnt(itemCnt)
                 .item(item)
                 .cart(cart)
+                .isChecked(true)
                 .build();
     }
 
     public void updateCartItemCnt(Integer itemCnt) {
         this.cartItemCnt = itemCnt;
     }
+
+    public void updateCheckItem() {
+        this.isChecked = !isChecked;
+    }
+
 }

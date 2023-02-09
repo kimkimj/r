@@ -1,6 +1,5 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateReqDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateReqDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateResDto;
@@ -19,7 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +37,7 @@ class RecipeServiceTest {
     ItemRepository itemRepository = mock(ItemRepository.class);
     RecipeItemRepository recipeItemRepository = mock(RecipeItemRepository.class);
     ApplicationEventPublisher publisher = mock(ApplicationEventPublisher.class);
+    S3Uploader s3Uploader = mock(S3Uploader.class);
 
     /**
      * 유저엔티티 생성
@@ -121,7 +120,7 @@ class RecipeServiceTest {
 
     @BeforeEach
     void beforeEach() {
-        recipeService = new RecipeService(recipeRepository, userRepository, likeRepository, itemRepository, recipeItemRepository, publisher);
+        recipeService = new RecipeService(recipeRepository, userRepository, likeRepository, itemRepository, recipeItemRepository, publisher, s3Uploader);
         items.add(0,"파");
         items.add(1,"양파");
         recipeItemEntityList.add(0,recipeItemEntity1);
