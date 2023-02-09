@@ -24,4 +24,5 @@ public class RecipeFindResDto {
     private LocalDateTime lastModifiedDate;
     private List<RecipeItemEntity> items; // 문제가 생긴다면 여기, 연관된곳이 너무 많음
     private List<ReviewEntity> reviews;
+    private String recipeImagePath;
 }

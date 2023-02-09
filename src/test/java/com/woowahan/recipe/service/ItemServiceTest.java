@@ -69,7 +69,7 @@ class ItemServiceTest {
 
     @Nested
     @DisplayName("아이템 등록")
-    class itemCreatTest {
+    class itemCreateTest {
         @Test
         @WithMockUser
         void 아이템_등록_성공() {

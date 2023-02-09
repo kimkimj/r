@@ -10,6 +10,7 @@ import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,7 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,10 +38,7 @@ public class RecipeService {
     private final ItemRepository itemRepository;
     private final RecipeItemRepository recipeItemRepository;
     private final ApplicationEventPublisher publisher;
-
-//    RecipeEntity recipe = recipeRepository.save(new RecipeEntity());
-//    ItemEntity item = itemRepository.save(new ItemEntity());
-//    RecipeItemEntity recipeItem = recipeItemRepository.save(RecipeItemEntity.builder().recipe(recipe).item(item).build());
+    private final S3Uploader s3Uploader;
 
     /**
      * @param recipeId
@@ -219,6 +219,7 @@ public class RecipeService {
                 .recipeBody(recipeCreateReqDto.getRecipeBody())
                 .user(userRepository.findByUserName(userName).orElseThrow(() ->
                         new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()))) // 현재 로그인된 userName으로 userEntity 저장
+                .recipeImagePath(recipeCreateReqDto.getRecipeImagePath())
                 .build();
         return recipeEntity;
     }
@@ -312,4 +313,14 @@ public class RecipeService {
         return items.map(ItemListForRecipeResDto::from);
     }
 
+    @Transactional
+    public String keepRecipe(MultipartFile image, RecipeEntity recipe) throws IOException {
+        System.out.println("Recipe service saveRecipe");
+        if(!image.isEmpty()) {
+            String storedFileName = s3Uploader.upload(image,"images");
+            recipe.setRecipeImagePath(storedFileName);
+        }
+        RecipeEntity savedRecipe = recipeRepository.save(recipe);
+        return savedRecipe.getRecipeImagePath();
+    }
 }

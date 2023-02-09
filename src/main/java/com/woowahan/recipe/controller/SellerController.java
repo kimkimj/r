@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,9 +54,13 @@ public class SellerController {
     }
 
     @PostMapping("/seller/join")
-    public String join(Model model) {
-        model.addAttribute("sellerLoginRequest", new SellerLoginRequest());
-        return "seller/joinForm";
+    public String join(Model model, @Valid SellerJoinRequest sellerJoinRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            return "seller/joinForm";
+        }
+        model.addAttribute("sellerJoinRequest", new SellerJoinRequest());
+        sellerService.join(sellerJoinRequest);
+        return "redirect:/seller/login";
     }
 
     @GetMapping("/seller/logout")
@@ -103,7 +108,6 @@ public class SellerController {
         model.addAttribute("sellerPasswordUpdateRequest", request);
        sellerService.updatePassword(authentication.getName(), request);
        return "redirect:/seller/my";
-
     }
 
 }
