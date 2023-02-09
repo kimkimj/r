@@ -55,8 +55,10 @@ public class RecipeController {
         String userName = authentication.getName();
         // image upload
         String filePath = "recipes"; // 파일경로
-        String recipeImagePath = s3Uploader.upload(file, filePath);
-        form.setFilePath(recipeImagePath);
+        if(!file.getOriginalFilename().isBlank()) {
+            String recipeImagePath = s3Uploader.upload(file, filePath);
+            form.setRecipeImagePath(recipeImagePath);
+        }
         recipeService.createRecipe(form, userName);
         return "redirect:/recipes/list";
     }
