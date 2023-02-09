@@ -58,13 +58,16 @@
     }
 
     function transferData() {
+        const totalCost = parseInt(document.getElementById('totalPrice').innerText);
         const orderCreateReqDto = {
             itemId: [[${id}]],
             count: document.getElementById('cartItemCnt').value,
-            totalCost: document.getElementById('totalPrice').innerText,
+            deliveryCost: totalCost >= 50000 ? 0 : 3000,
+            totalCost: totalCost
         }
         console.log(orderCreateReqDto.itemId)
         console.log(orderCreateReqDto.count)
+        console.log(orderCreateReqDto.deliveryCost)
         console.log(orderCreateReqDto.totalCost)
         sessionStorage.setItem("orderCreateReqDto", JSON.stringify(orderCreateReqDto));
         window.location.href = "/items/" + [[${id}]] + "/order"
