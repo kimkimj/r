@@ -6,7 +6,6 @@ import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.security.JwtTokenFilter;
 import com.woowahan.recipe.security.JwtTokenUtils;
 import com.woowahan.recipe.security.exception.JwtExceptionFilter;
-import com.woowahan.recipe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -39,7 +38,6 @@ public class SecurityConfig {
     @Value("${jwt.token.secret}")
     private String secretKey;
     private final JwtTokenUtils jwtTokenUtils;
-    private final UserService userService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -61,7 +59,7 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new JwtTokenFilter(secretKey, jwtTokenUtils, userService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtTokenFilter(secretKey, jwtTokenUtils), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtExceptionFilter(), JwtTokenFilter.class)
                 .exceptionHandling()
                 // 인증 실패 시 INVALID_PERMISSION 에러 발생
