@@ -4,7 +4,7 @@ import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
 import com.woowahan.recipe.domain.dto.cartDto.CartOrderListDto;
-import com.woowahan.recipe.domain.dto.cartDto.CheckCartItemDto;
+import com.woowahan.recipe.domain.dto.cartDto.CheckOrderItemDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.exception.ErrorResult;
@@ -46,13 +46,13 @@ public class CartRestController {
     }
 
     @PostMapping("/checkOrder")
-    public Response<String> updateCheckItem (@RequestBody List<CheckCartItemDto> checkCartItemDtoList, Authentication authentication) {
+    public Response<String> updateCheckItem (@RequestBody List<CheckOrderItemDto> checkCartItemDto, Authentication authentication) {
         String userName = authentication.getName();
-        for (CheckCartItemDto itemDto : checkCartItemDtoList) {
+        for (CheckOrderItemDto itemDto : checkCartItemDto) {
             log.info("item id = {}", itemDto.getId());
-            log.info("item isChecked = {}", itemDto.isChecked());
+            log.info("item isChecked = {}", itemDto.getIsChecked());
         }
-        cartService.updateCheckItem(checkCartItemDtoList, userName);
+        cartService.updateCheckItem(checkCartItemDto, userName);
         return Response.success("장바구니 상품 체크 완료");
     }
 

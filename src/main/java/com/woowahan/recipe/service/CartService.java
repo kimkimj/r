@@ -128,18 +128,19 @@ public class CartService {
         //1일때 -하면 아이템 삭제하기
     }
 
-    public void updateCheckItem(List<CheckCartItemDto> checkCartItemDtoList, String userName) {
+    public void updateCheckItem(List<CheckOrderItemDto> checkOrderItemDtoList, String userName) {
         UserEntity user = validateUser(userName);
 
         CartEntity cart = validateCart(user);
 
-        for (CheckCartItemDto dto : checkCartItemDtoList) {
+        for (CheckOrderItemDto dto : checkOrderItemDtoList) {
             log.info("cartItemEntity 검증");
             CartItemEntity cartItem = validateCartItem(cart, dto.getId());
-            if(cartItem.isChecked() != dto.isChecked()) {
+            boolean dtoCheck = dto.getIsChecked().equals("true")?true:false;
+            if(cartItem.isChecked() != dtoCheck) {
                 log.info("cartItemEntity 바꾸기");
                 log.info("cartItem.isChecked : {}", cartItem.isChecked());
-                log.info("dto.isChecked : {}", dto.isChecked());
+                log.info("dto.isChecked : {}", dtoCheck);
                 cartItem.updateCheckItem();
                 log.info("변경된 cartItem.isChecked : {}", cartItem.isChecked());
             }

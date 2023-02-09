@@ -38,7 +38,7 @@
                 <tr class="cartList" th:each="item : ${cartList}">
                     <td>
                         <input class="form-check-input" type="checkbox" id="flexCheckDefault" th:idx="${itemStat.index}" checked
-                               th:name="${item.name}" th:cartItemId="${item.id}" th:itemId="${item.itemId}" th:cnt="${item.cnt}" th:price="${item.price}" onclick="getCheckPrice()">
+                               th:cartItemId="${item.id}" th:itemId="${item.itemId}" th:cnt="${item.cnt}" th:price="${item.price}" onclick="getCheckPrice()">
                     </td>
                     <td class=".individual_image_input">
                         <div class="border d-flex justify-content-center align-items-center">

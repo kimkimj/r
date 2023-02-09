@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CheckCartItemDto {
+public class OrderItemList {
 
-    private Long id;
-
-    private boolean isChecked;
+    private List<CheckOrderItemDto> orderItems;
 
 }
