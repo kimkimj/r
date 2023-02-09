@@ -70,11 +70,15 @@ public class RecipeController {
     }
 
     @PostMapping("/update/{recipeId}")
-    public String update(@Valid @ModelAttribute RecipeUpdateReqDto form, BindingResult result, @PathVariable Long recipeId, RedirectAttributes redirectAttributes, Authentication authentication) {
+    public String update(@Valid @ModelAttribute RecipeUpdateReqDto form, BindingResult result, @PathVariable Long recipeId, RedirectAttributes redirectAttributes, Authentication authentication, MultipartFile file) throws IOException {
         if (result.hasErrors()) {
             return "recipe/updateForm";
         }
         String userName = authentication.getName();
+        // image upload
+        String filePath = "recipes"; // 파일경로
+        String recipeImagePath = s3Uploader.upload(file, filePath);
+        form.setRecipeImagePath(recipeImagePath);
         RecipeUpdateResDto resDto = recipeService.updateRecipe(form, recipeId, userName);
         redirectAttributes.addAttribute("recipeId", resDto.getRecipeId());
         return "redirect:/recipes/{recipeId}";
