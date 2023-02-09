@@ -261,6 +261,11 @@ public class RecipeController {
     @PostMapping("/carts")
     public String addCartItemList(@ModelAttribute CartItemReq cartItemReq, Model model,
                                   Authentication authentication, HttpServletRequest request) {
+        try{
+            authentication.isAuthenticated();
+        }catch (NullPointerException e){
+            return "redirect:/users/login";
+        }
         model.addAttribute("cartItemReq", cartItemReq);
         log.info("장바구니 아이템 요청");
         cartService.addCartItem(cartItemReq, authentication.getName());
