@@ -1,6 +1,5 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateReqDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateReqDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateResDto;
@@ -19,7 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 

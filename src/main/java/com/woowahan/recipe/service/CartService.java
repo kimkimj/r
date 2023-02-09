@@ -1,9 +1,9 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.cartDto.CartItemListReqDto;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
 import com.woowahan.recipe.domain.dto.cartDto.CartOrderListDto;
+import com.woowahan.recipe.domain.dto.cartDto.CheckOrderItemDto;
 import com.woowahan.recipe.domain.dto.orderDto.CartOrderDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
@@ -50,6 +50,9 @@ public class CartService {
         log.info("cart : {}" , cart.getId());
         Page<CartItemResponse> cartItemPage = cartItemRepository.findByCart(cart, pageable).map(CartItemResponse::from);
         log.info("cart : {}" , cart.getId());
+        for (CartItemResponse cartItem : cartItemPage.getContent()) {
+            System.out.println(cartItem.getId());
+        }
 
         return cartItemPage;
     }
@@ -66,11 +69,12 @@ public class CartService {
         int totalCost = 0;
         for (CartItemEntity cartItemEntity : cartItemList) {
             validateCartItem(cart, cartItemEntity.getId());
-
-            ItemEntity itemEntity = validateItem(cartItemEntity.getItem().getId());
-            CartOrderDto cartOrderDto = new CartOrderDto(cartItemEntity.getId(), itemEntity.getName(), cartItemEntity.getCartItemCnt());
-            orderList.add(cartOrderDto);
-            itemCost += itemEntity.getItemPrice() * cartItemEntity.getCartItemCnt();
+            if(cartItemEntity.isChecked()) {  // true인 경우만 담기
+                ItemEntity itemEntity = validateItem(cartItemEntity.getItem().getId());
+                CartOrderDto cartOrderDto = new CartOrderDto(cartItemEntity.getId(), itemEntity.getName(), cartItemEntity.getCartItemCnt());
+                orderList.add(cartOrderDto);
+                itemCost += itemEntity.getItemPrice() * cartItemEntity.getCartItemCnt();
+            }
         }
 
         // 50000원 미만일 경우 배송비 추가
@@ -128,6 +132,25 @@ public class CartService {
         //1일때 -하면 아이템 삭제하기
     }
 
+    public void updateCheckItem(List<CheckOrderItemDto> checkOrderItemDtoList, String userName) {
+        UserEntity user = validateUser(userName);
+
+        CartEntity cart = validateCart(user);
+
+        for (CheckOrderItemDto dto : checkOrderItemDtoList) {
+            log.info("cartItemEntity 검증");
+            CartItemEntity cartItem = validateCartItem(cart, dto.getId());
+            boolean dtoCheck = dto.getIsChecked().equals("true")?true:false;
+            if(cartItem.isChecked() != dtoCheck) {
+                log.info("cartItemEntity 바꾸기");
+                log.info("cartItem.isChecked : {}", cartItem.isChecked());
+                log.info("dto.isChecked : {}", dtoCheck);
+                cartItem.updateCheckItem();
+                log.info("변경된 cartItem.isChecked : {}", cartItem.isChecked());
+            }
+        }
+    }
+
     public void deleteCartItem(Long itemId, String userName) {
         validateUser(userName);
 
@@ -155,15 +178,13 @@ public class CartService {
         for (CartOrderDto dto : cartOrderList) {
             CartItemEntity cartItem = validateCartItem(cart, dto.getId());
 
-            OrderCreateReqDto orderCreateReqDto = new OrderCreateReqDto();
+            if(cartItem.isChecked()) {
+                OrderCreateReqDto orderCreateReqDto = new OrderCreateReqDto();
 
-            CartItemEntity cartItemEntity = cartItemRepository.findById(cartItem.getId()).orElseThrow(() -> {
-                throw new AppException(ErrorCode.CART_ITEM_NOT_FOUND, ErrorCode.CART_ITEM_NOT_FOUND.getMessage());
-            });
-
-            orderCreateReqDto.setItemId(cartItemEntity.getItem().getId());
-            orderCreateReqDto.setCount(cartItem.getCartItemCnt());
-            orderCreateReqDtoList.add(orderCreateReqDto);
+                orderCreateReqDto.setItemId(cartItem.getItem().getId());
+                orderCreateReqDto.setCount(cartItem.getCartItemCnt());
+                orderCreateReqDtoList.add(orderCreateReqDto);
+            }
         }
 
         // 주문하기
@@ -195,33 +216,4 @@ public class CartService {
                 .orElseThrow(() -> new AppException(ErrorCode.CART_ITEM_NOT_FOUND, ErrorCode.CART_ITEM_NOT_FOUND.getMessage()));
     }
 
-    public void addCartItemList(CartItemListReqDto cartItemListReqDto, String userName) {
-        UserEntity user = validateUser(userName); //user 존재 검증
-        CartEntity cart = validateCart(user); //user의 cart가 있는지, 존재 검증 -> 없으면 카트 생성
-        for (int i = 0; i < cartItemListReqDto.getItems().size(); i++) { // 리스트에서 하나씩 꺼내면서 item 생성, cart에 담기
-            ItemEntity item = validateItemList(cartItemListReqDto.getItems().get(i)); //카트에 넣으려는 아이템이 존재하는지 확인
-
-            Optional<CartItemEntity> cartItem = cartItemRepository.findByCartAndItemId(cart, item.getId());
-
-            if (cartItem.isEmpty()) {
-                if (item.getItemStock() < cartItemListReqDto.getCartItemCnt()) { //아이템 stock 충분한지 확인
-                    throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
-                }
-                CartItemEntity cartItemEntity = CartItemEntity.createCartItem(cartItemListReqDto.getCartItemCnt(), item, cart); //상품이 없으면 카트에 아이템 create
-                cartItemRepository.save(cartItemEntity);
-            } else {
-                Integer cnt = cartItem.get().getCartItemCnt() + cartItemListReqDto.getCartItemCnt();
-
-                if (item.getItemStock() < cnt) { //아이템 stock 충분한지 확인
-                    throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
-                }
-                cartItem.get().updateCartItemCnt(cnt); //상품이 이미 카트에 있으면 아이템수만 db에 update
-            }
-        }
-        //1일때 -하면 아이템 삭제하기
-    }
-    private ItemEntity validateItemList(String item) {
-        return itemRepository.findByName(item)
-                .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage()));
-    }
 }

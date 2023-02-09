@@ -19,7 +19,7 @@ async function count(type, idx)  {
             item.cartItemCnt = 10;
             return;
         }  else if (item.cartItemCnt >= stock) {
-            alert("구매할 수 있는 개수를 초과하였습니다.");
+            alert("재고가 부족합니다.");
             return;
         }
         item.cartItemCnt += 1;
@@ -43,7 +43,7 @@ async function count(type, idx)  {
         data: JSON.stringify(item)
     }).done((data) => {
         // console.log(data);
-        alert(data.result);
+        // alert(data.result);
     }).fail((error) => {
         // console.log(error);
         alert(error.result);
@@ -82,20 +82,20 @@ function deleteItem(idx) {
 // 전체 선택
 function selectAll(selectAll)  {
     const checkboxes
-        = document.getElementsByName('item');
+        = document.getElementsByClassName('form-check-input');
 
-    checkboxes.forEach((checkbox) => {
-        checkbox.checked = selectAll.checked;
-    })
+    for(var checkbox of checkboxes) {
+       checkbox.checked = selectAll.checked;
+    }
+
     getCheckPrice();
 }
 
 // 총 결제 예정 금액 구하기
 function getCheckPrice() {
     console.log('getCheckPrice() 실행');
-    const checkValue = 'input[name="item"]:checked';
+    const checkValue = 'input[class="form-check-input"]:checked';
     const selectElements = document.querySelectorAll(checkValue);
-
     let result = 0;
     console.log(typeof(result));
     selectElements.forEach((el) => {
@@ -122,41 +122,44 @@ function getCheckPrice() {
         document.getElementsByClassName('total-price')[0].innerText = parseInt(result) + deliveryPrice;
 }
 
-function purchaseOrder() {
+function saveOrder() {
     console.log('purchaseOrder() 실행');
-    const checkValue = 'input[name="item"]:checked';
-    const selectElements = document.querySelectorAll(checkValue);
-    var orderItems = [];
-    selectElements.forEach((el) => {
-        console.log(el);
-        orderItems.push({
-            // id: parseInt(el.getAttribute('itemId')),
-            id: parseInt(el.getAttribute('cartItemId')),
-            cnt: parseInt(el.getAttribute('cnt')),
-            // price: parseInt(el.getAttribute('price'))
-        });
-    });
-    console.log(typeof(orderItems));
-    console.log(orderItems);
-    const totalPrice = document.getElementsByClassName("total-price")[0].innerText;
-    console.log(totalPrice);
-    const orderSheet = {
-        imp_uid: '',
-        orderItems: orderItems,
-        totalPrice: totalPrice
+    const checkCnt = $(".form-check-input:checked").length;
+    if(checkCnt == 0) {
+        console.log(checkCnt);
+        alert("상품을 1개 이상 선택해주세요");
+        return;
     }
-    console.log(JSON.stringify(orderSheet));
+
+    var items = $(".form-check-input");
+    var orderItems = [];
+
+    for(var [idx, selectElement] of Object.entries(items)) {
+        console.log(isNaN(idx));
+        const cartItemId = $(selectElement).attr("cartItemId");
+        const checked = selectElement.checked;
+        if(!isNaN(idx)) {
+            console.log("orderItems에 push합니다");
+            orderItems.push({
+                id: cartItemId,
+                isChecked: checked
+            })
+        }
+    }
 
     $.ajax({
-        url: "/carts/order",
-        method: "GET",
-        dataType: "json",
+        url: "/api/v1/carts/checkOrder",
+        method: "POST",
         contentType: 'application/json;charset=utf-8',
-        data: JSON.stringify(orderSheet)
+        data: JSON.stringify(orderItems)
     }).done((data) => {
         console.log(data);
+        location.href = "/carts/order";
     }).fail((error) => {
         console.log(error);
+        if(error.result) {
+            alert(error.result);
+        }
     }).always(() => {
         console.log("주문 ajax 실행 완료");
     })
