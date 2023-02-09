@@ -4,7 +4,7 @@ import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.sellerDto.*;
 import com.woowahan.recipe.service.SellerService;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.security.core.Authentication;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -44,18 +44,17 @@ public class SellerRestController {
 
     // 판배자 정보 수정
     @PutMapping("/seller/{sellerName}")
-    public Response<SellerResponse> update(@RequestBody SellerUpdateRequest sellerUpdateRequest,
-                                           @PathVariable String sellerName) {
+    public Response<SellerResponse> update(@PathVariable String sellerName,
+                                           @RequestBody SellerUpdateRequest sellerUpdateRequest) {
         SellerResponse sellerResponse= sellerService.update(sellerName, sellerUpdateRequest);
         return Response.success(sellerResponse);
     }
 
 
-    @DeleteMapping("/seller/{id}")
-    public Response<SellerDeleteResponse> delete(@PathVariable String id, Authentication authentication) {
-        SellerDeleteResponse sellerDeleteResponse = sellerService.deleteSeller(id);
+    @DeleteMapping("/seller/{sellerName}")
+    public Response<SellerDeleteResponse> delete(@PathVariable String sellerName) {
+        SellerDeleteResponse sellerDeleteResponse = sellerService.deleteSeller(sellerName);
         return Response.success(sellerDeleteResponse);
-
     }
 
 

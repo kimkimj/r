@@ -1,4 +1,4 @@
-package com.woowahan.recipe.controller;
+package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.sellerDto.*;
 import com.woowahan.recipe.service.SellerService;
@@ -46,6 +46,7 @@ public class SellerController {
 
         return "redirect:/";
     }
+
 
     @GetMapping("/seller/join")
     public String joinForm(Model model) {
