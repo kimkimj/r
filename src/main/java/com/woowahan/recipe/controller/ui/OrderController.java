@@ -43,6 +43,7 @@ public class OrderController {
         UserResponse userResponse = findService.findUserName(authentication.getName());
         ItemDetailResDto item = findService.findItemName(id);
         log.info("totalCost={}", orderCreateReqDto.getTotalCost());
+        log.info("deliveryCost={}", orderCreateReqDto.getDeliveryCost());
         log.info("itemName={}", item.getItemName());
 
         model.addAttribute("item", item);
