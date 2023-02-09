@@ -48,12 +48,8 @@ public class OrderService {
 
         // 주문 상품 생성
         OrderItemEntity orderItem = OrderItemEntity.createOrderItem(item, reqDto.getCount());
-        log.info("orderItem.getTotalPrice={}", orderItem.getTotalPrice());
-        log.info("orderItem.getCount={}", orderItem.getCount());
         // 주문 생성
         OrderEntity order = OrderEntity.createOrder(user, delivery, orderItem, reqDto.getImp_uid());
-        log.info("order.getTotalPrice={}", order.getTotalPrice());
-        log.info("order.getTotalCounts={}", order.getTotalCounts());
 
         // 주문 저장
         orderRepository.save(order);
