@@ -117,7 +117,7 @@ class RecipeRestControllerTest {
     @Test
     void 레시피_수정_성공() throws Exception {
         //given
-        RecipeUpdateReqDto recipeUpdateReqDto = new RecipeUpdateReqDto("수정제목", "수정내용", Collections.singletonList(""));
+        RecipeUpdateReqDto recipeUpdateReqDto = new RecipeUpdateReqDto("수정제목", "수정내용", Collections.singletonList(""), "");
         //when
         when(recipeService.updateRecipe(any(), any(), any())).thenReturn(RecipeUpdateResDto.builder()
                 .recipeId(1L)
