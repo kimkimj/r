@@ -203,16 +203,10 @@
 
                 // button 추가
                 let addItemButton = document.createElement("button");
-                addItemButton.className += 'item-add-btn';
+                addItemButton.className += 'list-tag';
 
                 // button style
                 addItemButton.innerHTML = "&nbsp;&nbsp;선택&nbsp;&nbsp;";
-                addItemButton.style.color = 'black';
-                addItemButton.style.fontWeight = '600';
-                addItemButton.style.fontSize = '15px';
-                addItemButton.style.backgroundColor = '#e6f3e5';
-                addItemButton.style.borderStyle = 'none';
-                addItemButton.style.borderRadius= '15px';
 
                 addItemButton.onclick = () => {
 
@@ -263,8 +257,9 @@
         itemElement.className += 'itemTag';
         itemElement.appendChild(document.createTextNode(item));
         const btnElement = `
-            <button type="button" class="btn btn-secondary btn-sm mx-3 my-1">x</button>
+            <button type="button" class="delete-btn mx-2" onclick="deleteTag()">x</button>
         `;
+
         // const deleteBtn = document.createElement('button');
         // deleteBtn.innerHTML = 'x';
         const doc = new DOMParser().parseFromString(btnElement, 'text/html');
@@ -274,6 +269,11 @@
         itemList.appendChild(itemElement);
         selectItem.add(item);
         console.log('selectItem에 item이 추가되었습니다.' + selectItem);
+    }
+
+    function deleteTag() {
+        console.log("아이템 삭제");
+
     }
 
     function allRemove() {
