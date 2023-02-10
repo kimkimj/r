@@ -19,10 +19,10 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="/seller/my">회원 정보</a></li>
-              <li><a class="dropdown-item" href="/seller/my/items">나의 상품</a></li>
+              <li><a class="dropdown-item" href="/seller/my/items">상품 관리</a></li>
+              <li><a class="dropdown-item" href="/seller/my/items">상품 등록</a></li>
             </ul>
           </li>
-          <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/seller/my/items" class="nav-link link-dark px-2">나의 상품</a></li>
           <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/seller/logout" class="nav-link link-dark px-2">LogOut</a></li>
         </ul>
       </div>
