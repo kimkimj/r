@@ -18,3 +18,16 @@ hr {
     background-color: #DDF7F8;
     height: 200px;
 }
+
+.delete-btn {
+    color: red;
+    width: 50px;
+    height: 30px;
+    font-weight: 600;
+    font-size: 15px;
+    border: 1px solid red;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

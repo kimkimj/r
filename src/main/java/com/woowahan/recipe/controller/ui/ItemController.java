@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 
@@ -67,7 +66,7 @@ public class ItemController {
         model.addAttribute("id", id);
         model.addAttribute("resDto", resDto); // -> sellerName도 들어있음
         model.addAttribute("imgPath", imgPath);
-        model.addAttribute("cartItemReq", new CartItemReq(id, 1, true));
+        model.addAttribute("cartItemReq", new CartItemReq(id, 1));
         return "item/findForm";
     }
 
@@ -78,8 +77,7 @@ public class ItemController {
 //    @ResponseBody  버튼 구현 ajax로 할 경우에 사용
     @PostMapping("/cart")
     public String addCartItem(@ModelAttribute CartItemReq cartItemReq,
-                              Model model, Authentication authentication,
-                              HttpServletRequest request, Integer cnt) {
+                              Model model, Authentication authentication) {
 
         model.addAttribute("cartItemReq", cartItemReq);
         cartService.addCartItem(cartItemReq, authentication.getName());
