@@ -136,8 +136,7 @@ public class SellerController {
     // 내 상품 리스트
     @GetMapping("/seller/my/items")
     public String myItems(Model model, Authentication authentication,
-                            @PageableDefault(size = 5, sort = "name", direction = Sort.Direction.DESC) Pageable pageable) {
-        String username = authentication.getName();
+                            @PageableDefault(size = 5) Pageable pageable) {
         Page<ItemListResDto> itemList = itemService.findAllBySeller(authentication.getName(), pageable);
 
         int nowPage = itemList.getPageable().getPageNumber() + 1;
