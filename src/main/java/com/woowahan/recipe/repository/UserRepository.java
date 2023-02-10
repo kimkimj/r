@@ -8,4 +8,8 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByUserName(String userName); // 아이디 중복확인
     Optional<UserEntity> findByEmail(String email); // 이메일 중복확인
+
+    boolean existsByUserName(String userName);
+
+    boolean existsByEmail(String email);
 }
