@@ -50,6 +50,7 @@ public class UserEntity extends BaseEntity {
     @NotBlank
     private String phoneNum;
 
+    @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="Asia/Seoul")
