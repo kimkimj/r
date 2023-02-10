@@ -2,8 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: headerFragment"/>
 <style>
-    a { text-decoration:none !important; color:black; }
-    a:hover { text-decoration:none !important; color:black;}
+    a {
+        text-decoration: none !important;
+        color: black;
+    }
+
+    a:hover {
+        text-decoration: none !important;
+        color: black;
+    }
 
     /* 테이블 tr 색상 */
     .tr-hover:hover {
@@ -12,7 +19,9 @@
 </style>
 <body>
 <!-- Bootstrap Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
 
 <!-- 섹션의 전체 틀 div -->
 <div class="recipe-wapper">
@@ -38,9 +47,7 @@
             </thead>
             <tbody>
             <tr th:each="recipe : ${myLikeRecipeList}">
-                <a th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|" class="card-link">
-                    <td th:text="${recipe.recipeId}">
-                </a>
+                <td><a th:href="@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}" th:utext="${recipe.recipeId}"></a></td>
                 <td th:text="${recipe.recipeTitle}"/>
                 <td th:text="${recipe.recipeBody}"/>
                 <td th:text="${recipe.userName}"/>
@@ -60,8 +67,11 @@
                 </li>
 
                 <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                    <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/recipes/likes(page = ${page - 1})}" th:text="${page}">1</a></li>
-                    <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
+                    <li class="page-item" th:if="${page != nowPage}"><a class="page-link"
+                                                                        th:href="@{/recipes/likes(page = ${page - 1})}"
+                                                                        th:text="${page}">1</a></li>
+                    <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}"
+                                                                             style="color: #93bf85;"></strong></li>
                 </th:block>
 
                 <li class="page-item" th:classappend="${!myLikeRecipeList.hasNext} ? 'disabled'">
