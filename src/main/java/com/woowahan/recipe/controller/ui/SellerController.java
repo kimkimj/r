@@ -1,14 +1,25 @@
 package com.woowahan.recipe.controller.ui;
 
+import com.woowahan.recipe.domain.dto.cartDto.CartItemListReqDto;
+import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
+import com.woowahan.recipe.domain.dto.itemDto.ItemListForRecipeResDto;
 import com.woowahan.recipe.domain.dto.itemDto.ItemListResDto;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipePageResDto;
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeSearchReqDto;
+import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
 import com.woowahan.recipe.domain.dto.sellerDto.*;
 import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
 import com.woowahan.recipe.service.ItemService;
+import com.woowahan.recipe.service.RecipeService;
 import com.woowahan.recipe.service.SellerService;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -16,13 +27,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -31,6 +42,7 @@ public class SellerController {
 
     private final SellerService sellerService;
     private final ItemService itemService;
+    private final RecipeService recipeService;
 
     // 판매자 홈페이지
     @GetMapping("/sellerIndex")
@@ -151,5 +163,67 @@ public class SellerController {
         model.addAttribute("lastPage", lastPage);
 
         return "seller/myItems";
+    }
+
+    // 레시피 단건 조회
+    @GetMapping("/seller/recipes/{recipeId}")
+    public String findRecipe(@PathVariable Long recipeId, Model model) {
+        log.info("단건 조회");
+        RecipeFindResDto recipe = recipeService.findRecipe(recipeId);
+        model.addAttribute("recipe", recipe);
+        model.addAttribute("recipeId", recipeId);
+        model.addAttribute("recipe", recipe);
+        return "seller/recipeDetailList";
+    }
+
+    // 레시피 검색
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @GetMapping("/seller/recipes/search")
+    public String search(Model model, @ModelAttribute RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<RecipePageResDto> allRecipes = recipeService.searchRecipes(recipeSearchReqDto.getKeyword(), pageable);
+
+        return paging(model, allRecipes);
+    }
+
+    // 레시피 리스트
+    @GetMapping("/seller/recipes/list")
+    public String list(Model model, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<RecipePageResDto> allRecipes = recipeService.findAllRecipes(pageable);
+
+        return paging(model, allRecipes);
+    }
+
+    // 레시피 페이징 중복 코드 정리
+    private String paging(Model model, Page<RecipePageResDto> allRecipes) {
+        int nowPage = allRecipes.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4, 1);
+        int endPage = Math.min(nowPage + 5, allRecipes.getTotalPages());
+        int lastPage = allRecipes.getTotalPages();
+
+        model.addAttribute("allRecipes", allRecipes);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("lastPage", lastPage);
+        return "seller/recipeList";
+    }
+
+    //재료 검색
+    @Getter
+    @AllArgsConstructor
+    class SearchResponse {
+        private final List<String> results;
+    }
+
+    // 레시피를 재료로 검색
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @GetMapping("/seller/recipes/searchItem")
+    @ResponseBody
+    public SearchResponse searchItem(@RequestParam String keyword) {
+        Page<ItemListForRecipeResDto> allItems = recipeService.searchItemPage(keyword, PageRequest.of(0, 100));
+        return new SearchResponse(allItems
+                .stream()
+                .map(ItemListForRecipeResDto::getName)
+                .collect(Collectors.toList()));
     }
 }
