@@ -189,7 +189,7 @@ public class UserController {
         String username = authentication.getName();
         ReviewUpdateResponse reviewUpdateResponse = reviewService.updateReview(recipeId, reviewId, request, username);
         model.addAttribute("review", reviewUpdateResponse);
-        return "redirect:/my/reviews";
+        return "redirect:/users/my/reviews";
     }
 
     // 리뷰 삭제
