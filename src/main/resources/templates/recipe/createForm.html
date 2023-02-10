@@ -235,6 +235,7 @@
         itemElement.type = "text";
         itemElement.name = "items[]";
         itemElement.value = item;
+        console.log(itemElement.value);
         itemElement.hidden = true;
 
         // input 태그 추가
@@ -261,7 +262,7 @@
         itemElement.className += 'itemTag';
         itemElement.appendChild(document.createTextNode(item));
         const btnElement = `
-            <button type="button" class="delete-btn mx-2" onclick="deleteTag()">x</button>
+            <button type="button" class="delete-btn mx-2">x</button>
         `;
 
         // const deleteBtn = document.createElement('button');
@@ -275,10 +276,13 @@
         console.log('selectItem에 item이 추가되었습니다.' + selectItem);
     }
 
-    function deleteTag() {
+    $(document).on("click", ".delete-btn", function() {
         console.log("아이템 삭제");
-
-    }
+        var index = $('.delete-btn').index(this);
+        console.log("몇번째 요소인가요?" + index);
+        document.getElementsByClassName('itemTag')[index].remove();
+        document.getElementsByName('items[]')[index].remove();
+    });
 
     function allRemove() {
         console.log("삭제 버튼 누르기");
