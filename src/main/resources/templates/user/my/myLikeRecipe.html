@@ -28,6 +28,7 @@
         <table class="table table-hover" style="text-align: center;">
             <thead>
             <tr>
+                <th style="width: 50px">ID</th>
                 <th style="width: 250px">레시피 제목</th>
                 <th style="width: 250px">레시피 내용</th>
                 <th style="width: 100px">레시피 작성자</th>
@@ -36,8 +37,10 @@
             </tr>
             </thead>
             <tbody>
-<!--            th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|-->
             <tr th:each="recipe : ${myLikeRecipeList}">
+                <a th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|" class="card-link">
+                    <td th:text="${recipe.recipeId}">
+                </a>
                 <td th:text="${recipe.recipeTitle}"/>
                 <td th:text="${recipe.recipeBody}"/>
                 <td th:text="${recipe.userName}"/>
