@@ -1,16 +1,16 @@
 package com.woowahan.recipe.domain.dto.itemDto;
 
 import com.woowahan.recipe.domain.entity.ItemEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
+@Setter
 public class ItemListResDto {
 
     private Long id;
@@ -18,6 +18,8 @@ public class ItemListResDto {
     private String itemName;
     private Integer price;
     private Integer stock;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModified;
 
     public static ItemListResDto from(ItemEntity item) {
         return ItemListResDto.builder()
@@ -26,6 +28,8 @@ public class ItemListResDto {
                 .itemName(item.getName())
                 .price(item.getItemPrice())
                 .stock(item.getItemStock())
+                .createdDate(item.getCreatedDate())
+                .lastModified(item.getLastModifiedDate())
                 .build();
     }
 
