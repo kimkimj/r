@@ -1,7 +1,9 @@
 package com.woowahan.recipe.controller.api;
 
 import com.woowahan.recipe.domain.dto.Response;
+import com.woowahan.recipe.domain.dto.itemDto.ItemListResDto;
 import com.woowahan.recipe.domain.dto.sellerDto.*;
+import com.woowahan.recipe.service.ItemService;
 import com.woowahan.recipe.service.SellerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 public class SellerRestController {
     private final SellerService sellerService;
+    private final ItemService itemService;
 
     // 회원가입
     @PostMapping("/seller/join")
@@ -57,7 +60,9 @@ public class SellerRestController {
         return Response.success(sellerDeleteResponse);
     }
 
-
-
-
+    // 판매자가 등록한 재료 전체 조회
+    @GetMapping("/seller/items/{sellerName}")
+    public Response<Page<ItemListResDto>> findAllBySeller(@PathVariable String sellerName, Pageable pageable) {
+        return Response.success(itemService.findAllBySeller(sellerName, pageable));
+    }
 }

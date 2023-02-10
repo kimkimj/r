@@ -30,6 +30,14 @@ h2 {
 ul, ol {
     list-style: none;
 }
+.list-tag {
+    color: black;
+    font-weight: 600;
+    font-size: 15px;
+    background-color: #e6f3e5;
+    border-style: none;
+    border-radius: 15px;
+}
 
 /* a태그 */
 a, a:visited, a:hover, a:active {

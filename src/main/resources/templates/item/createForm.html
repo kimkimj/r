@@ -6,65 +6,46 @@
     border-color: #dc3545;
     color: #dc3545;
   }
+  img {
+      width: 300px;
+      height: 150px;
+      object-fit: cover;
+  }
 </style>
 <body>
-<script>
-  $('#btn-save').on('click', uploadImage);
-
-  function uploadImage() {
-    var file = $('#img')[0].files[0];
-    var formData = new FormData();
-    formData.append('data', file);
-
-    $.ajax({
-      type: 'POST',
-      url: '/upload',
-      data: formData,
-      processData: false,
-      contentType: false
-    }).done(function (data) {
-      $('#result-image').attr("src", data);
-    }).fail(function (error) {
-      alert(error);
-    })
-  }
-
-</script>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 <div class="container">
   <div class="py-5 text-center">
     <h2>상품 등록 화면</h2>
   </div>
-    <form role="form" th:action="@{/items/create}" th:object="${itemCreateReqDto}" method="post">
-      <div class="form-group">
-        <label for="img">파일 업로드</label>
-        <input type="file" id="img">
-      </div>
-      <div class="col-md-10">
-        <p><strong>결과 이미지입니다.</strong></p>
-        <img src="" id="result-image">
-      </div>
-      <div>
-        <label th:for="name">상품명</label>
-        <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명을 입력하세요"
-               th:class="${#fields.hasErrors('itemName')}? 'form-control fieldError' : 'form-control'">
-        <p class="fieldError" th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}">Incorrect name</p>
-      </div>
-      <div>
-        <label th:for="itemPrice">상품 가격</label>
-        <input type="text" th:field="*{itemPrice}" class="form-control" placeholder="상품 가격을 입력하세요"
-               th:class="${#fields.hasErrors('itemPrice')}? 'form-control fieldError' : 'form-control'">
-        <p class="fieldError" th:if="${#fields.hasErrors('itemPrice')}" th:errors="*{itemPrice}">Incorrect price</p>
-      </div>
-      <div>
-        <label th:for="itemStock">총 수량</label>
-        <input type="text" th:field="*{itemStock}" class="form-control" placeholder="상품 총 수량을 입력하세요"
-               th:class="${#fields.hasErrors('itemStock')}? 'form-control fieldError' : 'form-control'">
-        <p class="fieldError" th:if="${#fields.hasErrors('itemStock')}" th:errors="*{itemStock}">Incorrect stock</p>
-      </div>
-      <hr>
-      <button type="submit" class="btn btn-primary" id="btn-save">작성완료</button>
-    </form>
+  <form role="form" th:action="@{/items/create}" th:object="${itemCreateReqDto}" method="post" enctype="multipart/form-data">
+    <div th:if="${#fields.hasGlobalErrors()}">
+      <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${err}">글로벌 오류 메세지</p>
+    </div>
+    <div class="form-group">
+      <input type="file" id="img" name = "multipartFile">
+    </div>
+    <div>
+      <label th:for="name">상품명</label>
+      <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명을 입력하세요"
+             th:class="${#fields.hasErrors('itemName')}? 'form-control fieldError' : 'form-control'">
+      <p class="fieldError" th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}">Incorrect name</p>
+    </div>
+    <div>
+      <label th:for="itemPrice">상품 가격</label>
+      <input type="text" th:field="*{itemPrice}" class="form-control" placeholder="상품 가격을 입력하세요"
+             th:class="${#fields.hasErrors('itemPrice')}? 'form-control fieldError' : 'form-control'">
+      <p class="fieldError" th:if="${#fields.hasErrors('itemPrice')}" th:errors="*{itemPrice}">Incorrect price</p>
+    </div>
+    <div>
+      <label th:for="itemStock">총 수량</label>
+      <input type="text" th:field="*{itemStock}" class="form-control" placeholder="상품 총 수량을 입력하세요"
+             th:class="${#fields.hasErrors('itemStock')}? 'form-control fieldError' : 'form-control'">
+      <p class="fieldError" th:if="${#fields.hasErrors('itemStock')}" th:errors="*{itemStock}">Incorrect stock</p>
+    </div>
+    <hr>
+    <button type="submit" onclick="uploadImage()" class="btn btn-primary">작성완료</button>
+  </form>
 </div>
 <br/>
 <div th:replace="fragments/footer :: footerFragment"/>

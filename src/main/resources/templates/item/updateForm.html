@@ -16,7 +16,13 @@
   <div class="py-5 text-center">
     <h2>상품 수정 화면</h2>
   </div>
-    <form role="form" th:action="@{/items/update/{id} (id=${id})}" th:object="${itemUpdateReqDto}" method="post">
+    <form role="form" th:action="@{/items/update/{id} (id=${id})}" th:object="${itemUpdateReqDto}" method="post" enctype="multipart/form-data">
+      <div th:if="${#fields.hasGlobalErrors()}">
+        <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${err}">글로벌 오류 메세지</p>
+      </div>
+      <div class="form-group">
+        <input type="file" id="img" name = "multipartFile">
+      </div>
       <div>
         <label th:for="itemName">상품명</label>
         <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명을 입력하세요"

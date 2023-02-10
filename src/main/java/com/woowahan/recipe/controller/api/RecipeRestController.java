@@ -2,22 +2,31 @@
 package com.woowahan.recipe.controller.api;
 
 import com.woowahan.recipe.domain.dto.Response;
+import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
+import com.woowahan.recipe.service.CartService;
 import com.woowahan.recipe.service.RecipeService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
+@Slf4j
 @RequestMapping("/api/v1/recipes")
 public class RecipeRestController {
 
     private final RecipeService recipeService;
+    private final CartService cartService;
 
     /**
      * @author 김응준
@@ -145,6 +154,30 @@ public class RecipeRestController {
     @PostMapping("/search")
     public Response<Page<RecipePageResDto>> searchRecipes(@RequestBody String title, @PageableDefault(size = 50, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return Response.success(recipeService.searchRecipes(title, pageable));
+    }
+
+
+    /**
+     * 장바구니에 재료 담기
+     */
+    @PostMapping("/carts")
+    public Response<String> addCartItemList(@RequestBody List<CartItemReq> cartItemReqList, Model model, Authentication authentication) throws IOException {
+
+        for (CartItemReq reqDto:cartItemReqList) {
+            log.info("cartItemReq id = {}", reqDto.getCartItemId());
+            log.info("cartItemReq cnt = {}", reqDto.getCartItemCnt());
+        }
+//        log.info("cartItemReq check = {}", cartItemReq.getIsChecked());
+//        try{
+//            authentication.isAuthenticated();
+//        }catch (NullPointerException e){
+//            return "recipe/alert";
+//        }
+//        model.addAttribute("cartItemReqList", cartItemReqList);
+        log.info("장바구니 아이템 요청");
+        cartService.addCartItemList(cartItemReqList, authentication.getName());
+        log.info("장바구니 서비스 다녀옴");
+        return Response.success("장바구니에 상품이 담겼습니다. \n장바구니로 이동하시겠습니까?");
     }
 
 }

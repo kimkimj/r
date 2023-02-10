@@ -53,12 +53,6 @@ public class ItemRestController {
         return Response.success(itemService.searchItem(itemSearchReqDto.getKeyword(), pageable));
     }
 
-    // 특정 판매자가 등록한 재료  전체 조회
-    @GetMapping("/items/{sellerName}")
-    public Response<Page<ItemListResDto>> findAllBySeller(@PathVariable String sellerName, Pageable pageable) {
-        return Response.success(itemService.findAllBySeller(sellerName, pageable));
-    }
-
     /**
      * 재료 등록(관리자)
      */

@@ -13,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,8 +62,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders/my")
-    public String myOrders(Model model, OrderSearch orderSearch, Authentication authentication,
-                           @PageableDefault(size = 30, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String myOrders(Model model, OrderSearch orderSearch, Authentication authentication, Pageable pageable) {
         Page<OrderInfoResponse> orderList = orderService.findMyOrder(authentication.getName(), orderSearch, pageable);
 
         int nowPage = orderList.getPageable().getPageNumber() + 1;

@@ -5,6 +5,15 @@
     outline: none;
 }
 
+.delete-btn {
+    color: red;
+    height: 24px;
+    width: 24px;
+    font-weight: 600;
+    font-size: 15px;
+    border: 1px solid red;
+    border-radius: 7px;
+}
 
 .edit-btn {
     width: 90px;

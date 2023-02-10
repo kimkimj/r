@@ -19,14 +19,6 @@
 <body>
 <script type="text/javascript">
     /**
-     * 장바구니 상품 담김 알림
-     */
-    function cartAlert() {
-        alert("장바구니에 상품이 담겼습니다.");
-        return;
-    }
-
-    /**
      * 아이템 수량 카운팅 +  총 금액 계산
      */
     function count(type) {
@@ -57,6 +49,9 @@
         resultCntElement.value = number;
     }
 
+    /**
+     * 바로 구매
+     */
     function transferData() {
         const totalCost = parseInt(document.getElementById('totalPrice').innerText);
         const orderCreateReqDto = {
@@ -85,7 +80,7 @@
   </div>
   <div style="margin-top: 120px; border: 1px solid white" class="row">
     <div class="col">
-      <p th:align="center"><img th:src="${imgPath}" class="card-img-top" alt="이미지 준비중입니다.">
+      <p th:align="center"><img th:src="${resDto.getItemImagePath()}" class="card-img-top" alt="이미지 준비중입니다.">
     </div>
     <div style="padding-left: 150px" class="col">
       <div>
@@ -98,33 +93,24 @@
         <div class="back-ground">
           <input type="hidden" th:field="${cartItemReq.cartItemId}"/>
           <input type="hidden" id="itemPrice" th:value="${resDto.getItemPrice()}"/>
-          <!--자바스크립트로 id로 값 받기 getElementById -> onclick할때 그 값을 보내도록-->
           <!--장바구니 수량 버튼-->
           <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
             <input style="width: 40px" type='button' onclick='count("minus")' value="-"/>
-            <!--            <div style="width: 100px; border:1px solid; text-align: center; background-color: white" id='result'>0</div>-->
             <input style="width: 100px; border:1px solid; text-align: center; background-color: white" id='cartItemCnt'
                    name="cartItemCnt" th:value="${cartItemReq.cartItemCnt}"/>
-
-            <!--            th:field="*{cartItemReq.cartItemCnt}"-->
             <input style="width: 40px" type='button' onclick='count("plus")' value="+"/>
           </div>
-
-          <!--          <div style="margin-right: 30px; float: right" th:text="원">총 합계 금액</div>-->
           <div style="margin-right: 30px; float: right"><span id="totalPrice"
                                                               th:text="${resDto.getItemPrice()}">0</span>원
           </div>
         </div>
-
         <div style="border: 1px solid;">
           <input style="width: 100px; float: right;"
                  onclick="location.href='findAllForm.html'"
                  th:onclick="|location.href='@{/items}'|" type="button" value="목록으로"/>
 
-          <input type="submit" value="장바구니" style="width: 100px; float: right;"/>
-          <input type="button" value="바로구매" style="width: 100px; float: right;"
-                 onclick='transferData()'>
-
+          <input type="submit" value="장바구니" style="width: 100px; float: right;" onclick="alert('장바구니에 상품이 담겼습니다.')"/>
+          <input type="button" value="바로구매" style="width: 100px; float: right;" onclick='transferData()'>
         </div>
       </form>
     </div>

@@ -238,4 +238,14 @@ public class UserService {
         UserEntity user = validateUser(username);
         return user.getId();
     }
+
+    public boolean checkUserName(String userName) {
+        return userRepository.existsByUserName(userName);
+    }
+
+    public boolean checkEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+
 }
