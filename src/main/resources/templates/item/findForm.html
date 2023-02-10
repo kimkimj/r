@@ -98,7 +98,6 @@
         <div class="back-ground">
           <input type="hidden" th:field="${cartItemReq.cartItemId}"/>
           <input type="hidden" id="itemPrice" th:value="${resDto.getItemPrice()}"/>
-          <input type="hidden" id="isChecked" th:value="${cartItemReq.isChecked()}"/>
           <!--자바스크립트로 id로 값 받기 getElementById -> onclick할때 그 값을 보내도록-->
           <!--장바구니 수량 버튼-->
           <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
@@ -107,7 +106,6 @@
             <input style="width: 100px; border:1px solid; text-align: center; background-color: white" id='cartItemCnt'
                    name="cartItemCnt" th:value="${cartItemReq.cartItemCnt}"/>
 
-            <!--            th:field="*{cartItemReq.cartItemCnt}"-->
             <input style="width: 40px" type='button' onclick='count("plus")' value="+"/>
           </div>
 

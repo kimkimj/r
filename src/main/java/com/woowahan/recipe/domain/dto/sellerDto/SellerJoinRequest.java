@@ -52,6 +52,7 @@ public class SellerJoinRequest {
                 .sellerName(sellerName)
                 .password(encodedPassword)
                 .companyName(companyName)
+                .address(address)
                 .email(email)
                 .phoneNum(phoneNum)
                 .businessRegNum(businessRegNum)

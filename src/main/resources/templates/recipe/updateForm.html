@@ -271,8 +271,10 @@
         itemElement.className += 'itemTag';
         itemElement.appendChild(document.createTextNode(item));
         const btnElement = `
-            <button type="button" class="btn btn-secondary btn-sm mx-3 my-1">x</button>
-        `;
+            <button type="button" id="itemDeleteBtn" class="btn btn-secondary btn-sm mx-3 my-1"
+            onclick="handleButtonOnclick()">x</button>
+        `; //
+
         // const deleteBtn = document.createElement('button');
         // deleteBtn.innerHTML = 'x';
         const doc = new DOMParser().parseFromString(btnElement, 'text/html');
@@ -282,6 +284,17 @@
         itemList.appendChild(itemElement);
         selectItem.add(item);
         console.log('selectItem에 item이 추가되었습니다.' + selectItem);
+    }
+
+    function handleButtonOnclick()  {
+        var index = $(this).index();
+        $("li").eq(index).remove('.itemTag');
+
+        alert('재료가 삭제되었습니다.');
+        $("#itemDeleteBtn").remove();
+        console.log("x버튼 삭제");
+
+        // $("li").eq(index).remove('.itemTag'); // li태그 전부 사라짐
     }
 
     function allRemove() {

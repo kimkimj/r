@@ -1,11 +1,13 @@
 package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.cartDto.CartItemListReqDto;
-import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.itemDto.ItemListForRecipeResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
-import com.woowahan.recipe.service.*;
+import com.woowahan.recipe.service.FindService;
+import com.woowahan.recipe.service.RecipeService;
+import com.woowahan.recipe.service.ReviewService;
+import com.woowahan.recipe.service.S3Uploader;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -38,7 +39,7 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final FindService findService;
     private final ReviewService reviewService;
-    private final CartService cartService;
+//    private final CartService cartService;
     private final S3Uploader s3Uploader;
 
     @GetMapping("/create")
@@ -253,16 +254,19 @@ public class RecipeController {
         model.addAttribute("cartItemListReqDto", new CartItemListReqDto());
         model.addAttribute("recipeId", recipeId);
         model.addAttribute("recipe", recipe);
-        model.addAttribute("cartItemReq", new CartItemReq(recipe.getItems().get(0).getItem().getId(), 1, true)); // 장바구니 담기 위해 필요
         return "recipe/recipeDetailList";
     }
 
     /**
      * 장바구니에 재료 담기
      */
-    @PostMapping("/carts")
-    public String addCartItemList(@ModelAttribute CartItemReq cartItemReq, Model model,
-                                  Authentication authentication, HttpServletRequest request) throws IOException {
+    /*@PostMapping("/carts")
+    public String addCartItemList(@RequestBody CartItemReq cartItemReq, Model model,
+                                  Authentication authentication) throws IOException {
+
+        log.info("cartItemReq id = {}", cartItemReq.getCartItemId());
+        log.info("cartItemReq cnt = {}", cartItemReq.getCartItemCnt());
+        log.info("cartItemReq check = {}", cartItemReq.isChecked());
         try{
             authentication.isAuthenticated();
         }catch (NullPointerException e){
@@ -273,6 +277,6 @@ public class RecipeController {
         cartService.addCartItem(cartItemReq, authentication.getName());
         log.info("장바구니 서비스 다녀옴");
         return "recipe/alertCart";
-    }
+    }*/
 }
 

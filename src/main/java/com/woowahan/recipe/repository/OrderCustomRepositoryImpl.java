@@ -54,12 +54,21 @@ public class OrderCustomRepositoryImpl implements OrderCustomRepository{
                 .join(orderEntity.orderItems, orderItemEntity).fetchJoin()
                 .join(orderItemEntity.item, itemEntity).fetchJoin()
                 .where(booleanBuilder)
+                .orderBy(orderEntity.createdDate.desc())
                 .distinct()
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = contents.size();
+        long total = queryFactory.select(orderEntity.count())
+                .from(orderEntity)
+                .join(orderEntity.user, userEntity)
+                .join(orderEntity.delivery, deliveryEntity)
+                .join(orderEntity.orderItems, orderItemEntity)
+                .join(orderItemEntity.item, itemEntity)
+                .where(booleanBuilder)
+                .distinct()
+                .fetchOne();
         return new PageImpl<>(contents, pageable, total);
     }
 }

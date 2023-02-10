@@ -55,7 +55,7 @@
                     </td>
                     <td class="individual_price_input" th:idx="${itemStat.index}" th:text="${item.price}">상품 가격</td>
                     <td>
-                        <button type="button" class="btn btn-danger delete-btn" th:idx="${itemStat.index}" th:value="${item.id}" th:onclick="deleteItem(this.getAttribute('idx'))">삭제</button>
+                        <button type="button" class="btn delete-btn" th:idx="${itemStat.index}" th:value="${item.id}" th:onclick="deleteItem(this.getAttribute('idx'))">x</button>
                     </td>
                 </tr>
             </th:block>
