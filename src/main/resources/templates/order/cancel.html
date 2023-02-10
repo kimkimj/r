@@ -13,7 +13,7 @@
     <table class="container">
         <tr>
             <td>주문날짜</td>
-            <td>[[${order.orderDate}]]</td>
+            <td><span th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}"></span></td>
         </tr>
         <tr>
             <td>주문 번호</td>
@@ -30,7 +30,7 @@
     <table class="container">
         <tr>
             <td>취소 날짜</td>
-            <td>[[${order.updateDate}]]</td>
+            <td><span th:text="${#temporals.format(order.updateDate, 'yyyy-MM-dd HH:mm')}"></span></td>
         </tr>
         <tr>
             <td>총 결제 금액</td>

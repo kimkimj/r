@@ -52,11 +52,11 @@
             </thead>
             <tbody>
             <tr th:each="order : ${orderList}">
-                <td th:text="${order.orderNum}" th:onclick="|location.href='@{/orders/{orderNum}(orderNum=${order.getOrderNum})}'|">
+                <td><a th:href="@{/orders/{orderNum}(orderNum=${order.getOrderNum})}" th:utext="${order.orderNum}"></a></td>
                 <td th:text="${order.username}"/>
                 <td th:text="${order.address}"/>
                 <td th:text="${order.totalPrice}"/>
-                <td th:text="${order.orderDate}"/>
+                <td><span th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}"></span></td>
                 <td th:text="${order.orderStatus}"/>
             </tr>
             </tbody>
