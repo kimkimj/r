@@ -66,7 +66,7 @@
     <table class="container">
         <tr>
             <td>주문날짜</td>
-            <td>[[${order.orderDate}]]</td>
+            <td><span th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}"></span></td>
         </tr>
         <tr>
             <td>주문 번호</td>

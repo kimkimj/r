@@ -2,8 +2,8 @@ package com.woowahan.recipe.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
-import com.woowahan.recipe.domain.entity.ItemEntity;
 import com.woowahan.recipe.fixture.TestInfoFixture;
+import com.woowahan.recipe.service.CartService;
 import com.woowahan.recipe.service.RecipeService;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
@@ -42,6 +42,9 @@ class RecipeRestControllerTest {
 
     @MockBean
     RecipeService recipeService;
+
+    @MockBean
+    CartService cartService;
 
     @Autowired
     ObjectMapper objectMapper;
