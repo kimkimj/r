@@ -124,6 +124,7 @@
         <div class="button">
             <button type="submit" class="btn btn-outline-primary" onclick="requestPay()">결제하기</button>
             <script th:inline="javascript">
+                /*<![CDATA[*/
                 // 결제 금액, 구매자의 이름, 이메일
                 function requestPay() {
                     const data = {
@@ -154,12 +155,12 @@
                         pg: "html5_inicis",
                         pay_method: "card",
                         merchant_uid: data.orderNum,    // 주문번호
-                        name: data.itemName,    // 결제창에 보일 상품명
                         amount: data.totalCost,
                         buyer_email: data.email,
                         buyer_name: data.userName,
                         buyer_tel: data.phoneNum,
                         buyer_addr: data.address,
+                        name: data.itemName
                         // buyer_postcode: data.buyer_postcode
                     }, function (rsp) { // callback
                         if (rsp.success) {
@@ -218,8 +219,10 @@
 
                 function cancellation() {
                     alert("주문이 취소되었습니다.");
-                    location.replace("/carts")
+
+                    location.replace("/carts");
                 }
+                /*]]>*/
             </script>
             <button type="submit" class="btn btn-secondary" onclick="cancellation()">취소하기</button>
         </div>

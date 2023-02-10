@@ -103,29 +103,55 @@
         <br><br>
         <h5><b>주문 정보</b></h5>
         <div class="content">
-            <div id="itemName">결제 예정 상품: <span th:text="${item.itemName}"></span></div>
-            <div>결제 예정 금액: <span id="cost" th:text="${totalCost}"></span>원</div>
+            <form>
+                <table class="table">
+                    <thead>
+                    <th th:width="300">상품 이름</th>
+                    <th th:width="100">상품 수량</th>
+                    </thead>
+                    <tbody>
+                    <td><span th:text="${item.itemName}"></span></td>
+                    <td><span id="cnt"></span></td>
+                    </tbody>
+                </table>
+            </form>
+            <div>총 아이템 금액: <span id="cost">0</span>원</div>
+            <div>배송비: <span id="delivery">0</span>원</div>
+            <div>결제 예정 금액: <span id="totalCost">0</span>원</div>
         </div>
     </div>
     <div class="button-container">
         <div class="button">
             <button type="submit" class="btn btn-outline-primary" onclick="requestPay()">결제하기</button>
             <script th:inline="javascript">
+                var orderCreateReqDto = JSON.parse(sessionStorage.getItem("orderCreateReqDto"))
+                var itemCount = orderCreateReqDto.count;
+                var totalPrice = orderCreateReqDto.totalCost;
+                var deliveryCost = orderCreateReqDto.deliveryCost;
+                console.log(typeof itemCount);
+                console.log(typeof totalPrice);
+                console.log(typeof (deliveryCost + totalPrice));
+                document.getElementById("cnt").innerText = itemCount;
+                document.getElementById("cost").innerText = totalPrice;
+                document.getElementById("delivery").innerText = deliveryCost;
+                document.getElementById("totalCost").innerText = totalPrice + deliveryCost;
                 // 결제 금액, 구매자의 이름, 이메일
                 function requestPay() {
                     const data = {
                         itemName: [[${item.itemName}]],
                         orderNum: createOrderNum(),
-                        totalCost: document.getElementById('cost').innerText,
+                        totalCost: document.getElementById('totalCost').innerText,
                         userName: [[${userResponse.name}]],
                         phoneNum: [[${userResponse.phoneNum}]],
                         email: [[${userResponse.email}]],
                         address: [[${userResponse.address}]],
                         itemId: [[${item.itemId}]],
+                        count: itemCount
                     }
+                    console.log(orderCreateReqDto.count)
                     console.log(data.itemName);
                     console.log(data.orderNum);
-                    console.log(data.totalCost);
+                    console.log(orderCreateReqDto.count);
                     console.log([[${userResponse.name}]]);
                     console.log([[${userResponse.phoneNum}]]);
                     console.log([[${userResponse.email}]]);
@@ -147,6 +173,7 @@
                         buyer_name: data.userName,
                         buyer_tel: data.phoneNum,
                         buyer_addr: data.address,
+                        count: data.count
                         // buyer_postcode: data.buyer_postcode
                     }, function (rsp) { // callback
                         if (rsp.success) {
@@ -155,6 +182,7 @@
                             data.imp_uid = rsp.imp_uid; // 고유 ID
                             data.merchant_uid = rsp.merchant_uid; // 거래 ID
                             // 결제 성공 시 검증 로직
+                            sessionStorage.removeItem("orderCreateReqDto")
                             paymentComplete(data);
                         } else {
                             var msg = '결제에 실패하였습니다';
@@ -204,6 +232,7 @@
                 }
 
                 function cancellation() {
+                    sessionStorage.removeItem("orderCreateReqDto")
                     alert("주문이 취소되었습니다.");
                     location.replace("/items/" + [[${item.itemId}]])
                 }

@@ -13,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,17 +38,14 @@ public class OrderController {
      */
     @GetMapping("/items/{id}/order")
     public String orderForm(@PathVariable Long id, Model model, @ModelAttribute OrderCreateReqDto orderCreateReqDto, Authentication authentication) {
-
         UserResponse userResponse = findService.findUserName(authentication.getName());
         ItemDetailResDto item = findService.findItemName(id);
-        int count = 1; // 상품 상세보기에서 주문할 때, 들어올 상품 개수
-        int totalCost = item.getItemPrice() * count;
-        log.info("totalCost={}", totalCost);
-        log.info("itemName", item.getItemName());
+        log.info("totalCost={}", orderCreateReqDto.getTotalCost());
+        log.info("deliveryCost={}", orderCreateReqDto.getDeliveryCost());
+        log.info("itemName={}", item.getItemName());
 
-        model.addAttribute("userResponse", userResponse);
-        model.addAttribute("totalCost", totalCost);
         model.addAttribute("item", item);
+        model.addAttribute("userResponse", userResponse);
         return "order/orderForm";
     }
 
@@ -67,8 +62,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders/my")
-    public String myOrders(Model model, OrderSearch orderSearch, Authentication authentication,
-                           @PageableDefault(size = 30, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String myOrders(Model model, OrderSearch orderSearch, Authentication authentication, Pageable pageable) {
         Page<OrderInfoResponse> orderList = orderService.findMyOrder(authentication.getName(), orderSearch, pageable);
 
         int nowPage = orderList.getPageable().getPageNumber() + 1;

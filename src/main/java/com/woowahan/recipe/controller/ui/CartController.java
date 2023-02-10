@@ -30,6 +30,7 @@ public class CartController {
 
     @GetMapping("/order")
     public String orderForm(Model model, @ModelAttribute CartOrderListDto orderDto, Authentication authentication) {
+        System.out.println("들어왔습니다.");
         UserResponse userResponse = findService.findUserName(authentication.getName());
         CartOrderListDto cartOrderListDto = cartService.findCartItemOrder(authentication.getName(), orderDto.getImp_uid());
         List<CartOrderDto> cartOrderDtoList = cartOrderListDto.getCartOrderList();
@@ -38,12 +39,15 @@ public class CartController {
             log.info("cartItemCnt={}", cartOrderDto.getCnt());
         }
         String firstItem = cartOrderDtoList.get(0).getName();
+
+        log.info("firstItem = {}", firstItem);
         model.addAttribute("userResponse", userResponse);
         model.addAttribute("cartOrderDtoList", cartOrderDtoList);
         model.addAttribute("cartOrderListDto", cartOrderListDto);
         model.addAttribute("firstItem", firstItem);
         return "cart/orderForm";
     }
+
 
     @GetMapping
     public String cartItemList(Model model, @PageableDefault(sort = "itemName", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
