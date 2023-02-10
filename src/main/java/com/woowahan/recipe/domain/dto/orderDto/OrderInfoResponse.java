@@ -51,7 +51,7 @@ public class OrderInfoResponse {
                 .itemName(order.getOrderItems().get(0).getItem().getName())
                 .username(order.getUser().getName())
                 .address(order.getUser().getAddress())
-                .totalPrice(order.getTotalPrice())
+                .totalPrice(order.getTotalPrice() >= 50000 ? order.getTotalPrice() : order.getTotalPrice() + 3000)
                 .orderStatus(order.getOrderStatus())
                 .deliveryStatus(order.getDelivery().getDeliveryStatus())
                 .orderDate(order.getCreatedDate())
