@@ -22,7 +22,7 @@
                 <col style="width: 10%" />
             </colgroup>
             <tr>
-                <th><input type="checkbox" name="itemCheck" value="selectAll" checked onclick="selectAll(this)" />전체 선택</th>
+                <th><input type="checkbox" name="itemCheck" value="selectAll" checked onclick="selectAll(this)" /></th>
                 <th>상품 이미지</th>
                 <th>상품명</th>
                 <th>수량</th>
@@ -45,15 +45,15 @@
                             <img src="..." class="rounded" th:alt="|${{item.name}} 이미지 준비중|">
                         </div>
                     </td>
-                    <td class="individual_name_input text-truncate" th:idx="${itemStat.index}" th:text="${item.name}">상품 이름</td>
-                    <input type="hidden" class="individual_id_input" th:value="${item.id}">상품 아이디</input>
-                    <input type="hidden" class="individual_stock_input" th:value="${item.stock}">상품 재고</input>
+                    <td class="individual_name_input text-truncate" th:idx="${itemStat.index}" th:text="${item.name}"></td>
+                    <input type="hidden" class="individual_id_input" th:value="${item.id}"/>
+                    <input type="hidden" class="individual_stock_input" th:value="${item.stock}"/>
                     <td class="individual_cnt_input d-flex flex-row align-items-center">
                         <button type="button" class="btn btn-jelly cnt-option-btn minus" th:idx="${itemStat.index}" onclick="count('minus', this.getAttribute('idx'))">-</button>
                         <input type="number" class="item-cnt m-2 text-center" min="1" width="50" th:idx="${itemStat.index}" th:value="${item.cnt}" readonly />
                         <button type="button" class="btn btn-jelly cnt-option-btn plus" th:idx="${itemStat.index}" onclick="count('plus', this.getAttribute('idx'))">+</button>
                     </td>
-                    <td class="individual_price_input" th:idx="${itemStat.index}" th:text="${item.price}">상품 가격</td>
+                    <td class="individual_price_input" th:idx="${itemStat.index}" th:text="${item.price}"></td>
                     <td>
                         <button type="button" class="btn delete-btn" th:idx="${itemStat.index}" th:value="${item.id}" th:onclick="deleteItem(this.getAttribute('idx'))">x</button>
                     </td>
