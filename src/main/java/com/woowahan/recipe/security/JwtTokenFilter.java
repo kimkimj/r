@@ -1,7 +1,7 @@
 package com.woowahan.recipe.security;
 
-import com.woowahan.recipe.domain.UserRole;
-import com.woowahan.recipe.service.UserService;
+import com.woowahan.recipe.domain.dto.userDto.UserResponse;
+import com.woowahan.recipe.service.FindService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +25,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final String secretKey;
     private final JwtTokenUtils jwtTokenUtils;
+    private final FindService findService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -63,10 +64,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
 
         String userName = jwtTokenUtils.getUserName(token, secretKey);
+        UserResponse user = findService.findUserName(userName);
 
         // 통과
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(userName, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+                new UsernamePasswordAuthenticationToken(userName, null, List.of(new SimpleGrantedAuthority(user.getUserRole().getValue())));
 
 
 
