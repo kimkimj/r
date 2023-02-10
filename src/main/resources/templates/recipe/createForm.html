@@ -243,7 +243,7 @@
     }
 
     async function searchKeyword(keyword) {
-        let response = await fetch(`http://localhost:8080/recipes/searchItem?keyword=${encodeURIComponent(keyword)}`, {
+        let response = await fetch(`/recipes/searchItem?keyword=${encodeURIComponent(keyword)}`, {
             method: "GET",
         })
         let body = await response.json()
