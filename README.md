@@ -16,6 +16,8 @@
 |   SPRING_DATASOUCE_USER    |                         root                          |
 | SPRING_DATASOURCE_PASSWORD |                         root                          |
 |      JWT_SECRET_TOKEN      |                    aa.bb.cc.dd.ee                     |
+|          IMP_KEY           |                  123456789012345678                   |
+|         IMP_SECRET         |                   abcdefghijklmnop                    |
 
 <br />
 
@@ -38,7 +40,7 @@ http://localhost:8080/swagger-ui/ 로 접속하여 Swagger 실행
 | 1주차 | [[1주차] idea-10팀-진행상황-공유](./readme/[1주차]-idea-10팀-진행상황-공유.md) |
 | 2주차 | [[2주차] idea-10팀-진행상황-공유](./readme/[2주차]-idea-10팀-진행상황-공유.md) |
 | 3주차 | [[3주차] idea-10팀-진행상황-공유](./readme/[3주차]-idea-10팀-진행상황-공유.md) |
-| 4주차 |                                                              |
+| 4주차 | [[4주차] idea-10팀-진행상황-공유](./readme/[4주차]-idea-10팀-진행상황-공유.md) |
 
 <br />
 
