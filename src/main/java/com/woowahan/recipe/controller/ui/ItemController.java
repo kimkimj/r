@@ -162,5 +162,4 @@ public class ItemController {
         itemService.deleteItem(id, authentication.getName());
         return "redirect:/items";
     }
-
 }
