@@ -21,7 +21,7 @@
     }
 
     .modal-search img {
-        position : absolute;
+        position: absolute;
         width: 19px;
         height: 22px;
         top: 10px;
@@ -40,12 +40,15 @@
 <div class="container">
     <br>
     <div>
-        <h1>레시피 수정 페이지</h1><hr>
+        <h1>레시피 수정 페이지</h1>
+        <hr>
     </div>
     <div>
         <button type="button" class="btn btn-outline-success" style="float: right;"
-                th:onclick="|location.href='@{/recipes/list}'|">목록가기</button>
-    </div><br><br><br>
+                th:onclick="|location.href='@{/recipes/list}'|">목록가기
+        </button>
+    </div>
+    <br><br><br>
 
     <!--        &lt;!&ndash; 카테고리 선택 &ndash;&gt;-->
     <!--        <div>-->
@@ -67,30 +70,34 @@
     <div class="container px-4">
         <div class="row gx-5">
 
-        <!-- 내용 -->
+            <!-- 내용 -->
             <div class="p-3 border bg-light">
                 <h5>레시피 수정</h5>
                 <h6>제목, 내용, 재료 중 하나라도 입력되지 않으면 레시피가 등록되지 않습니다.</h6>
                 <hr>
-                <form role="form" th:action="@{/recipes/update/{recipeId} (recipeId=${recipeId})}" th:object="${recipeUpdateReqDto}" method="post" enctype="multipart/form-data">
+                <form role="form" th:action="@{/recipes/update/{recipeId} (recipeId=${recipeId})}"
+                      th:object="${recipeUpdateReqDto}" method="post" enctype="multipart/form-data">
                     <!-- 레시피 제목  -->
                     <div class="form-group col">
                         <label th:for="recipeTitle">레시피 제목</label>
-                        <input type="text" th:field="*{recipeTitle}" class="form-control" id="updateTitle" placeholder="제목을 입력하세요"
-                               th:class="${#fields.hasErrors('recipeTitle')}? 'form-control fieldError' : 'form-control'" onfocus="this.value=''; return true;">
+                        <input type="text" th:field="*{recipeTitle}" class="form-control" id="updateTitle"
+                               placeholder="제목을 입력하세요"
+                               th:class="${#fields.hasErrors('recipeTitle')}? 'form-control fieldError' : 'form-control'"
+                               onfocus="this.value=''; return true;">
                         <p th:if="${#fields.hasErrors('recipeTitle')}" th:errors="*{recipeTitle}"></p>
-                    </div><br>
+                    </div>
+                    <br>
                     <!-- 레시피 내용  -->
                     <div class="form-group mb-3">
-                        <label th:for="recipeBody" class="form-label">레시피 내용  (음식에 필요한 재료와 단위를 먼저 적어주시면 더 완벽한 레시피가 될거에요)</label>
-                        <textarea th:field="*{recipeBody}" class="form-control" id="updateBody" rows="3" style="height: 300px;"
+                        <label th:for="recipeBody" class="form-label">레시피 내용 (음식에 필요한 재료와 단위를 먼저 적어주시면 더 완벽한 레시피가
+                            될거에요)</label>
+                        <textarea th:field="*{recipeBody}" class="form-control" id="updateBody" rows="3"
+                                  style="height: 300px;"
                                   th:class="${#fields.hasErrors('recipeBody')}? 'form-control fieldError' : 'form-control'">
                         </textarea>
                         <p th:if="${#fields.hasErrors('recipeBody')}" th:errors="*{recipeBody}"></p>
                     </div>
                     <br>
-                    <div id="recipe-form-list">
-                    </div>
 
                     <!-- 재료 목록 -->
                     <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
@@ -98,16 +105,20 @@
                         <hr>
                         <!-- 선택한 재료들이 보이는 부분 -->
                         <td th:if="${recipeUpdateReqDto.getItems().size() == 0}">등록된 재료가 없습니다.</td>
-                        <th:block th:unless="${recipeUpdateReqDto.getItems().size() == 0}" th:each="num : ${#numbers.sequence(0,recipeUpdateReqDto.getItems().size()-1)}">
-                            <ul id="item-list">
-                                <span th:text="${recipeUpdateReqDto.getItems().get(num).item.getName()}"></span>
+                        <th:block th:unless="${recipeUpdateReqDto.getItems().size() == 0}"
+                                  th:each="num : ${#numbers.sequence(0,recipeUpdateReqDto.getItems().size()-1)}">
+                            <ul id="recipe-form-list">
+                                <input th:text="${recipeUpdateReqDto.getItems().get(num).item.getName()}" name="items[]" th:value="${recipeUpdateReqDto.getItems().get(num).item.getName()}" hidden="hidden">
                                 <span scope="row"><button type="button" class="btn btn-sm" style="border: 1px solid;">X</button></span>
+                            </ul>
+                            <ul id="item-list">
                             </ul>
                         </th:block>
                         <!-- 재료 등록 버튼(modal), 등록한 재료 전체삭제 버튼 -->
                         <div style="text-align: right;">
                             <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal" onclick="searchAndShowItems(document.querySelector('#keyword').value)">
+                                    data-bs-target="#exampleModal"
+                                    onclick="searchAndShowItems(document.querySelector('#keyword').value)">
                                 재료 등록
                             </button>
                             <button type="button" class="btn btn-outline-success" onclick="allRemove();">
@@ -126,49 +137,30 @@
                         </div>
                     </div>
 
-                    <!-- 재료 추가, 삭제 처음 했던 결과물 -->
-                    <!--<div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
-                        <h5>레시피 재료</h5><hr>
-                        <h5>삭제할 재료는 삭제를, 재료를 추가하시려면 추가버튼을 눌러주세요.</h5>
-                        <table class="table " style="width: 800px;">
-                            <thead>
-                            <tr>
-                                <th scope="col">삭제</th>
-                                <th scope="col">재료명</th>
-                            </tr>
-                            </thead>
-                            &lt;!&ndash; th:block &ndash;&gt;
-                            <th:block th:each="num : ${#numbers.sequence(0,recipeUpdateReqDto.getItems().size()-1)}">
-                                <tbody>
-                                <tr>
-                                    <th scope="row"><button type="button" class="btn btn-secondary btn-sm">X</button></th>
-                                    <td th:text="${recipeUpdateReqDto.getItems().get(num).item.getName()}"/>
-                                </tr>
-                                </tbody>
-                            </th:block>
-                        </table><br>
-                    </div>-->
-
                     <br><br>
                     <div style="text-align: center;">
                         <button id="submit-btn" type="submit" class="btn btn-outline-success">레시피 수정완료</button>
-                    </div><br>
+                    </div>
+                    <br>
                 </form>
             </div>
 
             <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">재료 등록</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div><br>
+                        </div>
+                        <br>
                         <div class="modal-body">
                             <!-- search -->
                             <div class="modal-search">
                                 <input id="keyword" type="text" name="keyword" placeholder="재료 검색">
-                                <button style="border:none; background:none;" onclick="searchAndShowItems(document.querySelector('#keyword').value)">
+                                <button style="border:none; background:none;"
+                                        onclick="searchAndShowItems(document.querySelector('#keyword').value)">
                                     <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png">
                                 </button>
                             </div>
@@ -182,7 +174,8 @@
                         </div>
                     </div>
                 </div>
-            </div><br>
+            </div>
+            <br>
         </div>
     </div>
 
@@ -194,6 +187,9 @@
 <br><br>
 <script>
     const selectItem = new Set();
+
+    let recipeFormList = document.querySelector("#recipe-form-list");
+
     async function searchAndShowItems(keyword) {
         // <ul id="search-list" ...> 가져온다.
         let itemList = document.querySelector("#search-list")
@@ -242,7 +238,6 @@
     }
 
     function addFormItem(item) {
-        let recipeFormList = document.querySelector("#recipe-form-list");
 
         // input 태그 생성
         let itemElement = document.createElement("input");
