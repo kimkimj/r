@@ -132,6 +132,33 @@ public class CartService {
         //1일때 -하면 아이템 삭제하기
     }
 
+    public void addCartItemList(List<CartItemReq> cartItemReqList, String userName) {
+        UserEntity user = validateUser(userName); //user 존재 검증
+        CartEntity cart = validateCart(user); //user의 cart가 있는지, 존재 검증 -> 없으면 카트 생성
+
+        for (CartItemReq cartItemReq:cartItemReqList) {
+            ItemEntity item = validateItem(cartItemReq.getCartItemId()); //카트에 넣으려는 아이템이 존재하는지 확인
+
+            Optional<CartItemEntity> cartItem = cartItemRepository.findByCartAndItemId(cart, item.getId());
+
+            if (cartItem.isEmpty()) {
+                if(item.getItemStock() < cartItemReq.getCartItemCnt()) { //아이템 stock 충분한지 확인
+                    throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
+                }
+                CartItemEntity cartItemEntity = CartItemEntity.createCartItem(cartItemReq.getCartItemCnt(), item, cart); //상품이 없으면 카트에 아이템 create
+                cartItemRepository.save(cartItemEntity);
+            } else {
+                Integer cnt = cartItem.get().getCartItemCnt() + cartItemReq.getCartItemCnt();
+
+                if(item.getItemStock() < cnt) { //아이템 stock 충분한지 확인
+                    throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
+                }
+
+                cartItem.get().updateCartItemCnt(cnt); //상품이 이미 카트에 있으면 아이템수만 db에 update
+            }
+        }
+    }
+
     public void updateCheckItem(List<CheckOrderItemDto> checkOrderItemDtoList, String userName) {
         UserEntity user = validateUser(userName);
 
@@ -196,12 +223,12 @@ public class CartService {
         }
         return orderCartItem;
     }
-
     /* 공통 로직 */
     private UserEntity validateUser(String userName) {
         return userRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
     }
+
     private ItemEntity validateItem(Long itemId) {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND, ErrorCode.ITEM_NOT_FOUND.getMessage()));
@@ -215,5 +242,4 @@ public class CartService {
         return cartItemRepository.findByCartAndId(cart, cartItemId)
                 .orElseThrow(() -> new AppException(ErrorCode.CART_ITEM_NOT_FOUND, ErrorCode.CART_ITEM_NOT_FOUND.getMessage()));
     }
-
 }
