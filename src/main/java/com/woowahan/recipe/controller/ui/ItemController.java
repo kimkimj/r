@@ -36,7 +36,6 @@ public class ItemController {
 
     private final S3Uploader s3Uploader;
 
-
     /**
      * paging -> 상품 전체 조회
      */
@@ -54,20 +53,16 @@ public class ItemController {
         return "item/findAllForm";
     }
 
-
     /**
      * 상품 상세조회
      */
     @GetMapping("/{id}")
     public String findForm(Model model, @PathVariable Long id) {
         ItemDetailResDto resDto = itemService.findItem(id);
-        String imgPath = s3Uploader.getImagePath(resDto.getItemImagePath());
-        log.info("이미지 상품 상세보기 화면: {}", imgPath);
 
         model.addAttribute("id", id);
         model.addAttribute("resDto", resDto); // -> sellerName도 들어있음
-        model.addAttribute("imgPath", imgPath);
-        model.addAttribute("cartItemReq", new CartItemReq(id, 1, true));
+        model.addAttribute("cartItemReq", new CartItemReq(id, 1));
         return "item/findForm";
     }
 
@@ -131,43 +126,23 @@ public class ItemController {
     }
 
     @PostMapping("/create")
-//    @ResponseBody
-    //동작 test용
     public String create(@Valid @ModelAttribute ItemCreateReqDto reqDto, BindingResult bindingResult,
                          @RequestPart MultipartFile multipartFile,
-                         RedirectAttributes redirectAttributes, Authentication authentication) {
+                         RedirectAttributes redirectAttributes, Authentication authentication) throws IOException {
 
         if (bindingResult.hasErrors()) {
             log.info("bindingResult = {}", bindingResult);
             return "item/createForm";
         }
-        String fileName = multipartFile.getOriginalFilename();
-        reqDto.setItemImagePath("item-image/"+fileName);
+
+        String imgPath = s3Uploader.upload(multipartFile, "item-image");
+        reqDto.setItemImagePath(imgPath);
         ItemCreateResDto resDto = itemService.createItem(reqDto, authentication.getName());
         redirectAttributes.addAttribute("id", resDto.getId());
 
-        log.info("dto 저장 확인 : {}", reqDto.getItemImagePath());
-
+        log.info("img주소확인 : {}", imgPath);
         return "redirect:/items/{id}";
     }
-
-    @ResponseBody
-    @PostMapping("/create/image")
-    public String createImage(@RequestParam("data") MultipartFile multipartFile) throws IOException {
-        log.info("이미지:{}",multipartFile.getOriginalFilename());
-        return s3Uploader.upload(multipartFile, "item-image");
-    }
-
-
-    /**
-     * 상품 등록(관리자, 판매자) - 이미지 업로드
-     */
-//    @PostMapping("/update")
-//    @ResponseBody
-//    public String upload(@RequestParam("data") MultipartFile multipartFile) throws IOException {
-//        return s3Uploader.upload(multipartFile, "static");
-//    }
-
 
     /**
      * 상품 수정(관리자, 판매자)
