@@ -62,7 +62,7 @@ public class ItemController {
 
         model.addAttribute("id", id);
         model.addAttribute("resDto", resDto); // -> sellerName도 들어있음
-        model.addAttribute("cartItemReq", new CartItemReq(id, 1));
+        model.addAttribute("cartItemReq", new CartItemReq(id, 1, true));
         return "item/findForm";
     }
 
