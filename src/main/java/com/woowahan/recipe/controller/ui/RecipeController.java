@@ -256,27 +256,5 @@ public class RecipeController {
         model.addAttribute("recipe", recipe);
         return "recipe/recipeDetailList";
     }
-
-    /**
-     * 장바구니에 재료 담기
-     */
-    /*@PostMapping("/carts")
-    public String addCartItemList(@RequestBody CartItemReq cartItemReq, Model model,
-                                  Authentication authentication) throws IOException {
-
-        log.info("cartItemReq id = {}", cartItemReq.getCartItemId());
-        log.info("cartItemReq cnt = {}", cartItemReq.getCartItemCnt());
-        log.info("cartItemReq check = {}", cartItemReq.isChecked());
-        try{
-            authentication.isAuthenticated();
-        }catch (NullPointerException e){
-            return "recipe/alert";
-        }
-        model.addAttribute("cartItemReq", cartItemReq);
-        log.info("장바구니 아이템 요청");
-        cartService.addCartItem(cartItemReq, authentication.getName());
-        log.info("장바구니 서비스 다녀옴");
-        return "recipe/alertCart";
-    }*/
 }
 
