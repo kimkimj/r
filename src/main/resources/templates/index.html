@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: headerFragment"/>
 <body>
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 <div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
     <h2>홈</h2>
     <button type="button" th:onclick="|location.href='@{/recipes/list}'|">레시피</button>
     <br/>
-    <div th:replace="fragments/footer :: footerFragment"/>
 </div>
+<div th:replace="fragments/footer :: footerFragment"/>
 </body>
 </html>

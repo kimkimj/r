@@ -1,0 +1,19 @@
+.wrapper {
+    margin: auto;
+    width: 40%;
+    min-height: 400px;
+}
+
+.button-container {
+    width: 80%;
+    margin: auto;
+    height: 50px;
+    text-align: center;
+}
+
+.button {
+    margin-top: 40%;
+    padding: 30px;
+    justify-content: center;
+    align-items: center;
+}

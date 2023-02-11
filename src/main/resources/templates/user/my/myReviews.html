@@ -53,7 +53,7 @@
                 </tbody>
             </table>
         </div>
-
+        <th:block th:if="${allMyReviews.totalElements > 0}">
         <!-- pagination -->
         <div class="py-3 my-4">
             <nav aria-label="Page navigation example">
@@ -73,6 +73,12 @@
                 </ul>
             </nav>
         </div>
+        </th:block>
+        <th:block th:unless="${allMyReviews.totalElements} > 0">
+            <div class="text-center">
+                현재 등록한 리뷰가 없습니다.
+            </div>
+        </th:block>
         <div th:replace="fragments/footer :: footerFragment"/>
     </body>
 </html>

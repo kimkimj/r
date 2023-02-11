@@ -1,0 +1,60 @@
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{adminMain}">
+<body>
+<div layout:fragment="adminMain" class="container">
+  <div>
+    <h1>판매자</h1>
+    <div>
+      <table class="table table-hover" style="text-align: center;">
+        <thead>
+        <tr>
+          <th scope="col">계정 ID</th>
+          <th scope="col">이름</th>
+          <th scope="col">주소</th>
+          <th scope="col">이메일</th>
+          <th scope="col">핸드폰 번호</th>
+          <th scope="col">사업자등록번호</th>
+          <th scope="col">수정/삭제</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="tr-hover" th:each="seller : ${sellerList}">
+          <th scope="row" th:text="${seller.sellerName}"/>
+          <td th:text="${seller.companyName}"/>
+          <td th:text="${seller.address}"/>
+          <td th:text="${seller.email}"/>
+          <td th:text="${seller.phoneNum}"/>
+          <td th:text="${seller.businessRegNum}"/>
+          <td>
+            <button>수정</button>
+            <button>삭제</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- pagination -->
+    <div class="py-3 my-4">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" th:classappend="${!sellerList.hasPrevious} ? 'disabled'">
+            <a class="page-link" th:href="@{/admin/sellers(page = ${nowPage - 2})}">Previous</a>
+          </li>
+
+          <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+            <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/admin/sellers(page = ${page - 1})}" th:text="${page}">1</a></li>
+            <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
+          </th:block>
+
+          <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
+            <a class="page-link" th:href="@{/admin/sellers(page = ${nowPage})}">Next</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+</body>
+</html>
