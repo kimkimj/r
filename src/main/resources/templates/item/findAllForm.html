@@ -11,6 +11,39 @@
   .inner{
     width: 19%;
   }
+  .search-wrapper {
+    width: 100%;
+    margin: 100px auto 0;
+    text-align: center;
+  }
+
+  /* search (in)*/
+  .item-search {
+    position: relative;
+    width: 500px;
+    display: inline-block;
+  }
+
+  .item-search input {
+    width: 100%;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .item-search input:focus {
+    outline: 1px solid gray;
+  }
+
+  .item-search img {
+    position : absolute;
+    width: 19px;
+    height: 22px;
+    top: 10px;
+    right: 12px;
+    margin: 0;
+  }
 </style>
 <body>
   <script>
@@ -34,10 +67,13 @@
   <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
   <!--상품 검색 창-->
 <!--  <div sec:authorize="hasRole('SELLER')">-->
-  <form style="text-align: center; margin-bottom: 100px" th:action="@{/items/search}" method="get">
-    <input type="text" name = "keyword" placeholder="상품 검색">
-    <button type="submit">검색</button>
-  </form>
+  <div class="search-wrapper">
+    <div class="item-search">
+      <form style="text-align: center; margin-bottom: 100px" th:action="@{/items/search}" method="get">
+        <input type="text" name = "keyword" placeholder="상품 검색">
+        <button style="border:none;" type="submit"><img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"></button>
+      </form>
+    </div>
   </div>
 <!--상품 목록 시작-->
   <div class="container">
