@@ -37,13 +37,6 @@ public class UserController {
     private final ReviewService reviewService;
     private final FindService findService;
 
-    // 관리자 페이지
-    @GetMapping("/admin/users")
-    public String admin(Model model, @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<UserResponse> userList = userService.findAll(pageable);
-        model.addAttribute("userList", userList);
-        return "user/admin";
-    }
 
     // 회원이나 판매자로 로그인
     @GetMapping("/login")
