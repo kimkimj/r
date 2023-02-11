@@ -52,18 +52,9 @@
     }
 </style>
 <body>
-<!-- Option 1: Bootstrap Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous"></script>
-
-<!-- 섹션의 전체 틀 div -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <div class="recipe-wapper">
-
-    <!-- bodyHeader -->
     <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-
-    <!-- 기본 컨테이너 -->
     <div class="container"><br>
         <div class="margin-10">
             <h1>레시피 상세보기 페이지</h1>
@@ -87,17 +78,15 @@
                 </span>
             </div>
 
-            <!-- 카테고리 -->
-            <div>
-                <h5>레시피 카테고리</h5><!-- 나중에 삭제-->
-                <!-- ${} 표현식을 사용해서 컨트롤러에서 전달받은 데이터에 접근 -->
+            <!--<div>
+                <h5>레시피 카테고리</h5>
+                &lt;!&ndash; ${} 표현식을 사용해서 컨트롤러에서 전달받은 데이터에 접근 &ndash;&gt;
                 <div th:text="${data}">메인 요리</div>
-            </div>
+            </div>-->
             <br>
 
-            <!-- 레시피 제목 -->
             <div>
-                <h5>레시피 제목</h5><!-- 나중에 삭제-->
+                <h5>레시피 제목</h5>
                 <div class="col">
                     <div class="title-box" th:text="${recipe.recipeTitle}"></div>
                 </div>
@@ -109,29 +98,24 @@
 
             <div class="recipe-write-content">
                 <div class="row">
-
                     <div class="col">
                         <div>
                             <div class="detail-box">레시피 정보 ID : <span id="recipe-id" th:text="${recipe.getRecipeId()}">ID</span></div>
                             <div class="detail-box">작성자 : &nbsp;<span th:text="${recipe.getUserName()}">작성자</span></div>
                         </div>
                     </div>
-
                     <div class="col">
                         <div>
                             <div class="detail-box">작성시간 : <span th:text="${recipe.getCreatedDate()}">작성시간</span></div>
                             <div class="detail-box">수정시간 : <span th:text="${recipe.getLastModifiedDate()}">수정시간</span>
                             </div>
-
                         </div>
                     </div>
-
                     <div class="col">
                         <div>
                             <div class="detail-box">조회수 : <span th:text="${recipe.recipeView}">조회수</span></div>
                             <div class="detail-box">좋아요💗: <span th:text="${recipe.recipeLike}">좋아요</span></div>
                         </div>
-
                         <!-- 영역을 만들 수 있는 태그
                         <span class="col">
                         </span>
@@ -139,7 +123,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <br>
 
@@ -154,11 +137,9 @@
                 <div class="p-3 border bg-light margin-10" style="margin-top: 20px;">
                     <h5>레시피</h5>
                     <hr>
-                    <!-- 레시피 제목 -->
                     <div class="mb-3">
                         <div style="font-weight: bold; font-size: 18px;" th:text="${recipe.recipeTitle}">제목</div>
                     </div>
-                    <!-- 레시피 내용 -->
                     <div class="mb-3">
                         <div th:text="${recipe.getRecipeBody()}">레시피 내용</div>
                     </div>
@@ -227,7 +208,6 @@
                         <div id="item-form-list"></div>
                         <br>
 
-                        <!--form 태그 전송하는 버튼-->
                         <div style="text-align: center;">
                             <button class="btn btn-outline-success" id="form-btn" type="submit">장바구니에 담기</button>
                         </div><br>
@@ -329,15 +309,6 @@
     <div th:replace="fragments/footer :: footerFragment"/>
     <br><br>
 </div>
-<!--
-<script>
-    $(document).ready(function(){
-        $("#like-btn").click(function(){
-            if(alert("좋아요를 눌렀습니다. 한번 더 누를 경우 좋아요가 취소됩니다.");
-        });
-    });
-</script>
--->
 <script>
     // checkbox 선택/해제
     $(document).ready(function() {
@@ -355,10 +326,10 @@
         });
     });
 
-    // 장바구니담기 버튼을 누르면 값을 가져오는 메서드
+    // 장바구니 담기
     $(document).ready(function() {
         $('#form-btn').click(function() {
-            alert($('#chk').val());
+            // alert($('#chk').val()); // 장바구니담기 버튼을 누르면 어떤 값을 보냈는지 값 출력
             // alert($("input[type=checkbox][name=chk]:checked").val());
 
             console.log('장바구니 담기 실행');
@@ -417,43 +388,5 @@
         })
     }
 </script>
-
-<!--<script>
-    // 장바구니 담기 시도 1
-    function clickBtn() {
-        // 체크한 데이터를 담을 배열 선언
-        const arr = [];
-        // Name이 check인 속성 취득
-        const check = document.getElementsByName("check");
-        // 취득한 속성 만큼 루프
-        for (let i = 0; i < check.length; i++) {
-            // 속성중에 체크 된 항목이 있을 경우
-            if (check[i].checked == true) {
-                arr.push(check[i].value);
-            }
-        }
-        // 결과를 표시
-        return document.getElementById("#recipe-form-list").textContent = arr;
-    }
-
-    // 장바구니 담기 시도 2
-    function clickBtn() {
-        // alert("장바구니에 재료가 담겼습니다.");
-        // checked 여부 확인하기
-        $('input:checkbox[name="check"]').is(":checked") == true
-
-        // checked 처리 하기
-
-        // 개별처리
-        $('input:checkbox[name="check"]').attr("checked", true);
-        // 전체처리
-        $('input:checkbox[name="check"]').each(function() {
-            this.checked = true;
-        });
-
-        // checkbox value 값 확인
-        $('input:checkbox[name="check"]').val();*/
-    }
-</script>-->
 </body>
 </html>
