@@ -116,6 +116,9 @@
     function check_username() {
         let username = $('#userName').val();
         console.log(username)
+        if (username.trim().length === 0) {
+            return;
+        }
         $.ajax({
             url: "/api/v1/check-username",
             method: "GET",
@@ -136,6 +139,9 @@
     function check_email() {
         let email = $('#email').val();
         console.log(email)
+        if (email.trim().length === 0) {
+            return;
+        }
         $.ajax({
             url: "/api/v1/check-email",
             method: "GET",
