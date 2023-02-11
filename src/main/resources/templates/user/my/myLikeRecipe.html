@@ -57,7 +57,7 @@
             </tbody>
         </table>
     </div>
-
+    <th:block th:if="${myLikeRecipeList.totalElements > 0}">
     <!-- pagination -->
     <div class="py-3 my-4">
         <nav aria-label="Page navigation example">
@@ -80,7 +80,12 @@
             </ul>
         </nav>
     </div>
-
+    </th:block>
+    <th:block th:unless="${myLikeRecipeList.totalElements} > 0">
+        <div class="text-center">
+            현재 좋아요를 누른 레시피가 없습니다.
+        </div>
+    </th:block>
     <br>
     <!-- footer -->
     <div th:replace="fragments/footer :: footerFragment"/>

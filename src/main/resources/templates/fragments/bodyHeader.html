@@ -5,41 +5,37 @@
 <!--    <p th:text="${#authentication.authorities}"></p>-->
 <!--    <p th:text="${#authentication.authenticated}"></p>-->
 <!--    <p sec:authentication="authorities"></p>-->
-    <a href="#contents" class="skip">본문바로가기</a>
     <header>
-        <h1><a href="#a">(로고)</a></h1>
-        <h2 class="hide">대메뉴</h2>
-        <nav class="bg-light nav-menu">
-            <ul class="nav justify-content-center">
-                <li class="nav-item"><a href="/" class="nav-link link-dark active" aria-current="page"><span>Home</span></a></li>
-                <li class="nav-item"><a href="/recipes/list" class="nav-link link-dark"><span>레시피 찾기</span></a></li>
-                <li class="nav-item"><a href="/items" class="nav-link link-dark"><span>재료 구매</span></a></li>
-                <li class="nav-item"><a href="#" class="nav-link link-dark" onclick="alert('해당 서비스는 아직 준비중입니다.')"><span>FAQs</span></a></li>
-            </ul>
-        </nav>
-        <h2 class="hide">회원 서비스</h2>
-        <nav class="user-menu">
-            <ul class="nav me-auto justify-content-end">
-                <!--비로그인도 가능-->
-                <li class="nav-item" sec:authorize="isAnonymous()"><a href="/login" class="nav-link link-dark">Login</a></li>
-                <li class="nav-item" sec:authorize="isAnonymous()"><a href="/join" class="nav-link link-dark">Sign up</a></li>
-                <!--로그인만 가능-->
-                <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
-                    <a class="nav-link dropdown-toggle" href="/users/my" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        마이페이지
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/users/my">회원 정보</a></li>
-                        <li><a class="dropdown-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_HEAD')" href="/admin">회원 관리</a></li>
-                        <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/recipes/my">나의 레시피</a></li>
-                        <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/recipes/likes/my">찜한 레시피</a></li>
-                        <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/users/my/reviews">나의 리뷰</a></li>
-                        <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/orders/my">주문 조회</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <li class="nav-item" sec:authorize="hasRole('ROLE_USER')"><a href="/carts" class="nav-link link-dark px-2">장바구니</a></li>
-            <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/users/logout" class="nav-link link-dark px-2">LogOut</a></li>
+        <nav class="py-2 bg-light border-bottom">
+            <div class="container d-flex flex-wrap">
+                <ul class="nav me-auto">
+                    <li class="nav-item"><a href="/" class="nav-link link-dark px-2 active" aria-current="page">Home</a></li>
+                    <li class="nav-item"><a href="/recipes/list" class="nav-link link-dark px-2">레시피 찾기</a></li>
+                    <li class="nav-item"><a href="/items" class="nav-link link-dark px-2">재료 구매</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link link-dark px-2" onclick="alert('해당 서비스는 아직 준비중입니다.')">FAQs</a></li>
+                </ul>
+                <ul class="nav me-auto justify-content-end">
+                    <!--비로그인도 가능-->
+                    <li class="nav-item" sec:authorize="isAnonymous()"><a href="/login" class="nav-link link-dark px-2">Login</a></li>
+                    <li class="nav-item" sec:authorize="isAnonymous()"><a href="/join" class="nav-link link-dark px-2">Sign up</a></li>
+                    <!--로그인만 가능-->
+                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                        <a class="nav-link dropdown-toggle" href="/users/my" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            마이페이지
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/users/my">회원 정보</a></li>
+                            <li><a class="dropdown-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_HEAD')" href="/admin">회원 관리</a></li>
+                            <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/recipes/my">나의 레시피</a></li>
+                            <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/recipes/likes/my">찜한 레시피</a></li>
+                            <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/users/my/reviews">나의 리뷰</a></li>
+                            <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/orders/my">주문 조회</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ROLE_USER')"><a href="/carts" class="nav-link link-dark px-2">장바구니</a></li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/users/logout" class="nav-link link-dark px-2">LogOut</a></li>
+                </ul>
+            </div>
         </nav>
     </header>
 </th:block>
