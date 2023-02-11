@@ -10,6 +10,43 @@
   }
   .inner{
     width: 19%;
+    margin-bottom: 50px;
+  }
+  img {
+    width: 210px;
+    height: 210px;
+    object-fit: cover;
+    align-content: center;
+    border-radius: 5%;
+  }
+  /*검색창 */
+  .search-wrapper {
+    width: 100%;
+    margin: 100px auto 0;
+    text-align: center;
+  }
+  .item-search {
+    position: relative;
+    width: 500px;
+    display: inline-block;
+  }
+  .item-search input {
+    width: 100%;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  .item-search input:focus {
+    outline: 1px solid gray;
+  }
+  .item-search img {
+    position : absolute;
+    width: 19px;
+    height: 22px;
+    top: 10px;
+    right: 12px;
+    margin: 0;
   }
 </style>
 <body>
@@ -32,28 +69,27 @@
     }
   </script>
   <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-  <!--상품 등록 버튼 & 상품 검색 창-->
-  <div style="margin: 60px 180px 60px auto;">
+  <!--상품 검색 창-->
 <!--  <div sec:authorize="hasRole('SELLER')">-->
-  <button style="margin: auto 0px 10px auto;display:block;" type="button" class="btn btn-primary"
-          onclick="location.href='createForm.html'"
-          th:onclick="|location.href='@{/items/create}'|">상품 등록</button>
-  </div>
-  <form style="text-align: center; margin-bottom: 100px" th:action="@{/items/search}" method="get">
-    <input type="text" name = "keyword" placeholder="상품 검색">
-    <button type="submit">검색</button>
-  </form>
+  <div class="search-wrapper">
+    <div class="item-search">
+      <form style="text-align: center; margin-bottom: 100px" th:action="@{/items/search}" method="get">
+        <input type="text" name = "keyword" placeholder="상품 검색">
+        <button style="border:none;" type="submit"><img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"></button>
+      </form>
+    </div>
   </div>
 <!--상품 목록 시작-->
   <div class="container">
   <tr th:each="item : ${items}">
     <div class="inner">
       <!--상품 이미지-->
-      <div class="card" style="width: 12rem; border: white">
+      <div class="card" style="border: white">
         <a onclick="location.href='findForm.html'"
            th:onclick="|location.href='@{/items/{id}(id=${item.getId})}'|"
            style="border: white">
-          <img th:src="${item.itemImagePath}" class="card-img-top" alt="이미지 준비중입니다.">
+          <img th:src="${item.itemImagePath}" alt="이미지 준비중입니다."
+          th:onerror="this.src='https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/noimage.gif'">
           <!--상품 이름 & 상품 가격-->
           <div class="card-body">
             <p class="card-title" th:text="${item.getItemName()}">상품 이름</p>

@@ -34,7 +34,9 @@
         </thead>
         <tbody>
         <tr class="tr-hover" th:each="item : ${myItemList}">
-            <td style="width: 300px">[[${item.itemName}]]</td>
+            <td onclick="location.href='itemFindForm.html'"
+                th:onclick="|location.href='@{/seller/items/{id}(id=${item.getId})}'|"
+                style="width: 300px">[[${item.itemName}]]</td>
             <td style="width: 160px"><span th:text="${#temporals.format(item.createdDate, 'yyyy-MM-dd HH:mm')}"></span> </td>
             <td style="width: 160px"><span th:text="${item.lastModified ==null}? ${#temporals.format(item.createdDate, 'yyyy-MM-dd HH:mm')}:${#temporals.format(item.lastModified, 'yyyy-MM-dd HH:mm')}"></span> </td>
             <td style="width: 300px">[[${item.price}]]</td>
