@@ -11,9 +11,14 @@
         padding-top: 20px;
         padding-left: 20px;
     }
-
     button {
         padding: 10px 30px;
+    }
+    img {
+      width: 400px;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 5%;
     }
 </style>
 <body>
@@ -73,9 +78,9 @@
 <div class="container" style="border: 1px solid white">
   <div style="margin-top: 120px; border: 1px solid white" class="row">
     <div class="col">
-      <p th:align="center"><img th:src="${resDto.getItemImagePath()}" class="card-img-top" alt="이미지 준비중입니다.">
+      <p th:align="center"><img th:src="${resDto.getItemImagePath()}" alt="이미지 준비중입니다.">
     </div>
-    <div style="padding-left: 150px" class="col">
+    <div class="col">
       <div>
         <h1 th:text="${resDto.getItemName()}">상품명</h1>
       </div>
