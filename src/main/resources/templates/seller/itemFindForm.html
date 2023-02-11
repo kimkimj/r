@@ -69,8 +69,10 @@
     }
 
 </script>
-<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
 <div class="container" style="border: 1px solid white">
+<!--  <div th:if="${resDto.getSellerName() == #authentication.getPrincipal()}">-->
+<!--  </div>-->
   <div style="margin-top: 120px; border: 1px solid white" class="row">
     <div class="col">
       <p th:align="center"><img th:src="${resDto.getItemImagePath()}" class="card-img-top" alt="이미지 준비중입니다.">
@@ -93,17 +95,18 @@
                    name="cartItemCnt" th:value="${cartItemReq.cartItemCnt}"/>
             <input style="width: 40px" type='button' onclick='count("plus")' value="+"/>
           </div>
-          <div style="margin-right: 30px; float: right"><span id="totalPrice"
-                                                              th:text="${resDto.getItemPrice()}">0</span>원
+          <div style="margin-right: 30px; float: right"><span id="totalPrice" th:text="${resDto.getItemPrice()}">0</span>원
           </div>
         </div>
         <div style="border: 1px solid;">
           <input style="width: 100px; float: right;"
-                 onclick="location.href='findAllForm.html'"
-                 th:onclick="|location.href='@{/items}'|" type="button" value="목록으로"/>
-
-          <input type="submit" value="장바구니" style="width: 100px; float: right;" onclick="alert('장바구니에 상품이 담겼습니다.')"/>
-          <input type="button" value="바로구매" style="width: 100px; float: right;" onclick='transferData()'>
+                 onclick="location.href='myItems.html'"
+                 th:onclick="|location.href='@{/seller/my/items}'|" type="button" value="목록으로"/>
+          <input style="width: 100px; float: right;"
+                 th:onclick="|location.href='@{/seller/items/delete/{id}(id=${id})}'|" type="button" value="상품 삭제"/>
+          <input style="width: 100px; float: right;"
+                 onclick="location.href='itemUpdateForm.html'"
+                 th:onclick="|location.href='@{/seller/items/update/{id}(id=${id})}'|" type="button" value="상품 수정"/>
         </div>
       </form>
     </div>

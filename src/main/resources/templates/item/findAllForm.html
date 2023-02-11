@@ -32,13 +32,8 @@
     }
   </script>
   <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-  <!--상품 등록 버튼 & 상품 검색 창-->
-  <div style="margin: 60px 180px 60px auto;">
+  <!--상품 검색 창-->
 <!--  <div sec:authorize="hasRole('SELLER')">-->
-  <button style="margin: auto 0px 10px auto;display:block;" type="button" class="btn btn-primary"
-          onclick="location.href='createForm.html'"
-          th:onclick="|location.href='@{/items/create}'|">상품 등록</button>
-  </div>
   <form style="text-align: center; margin-bottom: 100px" th:action="@{/items/search}" method="get">
     <input type="text" name = "keyword" placeholder="상품 검색">
     <button type="submit">검색</button>
