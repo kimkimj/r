@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="bodyHeaderFragment">
+<!--    <p th:text="${#authentication.name}"></p>-->
+<!--    <p th:text="${#authentication.authorities}"></p>-->
+<!--    <p th:text="${#authentication.authenticated}"></p>-->
+<!--    <p sec:authentication="authorities"></p>-->
     <header>
         <nav class="py-2 bg-light border-bottom">
             <div class="container d-flex flex-wrap">
@@ -21,13 +25,14 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="/users/my">회원 정보</a></li>
-                            <li><a class="dropdown-item" href="/recipes/my">나의 레시피</a></li>
-                            <li><a class="dropdown-item" href="/recipes/likes/my">찜한 레시피</a></li>
-                            <li><a class="dropdown-item" href="/users/my/reviews">나의 리뷰</a></li>
-                            <li><a class="dropdown-item" href="/orders/my">주문 조회</a></li>
+                            <li><a class="dropdown-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_HEAD')" href="/admin">회원 관리</a></li>
+                            <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/recipes/my">나의 레시피</a></li>
+                            <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/recipes/likes/my">찜한 레시피</a></li>
+                            <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/users/my/reviews">나의 리뷰</a></li>
+                            <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/orders/my">주문 조회</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/carts" class="nav-link link-dark px-2">장바구니</a></li>
+                    <li class="nav-item" sec:authorize="hasRole('ROLE_USER')"><a href="/carts" class="nav-link link-dark px-2">장바구니</a></li>
                     <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/users/logout" class="nav-link link-dark px-2">LogOut</a></li>
                 </ul>
             </div>

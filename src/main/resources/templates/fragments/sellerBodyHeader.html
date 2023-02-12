@@ -3,6 +3,9 @@
 <th:block th:fragment="sellerBodyHeaderFragment">
   <header>
     <nav class="py-2 bg-light border-bottom">
+      <p th:text="${#authentication.name}"></p>
+      <p th:text="${#authentication.authorities}"></p>
+      <p th:text="${#authentication.authenticated}"></p>
       <div class="container d-flex flex-wrap">
         <ul class="nav me-auto">
           <li class="nav-item"><a href="/sellerIndex" class="nav-link link-dark px-2 active" aria-current="page">Home</a></li>
@@ -21,7 +24,7 @@
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="/seller/my">회원 정보</a></li>
               <li><a class="dropdown-item" href="/seller/my/items">상품 관리</a></li>
-              <li><a class="dropdown-item" href="/seller/my/items">상품 등록</a></li>
+              <li><a class="dropdown-item" href="/seller/items/create">상품 등록</a></li>
             </ul>
           </li>
           <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/seller/logout" class="nav-link link-dark px-2">LogOut</a></li>

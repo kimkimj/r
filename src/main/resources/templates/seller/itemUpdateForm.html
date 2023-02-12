@@ -11,12 +11,12 @@
   }
 </style>
 <body>
-<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
 <div class="container">
   <div class="py-5 text-center">
     <h2>상품 수정 화면</h2>
   </div>
-    <form role="form" th:action="@{/items/update/{id} (id=${id})}" th:object="${itemUpdateReqDto}" method="post" enctype="multipart/form-data">
+    <form role="form" th:action="@{/seller/items/update/{id} (id=${id})}" th:object="${itemUpdateReqDto}" method="post" enctype="multipart/form-data">
       <div th:if="${#fields.hasGlobalErrors()}">
         <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${err}">글로벌 오류 메세지</p>
       </div>

@@ -1,18 +1,14 @@
 package com.woowahan.recipe.controller.ui;
 
-import com.woowahan.recipe.domain.dto.cartDto.CartItemListReqDto;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
-import com.woowahan.recipe.domain.dto.itemDto.ItemListForRecipeResDto;
-import com.woowahan.recipe.domain.dto.itemDto.ItemListResDto;
+import com.woowahan.recipe.domain.dto.itemDto.*;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipePageResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeSearchReqDto;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
-import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
 import com.woowahan.recipe.domain.dto.sellerDto.*;
-import com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto;
 import com.woowahan.recipe.service.ItemService;
 import com.woowahan.recipe.service.RecipeService;
+import com.woowahan.recipe.service.S3Uploader;
 import com.woowahan.recipe.service.SellerService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,21 +24,26 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+//@RequestMapping("/seller")
 public class SellerController {
 
     private final SellerService sellerService;
     private final ItemService itemService;
     private final RecipeService recipeService;
+    private final S3Uploader s3Uploader;
 
     // 판매자 홈페이지
     @GetMapping("/sellerIndex")
@@ -226,4 +227,84 @@ public class SellerController {
                 .map(ItemListForRecipeResDto::getName)
                 .collect(Collectors.toList()));
     }
+
+    /**
+     * seller - 상품 상세조회
+     */
+    @GetMapping("/seller/items/{id}")
+    public String findSellerForm(Model model, @PathVariable Long id) {
+        ItemDetailResDto resDto = itemService.findItem(id);
+
+        model.addAttribute("id", id);
+        model.addAttribute("resDto", resDto); // -> sellerName도 들어있음
+        model.addAttribute("cartItemReq", new CartItemReq(id, 1));
+        return "seller/itemFindForm";
+    }
+
+    /**
+     * 상품 등록
+     */
+    @GetMapping("/seller/items/create")
+    public String createForm(Model model) {
+        model.addAttribute("itemCreateReqDto", new ItemCreateReqDto());
+        return "seller/itemCreateForm";
+    }
+
+    @PostMapping("/seller/items/create")
+    public String create(@Valid @ModelAttribute ItemCreateReqDto reqDto, BindingResult bindingResult,
+                         @RequestPart MultipartFile multipartFile,
+                         RedirectAttributes redirectAttributes, Authentication authentication) throws IOException {
+
+        if (bindingResult.hasErrors()) {
+            log.info("bindingResult = {}", bindingResult);
+            return "seller/itemCreateForm";
+        }
+
+        String imgPath = s3Uploader.upload(multipartFile, "item-image");
+        reqDto.setItemImagePath(imgPath);
+        ItemCreateResDto resDto = itemService.createItem(reqDto, authentication.getName());
+        redirectAttributes.addAttribute("id", resDto.getId());
+
+        log.info("img주소확인 : {}", imgPath);
+        return "redirect:/seller/items/{id}";
+    }
+
+
+    /**
+     * 상품 수정
+     */
+    @GetMapping("/seller/items/update/{id}")
+    public String updateForm(@PathVariable Long id,  Model model) {
+        model.addAttribute("id", id);
+        model.addAttribute("itemUpdateReqDto", itemService.findItem(id));
+        return "seller/itemUpdateForm";
+    }
+
+    @PostMapping("/seller/items/update/{id}")
+    public String update(@Valid @ModelAttribute ItemUpdateReqDto reqDto, BindingResult bindingResult,
+                         @PathVariable Long id, @RequestPart MultipartFile multipartFile,
+                         RedirectAttributes redirectAttributes, Authentication authentication) throws IOException {
+
+        if (bindingResult.hasErrors()) {
+            log.info("bindingResult = {}", bindingResult);
+            return "seller/itemUpdateForm";
+        }
+        String imgPath = s3Uploader.upload(multipartFile, "item-image");
+        reqDto.setItemImagePath(imgPath);
+
+        ItemUpdateResDto resDto = itemService.updateItem(id, reqDto, authentication.getName());
+        redirectAttributes.addAttribute("id", resDto.getId());
+        return "redirect:/seller/items/{id}";
+    }
+
+    /**
+     * 상품 삭제
+     */
+    @GetMapping("seller/items/delete/{id}")
+    public String delete(@PathVariable Long id, Authentication authentication) {
+        itemService.deleteItem(id, authentication.getName());
+        return "redirect:/seller/my/items";
+    }
+
+
 }

@@ -1,0 +1,24 @@
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{adminMain}">
+<body>
+<div layout:fragment="adminMain" class="container">
+  <div class="wrapper">
+    <div class="button-container">
+      <div class="button">
+        <button class="w-100 btn btn-outline-primary btn-lg"
+                th:onclick="|location.href='@{/admin/users}'|"
+                type="button">회원 관리
+        </button>
+        <br><br>
+        <button class="w-100 btn btn-outline-primary btn-lg"
+                th:onclick="|location.href='@{/admin/sellers}'|"
+                type="button">판매자 관리
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
