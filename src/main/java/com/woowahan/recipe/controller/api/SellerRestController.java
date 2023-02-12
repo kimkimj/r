@@ -25,6 +25,25 @@ public class SellerRestController {
         return Response.success(sellerJoinResponse);
     }
 
+    @GetMapping("/seller/check-sellerName")
+    public String checkSellerName(String sellerName) {
+        if (!sellerService.checkSellerName(sellerName)) {
+            return "사용 가능한 아이디 입니다.";
+        } else {
+            return "중복된 아이디 입니다.";
+        }
+    }
+
+    @GetMapping("/seller/check-email")
+    public String checkEmail(String email) {
+        if (!sellerService.checkEmail(email)) {
+            return "사용가능한 이메일 입니다.";
+        } else {
+            return "중복된 이메일 입니다.";
+        }
+    }
+
+
     // 로그인
     @PostMapping("/seller/login")
     public Response<SellerLoginResponse> login(@RequestBody SellerLoginRequest sellerLoginRequest) {

@@ -35,6 +35,13 @@ public class SellerService {
         return seller;
     }
 
+    public boolean checkSellerName(String sellerName) {
+        return sellerRepository.existsBySellerName(sellerName);
+    }
+
+    public boolean checkEmail(String email) {
+        return sellerRepository.existsByEmail(email);
+    }
 
     public SellerJoinResponse join(SellerJoinRequest sellerJoinRequest) {
         // sellerName (ID) 중복확인
