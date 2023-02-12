@@ -11,11 +11,13 @@
         padding: 0;
         box-sizing: border-box;
     }
-
     body {
         width: 100%;
-        display: flex;
         align-items: center;
+    }
+    .container {
+        width: 70%;
+        margin: 0 auto;
     }
 
     div.recipe-wapper {
@@ -32,10 +34,11 @@
 
     /* 레시피 제목 */
     .title-box {
-        background-color: #DFE7E8;
+        background-color: rgba(204, 206, 201, 0.18);
         padding: 8px;
         border-radius: 5px;
         font-size: large;
+        font-weight: bold;
         margin-bottom: 5px;
     }
 
@@ -45,270 +48,222 @@
         border-radius: 5px;
         font-size: large;
         margin-bottom: 5px;
+        font-size: small;
     }
 
-    .margin-10 {
-        margin-bottom: 10px;
+    .margin-20 {
+        margin: 20px;
     }
+
+    .img-div {
+        display: flex;
+    }
+
 </style>
 <body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-<div class="recipe-wapper">
-    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-    <div class="container"><br>
-        <div class="margin-10">
-            <h1>레시피 상세보기 페이지</h1>
-        </div>
-        <br>
-
-        <!-- 레시피 등록하는 곳 타이틀 -->
-        <div class="recipe-title margin-10">
-            <div>
-                <h3>Recipe</h3>
-                <hr>
-                <span style="float: right;">
-                    <button type="button" class="btn btn-outline-success"
-                            th:onclick="|location.href='@{/recipes/update/{recipeId} (recipeId=${recipeId})}'|"
-                            sec:authorize="isAuthenticated()">레시피 수정</button>
-                    <button type="button" class="btn btn-outline-success recipeDeleteBtn"
-                            th:onclick="|location.href='@{/recipes/delete/{recipeId} (recipeId=${recipeId})}'|"
-                            sec:authorize="isAuthenticated()">레시피 삭제</button>
-                    <button type="button" class="btn btn-outline-success"
-                            th:onclick="|location.href='@{/recipes/list}'|">전체 레시피 보기</button>
-                </span>
-            </div>
-
-            <!--<div>
-                <h5>레시피 카테고리</h5>
-                &lt;!&ndash; ${} 표현식을 사용해서 컨트롤러에서 전달받은 데이터에 접근 &ndash;&gt;
-                <div th:text="${data}">메인 요리</div>
-            </div>-->
-            <br>
-
-            <div>
-                <h5>레시피 제목</h5>
-                <div class="col">
-                    <div class="title-box" th:text="${recipe.recipeTitle}"></div>
-                </div>
-            </div>
-            <br>
-
-            <!-- 레시피 작성자 이름, 날짜 -->
-            <!-- 작성자, 날짜 부분과 입력 받은 부분을 분리해야 한다. -->
-
-            <div class="recipe-write-content">
-                <div class="row">
-                    <div class="col">
-                        <div>
-                            <div class="detail-box">레시피 정보 ID : <span id="recipe-id" th:text="${recipe.getRecipeId()}">ID</span></div>
-                            <div class="detail-box">작성자 : &nbsp;<span th:text="${recipe.getUserName()}">작성자</span></div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div>
-                            <div class="detail-box">작성시간 : <span th:text="${recipe.getCreatedDate()}">작성시간</span></div>
-                            <div class="detail-box">수정시간 : <span th:text="${recipe.getLastModifiedDate()}">수정시간</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div>
-                            <div class="detail-box">조회수 : <span th:text="${recipe.recipeView}">조회수</span></div>
-                            <div class="detail-box">좋아요💗: <span th:text="${recipe.recipeLike}">좋아요</span></div>
-                        </div>
-                        <!-- 영역을 만들 수 있는 태그
-                        <span class="col">
-                        </span>
-                        -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
-
-        <div class="row gx-5">
-            <div class="">
-                <div class="p-3 border bg-light margin-10">
-                    <h5>레시피 이미지</h5><hr><br>
-                    <img th:src="${recipe.recipeImagePath}" class="img-fluid" alt="..." th:if="${recipe.recipeImagePath != null}">
-                    <img src="https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/noimage.gif" class="img-fluid" alt="..." th:if="${recipe.recipeImagePath == null}">
-                </div>
-
-                <div class="p-3 border bg-light margin-10" style="margin-top: 20px;">
-                    <h5>레시피</h5>
-                    <hr>
-                    <div class="mb-3">
-                        <div style="font-weight: bold; font-size: 18px;" th:text="${recipe.recipeTitle}">제목</div>
-                    </div>
-                    <div class="mb-3">
-                        <div th:text="${recipe.getRecipeBody()}">레시피 내용</div>
-                    </div>
-                </div>
-
-                <div class="p-3 border bg-light margin-10" style="margin-top: 20px;">
-                    <h5>레시피 재료</h5><hr>
-                    <p>구매하실 재료를 선택해주세요.</p>
-                    <!-- form -->
-                    <!--<form role="form" th:action="@{/recipes/carts}" th:object="${cartItemReq}" method="post"> &lt;!&ndash; th:action="@{/carts} &ndash;&gt;
-                        <input type="hidden" th:field="${cartItemReq.cartItemId}"/>
-                        <input type="hidden" style="width: 100px; border:1px solid; text-align: center; background-color: white" id='cartItemCnt'
-                               name="cartItemCnt" th:value="${cartItemReq.cartItemCnt}"  />
-
-                        <table class="table" style="width: 250px; text-align: center;">
-                            <thead>
-                            <tr>
-                                <th><input class="form-check-input" type="checkbox"  id="chkAll" name="chkAll"/></th>
-                                <th scope="col">재료명</th>
-                            </tr>
-                            </thead>
-                            &lt;!&ndash; th:block &ndash;&gt;
-                            <td th:if="${recipe.getItems().size() == 0}">등록된 재료가 없습니다.</td>
-                            <th:block th:unless="${recipe.getItems().size()== 0}" th:each="num : ${#numbers.sequence(0,recipe.getItems().size()-1)}">
-                                <tbody>
-                                <tr>
-                                    &lt;!&ndash;<td>
-                                        <input class="form-check-input" name="check" type="checkbox"
-                                               value="${recipe.getItems().get(num).item.getName()}">
-                                    </td>&ndash;&gt;
-                                    <td><input class="form-check-input" type="checkbox" id="chk" name="chk" value="${recipe.getItems().get(num).item.getName()}"></td>
-                                    <td th:text="${recipe.getItems().get(num).item.getName()}"/>
-                                </tr>
-                                </tbody>
-                            </th:block>
-                        </table>
-
-                        &lt;!&ndash; 재료 리스트 &ndash;&gt;
-                        <div id="item-form-list"></div>
-                        <br>
-
-                        &lt;!&ndash; form 태그 전송하는 버튼 &ndash;&gt;
-                        <div style="text-align: center;">
-                            <button class="btn btn-outline-success" id="form-btn" type="submit" onclick="clickBtn();">장바구니에 담기</button>
-                        </div><br>
-                    </form>-->
-                    <div>
-                        <table class="table" style="width: 250px; text-align: center;">
-                            <thead>
-                            <tr>
-                                <th><input class="form-check-input" type="checkbox"  id="chkAll" name="chkAll"/></th>
-                                <th scope="col">재료명</th>
-                            </tr>
-                            </thead>
-                            <td th:if="${recipe.items.size() == 0}">등록된 재료가 없습니다.</td>
-                            <th:block th:unless="${recipe.items.size() == 0}" th:each="obj : ${recipe.items}">
-                                <tbody>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox" id="chk" name="chk" th:itemCnt="1" th:itemId="${obj.item.id}" th:value="${obj.item.name}"></td>
-                                    <td th:text="${obj.item.name}"/>
-                                </tr>
-                                </tbody>
-                            </th:block>
-                        </table>
-                        <!--재료 리스트-->
-                        <div id="item-form-list"></div>
-                        <br>
-
-                        <div style="text-align: center;">
-                            <button class="btn btn-outline-success" id="form-btn" type="submit">장바구니에 담기</button>
-                        </div><br>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br><br>
-
-        <div style="text-align: center;">
-            <p>이 레시피가 좋으면 좋아요를 눌러 마이페이지에서 따로 확인하실 수 있습니다.</p>
-            <div>
-                <button class="btn btn-outline-success" type="button" id="like-btn"
-                        th:onclick="|location.href='@{/recipes/{recipeId}/likes (recipeId=${recipeId})}'|">좋아요💗
-                </button>
-            </div>
-        </div>
-        <br><br>
-
-        <!-- 리뷰 -->
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div class="container">
+    <br><br>
+    <div class="margin-20" style="text-align: center;">
+        <h3>|&nbsp;&nbsp;&nbsp;RECIPES FOR YOU&nbsp;&nbsp;&nbsp;|</h3>
+        <h5>맞춤추천 레시피를 둘러보세요.</h5>
+    </div>
+    <br>
+    <!-- 레시피 등록하는 곳 타이틀 -->
+    <div class="recipe-title margin-20">
         <div>
-            <h3>Review</h3><hr>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <!--                <textarea class="form-control" rows="1"></textarea>-->
-                <form role="form" th:action="@{/recipes/{recipeId}/reviews (recipeId=${recipeId})}"
-                      th:object="${reviewCreateRequest}" method="post" content>
-                    <!-- 리뷰 내용  -->
-                    <div class="form-group col">
-                        <label th:for="content">리뷰 내용</label>
-                        <input type="text" th:field="*{content}" class="form-control" placeholder="리뷰 내용을 입력해주세요"
-                               th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">
-                        <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
-                    </div>
-                    <br>
-                    <div style="text-align: center;">
-                        <button type="submit" class="btn btn-outline-success">리뷰 작성완료</button>
-                    </div>
-                    <br>
-                </form>
-            </div>
-            <div class="card-footer" style="text-align: right;">
-
-            </div>
+            <hr>
+            <span style="float: right;">
+                <button type="button" class="btn btn-outline-success"
+                        th:onclick="|location.href='@{/recipes/update/{recipeId} (recipeId=${recipeId})}'|"
+                        sec:authorize="isAuthenticated()">레시피 수정</button>
+                <button type="button" class="btn btn-outline-success recipeDeleteBtn"
+                        th:onclick="|location.href='@{/recipes/delete/{recipeId} (recipeId=${recipeId})}'|"
+                        sec:authorize="isAuthenticated()">레시피 삭제</button>
+                <button type="button" class="btn btn-outline-success"
+                        th:onclick="|location.href='@{/recipes/list}'|">목록가기</button>
+            </span>
         </div>
         <br>
-        <div class="card">
-            <!--                    <div class="card-header">댓글 목록</div>-->
-            <table class="table" style="width: 100%;">
-                <thead>
-                <tr>
-                    <colgroup>
-                        <col style="width: 5%" />
-                        <col style="width: 70%" />
-                        <col style="width: 15%" />
-                        <col style="width: 5%" />
-                        <col style="width: 5%" />
-                    </colgroup>
-                    <th scpoe="col">ID</th>
-                    <th scope="col" style="width: 50%">내용</th>
-                    <th scope="col">작성자명</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <th:block th:if="${#lists.size(recipe.reviews) == 0}">
-                    <td colspan="5" class="text-center" style="border: none;">댓글이 없습니다. 가장 먼저 댓글을 달아보세요</td>
-                </th:block>
-                <th:block th:unless="${#lists.size(recipe.reviews) == 0}">
-                    <tr th:each="review : ${recipe.reviews}">
-                        <td class="individual-review-id" th:text="${review.reviewId}"/>
-                        <td><input class="individual-content-input" placeholder="수정할 리뷰내용 입력" th:value="${review.content}" readonly></td>
-                        <td th:text="${review.user.userName}"/>
-                        <td>
-                            <button type="button" class="edit-btn btn-jelly" th:idx="${reviewStat.index}" onclick="updateReview(this.getAttribute('idx'))">
-                                수정
-                            </button>
-                            <button type="button" class="btn-jelly" style="width: 50px;" th:idx="${reviewStat.index}" onclick="deleteReview(this.getAttribute('idx'))">
-                                삭제
-                            </button>
-                        </td>
-                    </tr>
-                </th:block>
-                </tbody>
-            </table>
-            <br>
-        </div>
-        <br><br>
-        <div style="text-align: center;">
-            <button class="btn btn-outline-success" onclick="location.href='recipeList.html'"
-                    th:onclick="|location.href='@{/recipes/list}'|">목록가기
-            </button>
+        <!--<div>
+            <h5>레시피 카테고리</h5>
+            &lt;!&ndash; ${} 표현식을 사용해서 컨트롤러에서 전달받은 데이터에 접근 &ndash;&gt;
+            <div th:text="${data}">메인 요리</div>
+        </div>-->
+        <br>
+        <br>
+
+        <div class="recipe-write-content">
+            <div class="row">
+                <div class="col">
+                    <div>
+                        <div class="detail-box">레시피 정보 ID : <span id="recipe-id" th:text="${recipe.getRecipeId()}">ID</span></div>
+                        <div class="detail-box">작성자 : &nbsp;<span th:text="${recipe.getUserName()}">작성자</span></div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div>
+                        <div class="detail-box">작성시간 : <span th:text="${recipe.getCreatedDate()}">작성시간</span></div>
+                        <div class="detail-box">수정시간 : <span th:text="${recipe.getLastModifiedDate()}">수정시간</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div>
+                        <div class="detail-box">조회수 : <span th:text="${recipe.recipeView}">조회수</span></div>
+                        <div class="detail-box">좋아요💗: <span th:text="${recipe.recipeLike}">좋아요</span></div>
+                    </div>
+                    <!-- 영역을 만들 수 있는 태그
+                    <span class="col">
+                    </span>
+                    -->
+                </div>
+            </div>
         </div>
     </div>
-    <br><br><br>
-    <!-- footer -->
-    <div th:replace="fragments/footer :: footerFragment"/>
+
+    <div class="margin-20">
+        <div class="title-box" th:text="${recipe.recipeTitle}"></div>
+    </div>
+
+    <div class="margin-20 img-div">
+        <div>
+            <img th:src="${recipe.recipeImagePath}" class="img-fluid" alt="..." th:if="${recipe.recipeImagePath != null}">
+            <img src="https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/noimage.gif" class="img-fluid" alt="..." th:if="${recipe.recipeImagePath == null}">
+        </div>
+    </div>
+
+    <div class="row gx-5 margin-20">
+        <div class="p-3 border bg-light" style="padding:30px; border-radius: 10px;">
+            <div th:text="${recipe.getRecipeBody()}">레시피 내용</div>
+        </div>
+    </div>
+
+    <div class="p-3 border bg-light margin-20" style="margin-top: 20px; border-radius: 10px;">
+        <h5>레시피 재료</h5><hr>
+        <p>구매하실 재료를 선택해주세요.</p>
+
+        <div style="margin-left:10px; border: 1px solid; padding: 20px; border-radius: 10px;">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th style="width:10px;"><input class="form-check-input" type="checkbox"  id="chkAll" name="chkAll"/></th>
+                    <th>&nbsp;재료명</th>
+                </tr>
+                </thead>
+                <th:block th:unless="${recipe.items.size() == 0}" th:each="obj : ${recipe.items}">
+                    <tbody>
+                    <tr>
+                        <td><input class="form-check-input" type="checkbox" id="chk" name="chk" th:itemCnt="1" th:itemId="${obj.item.id}" th:value="${obj.item.name}"></td>
+                        <td th:text="${obj.item.name}"></td>
+                    </tr>
+                    </tbody>
+                </th:block>
+            </table>
+            <div th:if="${recipe.items.size() == 0}">등록된 재료가 없습니다.</div>
+            <!--재료 리스트-->
+            <div id="item-form-list"></div>
+            <br><br>
+
+            <div style="text-align: center;">
+                <button class="btn btn-outline-success" id="form-btn" type="submit">장바구니</button>
+            </div>
+        </div>
+    </div>
+
     <br><br>
+
+    <!-- 리뷰 -->
+    <div>
+        <h4>Review</h4><hr>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <!--                <textarea class="form-control" rows="1"></textarea>-->
+            <form role="form" th:action="@{/recipes/{recipeId}/reviews (recipeId=${recipeId})}"
+                  th:object="${reviewCreateRequest}" method="post" content>
+                <!-- 리뷰 내용  -->
+                <div class="form-group col">
+<!--                    <label th:for="content">리뷰 내용</label>-->
+                    <input type="text" th:field="*{content}" class="form-control" placeholder="리뷰 내용을 입력해주세요"
+                           th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">
+                    <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
+                </div>
+                <br>
+                <div style="text-align: center;">
+                    <button type="submit" class="btn btn-outline-success">리뷰 작성완료</button>
+                </div>
+                <br>
+            </form>
+        </div>
+        <div class="card-footer" style="text-align: right;">
+
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        <!--                    <div class="card-header">댓글 목록</div>-->
+        <table class="table" style="width: 100%;">
+            <thead>
+            <tr>
+                <colgroup>
+                    <col style="width: 5%" />
+                    <col style="width: 70%" />
+                    <col style="width: 15%" />
+                    <col style="width: 5%" />
+                    <col style="width: 5%" />
+                </colgroup>
+                <th scpoe="col">ID</th>
+                <th scope="col" style="width: 50%">내용</th>
+                <th scope="col">작성자명</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:if="${#lists.size(recipe.reviews) == 0}">
+                <td colspan="5" class="text-center" style="border: none;">댓글이 없습니다. 가장 먼저 댓글을 달아보세요</td>
+            </th:block>
+            <th:block th:unless="${#lists.size(recipe.reviews) == 0}">
+                <tr th:each="review : ${recipe.reviews}">
+                    <td class="individual-review-id" th:text="${review.reviewId}"/>
+                    <td><input class="individual-content-input" placeholder="수정할 리뷰내용 입력" th:value="${review.content}" readonly></td>
+                    <td th:text="${review.user.userName}"/>
+                    <td>
+                        <button type="button" class="edit-btn btn-jelly" th:idx="${reviewStat.index}" onclick="updateReview(this.getAttribute('idx'))">
+                            수정
+                        </button>
+                        <button type="button" class="btn-jelly" style="width: 50px;" th:idx="${reviewStat.index}" onclick="deleteReview(this.getAttribute('idx'))">
+                            삭제
+                        </button>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+        <br>
+    </div>
+    <br><br><br>
+<!--    <div style="text-align: center;">
+        <p style="font-weight: bold; font-size: small;">이 레시피가 좋으면 좋아요를 눌러 마이페이지에서 따로 확인하실 수 있습니다.</p>
+        <div>
+            <button class="btn btn-outline-success" type="button" id="like-btn"
+                    th:onclick="|location.href='@{/recipes/{recipeId}/likes (recipeId=${recipeId})}'|">좋아요💗
+            </button>
+        </div>
+    </div>-->
+    <div style="text-align: center;">
+        <button class="btn btn-outline-success" type="button" id="like-btn"
+                th:onclick="|location.href='@{/recipes/{recipeId}/likes (recipeId=${recipeId})}'|">좋아요💗
+        </button>
+        <button class="btn btn-outline-success" onclick="location.href='recipeList.html'"
+                th:onclick="|location.href='@{/recipes/list}'|">목록가기
+        </button>
+    </div>
 </div>
+<br><br><br>
+<div th:replace="fragments/footer :: footerFragment"/>
+<br><br><br>
 <script>
     // checkbox 선택/해제
     $(document).ready(function() {
