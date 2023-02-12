@@ -1,5 +1,6 @@
 package com.woowahan.recipe.service;
 
+import com.woowahan.recipe.domain.dto.recipeDto.RecipeCreateReqDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateReqDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeUpdateResDto;
@@ -66,16 +67,17 @@ class RecipeServiceTest {
     private final String title = "유부초밥";
     private final String body = "이렇게";
     private final List<String> items = new ArrayList<>();
-
+    private final String imagePath = "";
     private final int like = 10;
     private final int view = 12;
+    private RecipeEntity recipe;
 
     /**
      * RecipeItemEntity를 먼저 생성
      */
     private final RecipeItemEntity recipeItemEntity = RecipeItemEntity.builder()
             .item(new ItemEntity())
-//            .recipe(new RecipeEntity())
+            .recipe(recipe)
             .build();
 
     // List 형태의 RecipeItemEntity 선언
@@ -153,9 +155,8 @@ class RecipeServiceTest {
         when(userRepository.findByUserName(userName)).thenReturn(Optional.of(userEntity));
         when(recipeRepository.save(any())).thenReturn(recipeEntity);
         when(recipeItemRepository.save(any())).thenReturn(recipeItemEntity);
-//        assertDoesNotThrow(
-//                () -> recipeService.createRecipe(new RecipeCreateReqDto(
-//                        title, body, items), userName));
+        assertDoesNotThrow(
+                () -> recipeService.createRecipe(new RecipeCreateReqDto(title, body, items, imagePath), userName));
     }
 
     @Test
