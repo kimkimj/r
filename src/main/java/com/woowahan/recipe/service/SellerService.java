@@ -65,6 +65,14 @@ public class SellerService {
                 String.format("%s님의 회원가입이 완료되었습니다.", seller.getSellerName()));
     }
 
+    public boolean checkPassword(String sellerName, String password) {
+        SellerEntity seller = sellerRepository.findBySellerName(sellerName)
+                .orElseThrow(() -> new AppException(ErrorCode.SELLER_NOT_FOUND, ErrorCode.SELLER_NOT_FOUND.getMessage()));
+
+        // password가 맞지 않는 경우
+        return encoder.matches(password, seller.getPassword());
+    }
+
     public String login(String sellerName , String password) {
         log.info("로그인 입력");
         // userName(ID)가 없는 경우
