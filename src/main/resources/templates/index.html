@@ -1,13 +1,33 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: headerFragment"/>
+<style>
+    .container {
+        width: 70%;
+        margin: 0 auto;
+    }
+
+    .home {
+        width: 100%;
+        height: 1000px;
+        text-align: center;
+        border: 1px solid;
+    }
+
+    .home>h1 {
+        line-height:1000px;"
+    }
+</style>
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 <div class="container">
-    <h2>홈</h2>
-    <button type="button" th:onclick="|location.href='@{/recipes/list}'|">레시피</button>
-    <br/>
+    <br><br>
+    <div class="home">
+        <h1>woowahan recipe</h1>
+    </div>
 </div>
+<br><br><br>
 <div th:replace="fragments/footer :: footerFragment"/>
+<br><br><br>
 </body>
 </html>

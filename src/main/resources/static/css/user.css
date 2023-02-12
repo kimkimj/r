@@ -17,3 +17,8 @@
     justify-content: center;
     align-items: center;
 }
+
+.container {
+    width: 70%;
+    margin: 0 auto;
+}
