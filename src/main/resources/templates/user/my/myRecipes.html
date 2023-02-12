@@ -24,7 +24,6 @@
             <!-- 상단 메뉴바 -->
             <div th:replace="fragments/myPageNav :: myPageFragment"/>
             <br><br>
-
             <div>
                 <h1>마이 레시피 리스트</h1><hr>
                 <span style="float: right;">
@@ -56,7 +55,7 @@
                 </tbody>
             </table>
         </div>
-
+    <th:block th:if="${myRecipes.totalElements} > 0">
     <!-- pagination -->
     <div class="py-3 my-4">
         <nav aria-label="Page navigation example">
@@ -76,7 +75,12 @@
             </ul>
         </nav>
     </div>
-
+    </th:block>
+    <th:block th:unless="${myRecipes.totalElements} > 0">
+        <div class="text-center">
+            현재 등록한 글이 없습니다.
+        </div>
+    </th:block>
     <br>
     <!-- footer -->
     <div th:replace="fragments/footer :: footerFragment"/>

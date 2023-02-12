@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <head th:replace="fragments/header :: headerFragment"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/user.css}" />
+  <!--jQuery 적용-->
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+<!--  <script type="text/javascript" src="js/admin.js"></script>-->
+</head>
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div layout:fragment="adminMain">
+  <!--        <p>CONTENTS 들어갈 곳</p>-->
+</div>
+<div th:replace="fragments/footer :: footerFragment"/>
+</body>
+</html>
