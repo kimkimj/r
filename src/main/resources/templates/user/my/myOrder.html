@@ -62,7 +62,7 @@
             </tbody>
         </table>
     </div>
-
+    <th:block th:if="${orderList.totalElements > 0}">
     <!-- pagination -->
     <div class="py-3 my-4">
         <nav aria-label="Page navigation example">
@@ -88,7 +88,12 @@
             </ul>
         </nav>
     </div>
-
+    </th:block>
+    <th:block th:unless="${orderList.totalElements} > 0">
+        <div class="text-center">
+            현재 주문 내역이 없습니다.
+        </div>
+    </th:block>
     <br>
     <!-- footer -->
     <div th:replace="fragments/footer :: footerFragment"/>

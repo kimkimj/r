@@ -105,7 +105,7 @@ public class RecipeController {
     }
 
     @GetMapping("/list")
-    public String list(Model model, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String list(Model model, @PageableDefault(size = 9, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<RecipePageResDto> allRecipes = recipeService.findAllRecipes(pageable);
 
         // pagination
@@ -152,7 +152,7 @@ public class RecipeController {
      */
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/search")
-    public String search(Model model, @ModelAttribute RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String search(Model model, @ModelAttribute RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 9, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<RecipePageResDto> allRecipes = recipeService.searchRecipes(recipeSearchReqDto.getKeyword(), pageable);
 
         return paging(model, allRecipes);
@@ -256,27 +256,5 @@ public class RecipeController {
         model.addAttribute("recipe", recipe);
         return "recipe/recipeDetailList";
     }
-
-    /**
-     * 장바구니에 재료 담기
-     */
-    /*@PostMapping("/carts")
-    public String addCartItemList(@RequestBody CartItemReq cartItemReq, Model model,
-                                  Authentication authentication) throws IOException {
-
-        log.info("cartItemReq id = {}", cartItemReq.getCartItemId());
-        log.info("cartItemReq cnt = {}", cartItemReq.getCartItemCnt());
-        log.info("cartItemReq check = {}", cartItemReq.isChecked());
-        try{
-            authentication.isAuthenticated();
-        }catch (NullPointerException e){
-            return "recipe/alert";
-        }
-        model.addAttribute("cartItemReq", cartItemReq);
-        log.info("장바구니 아이템 요청");
-        cartService.addCartItem(cartItemReq, authentication.getName());
-        log.info("장바구니 서비스 다녀옴");
-        return "recipe/alertCart";
-    }*/
 }
 
