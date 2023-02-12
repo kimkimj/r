@@ -70,9 +70,9 @@
                     <button type="button" class="btn btn-outline-success"
                             th:onclick="|location.href='@{/recipes/update/{recipeId} (recipeId=${recipeId})}'|"
                             sec:authorize="isAuthenticated()">레시피 수정</button>
-                    <button type="button" class="btn btn-outline-success"
+                    <button type="button" class="btn btn-outline-success recipeDeleteBtn"
                             th:onclick="|location.href='@{/recipes/delete/{recipeId} (recipeId=${recipeId})}'|"
-                            sec:authorize="isAuthenticated()">레시피 삭제(복구 불가)</button>
+                            sec:authorize="isAuthenticated()">레시피 삭제</button>
                     <button type="button" class="btn btn-outline-success"
                             th:onclick="|location.href='@{/recipes/list}'|">전체 레시피 보기</button>
                 </span>
@@ -387,6 +387,11 @@
             console.log("장바구니 담기 ajax 실행 완료");
         })
     }
+
+    // 레시피 삭제 버튼
+    $(document).on("click", ".recipeDeleteBtn", function() {
+        alert('레시피가 삭제되었습니다.');
+    });
 </script>
 </body>
 </html>
