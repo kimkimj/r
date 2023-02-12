@@ -90,22 +90,7 @@
         <div>
           <h3><span th:text="${resDto.getItemPrice()}">상품 가격</span>원</h3>
         </div>
-        <form role="form" th:action="@{/items/cart}" th:object="${cartItemReq}" method="post">
-          <div class="back-ground">
-            <input type="hidden" th:field="${cartItemReq.cartItemId}"/>
-            <input type="hidden" id="itemPrice" th:value="${resDto.getItemPrice()}"/>
-            <!--장바구니 수량 버튼-->
-            <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-              <input style="width: 40px" type='button' onclick='count("minus")' value="-"/>
-              <input style="width: 100px; border:1px solid; text-align: center; background-color: white" id='cartItemCnt'
-                     name="cartItemCnt" th:value="${cartItemReq.cartItemCnt}"/>
-              <input style="width: 40px" type='button' onclick='count("plus")' value="+"/>
-            </div>
-            <div style="margin-right: 30px; float: right"><span id="totalPrice"
-                                                                th:text="${resDto.getItemPrice()}">0</span>원
-            </div>
-          </div>
-        <div style="border: 1px solid;">
+        <div style="border: 1px solid; margin-top: 310px">
           <input style="width: 100px; float: right;"
                  onclick="location.href='myItems.html'"
                  th:onclick="|location.href='@{/seller/my/items}'|" type="button" value="목록으로"/>
@@ -115,7 +100,6 @@
                  onclick="location.href='itemUpdateForm.html'"
                  th:onclick="|location.href='@{/seller/items/update/{id}(id=${id})}'|" type="button" value="상품 수정"/>
         </div>
-      </form>
     </div>
   </div>
   <hr>

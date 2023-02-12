@@ -3,14 +3,14 @@ server:
   servlet:
     session:
       timeout: 43200m      # 60m * 24h * 30d
-servlet:
-  encoding:
-    force-response: true
-  multipart:
-    enabled: true
-    max-file-size: 20MB
-    max-request-size: 20MB
 spring:
+  servlet:
+    encoding:
+      force-response: true
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
   profiles:
     include:
       - aws
