@@ -95,7 +95,7 @@
                         <textarea th:field="*{recipeBody}" class="form-control" id="recipeBody" rows="3" style="height: 300px; resize:none;"
                                   th:class="${#fields.hasErrors('recipeBody')}? 'form-control fieldError' : 'form-control'" placeholder="이 레시피의 내용을 적어주세요.">
                         </textarea>
-                        <p th:if="${#fields.hasErrors('recipeBody')}" th:errors="*{recipeBody}"></p>
+                        <p th:if="${#fields.hasErrors('recipeBody')}" th:errors="*{recipeBody}" style="white-space:pre;"></p>
                     </div>
                     <br>
                     <div id="recipe-form-list">

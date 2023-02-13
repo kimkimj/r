@@ -123,18 +123,21 @@ public class RecipeService {
         // TODO: 2023-01-24 를 사용하는 SnakeCase보다는 CamelCase가 Java 프로그래밍에서 권장되는 표기법이라고 합니다 🙂
         recipe.setRecipeTitle(recipeUpdateReqDto.getRecipeTitle());
         recipe.setRecipeBody(recipeUpdateReqDto.getRecipeBody());
-        recipeItemRepository.deleteAll();
-        if(recipeUpdateReqDto.getRecipeImagePath() != null) {
+        recipeItemRepository.deleteById(recipeId);
+        if(recipeUpdateReqDto.getRecipeImagePath() != null) { // 이미지가 있으면 등록
             recipe.setRecipeImagePath(recipeUpdateReqDto.getRecipeImagePath());
         }
         RecipeEntity saveRecipe = recipeRepository.saveAndFlush(recipe);
-        for (int i = 0; i < recipeUpdateReqDto.getItems().size(); i++) {
-            ItemEntity itemEntity = itemRepository.findByName(recipeUpdateReqDto.getItems().get(i)).orElse(null);
-            RecipeItemEntity recipeItemEntity = RecipeItemEntity.builder()
-                    .item(itemEntity)
-                    .recipe(saveRecipe)
-                    .build();
-            recipeItemRepository.save(recipeItemEntity);
+
+        // TODO : 재료를 db에 등록하는 부분
+        List<String> newItemList = recipeUpdateReqDto.getItems().stream().distinct().collect(Collectors.toList()); // 재료 요청 중복처리
+        for (int i = 0; i < newItemList.size(); i++) {
+                ItemEntity itemEntity = itemRepository.findByName(newItemList.get(i)).orElse(null);
+                RecipeItemEntity recipeItemEntity = RecipeItemEntity.builder()
+                        .item(itemEntity)
+                        .recipe(saveRecipe)
+                        .build();
+                recipeItemRepository.save(recipeItemEntity);
         }
         return new RecipeUpdateResDto(recipe.getId(), recipe.getRecipeTitle(), recipe.getRecipeBody(),
                 recipe.getUser().getUserName(), recipe.getLastModifiedDate());
@@ -151,7 +154,7 @@ public class RecipeService {
     public RecipeResponse deleteRecipe(Long recipeId, String userName) {
         RecipeEntity recipe = validateRecipe(recipeId);
         validateWriterAndUserName(userName, recipe); // 동일 유저 검증
-        recipeRepository.deleteById(recipeId);
+        recipeRepository.delete(recipe);
 
         return new RecipeResponse("레시피를 삭제했습니다.", recipeId);
     }

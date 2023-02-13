@@ -1,5 +1,6 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{adminMain}">
 <body>
@@ -16,25 +17,32 @@
           <th scope="col">이메일</th>
           <th scope="col">핸드폰 번호</th>
           <th scope="col">사업자등록번호</th>
-          <th scope="col">수정/삭제</th>
+          <th scope="col">상태</th>
+          <th scope="col">등록/삭제</th>
         </tr>
         </thead>
         <tbody>
-        <tr class="tr-hover" th:each="seller : ${sellerList}">
-          <th scope="row" th:text="${seller.sellerName}"/>
-          <td th:text="${seller.companyName}"/>
+        <tr class="tr-hover seller-info" th:each="seller : ${sellerList}">
+          <th th:text="${seller.sellerName}"/>
+          <td class="seller-id" th:text="${seller.id}" style="display: none;" />
+          <td class="company-name" th:text="${seller.companyName}"/>
           <td th:text="${seller.address}"/>
           <td th:text="${seller.email}"/>
           <td th:text="${seller.phoneNum}"/>
           <td th:text="${seller.businessRegNum}"/>
-          <td>
-            <button>수정</button>
-            <button>삭제</button>
+          <td class="seller-status" th:text="${seller.status}"/>
+          <td sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_HEAD')">
+            <div class="btn-group" th:if="${#strings.equals(seller.status.toString(), 'READY')}">
+              <button type="button" class="btn edit-btn btn-jelly" th:idx="${sellerStat.index}" th:status="ok" onclick="updateSeller(this.getAttribute('idx'), this.getAttribute('status'))">승인</button>
+              <button type="button" class="btn edit-btn btn-jelly" th:idx="${sellerStat.index}" th:status="reject" onclick="updateSeller(this.getAttribute('idx'), this.getAttribute('status'))">거절</button>
+            </div>
+            <button type="button" class="btn btn-jelly" th:idx="${sellerStat.index}" onclick="deleteSeller(this.getAttribute('idx'))">삭제</button>
           </td>
         </tr>
         </tbody>
       </table>
     </div>
+    <th:block th:if="${sellerList.totalElements > 0}">
     <!-- pagination -->
     <div class="py-3 my-4">
       <nav aria-label="Page navigation example">
@@ -54,6 +62,12 @@
         </ul>
       </nav>
     </div>
+    </th:block>
+    <th:block th:unless="${sellerList.totalElements} > 0">
+      <div class="text-center">
+        등록된 판매자가 없습니다.
+      </div>
+    </th:block>
   </div>
 </div>
 </body>

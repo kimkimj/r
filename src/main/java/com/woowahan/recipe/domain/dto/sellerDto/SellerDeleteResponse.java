@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class SellerDeleteResponse {
-    private Long id;
+    private String sellerName;
     private String message;
 }

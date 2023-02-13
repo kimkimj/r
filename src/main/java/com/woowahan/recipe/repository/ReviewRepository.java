@@ -12,4 +12,6 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
 
     Page<ReviewEntity> findAllByRecipe(RecipeEntity recipe, Pageable pageable);
     Page<ReviewEntity> findAllByUser(UserEntity user, Pageable pageable);
+    void deleteByUser(UserEntity user);
+
 }
