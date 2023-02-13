@@ -8,7 +8,7 @@
 </head>
 <style>
 
-  .container {
+  .wrapper {
     margin: auto;
     width: 45%;
     min-height: 450px;
@@ -32,38 +32,40 @@
 
 <body>
   <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
-    <div class="container">
+    <div class="wrapper">
       <div class="container_etc mt-5" style="width: 460px">
         <h2>판매자 정보</h2>
         <br>
 
         <form role="form" th:object="${seller}" method="get">
           <div class="mb-3">
-            <table>
-              <tr>
-                <td>아이디</td>
-                <td>[[${seller.sellerName}]]</td>
-              </tr>
-              <tr>
-                <td>업체명</td>
-                <td>[[${seller.companyName}]]</td>
-              </tr>
-              <tr>
-                <td>주소</td>
-                <td>[[${seller.address}]]</td>
-              </tr>
-              <tr>
-                <td>이메일</td>
-                <td>[[${seller.email}]]</td>
-              </tr>
-              <tr>
-                <td>핸드폰 번호</td>
-                <td>[[${seller.phoneNum}]]</td>
-              </tr>
-              <tr>
-                <td>사업자등록번호</td>
-                <td>[[${seller.businessRegNum}]]</td>
-              </tr>
+            <table class="table table-borderless">
+              <tbody>
+                <tr>
+                  <td>아이디</td>
+                  <td>[[${seller.sellerName}]]</td>
+                </tr>
+                <tr>
+                  <td>업체명</td>
+                  <td>[[${seller.companyName}]]</td>
+                </tr>
+                <tr>
+                  <td>주소</td>
+                  <td>[[${seller.address}]]</td>
+                </tr>
+                <tr>
+                  <td>이메일</td>
+                  <td>[[${seller.email}]]</td>
+                </tr>
+                <tr>
+                  <td>핸드폰 번호</td>
+                  <td>[[${seller.phoneNum}]]</td>
+                </tr>
+                <tr>
+                  <td>사업자등록번호</td>
+                  <td>[[${seller.businessRegNum}]]</td>
+                </tr>
+              </tbody>
             </table>
           </div>
           <div class="button-container">

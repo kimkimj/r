@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.util.CookieGenerator;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -78,16 +80,28 @@ public class UserController {
 
     @PostMapping("/users/login")
     public String login(@Valid @ModelAttribute UserLoginReqDto userLoginReqDto, BindingResult result,
-                        HttpServletRequest httpServletRequest, Model model){
+                        HttpServletRequest httpServletRequest, HttpServletResponse response, Model model){
         if (result.hasErrors()) {
             result.getFieldErrors().stream().forEach(err ->
                     log.info("field={} value={} msg={}", err.getField(), err.getRejectedValue(), err.getDefaultMessage()));
             return "user/loginForm";
         }
 
-        // 세션 넣기
-
         try {
+            String token = userService.login(userLoginReqDto.getUserName(), userLoginReqDto.getPassword());
+            CookieGenerator cookieGenerator = new CookieGenerator();
+            cookieGenerator.setCookieName("token");
+            cookieGenerator.setCookieHttpOnly(true);
+            cookieGenerator.addCookie(response, token);
+            cookieGenerator.setCookieMaxAge(60 * 60 * 2);
+
+        } catch (AppException e) {
+            model.addAttribute("e", e.getMessage());
+            result.reject(e.getMessage());
+            return "user/loginForm";
+        }
+
+        /*try {
             httpServletRequest.getSession().invalidate();
             HttpSession session = httpServletRequest.getSession(true);
             String token = userService.login(userLoginReqDto.getUserName(), userLoginReqDto.getPassword());
@@ -100,15 +114,21 @@ public class UserController {
             model.addAttribute("e", e.getMessage());
             result.reject(e.getMessage());
             return "user/loginForm";
-        }
+        }*/
 
         return "redirect:/";
     }
 
-    @GetMapping("/users/logout")
-    public String logout(HttpSession session) {
-        session.removeAttribute("jwt");
-        session.invalidate();
+    @GetMapping("/logout")
+    public String logout(HttpSession session, HttpServletResponse response) {
+        /*session.removeAttribute("jwt");
+        session.invalidate();*/
+
+        CookieGenerator cookieGenerator = new CookieGenerator();
+        cookieGenerator.setCookieName("token");
+        cookieGenerator.addCookie(response, "deleted");
+        cookieGenerator.setCookieMaxAge(0);
+
 
         return "redirect:/";
     }
