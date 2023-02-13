@@ -119,7 +119,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/users/logout")
+    @GetMapping("/logout")
     public String logout(HttpSession session, HttpServletResponse response) {
         /*session.removeAttribute("jwt");
         session.invalidate();*/
