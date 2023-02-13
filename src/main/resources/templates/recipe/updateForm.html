@@ -183,7 +183,7 @@
 <script>
     const selectItem = new Set();
 
-    let recipeFormList = document.querySelector("#item-list");
+    let recipeFormList = document.querySelector("#recipe-form-list");
 
     async function searchAndShowItems(keyword) {
         // <ul id="search-list" ...> 가져온다.
@@ -286,7 +286,7 @@
         var index = $('.delete-btn2').index(this);
         console.log("몇번째 요소인가요?" + index);
         document.getElementsByClassName('itemTag')[index].remove();
-        document.getElementsByName('items[]')[index].remove();
+        // document.getElementsByName('items[]')[index].remove();
     });
 
     // 새로 등록한 재료 삭제
@@ -318,9 +318,9 @@
                 $("#updateBody").focus();
                 return false;
             }
-            if ($("#item-list").find("li").length == 0) {
+            if ($("#recipe-form-list").find("li").length == 0) {
                 alert("재료를 입력해주세요.");
-                $("#item-list").focus();
+                $("#recipe-form-list").focus();
                 return false;
             }
         });
