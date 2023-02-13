@@ -69,8 +69,24 @@ th:first-child, td:first-child {
     border-left: none;
 }
 
+.box {
+    margin-top: 35px;
+}
+
+table {
+    margin-top: 10px;
+    width: 40%;
+}
+
 .button-container {
-    margin-top: 50px;
+    margin: 50px auto;
     height: 50px;
+    width: 300px;
+
     text-align: center;
+}
+
+.button {
+    margin-left: auto;
+    margin-right: auto;
 }
