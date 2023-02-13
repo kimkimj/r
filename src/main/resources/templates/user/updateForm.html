@@ -12,9 +12,10 @@
         <!-- 상단 메뉴바 -->
         <div th:replace="fragments/myPageNav :: myPageFragment"/>
         <br><br>
-        <div class="container_etc mt-5" style="width: 460px">
+        <div class="container" style="width: 460px">
             <h2>회원정보 수정</h2>
-            <a href="/users/my/update/password">비밀번호 변경</a>
+            <button type="button" class="btn btn-secondary" onclick="location.href='/users/my/update/password'">비밀번호 변경</button>
+            <br><br>
             <form role="form" th:action="@{/users/my/update}" th:object="${user}" method="post">
                 <div class="mb-3">
                     <label th:for="address" th:text="#{label.address}" class="form-label">주소</label>
