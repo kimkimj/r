@@ -5,6 +5,8 @@ import com.woowahan.recipe.domain.dto.adminDto.AdminResponse;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
+import com.woowahan.recipe.repository.RecipeRepository;
+import com.woowahan.recipe.repository.ReviewRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Service;
 public class AdminService {
 
     private final UserRepository userRepository;
+    private final RecipeRepository recipeRepository;
+    private final ReviewRepository reviewRepository;
 
     /**
      * 회원정보 전체 조회
@@ -71,6 +75,10 @@ public class AdminService {
         } else if(admin.getUserRole().equals(UserRole.HEAD) && targetUser.getUserRole().equals(UserRole.HEAD)) {  // 현재 로그인한 사용자가 head이고 삭제하고자 하는 회원의 등급이 HEAD라면
             throw new AppException(ErrorCode.ROLE_FORBIDDEN, ErrorCode.ROLE_FORBIDDEN.getMessage());
         }
+
+        recipeRepository.deleteByUser(targetUser);
+        reviewRepository.deleteByUser(targetUser);
+
         log.info("사용자를 삭제합니다.");
         userRepository.deleteById(id);
     }
