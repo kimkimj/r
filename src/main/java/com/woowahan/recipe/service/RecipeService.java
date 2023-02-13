@@ -154,7 +154,7 @@ public class RecipeService {
     public RecipeResponse deleteRecipe(Long recipeId, String userName) {
         RecipeEntity recipe = validateRecipe(recipeId);
         validateWriterAndUserName(userName, recipe); // 동일 유저 검증
-        recipeRepository.deleteById(recipeId);
+        recipeRepository.delete(recipe);
 
         return new RecipeResponse("레시피를 삭제했습니다.", recipeId);
     }
