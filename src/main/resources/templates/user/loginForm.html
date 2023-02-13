@@ -25,11 +25,15 @@
         margin-left: auto;
         margin-right: auto;
     }
-</style>
 
+    .container {
+        width: 70%;
+        margin: 0 auto;
+    }
+</style>
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-<div class="wrapper">
+<div class="container">
     <br><br><br>
     <h2>로그인</h2>
     <!--/*@thymesVar id="userLoginReqDto" type="com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto"*/-->
@@ -61,6 +65,8 @@
     </form>
     <br><br>
 </div>
+<br><br><br>
 <div th:replace="fragments/footer :: footerFragment"/>
+<br><br><br>
 </body>
 </html>

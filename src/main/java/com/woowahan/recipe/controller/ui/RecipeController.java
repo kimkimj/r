@@ -105,7 +105,7 @@ public class RecipeController {
     }
 
     @GetMapping("/list")
-    public String list(Model model, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String list(Model model, @PageableDefault(size = 9, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<RecipePageResDto> allRecipes = recipeService.findAllRecipes(pageable);
 
         // pagination
@@ -152,7 +152,7 @@ public class RecipeController {
      */
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/search")
-    public String search(Model model, @ModelAttribute RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String search(Model model, @ModelAttribute RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 9, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<RecipePageResDto> allRecipes = recipeService.searchRecipes(recipeSearchReqDto.getKeyword(), pageable);
 
         return paging(model, allRecipes);
