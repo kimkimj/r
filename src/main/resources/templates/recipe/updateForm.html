@@ -97,6 +97,7 @@
                     <!-- 재료 목록 -->
                     <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
                         <h5>레시피 재료</h5>
+                        <p>반드시 원래 있던 재료부터 삭제해주세요. 혹은 전체삭제 후 수정해주세요</p>
                         <hr>
                         <!-- 선택한 재료들이 보이는 부분 -->
                         <td th:if="${recipeUpdateReqDto.getItems().size() == 0}">등록된 재료가 없습니다.</td>
@@ -260,7 +261,7 @@
 
     function addItem(item) {
         console.log('addItem');
-        let itemList = document.querySelector("#item-list");
+        let itemList = document.querySelector("#recipe-form-list");
         let itemElement = document.createElement("li");
         itemElement.className += 'itemTag';
         itemElement.appendChild(document.createTextNode(item));
@@ -291,7 +292,7 @@
     // 새로 등록한 재료 삭제
     $(document).on("click", ".delete-btn", function() {
         console.log("아이템 삭제");
-        var index = $('.delete-btn').index(this);
+        var index = $('.delete-btn').index(this) + 1;
         console.log("몇번째 요소인가요?" + index);
         document.getElementsByClassName('itemTag')[index].remove();
         document.getElementsByName('items[]')[index].remove();
@@ -320,6 +321,11 @@
             if ($("#item-list").find("li").length == 0) {
                 alert("재료를 입력해주세요.");
                 $("#item-list").focus();
+                return false;
+            }
+            if ($("#recipe-form-list").find("li").length == 0) {
+                alert("재료를 입력해주세요.");
+                $("#recipe-form-list").focus();
                 return false;
             }
         });
