@@ -115,20 +115,6 @@ public class SellerController {
         return "redirect:/sellerIndex";
     }
 
-    @GetMapping("/seller/logout")
-    public String logout(HttpSession session, HttpServletResponse response) {
-
-        CookieGenerator cookieGenerator = new CookieGenerator();
-        cookieGenerator.setCookieName("token");
-        cookieGenerator.addCookie(response, "deleted");
-        cookieGenerator.setCookieMaxAge(0);
-
-        /*session.removeAttribute("jwt");
-        session.invalidate();*/
-
-        return "redirect:/";
-    }
-
     // 마이 페이지
     @GetMapping("/seller/my")
     public String myPage(Model model, Authentication authentication) {
