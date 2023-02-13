@@ -2,11 +2,14 @@ package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.UserRole;
 import com.woowahan.recipe.domain.dto.adminDto.AdminResponse;
+import com.woowahan.recipe.domain.dto.adminDto.SellerRoleReq;
+import com.woowahan.recipe.domain.entity.SellerEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.RecipeRepository;
 import com.woowahan.recipe.repository.ReviewRepository;
+import com.woowahan.recipe.repository.SellerRepository;
 import com.woowahan.recipe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 public class AdminService {
 
     private final UserRepository userRepository;
+    private final SellerRepository sellerRepository;
     private final RecipeRepository recipeRepository;
     private final ReviewRepository reviewRepository;
 
@@ -83,6 +87,37 @@ public class AdminService {
         userRepository.deleteById(id);
     }
 
+    public AdminResponse updateSeller(SellerRoleReq req, String userName) {
+        UserEntity admin = validateUserByUserName(userName);
+        SellerEntity targetSeller = validateSellerById(req.getId());
+
+        if(!admin.getUserRole().equals(UserRole.HEAD) && !admin.getUserRole().equals(UserRole.ADMIN)) {  // 현재 로그인한 사용자가 HEAD나 ADMIN이 아니라면
+            throw new AppException(ErrorCode.ROLE_FORBIDDEN, ErrorCode.ROLE_FORBIDDEN.getMessage());
+        }
+
+        if(targetSeller.getUserRole().equals(UserRole.SELLER)) {
+            throw new AppException(ErrorCode.SELLER_ALREADY, ErrorCode.SELLER_ALREADY.getMessage());
+        }
+
+        targetSeller.updateToSeller(req.getStatus());
+        return AdminResponse.toAdminResponse(targetSeller);
+    }
+
+    public void deleteSeller(Long id, String userName) {
+        UserEntity admin = validateUserByUserName(userName);
+        SellerEntity targetSeller = validateSellerById(id);
+
+        if(!admin.getUserRole().equals(UserRole.HEAD) && !admin.getUserRole().equals(UserRole.ADMIN)) {  // 현재 로그인한 사용자가 HEAD나 ADMIN이 아니라면
+            throw new AppException(ErrorCode.ROLE_FORBIDDEN, ErrorCode.ROLE_FORBIDDEN.getMessage());
+        }
+
+        if(targetSeller.getUserRole().equals(UserRole.SELLER)) {
+            throw new AppException(ErrorCode.SELLER_ALREADY, ErrorCode.SELLER_ALREADY.getMessage());
+        }
+
+        sellerRepository.deleteById(id);
+    }
+
     public UserEntity validateUserByUserName(String userName) {
         UserEntity user = userRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
@@ -93,5 +128,11 @@ public class AdminService {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
         return user;
+    }
+
+    private SellerEntity validateSellerById(Long id) {
+        SellerEntity seller = sellerRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.SELLER_NOT_FOUND, ErrorCode.SELLER_NOT_FOUND.getMessage()));
+        return seller;
     }
 }

@@ -17,6 +17,7 @@ function updateRole(idx) {
         $.ajax({
             url: `/api/v1/admin/role/${id}`,
             method: "PUT",
+            dataType: "json",
             contentType: 'application/json;charset=utf-8',
             data: JSON.stringify(role)
         }).done((data) => {
@@ -45,14 +46,78 @@ function deleteRole(idx) {
     if(answer) {
         console.log(userName + "을 삭제합니다.");
         $.ajax({
-            url: `/api/v1/admin/${id}`,
+            url: `/api/v1/admin/user/${id}`,
             method: "DELETE",
+            dataType: "json",
             contentType: 'application/json;charset=utf-8',
         }).done((data) => {
             console.log(data);
             if(data.resultCode === 'SUCCESS') {
                 alert("삭제가 완료되었습니다.");
                 $('.user-info').eq(idx).remove();
+            }
+        }).fail((error) => {
+            console.log(error);
+        }).always(() => {
+            console.log("회원 삭제 기능 호출 완료");
+        })
+    }
+}
+
+function updateSeller(idx, status) {
+    console.log('updateSeller() 실행');
+    console.log("이 판매자는 " + idx + "번째");
+    var id = $('.seller-id').eq(idx).html();
+    var company = $('.company-name').eq(idx).html();
+    console.log(typeof id);
+    console.log(typeof company);
+    console.log(typeof status);
+    console.log("이 판매자의 등록을 " + status + "하겠습니다");
+    const seller = {
+        id: parseInt(id),
+        status: status
+    }
+
+    $.ajax({
+        url: `/api/v1/admin/seller`,
+        method: "PUT",
+        dataType: "json",
+        contentType: 'application/json;charset=utf-8',
+        data: JSON.stringify(seller)
+    }).done((data) => {
+        console.log(data);
+        if(data.resultCode === 'SUCCESS') {
+            alert("판매자를 " + status + "로 변경하였습니다");
+            $('.btn-group').eq(idx).remove();
+            var change = data.result.userRole;
+            console.log(change);
+            $('.seller-status').eq(idx).html(change);
+        }
+    }).fail((error) => {
+        console.log(error);
+    }).always(() => {
+        console.log("판매자 등록 기능 호출 완료");
+    })
+}
+
+function deleteSeller(idx) {
+    console.log('deleteSeller() 실행');
+    console.log("이 판매자는 " + idx + "번째");;
+    var id = $('.seller-id').eq(idx).html();
+    var company = $('.company-name').eq(idx).html();
+    var answer = confirm("정말 " + company + "을(를) 삭제하시겠습니까?");
+
+    if(answer) {
+        console.log(company + "을(를) 삭제합니다.");
+        $.ajax({
+            url: `/api/v1/admin/seller/${id}`,
+            method: "DELETE",
+            contentType: 'application/json;charset=utf-8',
+        }).done((data) => {
+            console.log(data);
+            if(data.resultCode === 'SUCCESS') {
+                alert("삭제가 완료되었습니다.");
+                $('.seller-info').eq(idx).remove();
             }
         }).fail((error) => {
             console.log(error);
