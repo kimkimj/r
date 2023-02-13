@@ -55,4 +55,12 @@ public class SellerEntity extends BaseEntity {
         this.password = password;
     }
 
+    public void updateToSeller(String status) {
+        System.out.println(status);
+        if(status.equals("ok")) {
+            this.userRole = UserRole.SELLER;
+        } else {
+            this.userRole = UserRole.REJECT;
+        }
+    }
 }

@@ -14,7 +14,6 @@
 
     body {
         width: 100%;
-        display: flex;
         align-items: center;
     }
 
@@ -32,10 +31,11 @@
 
     /* 레시피 제목 */
     .title-box {
-        background-color: #DFE7E8;
+        background-color: rgba(204, 206, 201, 0.18);
         padding: 8px;
         border-radius: 5px;
         font-size: large;
+        font-weight: bold;
         margin-bottom: 5px;
     }
 
@@ -45,6 +45,7 @@
         border-radius: 5px;
         font-size: large;
         margin-bottom: 5px;
+        font-size: small;
     }
 
     .margin-10 {
@@ -56,8 +57,10 @@
 <div class="recipe-wapper">
     <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
     <div class="container"><br>
-        <div class="margin-10">
-            <h1>레시피 상세보기 페이지</h1>
+        <br><br>
+        <div class="margin-20" style="text-align: center;">
+            <h3>|&nbsp;&nbsp;&nbsp;RECIPES FOR YOU&nbsp;&nbsp;&nbsp;|</h3>
+            <h5>맞춤추천 레시피를 둘러보세요.</h5>
         </div>
         <br>
 
@@ -70,9 +73,9 @@
                     <button type="button" class="btn btn-outline-success"
                             th:onclick="|location.href='@{/recipes/update/{recipeId} (recipeId=${recipeId})}'|"
                             sec:authorize="isAuthenticated()">레시피 수정</button>
-                    <button type="button" class="btn btn-outline-success"
+                    <button type="button" class="btn btn-outline-success recipeDeleteBtn"
                             th:onclick="|location.href='@{/recipes/delete/{recipeId} (recipeId=${recipeId})}'|"
-                            sec:authorize="isAuthenticated()">레시피 삭제(복구 불가)</button>
+                            sec:authorize="isAuthenticated()">레시피 삭제</button>
                     <button type="button" class="btn btn-outline-success"
                             th:onclick="|location.href='@{/recipes/list}'|">전체 레시피 보기</button>
                 </span>
@@ -92,9 +95,6 @@
                 </div>
             </div>
             <br>
-
-            <!-- 레시피 작성자 이름, 날짜 -->
-            <!-- 작성자, 날짜 부분과 입력 받은 부분을 분리해야 한다. -->
 
             <div class="recipe-write-content">
                 <div class="row">
@@ -141,7 +141,7 @@
                         <div style="font-weight: bold; font-size: 18px;" th:text="${recipe.recipeTitle}">제목</div>
                     </div>
                     <div class="mb-3">
-                        <div th:text="${recipe.getRecipeBody()}">레시피 내용</div>
+                        <div th:text="${recipe.getRecipeBody()}" style="white-space:pre; white-space: pre-wrap;">레시피 내용</div>
                     </div>
                 </div>
 
@@ -305,9 +305,8 @@
         </div>
     </div>
     <br><br><br>
-    <!-- footer -->
     <div th:replace="fragments/footer :: footerFragment"/>
-    <br><br>
+    <br><br><br>
 </div>
 <script>
     // checkbox 선택/해제
@@ -387,6 +386,11 @@
             console.log("장바구니 담기 ajax 실행 완료");
         })
     }
+
+    // 레시피 삭제 버튼
+    $(document).on("click", ".recipeDeleteBtn", function() {
+        alert('레시피가 삭제되었습니다.');
+    });
 </script>
 </body>
 </html>

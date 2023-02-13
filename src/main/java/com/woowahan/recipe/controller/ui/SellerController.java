@@ -6,6 +6,7 @@ import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipePageResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeSearchReqDto;
 import com.woowahan.recipe.domain.dto.sellerDto.*;
+import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.service.ItemService;
 import com.woowahan.recipe.service.RecipeService;
 import com.woowahan.recipe.service.S3Uploader;
@@ -45,11 +46,11 @@ public class SellerController {
     private final RecipeService recipeService;
     private final S3Uploader s3Uploader;
 
-    // 판매자 홈페이지
+    /* 판매자 홈페이지
     @GetMapping("/sellerIndex")
     public String home() {
         return "seller/sellerIndex";
-    }
+    }*/
 
     // 판매자 회원 가입
     @GetMapping("/seller/join")
@@ -77,25 +78,27 @@ public class SellerController {
 
     @PostMapping("/seller/login")
     public String login(@Valid @ModelAttribute SellerLoginRequest sellerLoginRequest, BindingResult result,
-                        HttpServletRequest httpServletRequest){
-        if (result.hasErrors()) {
-            result.getFieldErrors().stream().forEach(err ->
-                    log.info("field={} value={} msg={}", err.getField(), err.getRejectedValue(), err.getDefaultMessage()));
+                        HttpServletRequest httpServletRequest, Model model){
+        try {
+
+            // 세션 넣기
+            httpServletRequest.getSession().invalidate();
+            HttpSession session = httpServletRequest.getSession(true);
+
+            String token = sellerService.login(sellerLoginRequest.getSellerName(), sellerLoginRequest.getPassword());
+            session.setAttribute("jwt", "Bearer " + token);
+            String checkJwt = (String) session.getAttribute("jwt");
+            log.info("checkJwt={}", checkJwt);
+            log.info("token={}", token);
+            session.setMaxInactiveInterval(1800);
+        } catch (AppException e) {
+            model.addAttribute("e", e.getMessage());
+            result.reject(e.getMessage());
             return "seller/loginForm";
         }
 
-        // 세션 넣기
-        httpServletRequest.getSession().invalidate();
-        HttpSession session = httpServletRequest.getSession(true);
-
-        String token = sellerService.login(sellerLoginRequest.getSellerName(), sellerLoginRequest.getPassword());
-        session.setAttribute("jwt", "Bearer " + token);
-        String checkJwt = (String) session.getAttribute("jwt");
-        log.info("checkJwt={}", checkJwt);
-        log.info("token={}", token);
-        session.setMaxInactiveInterval(1800);
-
-        return "redirect:/sellerIndex";
+        //return "redirect:/sellerIndex";
+        return "redirect:/";
     }
 
     @GetMapping("/seller/logout")

@@ -48,7 +48,8 @@
             <tbody>
             <tr th:each="recipe : ${myLikeRecipeList}">
                 <td><a th:href="@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}" th:utext="${recipe.recipeId}"></a></td>
-                <td th:text="${recipe.recipeTitle}"/>
+                <td><a th:href="@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}" th:utext="${recipe.recipeTitle}"></a></td>
+<!--                <td th:text="${recipe.recipeTitle}"/>-->
                 <td th:text="${recipe.recipeBody}"/>
                 <td th:text="${recipe.userName}"/>
                 <td th:text="${recipe.recipeLike}"/>
@@ -83,7 +84,7 @@
     </th:block>
     <th:block th:unless="${myLikeRecipeList.totalElements} > 0">
         <div class="text-center">
-            현재 좋아요를 누른 레시피가 없습니다.
+            좋아요를 누른 레시피가 없습니다.
         </div>
     </th:block>
     <br>

@@ -4,7 +4,7 @@
 <style>
   .container {
     display: flex;
-    gap: 20px 1%;
+    gap: 5px 5%;
     flex-wrap: wrap;
     justify-content: space-evenly;
   }
@@ -12,17 +12,16 @@
     width: 19%;
     margin-bottom: 50px;
   }
-  img {
-    width: 210px;
-    height: 210px;
-    object-fit: cover;
-    align-content: center;
-    border-radius: 5%;
+  /*제목*/
+  .title-wrapper {
+    width: 100%;
+    margin: 0px auto 0;
+    text-align: center;
   }
   /*검색창 */
   .search-wrapper {
     width: 100%;
-    margin: 100px auto 0;
+    margin: 0px auto 100px;
     text-align: center;
   }
   .item-search {
@@ -71,36 +70,45 @@
   <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
   <!--상품 검색 창-->
 <!--  <div sec:authorize="hasRole('SELLER')">-->
-  <div class="search-wrapper">
-    <div class="item-search">
-      <form style="text-align: center; margin-bottom: 100px" th:action="@{/items/search}" method="get">
-        <input type="text" name = "keyword" placeholder="상품 검색">
-        <button style="border:none;" type="submit"><img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"></button>
-      </form>
-    </div>
-  </div>
 <!--상품 목록 시작-->
   <div class="container">
-  <tr th:each="item : ${items}">
-    <div class="inner">
-      <!--상품 이미지-->
-      <div class="card" style="border: white">
-        <a onclick="location.href='findForm.html'"
-           th:onclick="|location.href='@{/items/{id}(id=${item.getId})}'|"
-           style="border: white">
-          <img th:src="${item.itemImagePath}" alt="이미지 준비중입니다."
-          th:onerror="this.src='https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/noimage.gif'">
-          <!--상품 이름 & 상품 가격-->
-          <div class="card-body">
-            <p class="card-title" th:text="${item.getItemName()}">상품 이름</p>
-            <h5 class="card-text" th:text="${item.getPrice()}+원">가격</h5>
-          </div>
-        </a>
+    <br><br>
+    <div class="title-wrapper">
+      <div style="text-align: center; margin: 20px;">
+        <h3>|&nbsp;&nbsp;&nbsp;OUR INGREDIENTS&nbsp;&nbsp;&nbsp;|</h3>
+        <h5>신선한 재료를 우아한에서 간편하게 주문해 보세요.</h5>
       </div>
-
+      <br>
     </div>
-  </tr>
-  </div>
+    <div class="search-wrapper">
+      <div class="item-search">
+        <form style="text-align: center;" th:action="@{/items/search}" method="get">
+          <input type="text" name = "keyword" placeholder="상품 검색">
+          <button style="border:none;" type="submit"><img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"></button>
+        </form>
+      </div>
+    </div>
+      <tr th:each="item : ${items}">
+        <div class="inner">
+          <!--상품 이미지-->
+          <div class="card" style="border: white">
+            <a onclick="location.href='findForm.html'"
+               th:onclick="|location.href='@{/items/{id}(id=${item.getId})}'|"
+               style="border: white">
+              <img style="width: 215px; height: 215px; object-fit: cover; align-content: center; border-radius: 5%; border: 1px solid lightgrey;"
+                    th:src="${item.itemImagePath}" alt="이미지 준비중입니다."
+                    th:onerror="this.src='https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/noimage.gif'">
+              <!--상품 이름 & 상품 가격-->
+              <div class="card-body">
+                <p class="card-title" th:text="${item.getItemName()}">상품 이름</p>
+                <h5 class="card-text" th:text="${item.getPrice()}+원">가격</h5>
+              </div>
+            </a>
+          </div>
+        </div>
+      </tr>
+  </div>>
+  <th:block th:if="${items.totalElements} > 0">
   <!-- pagination -->
   <div class="py-3 my-4">
     <nav aria-label="Page navigation example">
@@ -121,6 +129,7 @@
       </ul>
     </nav>
   </div>
+  </th:block>
 <br/>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>
