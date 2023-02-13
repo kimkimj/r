@@ -111,8 +111,8 @@
                     </div>
                     <div class="col">
                         <div>
-                            <div class="detail-box">작성시간 : <span th:text="${recipe.getCreatedDate()}">작성시간</span></div>
-                            <div class="detail-box">수정시간 : <span th:text="${recipe.getLastModifiedDate()}">수정시간</span>
+                            <div class="detail-box">작성시간 : <span th:text="${#temporals.format(recipe.getCreatedDate(), 'yyyy-MM-dd HH:mm')}"></span></div>
+                            <div class="detail-box">수정시간 : <span th:text="${#temporals.format(recipe.getLastModifiedDate(), 'yyyy-MM-dd HH:mm')}"></span></div>
                             </div>
                         </div>
                     </div>
