@@ -32,21 +32,8 @@
                             <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/orders/my">주문 조회</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_SELLER')">
-                        <a class="nav-link dropdown-toggle" href="/seller/my" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            마이페이지
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/seller/my">회원 정보</a></li>
-                            <li sec:authorize="hasRole('SELLER')"><a class="dropdown-item" href="/seller/my/items">상품 관리</a></li>
-                            <li sec:authorize="hasRole('SELLER')"><a class="dropdown-item" href="/seller/items/create">상품 등록</a></li>
-                        </ul>
-                    </li>
                     <li class="nav-item" sec:authorize="hasRole('ROLE_USER')"><a href="/carts" class="nav-link link-dark px-2">장바구니</a></li>
-                    <li class="nav-item" sec:authorize="hasRole('ROLE_USER')"><a href="/user/logout" class="nav-link link-dark px-2">LogOut</a></li>
-                    <li class="nav-item" sec:authorize="hasRole('ROLE_SELLER')"><a href="/seller/logout" class="nav-link link-dark px-2">LogOut</a></li>
-                    <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin/logout" class="nav-link link-dark px-2">LogOut</a></li>
-                    <li class="nav-item" sec:authorize="hasRole('ROLE_HEAD')"><a href="/head/logout" class="nav-link link-dark px-2">LogOut</a></li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/user/logout" class="nav-link link-dark px-2">LogOut</a></li>
                 </ul>
             </div>
         </nav>
