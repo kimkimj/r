@@ -112,7 +112,7 @@ public class SellerController {
         log.info("token={}", token);
         session.setMaxInactiveInterval(1800);*/
 
-        return "redirect:/sellerIndex";
+        return "redirect:/";
     }
 
     // 마이 페이지
