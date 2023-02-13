@@ -305,16 +305,16 @@
 
     $(document).ready(function () {
         $("#submit-btn").click(function () {
-            if ($("#recipeTitle").val().length == 0) {
+            if ($("#updateTitle").val().length == 0) {
                 alert("제목을 입력해주세요.");
                 setTimeout(function () {
-                    $("#recipeTitle").focus();
+                    $("#updateTitle").focus();
                 }, 1);
                 return false;
             }
-            if ($("#recipeBody").val().length == 0) {
+            if ($("#updateBody").val().length == 0) {
                 alert("내용을 입력해주세요.");
-                $("#recipeBody").focus();
+                $("#updateBody").focus();
                 return false;
             }
             if ($("#item-list").find("li").length == 0) {

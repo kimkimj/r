@@ -5,6 +5,7 @@ import com.woowahan.recipe.domain.dto.sellerDto.*;
 import com.woowahan.recipe.domain.entity.SellerEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
+import com.woowahan.recipe.repository.ItemRepository;
 import com.woowahan.recipe.repository.SellerRepository;
 import com.woowahan.recipe.security.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SellerService {
     private final SellerRepository sellerRepository;
+    private final ItemRepository itemRepository;
     private final BCryptPasswordEncoder encoder;
 
     @Value("${jwt.token.secret}")
@@ -58,7 +60,7 @@ public class SellerService {
                 });
 
         SellerEntity seller = sellerJoinRequest.toEntity(encoder.encode(sellerJoinRequest.getPassword()));
-        seller.setUserRole(UserRole.SELLER);
+        seller.setUserRole(UserRole.READY);
         seller = sellerRepository.save(seller);
 
         return new SellerJoinResponse(seller.getSellerName(),
@@ -148,8 +150,12 @@ public class SellerService {
             throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
         }
 
+        // delete all items related to the seller
+        itemRepository.deleteAllBySeller(seller);
+
         sellerRepository.delete(seller);
-        return new SellerDeleteResponse(seller.getId(), "회원 삭제가 완료되었습니다");
+        
+        return new SellerDeleteResponse(sellerName, "회원 삭제가 완료되었습니다");
     }
 
     public Page<SellerListResponse> findAll(Pageable pageable) {
