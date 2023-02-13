@@ -14,6 +14,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.util.CookieGenerator;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 @Controller
@@ -27,6 +31,27 @@ public class AdminController {
     @GetMapping("/admin")
     public String moveUpdateView(){
         return "admin/navPage";
+    }
+
+    // logout
+    @GetMapping("/admin/logout")
+    public String logout(HttpSession session, HttpServletResponse response) {
+        CookieGenerator cookieGenerator = new CookieGenerator();
+        cookieGenerator.setCookieName("token");
+        cookieGenerator.addCookie(response, "deleted");
+        cookieGenerator.setCookieMaxAge(0);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/head/logout")
+    public String headLogout(HttpSession session, HttpServletResponse response) {
+        CookieGenerator cookieGenerator = new CookieGenerator();
+        cookieGenerator.setCookieName("token");
+        cookieGenerator.addCookie(response, "deleted");
+        cookieGenerator.setCookieMaxAge(0);
+
+        return "redirect:/";
     }
 
     // ADMIN - 회원 관리 페이지

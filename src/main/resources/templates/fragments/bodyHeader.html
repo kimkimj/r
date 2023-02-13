@@ -45,6 +45,8 @@
                     <li class="nav-item" sec:authorize="hasRole('ROLE_USER')"><a href="/carts" class="nav-link link-dark px-2">장바구니</a></li>
                     <li class="nav-item" sec:authorize="hasRole('ROLE_USER')"><a href="/user/logout" class="nav-link link-dark px-2">LogOut</a></li>
                     <li class="nav-item" sec:authorize="hasRole('ROLE_SELLER')"><a href="/seller/logout" class="nav-link link-dark px-2">LogOut</a></li>
+                    <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin/logout" class="nav-link link-dark px-2">LogOut</a></li>
+                    <li class="nav-item" sec:authorize="hasRole('ROLE_HEAD')"><a href="/head/logout" class="nav-link link-dark px-2">LogOut</a></li>
                 </ul>
             </div>
         </nav>
