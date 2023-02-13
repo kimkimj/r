@@ -6,6 +6,7 @@ import com.woowahan.recipe.domain.dto.reviewDto.ReviewGetResponse;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewListResponse;
 import com.woowahan.recipe.domain.dto.reviewDto.ReviewUpdateResponse;
 import com.woowahan.recipe.domain.dto.userDto.*;
+import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.ReviewService;
 import com.woowahan.recipe.service.UserService;
@@ -77,7 +78,7 @@ public class UserController {
 
     @PostMapping("/users/login")
     public String login(@Valid @ModelAttribute UserLoginReqDto userLoginReqDto, BindingResult result,
-                        HttpServletRequest httpServletRequest){
+                        HttpServletRequest httpServletRequest, Model model){
         if (result.hasErrors()) {
             result.getFieldErrors().stream().forEach(err ->
                     log.info("field={} value={} msg={}", err.getField(), err.getRejectedValue(), err.getDefaultMessage()));
@@ -85,15 +86,21 @@ public class UserController {
         }
 
         // 세션 넣기
-        httpServletRequest.getSession().invalidate();
-        HttpSession session = httpServletRequest.getSession(true);
 
-        String token = userService.login(userLoginReqDto.getUserName(), userLoginReqDto.getPassword());
-        session.setAttribute("jwt", "Bearer " + token);
-        String checkJwt = (String) session.getAttribute("jwt");
-        log.info("checkJwt={}", checkJwt);
-        log.info("token={}", token);
-        session.setMaxInactiveInterval(1800);
+        try {
+            httpServletRequest.getSession().invalidate();
+            HttpSession session = httpServletRequest.getSession(true);
+            String token = userService.login(userLoginReqDto.getUserName(), userLoginReqDto.getPassword());
+            session.setAttribute("jwt", "Bearer " + token);
+            String checkJwt = (String) session.getAttribute("jwt");
+            log.info("checkJwt={}", checkJwt);
+            log.info("token={}", token);
+            session.setMaxInactiveInterval(1800);
+        } catch (AppException e) {
+            model.addAttribute("e", e.getMessage());
+            result.reject(e.getMessage());
+            return "user/loginForm";
+        }
 
         return "redirect:/";
     }
