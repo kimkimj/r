@@ -48,7 +48,8 @@
             <tbody>
             <tr th:each="recipe : ${myLikeRecipeList}">
                 <td><a th:href="@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}" th:utext="${recipe.recipeId}"></a></td>
-                <td th:text="${recipe.recipeTitle}"/>
+                <td><a th:href="@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}" th:utext="${recipe.recipeTitle}"></a></td>
+<!--                <td th:text="${recipe.recipeTitle}"/>-->
                 <td th:text="${recipe.recipeBody}"/>
                 <td th:text="${recipe.userName}"/>
                 <td th:text="${recipe.recipeLike}"/>
