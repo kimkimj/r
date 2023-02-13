@@ -17,7 +17,7 @@
         background-color: #E3F4EA;
     }
 
-    .form-control {
+    .form-control-custom {
         width: 100px;
         height: 40px;
     }
@@ -40,8 +40,8 @@
         <br><br>
         <div>
             <form th:object="${orderSearch}" class="form-inline d-flex">
-                <div class="form-group mx-sm-1 mb-2 ">
-                    <select th:field="*{orderStatus}" class="form-control">
+                <div class="form-group mx-sm-1 mb-2">
+                    <select th:field="*{orderStatus}" class="form-control-custom">
                         <option value="">주문상태</option>
                         <option th:each="status : ${T(com.woowahan.recipe.domain.OrderStatus).values()}"
                                 th:value="${status}"
