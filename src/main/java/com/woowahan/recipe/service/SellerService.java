@@ -60,7 +60,7 @@ public class SellerService {
                 });
 
         SellerEntity seller = sellerJoinRequest.toEntity(encoder.encode(sellerJoinRequest.getPassword()));
-        seller.setUserRole(UserRole.SELLER);
+        seller.setUserRole(UserRole.READY);
         seller = sellerRepository.save(seller);
 
         return new SellerJoinResponse(seller.getSellerName(),
