@@ -35,6 +35,13 @@ public class SellerService {
         return seller;
     }
 
+    public boolean checkSellerName(String sellerName) {
+        return sellerRepository.existsBySellerName(sellerName);
+    }
+
+    public boolean checkEmail(String email) {
+        return sellerRepository.existsByEmail(email);
+    }
 
     public SellerJoinResponse join(SellerJoinRequest sellerJoinRequest) {
         // sellerName (ID) 중복확인
@@ -56,6 +63,14 @@ public class SellerService {
 
         return new SellerJoinResponse(seller.getSellerName(),
                 String.format("%s님의 회원가입이 완료되었습니다.", seller.getSellerName()));
+    }
+
+    public boolean checkPassword(String sellerName, String password) {
+        SellerEntity seller = sellerRepository.findBySellerName(sellerName)
+                .orElseThrow(() -> new AppException(ErrorCode.SELLER_NOT_FOUND, ErrorCode.SELLER_NOT_FOUND.getMessage()));
+
+        // password가 맞지 않는 경우
+        return encoder.matches(password, seller.getPassword());
     }
 
     public String login(String sellerName , String password) {

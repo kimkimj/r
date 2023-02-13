@@ -8,15 +8,10 @@
 </head>
 <style>
 
-  .wrapper {
+  .container {
     margin: auto;
     width: 45%;
     min-height: 450px;
-  }
-
-  .container {
-    margin: auto;
-    margin-left: 100px;
   }
 
   table {
@@ -37,7 +32,6 @@
 
 <body>
   <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
-  <div class="wrapper">
     <div class="container">
       <div class="container_etc mt-5" style="width: 460px">
         <h2>판매자 정보</h2>
@@ -80,7 +74,6 @@
         </form>
       </div>
     </div>
-  </div>
 </div>
 <div th:replace="fragments/footer :: footerFragment"/>
 
