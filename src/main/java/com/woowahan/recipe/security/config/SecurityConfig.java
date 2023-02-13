@@ -1,6 +1,7 @@
 package com.woowahan.recipe.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.woowahan.recipe.domain.UserRole;
 import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.security.JwtTokenFilter;
@@ -41,28 +42,89 @@ public class SecurityConfig {
     private final JwtTokenUtils jwtTokenUtils;
     private final FindService findService;
 
+    private final String SWAGGER = "/swagger-ui/**";
+
+    private final String[] POST_PERMIT = {
+            // api
+            "/api/v1/users/join",
+            "/api/v1/users/login",
+            "/api/v1/seller/join",
+            "/api/v1/seller/login",
+            "/api/v1/items/search",
+            // ui
+            "/login",
+            "/join",
+            "/users/join",
+            "/users/login",
+            "/seller/join",
+            "/seller/login"
+    };
+
+    private final String[] GET_AUTHENTICATED = {
+            // UserController
+            "/users/my",
+            "/users/my/**",
+            "/users/logout",
+            // /api/v1/users/ 관련 부분 수정필요
+            "/api/v1/users/**",
+            // SellerController
+            "/seller/my",
+            "/seller/my/**",
+            "/seller/items/**",
+            "/seller/logout",
+            "/api/v1/seller/**",
+            // RecipeController
+            "/recipes/create",
+            "/recipes/update/**",
+            "/recipes/delete/**",
+            "/recipes/**/likes",
+            "/recipes/my",
+            "/recipes/likes/my",
+            "/api/v1/recipes/my",
+            "/apu/v1/recipes/reviews",
+            // OrderController
+            "/items/**/order",
+            "/delivery/**",
+            "/orders/**",
+            "/api/v1/orders/**",
+            // ItemController
+            // CartController
+            "/carts/**",
+            "/api/v1/carts",
+            // AlaramController
+            "/api/v1/alarms"
+    };
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
+        httpSecurity
                 .httpBasic().disable()
                 .csrf().disable()
-                .cors().and()
-                .authorizeHttpRequests()
-                .antMatchers(HttpMethod.GET, "/api/v1/recipes/my, /api/v1/alarms, /api/v1/carts").authenticated()
+                .cors().and();
+
+        httpSecurity.authorizeHttpRequests()
+                .antMatchers(SWAGGER).permitAll()
+                .antMatchers(HttpMethod.POST, POST_PERMIT).permitAll()
+                .antMatchers(HttpMethod.GET, GET_AUTHENTICATED).permitAll()
                 .antMatchers(HttpMethod.GET).permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1/users/join", "/api/v1/users/login",
-                        "/api/v1/seller/join", "/api/v1/seller/login",
-                        "/api/v1/items/search").permitAll()
-                .antMatchers(HttpMethod.GET, "/users/**", "seller/**").authenticated() //추가
-                .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
+//                .antMatchers(HttpMethod.GET, "/api/v1/users/**", "seller/**").authenticated() //추가
+                .antMatchers(HttpMethod.POST).authenticated()
                 .antMatchers(HttpMethod.PUT).authenticated()
+                .antMatchers(HttpMethod.PATCH).authenticated()
                 .antMatchers(HttpMethod.DELETE).authenticated()
-                .and()
+                .antMatchers("/seller/**").hasRole(UserRole.SELLER.getValue())
+                .antMatchers("/admin/**").hasAuthority(UserRole.ADMIN.getValue());
+
+        httpSecurity
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        httpSecurity
                 .addFilterBefore(new JwtTokenFilter(secretKey, jwtTokenUtils, findService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtExceptionFilter(), JwtTokenFilter.class)
+                .addFilterBefore(new JwtExceptionFilter(), JwtTokenFilter.class);
+
+        httpSecurity
                 .exceptionHandling()
                 // 인증 실패 시 INVALID_PERMISSION 에러 발생
                 .authenticationEntryPoint(new AuthenticationEntryPoint() {
@@ -77,9 +139,9 @@ public class SecurityConfig {
                     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
                         makeErrorResponse(response, ROLE_FORBIDDEN);
                     }
-                })
-                .and()
-                .build();
+                });
+
+        return httpSecurity.build();
     }
 
     // Security Filter Chain에서 발생하는 Exception은 ExceptionManager 까지 가지 않기 때문에 여기서 직접 처리
