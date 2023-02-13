@@ -3,6 +3,8 @@ package com.woowahan.recipe.domain.entity;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipePageResDto;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Where(clause = "deleted_date is null")
+@SQLDelete(sql = "UPDATE recipe_entity SET deleted_date = now() WHERE recipe_id = ?")
 public class RecipeEntity extends BaseEntity {
 
     @Id
