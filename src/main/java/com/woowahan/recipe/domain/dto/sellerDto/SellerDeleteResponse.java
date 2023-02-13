@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class SellerDeleteResponse {
