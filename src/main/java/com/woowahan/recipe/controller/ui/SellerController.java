@@ -115,6 +115,20 @@ public class SellerController {
         return "redirect:/";
     }
 
+    // 로그아웃
+    @GetMapping("/seller/logout")
+    public String logout(HttpSession session, HttpServletResponse response) {
+        /*session.removeAttribute("jwt");
+        session.invalidate();*/
+
+        CookieGenerator cookieGenerator = new CookieGenerator();
+        cookieGenerator.setCookieName("token");
+        cookieGenerator.addCookie(response, "deleted");
+        cookieGenerator.setCookieMaxAge(0);
+
+        return "redirect:/";
+    }
+
     // 마이 페이지
     @GetMapping("/seller/my")
     public String myPage(Model model, Authentication authentication) {

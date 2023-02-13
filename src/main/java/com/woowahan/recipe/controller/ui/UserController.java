@@ -119,7 +119,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/user/logout")
     public String logout(HttpSession session, HttpServletResponse response) {
         /*session.removeAttribute("jwt");
         session.invalidate();*/
@@ -128,7 +128,6 @@ public class UserController {
         cookieGenerator.setCookieName("token");
         cookieGenerator.addCookie(response, "deleted");
         cookieGenerator.setCookieMaxAge(0);
-
 
         return "redirect:/";
     }

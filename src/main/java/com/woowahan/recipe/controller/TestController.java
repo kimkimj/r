@@ -13,4 +13,9 @@ public class TestController {
         return "/test";
     }
 
+    @GetMapping
+    public String go() {
+        return "index";
+    }
+
 }

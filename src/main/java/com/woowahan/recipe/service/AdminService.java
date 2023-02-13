@@ -7,10 +7,7 @@ import com.woowahan.recipe.domain.entity.SellerEntity;
 import com.woowahan.recipe.domain.entity.UserEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
-import com.woowahan.recipe.repository.RecipeRepository;
-import com.woowahan.recipe.repository.ReviewRepository;
-import com.woowahan.recipe.repository.SellerRepository;
-import com.woowahan.recipe.repository.UserRepository;
+import com.woowahan.recipe.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,6 +23,7 @@ public class AdminService {
     private final SellerRepository sellerRepository;
     private final RecipeRepository recipeRepository;
     private final ReviewRepository reviewRepository;
+    private final ItemRepository itemRepository;
 
     /**
      * 회원정보 전체 조회
@@ -116,6 +114,7 @@ public class AdminService {
         }
 
         sellerRepository.deleteById(id);
+        itemRepository.deleteAllBySeller(targetSeller);
     }
 
     public UserEntity validateUserByUserName(String userName) {
