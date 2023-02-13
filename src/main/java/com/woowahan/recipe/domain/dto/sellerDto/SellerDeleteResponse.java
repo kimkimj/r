@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SellerDeleteResponse {
-    private Long id;
+    private String sellerName;
     private String message;
 }
