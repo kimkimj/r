@@ -317,9 +317,9 @@
                 $("#updateBody").focus();
                 return false;
             }
-            if ($("#item-list").find("li").length == 0) {
+            if ($(".itemTag").input().find("li").length == 0) {
                 alert("재료를 입력해주세요.");
-                $("#item-list").focus();
+                $(".itemTag").focus();
                 return false;
             }
         });
