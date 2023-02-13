@@ -3,6 +3,8 @@ package com.woowahan.recipe.domain.entity;
 
 import com.woowahan.recipe.exception.NotEnoughStockException;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -16,6 +18,8 @@ import java.util.List;
 @Setter
 @Builder
 @Entity
+@SQLDelete(sql = "UPDATE item_entity SET deleted_date = current_timestamp WHERE item_id = ?")
+@Where(clause = "deleted_date is null")
 public class ItemEntity extends BaseEntity{
 
     @Id
