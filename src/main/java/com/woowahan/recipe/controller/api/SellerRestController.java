@@ -43,23 +43,6 @@ public class SellerRestController {
         }
     }
 
-    @GetMapping("/seller/check-account")
-    public String checkAccount(String sellerName) {
-        if (!sellerService.checkSellerName(sellerName)) {
-            return "존재하지 않는 아이디입니다.";
-        }
-        return "아이디 존재";
-    }
-
-    @GetMapping("/seller/check-password")
-    public String checkPassword(String sellerName, String password) {
-        if (!sellerService.checkPassword(sellerName, password)) {
-            return "비밀번호가 틀렸습니다.";
-        }
-        return "로그인 성공";
-    }
-
-
     // 로그인
     @PostMapping("/seller/login")
     public Response<SellerLoginResponse> login(@RequestBody SellerLoginRequest sellerLoginRequest) {
