@@ -1,5 +1,6 @@
 package com.woowahan.recipe.aop;
 
+import com.woowahan.recipe.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -20,7 +21,10 @@ public class AspectOrder {
             log.info("[logging START] {}", joinPoint.getSignature());
             try {
                 return joinPoint.proceed();
-            } finally {
+            } catch (AppException e) {
+                e.getStackTrace();
+                return joinPoint.proceed();
+            }finally {
                 long endTime = System.currentTimeMillis();
                 log.info("[logging END] {} ({}ms)", joinPoint.getSignature(), endTime-startTime);
             }

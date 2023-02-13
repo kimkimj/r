@@ -62,7 +62,7 @@ public class ItemEntity extends BaseEntity{
     public void decreaseStock(int quantity) {
          int restStock = this.itemStock -= quantity;
          if (restStock < 0) {
-             throw new NotEnoughStockException("재고 수량이 없습니다.");
+             throw new NotEnoughStockException("재고 수량이 없습니다");
          }
         this.itemStock = restStock;
     }

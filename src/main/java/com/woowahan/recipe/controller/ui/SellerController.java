@@ -27,8 +27,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.CookieGenerator;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -78,27 +80,39 @@ public class SellerController {
 
     @PostMapping("/seller/login")
     public String login(@Valid @ModelAttribute SellerLoginRequest sellerLoginRequest, BindingResult result,
-                        HttpServletRequest httpServletRequest, Model model){
-        try {
-
-            // 세션 넣기
-            httpServletRequest.getSession().invalidate();
-            HttpSession session = httpServletRequest.getSession(true);
-
-            String token = sellerService.login(sellerLoginRequest.getSellerName(), sellerLoginRequest.getPassword());
-            session.setAttribute("jwt", "Bearer " + token);
-            String checkJwt = (String) session.getAttribute("jwt");
-            log.info("checkJwt={}", checkJwt);
-            log.info("token={}", token);
-            session.setMaxInactiveInterval(1800);
-        } catch (AppException e) {
-            model.addAttribute("e", e.getMessage());
-            result.reject(e.getMessage());
+                        HttpServletRequest httpServletRequest, HttpServletResponse response, Model model){
+        if (result.hasErrors()) {
+            result.getFieldErrors().stream().forEach(err ->
+                    log.info("field={} value={} msg={}", err.getField(), err.getRejectedValue(), err.getDefaultMessage()));
             return "seller/loginForm";
         }
 
-        //return "redirect:/sellerIndex";
-        return "redirect:/";
+        try {
+            String token = sellerService.login(sellerLoginRequest.getSellerName(), sellerLoginRequest.getPassword());
+            CookieGenerator cookieGenerator = new CookieGenerator();
+            cookieGenerator.setCookieName("token");
+            cookieGenerator.setCookieHttpOnly(true);
+            cookieGenerator.addCookie(response, token);
+            cookieGenerator.setCookieMaxAge(60 * 60 * 2);
+
+        } catch (AppException e) {
+            model.addAttribute("e", e.getMessage());
+            result.reject(e.getMessage());
+            return "user/loginForm";
+        }
+
+        /*// 세션 넣기
+        httpServletRequest.getSession().invalidate();
+        HttpSession session = httpServletRequest.getSession(true);
+
+        String token = sellerService.login(sellerLoginRequest.getSellerName(), sellerLoginRequest.getPassword());
+        session.setAttribute("jwt", "Bearer " + token);
+        String checkJwt = (String) session.getAttribute("jwt");
+        log.info("checkJwt={}", checkJwt);
+        log.info("token={}", token);
+        session.setMaxInactiveInterval(1800);*/
+
+        return "redirect:/sellerIndex";
     }
 
     // 마이 페이지

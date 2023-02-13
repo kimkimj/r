@@ -119,7 +119,7 @@ class CartServiceTest {
             try {
                 cartService.addCartItem(cartItemReq, userName);
             } catch (AppException e) {
-                assertEquals("재고 수량이 없습니다.", e.getMessage());
+                assertEquals("재고 수량이 없습니다", e.getMessage());
             }
         }
 
