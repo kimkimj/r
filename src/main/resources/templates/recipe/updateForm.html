@@ -183,7 +183,7 @@
 <script>
     const selectItem = new Set();
 
-    let recipeFormList = document.querySelector("#recipe-form-list");
+    let recipeFormList = document.querySelector("#item-list");
 
     async function searchAndShowItems(keyword) {
         // <ul id="search-list" ...> 가져온다.
@@ -306,26 +306,21 @@
 
     $(document).ready(function () {
         $("#submit-btn").click(function () {
-            if ($("#recipeTitle").val().length == 0) {
+            if ($("#updateTitle").val().length == 0) {
                 alert("제목을 입력해주세요.");
                 setTimeout(function () {
-                    $("#recipeTitle").focus();
+                    $("#updateTitle").focus();
                 }, 1);
                 return false;
             }
-            if ($("#recipeBody").val().length == 0) {
+            if ($("#updateBody").val().length == 0) {
                 alert("내용을 입력해주세요.");
-                $("#recipeBody").focus();
+                $("#updateBody").focus();
                 return false;
             }
             if ($("#item-list").find("li").length == 0) {
                 alert("재료를 입력해주세요.");
                 $("#item-list").focus();
-                return false;
-            }
-            if ($("#recipe-form-list").find("li").length == 0) {
-                alert("재료를 입력해주세요.");
-                $("#recipe-form-list").focus();
                 return false;
             }
         });
