@@ -10,6 +10,7 @@ public enum UserRole {
     ADMIN("ROLE_ADMIN"),
     SELLER("ROLE_SELLER"),
     READY("ROLE_READY"),
+    REJECT("ROLE_REJECT"),
     USER("ROLE_USER");
 
     private String value;

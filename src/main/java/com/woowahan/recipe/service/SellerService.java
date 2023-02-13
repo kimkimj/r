@@ -5,6 +5,7 @@ import com.woowahan.recipe.domain.dto.sellerDto.*;
 import com.woowahan.recipe.domain.entity.SellerEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
+import com.woowahan.recipe.repository.ItemRepository;
 import com.woowahan.recipe.repository.SellerRepository;
 import com.woowahan.recipe.security.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SellerService {
     private final SellerRepository sellerRepository;
+    private final ItemRepository itemRepository;
     private final BCryptPasswordEncoder encoder;
 
     @Value("${jwt.token.secret}")
@@ -35,6 +37,13 @@ public class SellerService {
         return seller;
     }
 
+    public boolean checkSellerName(String sellerName) {
+        return sellerRepository.existsBySellerName(sellerName);
+    }
+
+    public boolean checkEmail(String email) {
+        return sellerRepository.existsByEmail(email);
+    }
 
     public SellerJoinResponse join(SellerJoinRequest sellerJoinRequest) {
         // sellerName (ID) 중복확인
@@ -51,11 +60,19 @@ public class SellerService {
                 });
 
         SellerEntity seller = sellerJoinRequest.toEntity(encoder.encode(sellerJoinRequest.getPassword()));
-        seller.setUserRole(UserRole.SELLER);
+        seller.setUserRole(UserRole.READY);
         seller = sellerRepository.save(seller);
 
         return new SellerJoinResponse(seller.getSellerName(),
                 String.format("%s님의 회원가입이 완료되었습니다.", seller.getSellerName()));
+    }
+
+    public boolean checkPassword(String sellerName, String password) {
+        SellerEntity seller = sellerRepository.findBySellerName(sellerName)
+                .orElseThrow(() -> new AppException(ErrorCode.SELLER_NOT_FOUND, ErrorCode.SELLER_NOT_FOUND.getMessage()));
+
+        // password가 맞지 않는 경우
+        return encoder.matches(password, seller.getPassword());
     }
 
     public String login(String sellerName , String password) {
@@ -133,8 +150,12 @@ public class SellerService {
             throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
         }
 
+        // delete all items related to the seller
+        itemRepository.deleteAllBySeller(seller);
+
         sellerRepository.delete(seller);
-        return new SellerDeleteResponse(seller.getId(), "회원 삭제가 완료되었습니다");
+        
+        return new SellerDeleteResponse(sellerName, "회원 삭제가 완료되었습니다");
     }
 
     public Page<SellerListResponse> findAll(Pageable pageable) {
