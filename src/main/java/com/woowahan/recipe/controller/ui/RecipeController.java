@@ -7,7 +7,7 @@ import com.woowahan.recipe.domain.dto.reviewDto.ReviewCreateRequest;
 import com.woowahan.recipe.service.FindService;
 import com.woowahan.recipe.service.RecipeService;
 import com.woowahan.recipe.service.ReviewService;
-import com.woowahan.recipe.service.S3Uploader;
+import com.woowahan.recipe.service.S3UploadService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class RecipeController {
     private final FindService findService;
     private final ReviewService reviewService;
 //    private final CartService cartService;
-    private final S3Uploader s3Uploader;
+    private final S3UploadService s3UploadService;
 
     @GetMapping("/create")
     public String createForm(Model model) {
@@ -57,7 +57,7 @@ public class RecipeController {
         // image upload
         String filePath = "recipes"; // 파일경로
         if(!file.getOriginalFilename().isBlank()) {
-            String recipeImagePath = s3Uploader.upload(file, filePath);
+            String recipeImagePath = s3UploadService.saveUploadFile(file, filePath);
             form.setRecipeImagePath(recipeImagePath);
         }
         recipeService.createRecipe(form, userName);
@@ -81,7 +81,7 @@ public class RecipeController {
         // image upload
         String filePath = "recipes"; // 파일경로
         if(!file.getOriginalFilename().isBlank()) {
-            String recipeImagePath = s3Uploader.upload(file, filePath);
+            String recipeImagePath = s3UploadService.saveUploadFile(file, filePath);
             form.setRecipeImagePath(recipeImagePath);
         }
         RecipeUpdateResDto resDto = recipeService.updateRecipe(form, recipeId, userName);

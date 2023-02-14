@@ -4,6 +4,7 @@ package com.woowahan.recipe.domain.entity;
 import com.woowahan.recipe.exception.NotEnoughStockException;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -18,6 +19,7 @@ import java.util.List;
 @Builder
 @Entity
 @SQLDelete(sql = "UPDATE item_entity SET deleted_date = current_timestamp WHERE item_id = ?")
+@Where(clause = "deleted_date is null")
 public class ItemEntity extends BaseEntity{
 
     @Id
@@ -62,7 +64,7 @@ public class ItemEntity extends BaseEntity{
     public void decreaseStock(int quantity) {
          int restStock = this.itemStock -= quantity;
          if (restStock < 0) {
-             throw new NotEnoughStockException("재고 수량이 없습니다");
+             throw new NotEnoughStockException("재고 수량이 없습니다.");
          }
         this.itemStock = restStock;
     }

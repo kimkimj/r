@@ -1,19 +1,26 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="fragments/header :: headerFragment"/>
-    <style>
-      .fieldError {
-        border-color: #dc3545;
-        color: #dc3545;
-      }
-      img {
-          width: 300px;
-          height: 150px;
-          object-fit: cover;
-      }
-    </style>
-  </head>
+<head th:replace="fragments/header :: headerFragment"/>
+  <style>
+    .fieldError {
+      border-color: #dc3545;
+      color: #dc3545;
+    }
+    img {
+      width: 300px;
+      height: 150px;
+      object-fit: cover;
+    }
+  </style>
   <body>
+    <script>
+      function emptyImg() {
+        var img = document.getElementById("img").value
+        if (img == "") {
+          alert("이미지는 필수 입니다.")
+          window.location.href = "redirect:/seller/items/create"
+        }
+      }
+    </script>
     <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
     <div class="container">
       <div class="py-5 text-center">
@@ -23,8 +30,9 @@
         <div th:if="${#fields.hasGlobalErrors()}">
           <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${err}">글로벌 오류 메세지</p>
         </div>
-        <div class="form-group">
-          <input type="file" id="img" name = "multipartFile">
+        <div>
+          <input type="file" id="img" name="multipartFile">
+          <!--      <p class="fieldError" th:if="${#fields.hasErrors('itemImagePath')}" th:errors="*{itemImagePath}">Incorrect name</p>-->
         </div>
         <div>
           <label th:for="name">상품명</label>
@@ -45,7 +53,7 @@
           <p class="fieldError" th:if="${#fields.hasErrors('itemStock')}" th:errors="*{itemStock}">Incorrect stock</p>
         </div>
         <hr>
-        <button type="submit" onclick="uploadImage()" class="btn btn-primary">작성완료</button>
+        <button type="submit" onclick="emptyImg()" class="btn btn-primary">작성완료</button>
       </form>
     </div>
     <br/>
