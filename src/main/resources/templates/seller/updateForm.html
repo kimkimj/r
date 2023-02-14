@@ -11,7 +11,7 @@
 
             .button-container {
                 margin-top: 50px;
-                height: 50px;
+                height: 100px;
                 text-align: center;
             }
 
@@ -19,6 +19,21 @@
                 margin-left: auto;
                 margin-right: auto;
             }
+
+            .btn {
+                color: #625d55;
+                background-color: white;
+                border-color: #625d55;
+                font-weight: bold;
+            }
+
+            .btn:hover, .btn:active, .btn:visited {
+                border-color: #DBD0C0 !important;
+                outline-color: #DBD0C0 !important;
+                background-color: #DBD0C0 !important;
+                color: black;
+            }
+
         </style>
     </head>
     <body>
@@ -27,8 +42,10 @@
         <div class="wrapper">
             <div class="container"><br>
                 <div class="container_etc mt-5" style="width: 460px">
-                    <h2>판매자 정보 수정</h2>
-                    <br>
+                    <div style="text-align: center;">
+                        <h3>|&nbsp;&nbsp;&nbsp;UPDATE INFO&nbsp;&nbsp;&nbsp;|</h3>
+                    </div>
+                    <div class="margin-20"></div>
                     <form role="form" th:action="@{/seller/my/update}" th:object="${seller}" method="post">
                         <div class="mb-3">
                             <p>비밀번호</p>
@@ -61,7 +78,7 @@
                         </div>
                         <div class="button-container">
                             <div class="button">
-                                <button type="submit" class="btn btn-primary">수정하기</button>
+                                <button type="submit" class="btn" style="width: 100px">수정하기</button>
                             </div>
                         </div>
                     </form>
