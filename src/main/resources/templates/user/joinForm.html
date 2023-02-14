@@ -3,7 +3,6 @@
 <head th:replace="fragments/header :: headerFragment"/>
 <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-
 <style>
     .container {
         width: 70%;
@@ -45,65 +44,83 @@
     </div>
     <div class="margin-20"></div>
     <div class="join-wrapper">
-        <form role="form" th:action="@{/users/join}" th:object="${userJoinReqDto}" method="post">
-            <div th:if="${#fields.hasGlobalErrors()}">
-                <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${err}">글로벌 오류 메세지</p>
-            </div>
+<!--        <form role="form" th:action="@{/users/join}" th:object="${userJoinReqDto}" method="post">-->
+        <form role="form" th:object="${userJoinReqDto}">
+<!--            <div th:if="${#fields.hasGlobalErrors()}">-->
+<!--                <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${err}">글로벌 오류 메세지</p>-->
+<!--            </div>-->
             <div class="form-group">
                 <label th:for="userName" th:text="#{label.userName}">아이디</label>
-                <input type="text" th:field="*{userName}" class="form-control" placeholder="아이디 입력하세요"
-                       th:errorclass="field-error">
-                <button onclick="check_username()">아이디 중복 확인</button>
-                <div class="field-error" th:errors="*{userName}">아이디 오류</div>
+                <input type="text" th:field="*{userName}" id="id-input" class="form-control" placeholder="아이디를 입력하세요">
+                <button type="button" class="id-btn">아이디 중복 확인</button>
+                <div id="id-result"></div>
+<!--                <div class="field-error" th:errors="*{userName}">아이디 오류</div>-->
             </div>
             <br/>
             <div class="form-group">
                 <label th:for="exampleInputPassword1" th:text="#{label.userPassword}">비밀번호</label>
-                <input type="password" th:field="*{password}" class="form-control" placeholder="비밀번호를 입력하세요"
-                       th:errorclass="field-error">
-                <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
+                <input type="password" th:field="*{password}" id="pw-input" class="form-control" placeholder="비밀번호를 입력하세요">
+                <div id="pw-result"></div>
+<!--                <div class="field-error" th:errors="*{password}">비밀번호 오류</div>-->
             </div>
             <br/>
             <div class="form-group">
                 <label th:for="name" th:text="#{label.name}">이름</label>
-                <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요"
-                       th:errorclass="field-error">
-                <div class="field-error" th:errors="*{name}">이름 오류</div>
+                <input type="text" th:field="*{name}" id="name-input" class="form-control" placeholder="이름을 입력하세요">
+                <div id="name-result"></div>
+<!--                <div class="field-error" th:errors="*{name}">이름 오류</div>-->
             </div>
             <br/>
+<!--            <div class="form-group">-->
+<!--                <label th:for="address" th:text="#{label.address}">주소</label>-->
+<!--                <input type="text" th:field="*{address}" id="address-input" class="form-control" placeholder="주소를 입력하세요">-->
+<!--                <div id="address-result"></div>-->
+<!--&lt;!&ndash;                <div class="field-error" th:errors="*{address}">주소 오류</div>&ndash;&gt;-->
+<!--            </div>-->
             <div class="form-group">
-                <label th:for="address" th:text="#{label.address}">주소</label>
-                <input type="text" th:field="*{address}" class="form-control" placeholder="주소를 입력하세요"
-                       th:errorclass="field-error">
-                <div class="field-error" th:errors="*{address}">주소 오류</div>
+              <label style="display: block" th:for="address" th:text="#{label.address}">주소</label>
+              <input type="hidden" th:field="*{address}" id="address-no-input" class="form-control" placeholder="우편번호">
+              <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
+              <input type="text" id="address-input" class="form-control" name="address-input" placeholder="우편번호 찾기를 진행해주세요"><br>
+              <input type="text" id="detail-input" class="form-control" placeholder="상세주소">
+<!--              <input type="text" id="sample6_extraAddress" placeholder="참고항목">-->
+              <div id="address-result"></div>
             </div>
             <br/>
             <div class="form-group">
                 <label th:for="email" th:text="#{label.email}">이메일</label>
-                <input type="text" th:field="*{email}" class="form-control" placeholder="이메일을 입력하세요"
-                       th:errorclass="field-error">
-                <button onclick="check_email()">이메일 중복 확인</button>
-                <div class="field-error" th:errors="*{email}">이메일 오류</div>
+                <input type="email" th:field="*{email}" id="email-input" class="form-control" placeholder="woowahan@woowahan.com" autocomplete required>
+                <button type="button" class="email-btn">이메일 중복 확인</button>
+                <div id="email-result"></div>
+<!--                <div class="field-error" th:errors="*{email}">이메일 오류</div>-->
             </div>
             <br/>
             <div class="form-group">
                 <label th:for="phoneNum" th:text="#{label.phoneNum}">핸드폰 번호</label>
-                <input type="text" th:field="*{phoneNum}" class="form-control" placeholder="띄어쓰기나 - 없이 핸드폰 번호만 입력해주세요"
-                       th:errorclass="field-error">
-                <div class="field-error" th:errors="*{phoneNum}">핸드폰 번호 오류</div>
+                <input type="text" th:field="*{phoneNum}" id="phone-input" class="form-control" placeholder="띄어쓰기나 - 없이 숫자만 입력해주세요">
+                <div id="phone-result"></div>
+<!--                <div class="field-error" th:errors="*{phoneNum}">핸드폰 번호 오류</div>-->
             </div>
             <br/>
-            <div class="form-group">
-                <label th:for="birth" th:text="#{label.birth}">출생연도</label>
-                <input type="text" th:field="*{birth}" class="form-control" placeholder="출생연도를 입력하세요"
-                       th:errorclass="field-error">
-                <div class="field-error" th:errors="*{birth}">출생연도 오류</div>
+<!--            <div class="form-group">-->
+<!--                <label th:for="birth" th:text="#{label.birth}">출생연도</label>-->
+<!--                <input type="text" th:field="*{birth}" id="birth-input" class="form-control" placeholder="출생연도를 입력하세요"-->
+<!--                       th:errorclass="field-error">-->
+<!--                <div id="birth-result"></div>-->
+<!--&lt;!&ndash;                <div class="field-error" th:errors="*{birth}">출생연도 오류</div>&ndash;&gt;-->
+<!--            </div>-->
+          <div class="form-group">
+            <label th:for="birth" th:text="#{label.birth}">출생연도</label>
+            <input type="text" th:field="*{birth}" id="birth-input" class="form-control" placeholder="19xx.xx.xx 형식으로 입력해주세요.">
+            <div id="birth-result"></div>
+<!--                <div class="field-error" th:errors="*{birth}">출생연도 오류</div>-->
             </div>
+
 
             <div class="button">
                 <div class="row">
                     <div class="col">
-                        <button class="w-100 btn btn-primary" type="submit">회원가입</button>
+                        <button class="w-100 btn btn-primary submit-btn" type="button" onclick="javascript:submitForm()">회원가입</button>
                     </div>
                     <div class="col">
                         <button class="w-100 btn btn-secondary"
@@ -118,54 +135,49 @@
 </div>
 <div class="margin-my"></div>
 </div>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript" src="/js/join.js"></script>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>
-<script th:inline="javascript">
-    function check_username() {
-        let username = $('#userName').val();
-        console.log(username)
-        if (username.trim().length === 0) {
-            return;
-        }
-        $.ajax({
-            url: "/api/v1/check-username",
-            method: "GET",
-            data: {
-                userName: username
-            },
-            success: function (message) {
-                if (message == '중복된 아이디 입니다.') {
-                    alert(message)
-                } else if (message == '사용 가능한 아이디 입니다.')
-                {
-                    alert(message)
-                }
-            }
-        })
-    }
+<!--<script th:inline="javascript">-->
+<!--    function check_username() {-->
+<!--        let username = $('#id-input').val();-->
+<!--        let birth = $('#birth-input').val();-->
+<!--        console.log(username);-->
+<!--        console.log(birth);-->
+<!--        if (username.trim().length == 0) {-->
+<!--            $("#id-result").text("아이디는 8자이하여야 합니다").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');-->
+<!--            return;-->
+<!--        }-->
+<!--        $.ajax({-->
+<!--            url: "/api/v1/check-username",-->
+<!--            method: "GET",-->
+<!--            data: {-->
+<!--                userName: username-->
+<!--            },-->
+<!--            success: function (message) {-->
+<!--                alert(message)-->
+<!--            }-->
+<!--        })-->
+<!--    }-->
 
-    function check_email() {
-        let email = $('#email').val();
-        console.log(email)
-        if (email.trim().length === 0) {
-            return;
-        }
-        $.ajax({
-            url: "/api/v1/check-email",
-            method: "GET",
-            contentType: 'application/json',
-            data: {
-                email: email
-            },
-            success: function (message) {
-                if (message == '중복된 이메일 입니다.') {
-                    alert(message)
-                } else if (message == '사용가능한 이메일 입니다.')
-                {
-                    alert(message)
-                }
-            }
-        })
-    }
-</script>
+<!--    function check_email() {-->
+<!--        let email = $('#email').val();-->
+<!--        console.log(email)-->
+<!--        if (email.trim().length === 0) {-->
+<!--            return;-->
+<!--        }-->
+<!--        $.ajax({-->
+<!--            url: "/api/v1/check-email",-->
+<!--            method: "GET",-->
+<!--            contentType: 'application/json',-->
+<!--            data: {-->
+<!--                email: email-->
+<!--            },-->
+<!--            success: function (message) {-->
+<!--                alert(message)-->
+<!--            }-->
+<!--        })-->
+<!--    }-->
+<!--</script>-->
 </html>
