@@ -46,8 +46,6 @@ public class SellerController {
     private final SellerService sellerService;
     private final ItemService itemService;
     private final RecipeService recipeService;
-//    private final S3Uploader s3Uploader;
-
     private final S3UploadService s3UploadService;
 
     // 판매자 홈페이지
