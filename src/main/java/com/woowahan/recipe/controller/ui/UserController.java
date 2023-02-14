@@ -26,9 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.util.CookieGenerator;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -67,7 +65,11 @@ public class UserController {
             return "user/joinForm";
         }
         model.addAttribute("userJoinReqDto", new UserJoinReqDto());
-        userService.join(form);
+        try {
+            userService.join(form);
+        } catch (AppException e) {
+            model.addAttribute("e", e.getMessage());
+        }
         return "redirect:/login";
     }
 
@@ -80,48 +82,33 @@ public class UserController {
 
     @PostMapping("/users/login")
     public String login(@Valid @ModelAttribute UserLoginReqDto userLoginReqDto, BindingResult result,
-                        HttpServletRequest httpServletRequest, HttpServletResponse response, Model model){
+                        HttpServletResponse response){
+
         if (result.hasErrors()) {
-            result.getFieldErrors().stream().forEach(err ->
-                    log.info("field={} value={} msg={}", err.getField(), err.getRejectedValue(), err.getDefaultMessage()));
             return "user/loginForm";
         }
 
         try {
+            log.info("bbb");
             String token = userService.login(userLoginReqDto.getUserName(), userLoginReqDto.getPassword());
             CookieGenerator cookieGenerator = new CookieGenerator();
+            log.info("makeCookie={}", cookieGenerator.getCookieName());
             cookieGenerator.setCookieName("token");
+            log.info("makeCookie.name={}", cookieGenerator.getCookieName());
             cookieGenerator.setCookieHttpOnly(true);
             cookieGenerator.addCookie(response, token);
             cookieGenerator.setCookieMaxAge(60 * 60 * 2);
+            log.info("controller token={}", cookieGenerator.getCookieName());
 
         } catch (AppException e) {
-            model.addAttribute("e", e.getMessage());
-            result.reject(e.getMessage());
-        }
-
-        /*try {
-            httpServletRequest.getSession().invalidate();
-            HttpSession session = httpServletRequest.getSession(true);
-            String token = userService.login(userLoginReqDto.getUserName(), userLoginReqDto.getPassword());
-            session.setAttribute("jwt", "Bearer " + token);
-            String checkJwt = (String) session.getAttribute("jwt");
-            log.info("checkJwt={}", checkJwt);
-            log.info("token={}", token);
-            session.setMaxInactiveInterval(1800);
-        } catch (AppException e) {
-            model.addAttribute("e", e.getMessage());
-            result.reject(e.getMessage());
             return "user/loginForm";
-        }*/
+        }
 
         return "redirect:/";
     }
 
     @GetMapping("/user/logout")
-    public String logout(HttpSession session, HttpServletResponse response) {
-        /*session.removeAttribute("jwt");
-        session.invalidate();*/
+    public String logout(HttpServletResponse response) {
 
         CookieGenerator cookieGenerator = new CookieGenerator();
         cookieGenerator.setCookieName("token");
