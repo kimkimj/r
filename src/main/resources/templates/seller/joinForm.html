@@ -4,7 +4,7 @@
     <style>
       .container {
         margin: auto;
-        width: 50%;
+        width: 600px
       }
 
       h2 {
@@ -14,6 +14,7 @@
 
       .button {
         margin: auto;
+        margin-top: 50px;
         width: 60%;
       }
 
@@ -80,9 +81,11 @@
   <body>
     <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
     <div class="container">
-      <br>
-      <h2>판매자 회원가입</h2>
-      <br>
+      <div class="margin-my"></div>
+      <div style="text-align: center;">
+        <h3>|&nbsp;&nbsp;&nbsp;판매자 회원가입 &nbsp;|</h3>
+      </div>
+      <div class="margin-20"></div>
       <form role="form" th:action="@{/seller/join}" th:object="${sellerJoinRequest}" method="post">
         <div th:if="${#fields.hasGlobalErrors()}">
           <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}">글로벌 오류 메세지</p>
@@ -138,7 +141,6 @@
                  th:errorclass="field-error">
           <div class="field-error" th:errors="*{businessRegNum}">사업자등록번호 오류</div>
         </div>
-
         <div class="button">
           <div class="row">
             <div class="col">
@@ -153,7 +155,7 @@
           </div>
         </div>
       </form>
-      <br/>
+      <div class="margin-common"></div>
     </div>
     <div th:replace="fragments/footer :: footerFragment"/>
   </body>
