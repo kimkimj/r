@@ -283,6 +283,10 @@ public class SellerController {
             return "seller/itemCreateForm";
         }
 
+        if (multipartFile.isEmpty()) {
+            return "redirect:/seller/items/create";
+        }
+
         String imgPath = s3Uploader.upload(multipartFile, "item-image");
         reqDto.setItemImagePath(imgPath);
         ItemCreateResDto resDto = itemService.createItem(reqDto, authentication.getName());
