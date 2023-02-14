@@ -98,7 +98,6 @@ public class SellerController {
         } catch (AppException e) {
             model.addAttribute("e", e.getMessage());
             result.reject(e.getMessage());
-            return "seller/loginForm";
         }
 
         return "redirect:/sellerIndex";

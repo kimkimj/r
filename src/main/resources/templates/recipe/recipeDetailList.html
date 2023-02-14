@@ -196,13 +196,14 @@
         <br><br>
 
         <div style="text-align: center;">
-            <p>이 레시피가 좋으면 좋아요를 눌러 마이페이지에서 따로 확인하실 수 있습니다.</p>
             <div sec:authorize="!isAuthenticated()">
+                <p>마음에 드는 레시피를 로그인하기 위해서는 로그인이 필요합니다.</p>
                 <button class="btn btn-outline-success like-btn" type="button"
                         th:onclick="|location.href='@{/recipes/{recipeId}/likes (recipeId=${recipeId})}'|">좋아요💗
                 </button>
             </div>
             <div sec:authorize="hasRole('ROLE_USER')">
+                <p>이 레시피가 좋으면 좋아요를 눌러 마이페이지에서 따로 확인하실 수 있습니다.</p>
                 <button class="btn btn-outline-success like-btn" type="button"
                         th:onclick="|location.href='@{/recipes/{recipeId}/likes (recipeId=${recipeId})}'|">좋아요💗
                 </button>
