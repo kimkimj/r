@@ -22,10 +22,8 @@
         </style>
     </head>
     <body>
-        <!-- bodyHeader -->
         <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
 
-        <!-- 섹션의 전체 틀 div -->
         <div class="wrapper">
             <div class="container"><br>
                 <div class="container_etc mt-5" style="width: 460px">
@@ -67,12 +65,9 @@
                             </div>
                         </div>
                     </form>
-
                 </div>
             </div>
-
-            <br/>
-            <div th:replace="fragments/footer :: footerFragment"/>
         </div>
+        <div th:replace="fragments/footer :: footerFragment"/>
     </body>
 </html>
