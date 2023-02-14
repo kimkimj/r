@@ -38,7 +38,7 @@
     /* 검색창 감싸는 div (out)*/
     .search-wrapper {
         width: 100%;
-        margin:0 auto;
+        margin: 0px auto 60px;
         text-align: center;
     }
     /* search (in)*/
@@ -99,6 +99,7 @@
         object-fit: cover;
         align-content: center;
         border: 1px solid lightgray;
+        border-radius: 5%;
     }
     .card {
         border: white;
@@ -124,26 +125,6 @@
         transform: scale(1.05) translateZ(0);
         cursor: pointer;
     }
-    .card__content{
-        left: 0;
-        padding: 24px;
-        position: absolute;
-        top: 8px;
-        padding-left: 15px;
-    }
-    .card__category{
-        color: rgba(255,255,255,0.6);
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-        text-transform: uppercase;
-    }
-    .card__heading{
-        color: rgba(255,255,255,0.6);
-        font-size: 20px;
-        /*text-shadow: 2px 2px 20px rgba(0,0,0,0.2);*/
-        line-height: 1.4;
-        /*word-spacing: 100vw;*/ /*tab조절*/
-    }
 </style>
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
@@ -152,34 +133,24 @@
     <div style="text-align: center;">
         <h3>|&nbsp;&nbsp;&nbsp;OUR RECIPES&nbsp;&nbsp;&nbsp;|</h3>
         <h5>우아한과 함께 맛있는 음식을 만들어 보세요.</h5>
-        <br>
-        <hr>
     </div>
-    <!--<div style="text-align: center;">
-        <img style="width: 150px; height: 150px;" src="https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/스크린샷 2023-02-12 오후 7.30.02.png">
-    </div>-->
-
     <br>
     <!-- search -->
     <div class="search-wrapper">
         <div class="recipe-search">
             <form th:action="@{/recipes/search}" method="get">
-                <input type="text" name="keyword" placeholder="검색어 입력">
+                <input type="text" name="keyword" placeholder="레시피 검색">
                 <button style="border:none;" type="submit"><img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"></button>
             </form>
         </div>
     </div><br>
 
     <div>
-<!--            <br><h5>총 <span style="color:#0c4128;" th:text="${#lists.size(allRecipes)}"></span>개의 맛있는 레시피가 있습니다.</h5><hr>-->
-        <span style="float: right; margin: 20px;">
+        <span style="float: right;">
             <button sec:authorize="isAuthenticated()" type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>
             <button sec:authorize="isAuthenticated()" type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/my}'|">내 글 보기</button>
         </span>
     </div>
-
-    <br><br><br>
-
 
     <!-- 레시피 리스트 div-->
     <div class="recipe-list-wrapper">
@@ -187,13 +158,6 @@
         <th:block th:each="recipe : ${allRecipes}">
             <div class="card recipe-list-div" style="width: 280px;">
                 <a th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|" class="card-link">
-                   <!-- <div class="card__content">
-&lt;!&ndash;                            <p class="card__category">Category</p>&ndash;&gt;
-                        <h3 class="card__heading">
-                            <div th:text="${recipe.getRecipeTitle()}" th:if="${recipe.getRecipeTitle() != null }"></div>
-                            <div th:if="${recipe.getRecipeTitle() == null}"></div>
-                        </h3>
-                    </div>-->
                     <img th:src="${recipe.recipeImagePath}" class="card-img-top" alt="..." th:if="${recipe.recipeImagePath != null}">
                     <img src="https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/noimage.gif" class="card-img-top" alt="..." th:if="${recipe.recipeImagePath == null}">
                 </a>

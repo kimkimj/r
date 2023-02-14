@@ -21,7 +21,7 @@
   /*검색창 */
   .search-wrapper {
     width: 100%;
-    margin: 0px auto 100px;
+    margin: 0px auto 80px;
     text-align: center;
   }
   .item-search {
@@ -72,9 +72,9 @@
 <!--  <div sec:authorize="hasRole('SELLER')">-->
 <!--상품 목록 시작-->
   <div class="container">
-    <br><br>
+    <div class="margin-common"></div>
     <div class="title-wrapper">
-      <div style="text-align: center; margin: 20px;">
+      <div style="text-align: center;">
         <h3>|&nbsp;&nbsp;&nbsp;OUR INGREDIENTS&nbsp;&nbsp;&nbsp;|</h3>
         <h5>신선한 재료를 우아한에서 간편하게 주문해 보세요.</h5>
       </div>
@@ -110,7 +110,7 @@
   </div>>
   <th:block th:if="${items.totalElements} > 0">
   <!-- pagination -->
-  <div class="py-3 my-4">
+  <div class="my-4">
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
         <!--이전 버튼-->
@@ -130,7 +130,8 @@
     </nav>
   </div>
   </th:block>
-<br/>
+<div class="margin-common"></div>
+</div>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>
 </html>
