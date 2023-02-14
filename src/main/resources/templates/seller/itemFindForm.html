@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+  <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
   <head th:replace="fragments/header :: headerFragment"/>
     <style>
         .back-ground {
@@ -76,7 +77,12 @@
 
   </script>
 
-  <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+  <div sec:authorize="!hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
+    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+  </div>
+  <div sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
+    <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+  </div>
 
   <div class="container" style="border: 1px solid white">
   <!--  <div th:if="${resDto.getSellerName() == #authentication.getPrincipal()}">-->
@@ -92,20 +98,21 @@
           <div>
             <h3><span th:text="${resDto.getItemPrice()}">상품 가격</span>원</h3>
           </div>
-          <div style="border: 1px solid; margin-top: 310px">
+          <div style="margin-top: 310px">
             <input style="width: 100px; float: right;"
                    onclick="location.href='myItems.html'"
                    th:onclick="|location.href='@{/seller/my/items}'|" type="button" value="목록으로"/>
-            <input style="width: 100px; float: right;"
-                   th:onclick="|location.href='@{/seller/items/delete/{id}(id=${id})}'|" type="button" value="상품 삭제"/>
-            <input style="width: 100px; float: right;"
-                   onclick="location.href='itemUpdateForm.html'"
-                   th:onclick="|location.href='@{/seller/items/update/{id}(id=${id})}'|" type="button" value="상품 수정"/>
+            <div th:if="${resDto.getSellerName() == #authentication.getPrincipal()}">
+              <input style="width: 100px; float: right;"
+                     th:onclick="|location.href='@{/seller/items/delete/{id}(id=${id})}'|" type="button" value="상품 삭제"/>
+              <input style="width: 100px; float: right;"
+                     onclick="location.href='itemUpdateForm.html'"
+                     th:onclick="|location.href='@{/seller/items/update/{id}(id=${id})}'|" type="button" value="상품 수정"/>
+            </div>
           </div>
         </div>
       </div>
       <hr>
-
     </div>
     <div th:replace="fragments/footer :: footerFragment"/>
   </body>

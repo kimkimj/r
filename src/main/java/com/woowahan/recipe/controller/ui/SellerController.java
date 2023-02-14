@@ -2,21 +2,16 @@ package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.itemDto.*;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipePageResDto;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeSearchReqDto;
 import com.woowahan.recipe.domain.dto.sellerDto.*;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.service.ItemService;
 import com.woowahan.recipe.service.RecipeService;
 import com.woowahan.recipe.service.S3UploadService;
 import com.woowahan.recipe.service.SellerService;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -32,8 +27,6 @@ import org.springframework.web.util.CookieGenerator;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -240,9 +233,11 @@ public class SellerController {
                 .collect(Collectors.toList()));
     }
 
+    */
+
     /**
      * seller - 상품 상세조회
-
+     */
     @GetMapping("/seller/items/{id}")
     public String findSellerForm(Model model, @PathVariable Long id) {
         ItemDetailResDto resDto = itemService.findItem(id);
@@ -251,7 +246,7 @@ public class SellerController {
         model.addAttribute("resDto", resDto); // -> sellerName도 들어있음
         model.addAttribute("cartItemReq", new CartItemReq(id, 1));
         return "seller/itemFindForm";
-    }*/
+    }
 
     /**
      * 상품 등록
