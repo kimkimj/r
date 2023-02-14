@@ -19,6 +19,7 @@
       height: 400px;
       object-fit: cover;
       border-radius: 5%;
+      border: 1px solid lightgrey;"
     }
 </style>
 <body>
@@ -118,7 +119,10 @@
 <div class="container" style="border: 1px solid white">
   <div style="margin-top: 120px; border: 1px solid white" class="row">
     <div class="col">
-      <p th:align="center"><img th:src="${resDto.getItemImagePath()}" alt="이미지 준비중입니다.">
+      <p th:align="center">
+        <img th:src="${resDto.getItemImagePath()}"
+             th:onerror="this.src='https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/item-image/3731374c-70de-4ea3-b1c6-55972bd18c40.png'">
+      </p>
     </div>
     <div class="col">
       <div>
@@ -127,9 +131,9 @@
       <div>
         <h3><span th:text="${resDto.getItemPrice()}">상품 가격</span>원</h3>
       </div>
-      <input type="hidden" th:field="${cartItemReq.cartItemId}"/>
       <input type="hidden" id="itemPrice" th:value="${resDto.getItemPrice()}"/>
       <form sec:authorize="isAuthenticated()" role="form" th:action="@{/items/cart}" th:object="${cartItemReq}" method="post" onsubmit="cart();">
+        <input type="hidden" th:field="${cartItemReq.cartItemId}"/>
         <div class="back-ground">
           <!--장바구니 수량 버튼-->
           <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
