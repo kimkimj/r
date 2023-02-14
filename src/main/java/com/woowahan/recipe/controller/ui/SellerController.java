@@ -48,11 +48,11 @@ public class SellerController {
     private final RecipeService recipeService;
     private final S3Uploader s3Uploader;
 
-    /* 판매자 홈페이지
+    // 판매자 홈페이지
     @GetMapping("/sellerIndex")
     public String home() {
         return "seller/sellerIndex";
-    }*/
+    }
 
     // 판매자 회원 가입
     @GetMapping("/seller/join")
@@ -112,7 +112,7 @@ public class SellerController {
         log.info("token={}", token);
         session.setMaxInactiveInterval(1800);*/
 
-        return "redirect:/";
+        return "redirect:/sellerIndex";
     }
 
     // 로그아웃

@@ -47,8 +47,8 @@
                 <tr class="tr-hover" th:each="recipe : ${myRecipes}" th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|">
                     <th scope="row" th:text="${recipe.getRecipeId()}"/>
                     <td th:text="${recipe.getRecipeTitle}"/>
-                    <td th:text="${recipe.createdDate}"/>
-                    <td th:text="${recipe.lastModifiedDate}"/>
+                    <td><span th:text="${#temporals.format(recipe.createdDate, 'yyyy-MM-dd HH:mm')}"></span></td>
+                    <td><span th:text="${#temporals.format(recipe.lastModifiedDate, 'yyyy-MM-dd HH:mm')}"></span></td>
                     <td th:text="${recipe.getRecipeView}"/>
                     <td th:text="${recipe.getRecipeLike}"/>
                 </tr>
@@ -84,7 +84,6 @@
     <br>
     <!-- footer -->
     <div th:replace="fragments/footer :: footerFragment"/>
-    <br><br>
 </div>
 </body>
 </html>
