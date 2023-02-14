@@ -98,7 +98,7 @@ public class SellerController {
         } catch (AppException e) {
             model.addAttribute("e", e.getMessage());
             result.reject(e.getMessage());
-            return "user/loginForm";
+            return "seller/loginForm";
         }
 
         /*// 세션 넣기
