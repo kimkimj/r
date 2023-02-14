@@ -215,7 +215,7 @@
 
     <th:block th:if="${allRecipes.totalElements > 0}">
     <!-- pagination -->
-    <div class="py-3 my-4">
+    <div class="my-4">
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
@@ -236,7 +236,7 @@
     </th:block>
     <th:block th:unless="${allRecipes.totalElements} > 0">
         <div style="width: 100%; height: 200px; text-align: center;">
-            <h2>현재 검색어에 해당하는 레시피가 없습니다.</h2>
+            <h5 style="line-height: 150px;">현재 검색어에 해당하는 레시피가 없습니다.</h5>
         </div>
     </th:block>
     <div class="margin-common"></div>
