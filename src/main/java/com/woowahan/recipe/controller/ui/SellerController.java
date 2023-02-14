@@ -29,9 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.CookieGenerator;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -40,7 +38,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-//@RequestMapping("/seller")
 public class SellerController {
 
     private final SellerService sellerService;
@@ -80,10 +77,8 @@ public class SellerController {
 
     @PostMapping("/seller/login")
     public String login(@Valid @ModelAttribute SellerLoginRequest sellerLoginRequest, BindingResult result,
-                        HttpServletRequest httpServletRequest, HttpServletResponse response, Model model){
+                        HttpServletResponse response){
         if (result.hasErrors()) {
-            result.getFieldErrors().stream().forEach(err ->
-                    log.info("field={} value={} msg={}", err.getField(), err.getRejectedValue(), err.getDefaultMessage()));
             return "seller/loginForm";
         }
 
@@ -96,19 +91,16 @@ public class SellerController {
             cookieGenerator.setCookieMaxAge(60 * 60 * 2);
 
         } catch (AppException e) {
-            model.addAttribute("e", e.getMessage());
-            result.reject(e.getMessage());
-            return "seller/loginForm";
+            return "user/loginForm";
         }
 
         return "redirect:/sellerIndex";
     }
 
+
     // 로그아웃
     @GetMapping("/seller/logout")
-    public String logout(HttpSession session, HttpServletResponse response) {
-        /*session.removeAttribute("jwt");
-        session.invalidate();*/
+    public String logout(HttpServletResponse response) {
 
         CookieGenerator cookieGenerator = new CookieGenerator();
         cookieGenerator.setCookieName("token");
