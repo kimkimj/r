@@ -156,3 +156,11 @@ input[type="number"]::-webkit-inner-spin-button {
     background-color: #F9E4C8;
     border-color: #F9E4C8;
 }
+
+/* 말줄임표 */
+.ellipsis {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

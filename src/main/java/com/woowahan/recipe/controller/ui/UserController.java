@@ -98,7 +98,6 @@ public class UserController {
         } catch (AppException e) {
             model.addAttribute("e", e.getMessage());
             result.reject(e.getMessage());
-            return "user/loginForm";
         }
 
         /*try {
