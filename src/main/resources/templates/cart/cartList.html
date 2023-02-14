@@ -4,13 +4,18 @@
       layout:decorate="~{cartMain}">
 <!--<head th:replace="fragments/header :: headerFragment"/>-->
 <body>
-<!--<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>-->
-<div layout:fragment="cartMain" class="container">
-    <div class="border-bottom p-2 my-3">
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div class="container" layout:fragment="cartMain">
+    <div class="margin-common"></div>
+    <div style="text-align: center;">
+        <h3>|&nbsp;&nbsp;&nbsp;CART&nbsp;&nbsp;&nbsp;|</h3>
+    </div>
+    <div class="margin-my"></div>
+<!--    <div class="border-bottom p-2 my-3">
         <h2>장바구니 페이지</h2>
         <div>진행상황 띄우기</div>
-    </div>
-    <div>
+    </div>-->
+    <div style="margin-bottom: 20px;">
         <table class="table cart-table text-center align-middle">
             <thead>
             <colgroup>
@@ -68,7 +73,7 @@
             </th:block>
             </tbody>
         </table>
-        <hr />
+        <hr>
         <div class="cart-result rounded-3">
             <table class="table align-middle">
                 <tr>
@@ -84,10 +89,13 @@
                     <td class="border"><span class="total-price">0</span> 원</td>
                 </tr>
             </table>
+        </div>
+        <div style="height: 50px; width: 100%; margin-top: 40px; text-align:center;">
             <button type="submit" class="btn btn-primary order-btn" onclick="saveOrder()">주문하기</button>
         </div>
     </div>
+    <div class="margin-common"></div>
 </div>
+<div th:replace="fragments/footer :: footerFragment"/>
 </body>
-
 </html>
