@@ -55,7 +55,12 @@
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <div class="recipe-wapper">
-    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+    <div sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_HEAD')">
+        <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+    </div>
+    <div sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
+        <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+    </div>
     <div class="container"><br>
         <br><br>
         <div class="margin-20" style="text-align: center;">
@@ -180,7 +185,7 @@
                         <div sec:authorize="!isAuthenticated()" style="text-align: center;">
                             <button class="btn btn-outline-success" type="button" onclick="cartLogin();">장바구니에 담기</button>
                         </div>
-                        <div sec:authorize="isAuthenticated()" style="text-align: center;">
+                        <div sec:authorize="hasRole('ROLE_USER')" style="text-align: center;">
                             <button class="btn btn-outline-success" id="form-btn" type="submit">장바구니에 담기</button>
                         </div>
                         <br>
@@ -197,7 +202,7 @@
                         th:onclick="|location.href='@{/recipes/{recipeId}/likes (recipeId=${recipeId})}'|">좋아요💗
                 </button>
             </div>
-            <div sec:authorize="isAuthenticated()">
+            <div sec:authorize="hasRole('ROLE_USER')">
                 <button class="btn btn-outline-success like-btn" type="button"
                         th:onclick="|location.href='@{/recipes/{recipeId}/likes (recipeId=${recipeId})}'|">좋아요💗
                 </button>
@@ -209,10 +214,10 @@
         <div>
             <h3>Review</h3><hr>
         </div>
-        <div class="card">
+        <div class="card" sec:authorize="hasAnyRole('ROLE_USER')">
             <div class="card card-body">
                 <!--                <textarea class="form-control" rows="1"></textarea>-->
-                <form sec:authorize="isAuthenticated()" role="form" th:action="@{/recipes/{recipeId}/reviews (recipeId=${recipeId})}"
+                <form role="form" th:action="@{/recipes/{recipeId}/reviews (recipeId=${recipeId})}"
                       th:object="${reviewCreateRequest}" method="post" content>
                     <!-- 리뷰 내용  -->
                     <div class="form-group col">

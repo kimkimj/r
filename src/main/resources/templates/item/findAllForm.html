@@ -67,7 +67,12 @@
       resultElement.innerText = number;
     }
 </script>
-<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_HEAD')">
+  <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+</div>
+<div sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
+  <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+</div>
   <!--상품 검색 창-->
 <!--  <div sec:authorize="hasRole('SELLER')">-->
 <!--상품 목록 시작-->

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <head th:replace="fragments/header :: headerFragment"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/recipe.css}" />
@@ -39,7 +39,12 @@
         crossorigin="anonymous"></script>
 
 <!-- bodyHeader -->
-<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_HEAD')">
+    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+</div>
+<div sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
+    <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+</div>
 
 <div class="container"><br>
 
