@@ -3,13 +3,15 @@
 <head th:replace="fragments/header :: headerFragment"/>
 <style>
     .back-ground {
-        background-color: #cccccc;
+        border: 1px solid #DBD0C0;
+        /*background-color: #F9CF93;*/
         border-radius: 10px;
         height: 65px;
-        margin-top: 220px;
+        margin-top: 210px;
         margin-bottom: 10px;
         padding-top: 20px;
         padding-left: 20px;
+        width: 450px;
     }
     button {
         padding: 10px 30px;
@@ -19,7 +21,18 @@
       height: 400px;
       object-fit: cover;
       border-radius: 5%;
-      border: 1px solid lightgrey;"
+      border: 1px solid #DBD0C0;
+    }
+    .item-wrapper {
+      margin-top: 80px;
+      /*border: 10px solid #FAEEE0;*/
+      border-radius: 10px;
+
+    }
+    .pm-btn {
+      background-color: #DBD0C0;
+      font-weight: bold;
+      border-radius: 5px;
     }
 </style>
 <body>
@@ -117,18 +130,24 @@
 </script>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 <div class="container" style="border: 1px solid white">
-  <div style="margin-top: 120px; border: 1px solid white" class="row">
-    <div class="col">
-      <p th:align="center">
+  <div class="margin-common"></div>
+  <div style="text-align: center;">
+    <h3>|&nbsp;&nbsp;&nbsp;OUR INGREDIENTS&nbsp;&nbsp;&nbsp;|</h3>
+    <h5>신선한 재료를 우아한에서 간편하게 주문해 보세요.</h5>
+  </div>
+
+  <div class="row item-wrapper">
+    <div class="col" style="padding-top:30px; text-align: center;">
+      <div th:align="center">
         <img th:src="${resDto.getItemImagePath()}"
              th:onerror="this.src='https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/item-image/3731374c-70de-4ea3-b1c6-55972bd18c40.png'">
-      </p>
-    </div>
-    <div class="col">
-      <div>
-        <h1 th:text="${resDto.getItemName()}">상품명</h1>
       </div>
-      <div>
+    </div>
+    <div class="col" style="padding:30px; width: 300px; height: 300px;">
+      <div style="color:#645f53; margin-top: 10px;">
+        <h2 th:text="${resDto.getItemName()}">상품명</h2>
+      </div>
+      <div style="color:#645f53;">
         <h3><span th:text="${resDto.getItemPrice()}">상품 가격</span>원</h3>
       </div>
       <input type="hidden" id="itemPrice" th:value="${resDto.getItemPrice()}"/>
@@ -137,10 +156,10 @@
         <div class="back-ground">
           <!--장바구니 수량 버튼-->
           <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-            <input style="width: 40px" type='button' onclick='count("minus")' value="-"/>
+            <input class="pm-btn" style="width: 40px" type='button' onclick='count("minus")' value="-"/>
             <input style="width: 100px; border:1px solid; text-align: center; background-color: white" id='cartItemCnt'
                    name="cartItemCnt" th:value="${cartItemReq.cartItemCnt}"/>
-            <input style="width: 40px" type='button' onclick='count("plus")' value="+"/>
+            <input class="pm-btn" style="width: 40px" type='button' onclick='count("plus")' value="+"/>
           </div>
           <div style="margin-right: 30px; float: right"><span id="totalPrice"
                                                               th:text="${resDto.getItemPrice()}">0</span>원
@@ -153,6 +172,7 @@
 
             <input type="submit" value="장바구니" style="width: 100px; float: right;"/>
             <input type="button" value="바로구매" style="width: 100px; float: right;" onclick='order()'/>
+
         </div>
       </form>
 
@@ -161,7 +181,7 @@
           <!--장바구니 수량 버튼-->
           <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
             <input style="width: 40px" type='button' onclick='count2("minus")' value="-"/>
-            <input style="width: 100px; border:1px solid; text-align: center; background-color: white" id='cartItemCnt2'
+            <input style="width: 80px; border:1px solid; text-align: center; background-color: white" id='cartItemCnt2'
                    name="cartItemCnt" value="1"/>
             <input style="width: 40px" type='button' onclick='count2("plus")' value="+"/>
           </div>
@@ -169,7 +189,7 @@
                                                               th:text="${resDto.getItemPrice()}">0</span>원
           </div>
         </div>
-        <div>
+        <div style="width:450px;">
           <input style="width: 100px; float: right;"
                  onclick="location.href='findAllForm.html'"
                  th:onclick="|location.href='@{/items}'|" type="button" value="목록으로"/>
@@ -181,9 +201,9 @@
       </div>
     </div>
   </div>
-  <hr>
-
+  <div class="margin-common"></div>
 </div>
+<div class="margin-common"></div>
 </div>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>
