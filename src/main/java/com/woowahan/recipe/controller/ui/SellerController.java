@@ -101,17 +101,6 @@ public class SellerController {
             return "seller/loginForm";
         }
 
-        /*// 세션 넣기
-        httpServletRequest.getSession().invalidate();
-        HttpSession session = httpServletRequest.getSession(true);
-
-        String token = sellerService.login(sellerLoginRequest.getSellerName(), sellerLoginRequest.getPassword());
-        session.setAttribute("jwt", "Bearer " + token);
-        String checkJwt = (String) session.getAttribute("jwt");
-        log.info("checkJwt={}", checkJwt);
-        log.info("token={}", token);
-        session.setMaxInactiveInterval(1800);*/
-
         return "redirect:/sellerIndex";
     }
 
@@ -273,24 +262,6 @@ public class SellerController {
         return "seller/itemCreateForm";
     }
 
-//    @PostMapping("/seller/items/create")
-//    public String create(@Valid @ModelAttribute ItemCreateReqDto reqDto, BindingResult bindingResult,
-//                         @RequestPart MultipartFile multipartFile,
-//                         RedirectAttributes redirectAttributes, Authentication authentication) throws IOException {
-//
-//        if (bindingResult.hasErrors()) {
-//            log.info("bindingResult = {}", bindingResult);
-//            return "seller/itemCreateForm";
-//        }
-//
-//        String imgPath = s3Uploader.upload(multipartFile, "item-image");
-//        reqDto.setItemImagePath(imgPath);
-//        ItemCreateResDto resDto = itemService.createItem(reqDto, authentication.getName());
-//        redirectAttributes.addAttribute("id", resDto.getId());
-//
-//        log.info("img주소확인 : {}", imgPath);
-//        return "redirect:/seller/items/{id}";
-//    }
     @PostMapping("/seller/items/create")
     public String create(@Valid @ModelAttribute ItemCreateReqDto reqDto, BindingResult bindingResult,
                          @RequestParam MultipartFile multipartFile,
@@ -305,7 +276,6 @@ public class SellerController {
             return "redirect:/seller/items/create";
         }
 
-        //        String imgPath = s3Uploader.upload(multipartFile, "item-image");
         String imgPath = s3UploadService.saveUploadFile(multipartFile, "item-image");
         reqDto.setItemImagePath(imgPath);
         ItemCreateResDto resDto = itemService.createItem(reqDto, authentication.getName());
@@ -335,9 +305,10 @@ public class SellerController {
             log.info("bindingResult = {}", bindingResult);
             return "seller/itemUpdateForm";
         }
-//        String imgPath = s3Uploader.upload(multipartFile, "item-image");
-        String imgPath = s3UploadService.saveUploadFile(multipartFile, "item-image");
-        reqDto.setItemImagePath(imgPath);
+        if (!multipartFile.isEmpty()) {
+            String imgPath = s3UploadService.saveUploadFile(multipartFile, "item-image");
+            reqDto.setItemImagePath(imgPath);
+        }
 
         ItemUpdateResDto resDto = itemService.updateItem(id, reqDto, authentication.getName());
         redirectAttributes.addAttribute("id", resDto.getId());

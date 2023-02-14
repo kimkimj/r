@@ -3,11 +3,11 @@
 }
 .cart-table .item-cnt {
     border: none;
-    outline: #DDF7F8;
+    outline: #F9E4C8;
     width: 100px;
 }
 .cart-table .cnt-option-btn {
-    background-color: #DDF7F8;
+    background-color: #F9E4C8;
 }
 
 hr {
@@ -15,13 +15,13 @@ hr {
 }
 
 .cart-result {
-    background-color: #DDF7F8;
+    /*background-color: #F9E4C8;*/
     height: 200px;
 }
 
 .delete-btn {
     color: red;
-    width: 50px;
+    width: 40px;
     height: 30px;
     font-weight: 600;
     font-size: 15px;
@@ -30,4 +30,9 @@ hr {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.form-check-input:checked {
+    background-color: #DBD0C0;
+    border-color: #DBD0C0;
 }

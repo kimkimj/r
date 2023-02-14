@@ -92,8 +92,11 @@ public class ItemService {
         if(!item.getSeller().equals(seller)) {  // 현재 수정하고자 하는 item을 등록한 판매자와 로그인한 회원이 동일한지
             throw new AppException(ErrorCode.ROLE_FORBIDDEN, ErrorCode.ROLE_FORBIDDEN.getMessage());
         }
-
+        String img = item.getItemImagePath();
         item.update(ReqDto.getItemImagePath(), ReqDto.getItemName(), ReqDto.getItemPrice(), ReqDto.getItemStock(), seller);
+        if(ReqDto.getItemImagePath() == null) { // 이미지가 있으면 등록
+            item.setItemImagePath(img);
+        }
         itemRepository.flush();
         return ItemUpdateResDto.from(item);
 
