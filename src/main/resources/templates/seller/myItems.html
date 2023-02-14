@@ -42,28 +42,28 @@
                 </tr>
                 </tbody>
             </table>
-
-            <!-- pagination -->
-            <div class="py-3 my-4">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
-                            <a class="page-link" th:href="@{/users/my/items(page = ${nowPage - 2})}">Previous</a>
-                        </li>
-
-                        <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                            <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/users/my/items(page = ${page - 1})}" th:text="${page}">1</a></li>
-                            <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
-                        </th:block>
-
-                        <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
-                            <a class="page-link" th:href="@{/users/my/items(page = ${nowPage})}">Next</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="margin-common"></div>
+            <th:block th:if="${myItemList.totalElements} > 0">
+                <!-- pagination -->
+                <div class="py-3 my-4">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            <!--이전 버튼-->
+                            <li class="page-item" th:classappend="${!myItemList.hasPrevious()} ? 'disabled'">
+                                <a class="page-link" th:href="@{/seller/my/items(page = ${nowPage - 2})}">Previous</a>
+                            </li>
+                            <!--페이지 번호 버튼-->
+                            <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                                <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/seller/my/items(page = ${page - 1})}" th:text="${page}">1</a></li>
+                                <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
+                            </th:block>
+                            <!--다음 버튼-->
+                            <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
+                                <a class="page-link" th:href="@{/seller/my/items(page = ${nowPage})}">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </th:block>
         </div>
-        <div th:replace="fragments/footer :: footerFragment"/>
     </body>
 </html>
