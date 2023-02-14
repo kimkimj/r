@@ -15,14 +15,14 @@
 
     </style>
     <body>
+
         <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
         <div class="container"><br>
+            <div class="margin-my"></div>
             <!-- 상단 메뉴바 -->
             <div th:replace="fragments/myPageNav :: myPageFragment"/>
+            <div class="margin-my"></div>
             <br><br>
-            <div>
-                <h4>내가 작성한 리뷰</h4>
-            </div><br><br>
 
             <table class="table table-hover" style="text-align: center;">
                 <thead>
@@ -79,6 +79,9 @@
                 현재 등록한 리뷰가 없습니다.
             </div>
         </th:block>
+        <div class="margin-my"></div>
+        <div class="margin-my"></div>
+        <div class="margin-my"></div>
         <div th:replace="fragments/footer :: footerFragment"/>
     </body>
 </html>
