@@ -76,8 +76,11 @@ public class S3Uploader {
     }
 
     private Optional<File> convert(MultipartFile file) throws  IOException {
+        log.info("convert() 실행");
         File convertFile = new File(file.getOriginalFilename());
+        log.info("convertFile = {}", convertFile.getName());
         if(convertFile.createNewFile()) {
+            log.info("convertFile new File = {}", convertFile.getName());
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
                 fos.write(file.getBytes());
             }
