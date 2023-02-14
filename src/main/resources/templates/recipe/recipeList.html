@@ -11,10 +11,6 @@
         width: 100%;
         align-items: center;
     }
-    .container {
-        width: 70%;
-        margin: 0 auto;
-    }
 
     a { text-decoration:none !important }
     a:hover { text-decoration:none !important }
@@ -148,15 +144,16 @@
         line-height: 1.4;
         /*word-spacing: 100vw;*/ /*tab조절*/
     }
-
 </style>
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 <div class="container">
-    <br><br>
-    <div style="text-align: center; margin: 20px;">
+    <div class="margin-common"></div>
+    <div style="text-align: center;">
         <h3>|&nbsp;&nbsp;&nbsp;OUR RECIPES&nbsp;&nbsp;&nbsp;|</h3>
         <h5>우아한과 함께 맛있는 음식을 만들어 보세요.</h5>
+        <br>
+        <hr>
     </div>
     <!--<div style="text-align: center;">
         <img style="width: 150px; height: 150px;" src="https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/스크린샷 2023-02-12 오후 7.30.02.png">
@@ -214,7 +211,7 @@
 
             </div>
         </th:block>
-    </div><br><br><br><br>
+    </div><br><br>
 
     <th:block th:if="${allRecipes.totalElements > 0}">
     <!-- pagination -->
@@ -242,9 +239,8 @@
             <h2>현재 검색어에 해당하는 레시피가 없습니다.</h2>
         </div>
     </th:block>
+    <div class="margin-common"></div>
 </div>
-
-<br><br><br>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>
 </html>
