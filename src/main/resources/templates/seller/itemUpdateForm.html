@@ -1,52 +1,52 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: headerFragment"/>
-<script>
+  <head th:replace="fragments/header :: headerFragment"/>
+    <script>
 
-</script>
-<style>
-  .fieldError {
-    border-color: #dc3545;
-    color: #dc3545;
-  }
-</style>
-<body>
-<div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
-<div class="container">
-  <div class="py-5 text-center">
-    <h2>상품 수정 화면</h2>
-  </div>
-    <form role="form" th:action="@{/seller/items/update/{id} (id=${id})}" th:object="${itemUpdateReqDto}" method="post" enctype="multipart/form-data">
-      <div th:if="${#fields.hasGlobalErrors()}">
-        <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${err}">글로벌 오류 메세지</p>
+    </script>
+    <style>
+      .fieldError {
+        border-color: #dc3545;
+        color: #dc3545;
+      }
+    </style>
+  </head>
+  <body>
+    <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+    <div class="container">
+      <div class="py-5 text-center">
+        <h2>상품 수정 화면</h2>
       </div>
-      <div class="form-group">
-        <input type="file" id="img" name = "multipartFile">
+        <form role="form" th:action="@{/seller/items/update/{id} (id=${id})}" th:object="${itemUpdateReqDto}" method="post" enctype="multipart/form-data">
+          <div th:if="${#fields.hasGlobalErrors()}">
+            <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${err}">글로벌 오류 메세지</p>
+          </div>
+          <div class="form-group">
+            <input type="file" id="img" name = "multipartFile">
+          </div>
+          <div>
+            <label th:for="itemName">상품명</label>
+            <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명을 입력하세요"
+                   th:class="${#fields.hasErrors('itemName')}? 'form-control fieldError' : 'form-control'" onfocus="this.value=''; return true;">
+            <p class="fieldError" th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}">Incorrect name</p>
+          </div>
+          <div>
+            <label th:for="itemPrice">상품 가격</label>
+            <input type="text" th:field="*{itemPrice}" class="form-control" placeholder="상품 가격을 입력하세요"
+                   th:class="${#fields.hasErrors('itemPrice')}? 'form-control fieldError' : 'form-control'" onfocus="this.value=''; return true;">
+            <p class="fieldError" th:if="${#fields.hasErrors('itemPrice')}" th:errors="*{itemPrice}">Incorrect price</p>
+          </div>
+          <div>
+            <label th:for="itemStock">총 수량</label>
+            <input type="text" th:field="*{itemStock}" class="form-control" placeholder="상품 총 수량을 입력하세요"
+                   th:class="${#fields.hasErrors('itemStock')}? 'form-control fieldError' : 'form-control'" onfocus="this.value=''; return true;">
+            <p class="fieldError" th:if="${#fields.hasErrors('itemStock')}" th:errors="*{itemStock}">Incorrect stock</p>
+          </div>
+          <hr>
+          <button type="submit" class="btn btn-primary">수정완료</button>
+        </form>
       </div>
-      <div>
-        <label th:for="itemName">상품명</label>
-        <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명을 입력하세요"
-               th:class="${#fields.hasErrors('itemName')}? 'form-control fieldError' : 'form-control'" onfocus="this.value=''; return true;">
-        <p class="fieldError" th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}">Incorrect name</p>
-      </div>
-      <div>
-        <label th:for="itemPrice">상품 가격</label>
-        <input type="text" th:field="*{itemPrice}" class="form-control" placeholder="상품 가격을 입력하세요"
-               th:class="${#fields.hasErrors('itemPrice')}? 'form-control fieldError' : 'form-control'" onfocus="this.value=''; return true;">
-        <p class="fieldError" th:if="${#fields.hasErrors('itemPrice')}" th:errors="*{itemPrice}">Incorrect price</p>
-      </div>
-      <div>
-        <label th:for="itemStock">총 수량</label>
-        <input type="text" th:field="*{itemStock}" class="form-control" placeholder="상품 총 수량을 입력하세요"
-               th:class="${#fields.hasErrors('itemStock')}? 'form-control fieldError' : 'form-control'" onfocus="this.value=''; return true;">
-        <p class="fieldError" th:if="${#fields.hasErrors('itemStock')}" th:errors="*{itemStock}">Incorrect stock</p>
-      </div>
-      <hr>
-      <button type="submit" class="btn btn-primary">수정완료</button>
-    </form>
-  </div>
-</div>
-<br/>
-<div th:replace="fragments/footer :: footerFragment"/>
-</body>
+    </div>
+    <br/>
+    <div th:replace="fragments/footer :: footerFragment"/>
+  </body>
 </html>
