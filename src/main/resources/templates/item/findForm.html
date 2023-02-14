@@ -115,7 +115,12 @@
     }
 
 </script>
-<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_HEAD')">
+  <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+</div>
+<div sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
+  <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+</div>
 <div class="container" style="border: 1px solid white">
   <div style="margin-top: 120px; border: 1px solid white" class="row">
     <div class="col">
@@ -165,8 +170,8 @@
                    name="cartItemCnt" value="1"/>
             <input style="width: 40px" type='button' onclick='count2("plus")' value="+"/>
           </div>
-          <div style="margin-right: 30px; float: right"><span id="totalPrice2"
-                                                              th:text="${resDto.getItemPrice()}">0</span>원
+          <div style="margin-right: 30px; float: right">
+            <span id="totalPrice2" th:text="${resDto.getItemPrice()}">0</span>원
           </div>
         </div>
         <div>

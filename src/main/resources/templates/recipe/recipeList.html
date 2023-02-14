@@ -146,7 +146,12 @@
     }
 </style>
 <body>
-<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_HEAD')">
+    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+</div>
+<div sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
+    <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+</div>
 <div class="container">
     <div class="margin-common"></div>
     <div style="text-align: center;">
@@ -172,7 +177,7 @@
 
     <div>
 <!--            <br><h5>총 <span style="color:#0c4128;" th:text="${#lists.size(allRecipes)}"></span>개의 맛있는 레시피가 있습니다.</h5><hr>-->
-        <span style="float: right; margin: 20px;">
+        <span style="float: right; margin: 20px;" sec:authorize="hasRole('ROLE_USER')">
             <button sec:authorize="isAuthenticated()" type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>
             <button sec:authorize="isAuthenticated()" type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/my}'|">내 글 보기</button>
         </span>
