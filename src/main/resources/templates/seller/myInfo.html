@@ -31,7 +31,6 @@
       margin-right: auto;
     }
   </style>
-
   <body>
     <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
       <div class="container">
@@ -66,6 +65,14 @@
                     <tr>
                       <td>사업자등록번호</td>
                       <td>[[${seller.businessRegNum}]]</td>
+                    </tr>
+                    <tr>
+                      <td>판매자 등록 여부</td>
+                      <td th:switch="${seller.status}">
+                        <span th:case="${T(com.woowahan.recipe.domain.UserRole).READY}">등록 대기</span>
+                        <span th:case="${T(com.woowahan.recipe.domain.UserRole).REJECT}">등록 반려</span>
+                        <span th:case="${T(com.woowahan.recipe.domain.UserRole).SELLER}">등록 완료</span>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
