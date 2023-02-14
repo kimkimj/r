@@ -2,33 +2,43 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: headerFragment"/>
 <style>
-    a { text-decoration:none !important; color:black; }
-    a:hover { text-decoration:none !important; color:black;}
+    a {
+        text-decoration: none !important;
+        color: black;
+    }
+
+    a:hover {
+        text-decoration: none !important;
+        color: black;
+    }
 
     /* 테이블 tr 색상 */
     .tr-hover:hover {
         background-color: #E3F4EA;
     }
+
 </style>
 <body>
 <!-- Bootstrap Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
 
 <!-- 섹션의 전체 틀 div -->
 <div class="recipe-wapper">
-
     <!-- bodyHeader -->
     <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-
-        <div class="container"><br>
-            <!-- 상단 메뉴바 -->
-            <div th:replace="fragments/myPageNav :: myPageFragment"/>
-            <br><br>
-            <div>
-                <h1>마이 레시피 리스트</h1><hr>
+    <div class="container"><br>
+        <div class="margin-my"></div>
+        <!-- 상단 메뉴바 -->
+        <div th:replace="fragments/myPageNav :: myPageFragment"/>
+        <br><br>
+        <div>
                 <span style="float: right;">
-                    <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>
-                    <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/list}'|">전체 레시피 보기</button>
+                    <button type="button" class="btn btn-outline-success"
+                            th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>
+                    <button type="button" class="btn btn-outline-success"
+                            th:onclick="|location.href='@{/recipes/list}'|">전체 레시피 보기</button>
                 </span>
             </div><br><br><br><br>
 
@@ -55,26 +65,55 @@
                 </tbody>
             </table>
         </div>
-    <th:block th:if="${myRecipes.totalElements} > 0">
-    <!-- pagination -->
-    <div class="py-3 my-4">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${!myRecipes.hasPrevious} ? 'disabled'">
-                    <a class="page-link" th:href="@{/recipes/my(page = ${nowPage - 2})}">Previous</a>
-                </li>
+        <br><br><br><br>
 
-                <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                    <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/recipes/my(page = ${page - 1})}" th:text="${page}">1</a></li>
-                    <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
-                </th:block>
-
-                <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
-                    <a class="page-link" th:href="@{/recipes/my(page = ${nowPage})}">Next</a>
-                </li>
-            </ul>
-        </nav>
+        <table class="table table-hover" style="text-align: center;">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col" style="width: 350px">레시피 제목</th>
+                <th scope="col">작성일</th>
+                <th scope="col">수정일</th>
+                <th scope="col" style="width: 100px">조회수</th>
+                <th scope="col" style="width: 100px">좋아요</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="tr-hover" th:each="recipe : ${myRecipes}"
+                th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|">
+                <th scope="row" th:text="${recipe.getRecipeId()}"/>
+                <td th:text="${recipe.getRecipeTitle}"/>
+                <td><span th:text="${#temporals.format(recipe.createdDate, 'yyyy-MM-dd HH:mm')}"></span></td>
+                <td><span th:text="${#temporals.format(recipe.lastModifiedDate, 'yyyy-MM-dd HH:mm')}"></span></td>
+                <td th:text="${recipe.getRecipeView}"/>
+                <td th:text="${recipe.getRecipeLike}"/>
+            </tr>
+            </tbody>
+        </table>
     </div>
+    <th:block th:if="${myRecipes.totalElements} > 0">
+        <!-- pagination -->
+        <div class="py-3 my-4">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${!myRecipes.hasPrevious} ? 'disabled'">
+                        <a class="page-link" th:href="@{/recipes/my(page = ${nowPage - 2})}">Previous</a>
+                    </li>
+
+                    <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                        <li class="page-item" th:if="${page != nowPage}"><a class="page-link"
+                                                                            th:href="@{/recipes/my(page = ${page - 1})}"
+                                                                            th:text="${page}">1</a></li>
+                        <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}"
+                                                                                 style="color: #93bf85;"></strong></li>
+                    </th:block>
+
+                    <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/recipes/my(page = ${nowPage})}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </th:block>
     <th:block th:unless="${myRecipes.totalElements} > 0">
         <div class="text-center">
@@ -82,6 +121,9 @@
         </div>
     </th:block>
     <br>
+    <div class="margin-my"></div>
+    <div class="margin-my"></div>
+    <div class="margin-my"></div>
     <!-- footer -->
     <div th:replace="fragments/footer :: footerFragment"/>
 </div>
