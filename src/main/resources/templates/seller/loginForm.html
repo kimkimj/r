@@ -2,67 +2,68 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: headerFragment"/>
 
-  <style>
+<style>
 
-    h2 {
-      text-align: center;
-    }
+  h2 {
+    text-align: center;
+  }
 
-    .wrapper {
-      width: 33%;
-      min-height: 450px;
-      margin: auto;
-      margin-bottom: 66px;
-      padding: 20px;
-    }
+  .button-container {
+    margin-top: 50px;
+    height: 50px;
+    text-align: center;
+  }
 
-    .button-container {
-      margin-top: 50px;
-      height: 50px;
-      text-align: center;
-    }
+  .button {
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-    .button {
-      margin-left: auto;
-      margin-right: auto;
-    }
-  </style>
+  .login-wrapper {
+    width: 350px;
+    margin: 0 auto;
+    min-height: 290px;
+  }
+</style>
 
-  <body>
-    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-    <div class="wrapper">
-      <br><br><br>
-      <h2>판매자 로그인</h2>
+<body  style="margin-bottom:0px;">
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div class="container">
+  <div class="margin-my"></div>
+  <div style="text-align: center;">
+    <h3>|&nbsp;&nbsp;&nbsp;판매자 LOGIN&nbsp;&nbsp;&nbsp;|</h3>
+  </div>
+  <div class="margin-20"></div>
+  <div class="login-wrapper">
+    <!--/*@thymesVar id="userLoginReqDto" type="com.woowahan.recipe.domain.dto.userDto.UserLoginReqDto"*/-->
 
-      <br>
-      <form role="form" th:action="@{/seller/login}" th:object="${sellerLoginRequest}"
-            method="post">
+    <form role="form" th:action="@{/seller/login}" th:object="${sellerLoginRequest}" method="post">
+      <div th:if="${#fields.hasGlobalErrors()}">
+        <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${e}">글로벌 오류 메세지</p>
+      </div>
 
-        <div class="mb-3">
-          <label th:for="sellerName" class="form-label">아이디</label>
-          <input type="text" th:field="*{sellerName}" class="form-control" placeholder="아이디를 입력해주세요"
-                 th:errorclass="field-error">
-          <div class="field-error" th:errors="*{sellerName}">아이디 오류</div>
+      <div class="mb-3">
+        <label th:for="sellerName" class="form-label">아이디</label>
+        <input type="text" th:field="*{sellerName}" class="form-control" placeholder="아이디를 입력해주세요"
+               th:errorclass="field-error">
+        <div class="field-error" th:errors="*{sellerName}">아이디 오류</div>
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">비밀번호</label>
+        <input type="password" th:field="*{password}" class="form-control" id="exampleInputPassword1"
+               placeholder="비밀번호를 입력해주세요"
+               th:errorclass="field-error">
+        <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
+      </div>
+      <div class="button-container">
+        <div class="button">
+          <button type="submit" class="btn btn-primary">로그인</button>
         </div>
-        <div class="mb-3">
-          <label for="exampleInputPassword1" class="form-label">비밀번호</label>
-          <input type="password" th:field="*{password}" class="form-control" id="exampleInputPassword1"
-                 placeholder="비밀번호를 입력해주세요"
-                 th:errorclass="field-error">
-          <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
-        </div>
-        <div th:if="${#fields.hasGlobalErrors()}">
-          <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${e}">글로벌 오류 메세지</p>
-        </div>
-        <div class="button-container">
-          <div class="button">
-            <button type="submit" class="btn btn-primary">로그인</button>
-          </div>
-        </div>
-
-      </form>
-      <br><br>
-    </div>
-    <div th:replace="fragments/footer :: footerFragment"/>
-  </body>
+      </div>
+    </form>
+  </div>
+  <div class="margin-my"></div>
+</div>
+<div th:replace="fragments/footer :: footerFragment"/>
+</body>
 </html>
