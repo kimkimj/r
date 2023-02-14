@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<th:block th:fragment="mySellerPageNav">
+  <div class="container2 px-4 text-center my-nev mt-5">
+    <div class="row gx-5" sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
+      <div class="col" >
+        <div class="p-3 border detail-box"><a href="/seller/my">나의 정보</a></div>
+      </div>
+      <div class="col" sec:authorize="hasRole('ROLE_SELLER')">
+        <div class="p-3 border detail-box"><a href="/seller/my/items">상품 관리</a></div>
+      </div>
+      <div class="col" sec:authorize="hasRole('ROLE_SELLER')">
+        <div class="p-3 border detail-box"><a href="/seller/items/create">상품 등록</a></div>
+      </div>
+    </div>
+  </div>
+</th:block>
+</html>

@@ -16,9 +16,9 @@
             <div class="container d-flex flex-wrap" >
                 <ul class="nav me-auto">
                     <li class="nav-item"><a href="/" class="nav-link link-dark px-2 active" aria-current="page">Home</a></li>
-                    <li class="nav-item"><a href="/recipes/list" class="nav-link link-dark px-2">레시피 찾기</a></li>
-                    <li class="nav-item"><a href="/items" class="nav-link link-dark px-2">재료 구매</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link link-dark px-2" onclick="alert('해당 서비스는 아직 준비중입니다.')">FAQs</a></li>
+                    <li class="nav-item"><a href="/recipes/list" class="nav-link link-dark px-2">레시피</a></li>
+                    <li class="nav-item"><a href="/items" class="nav-link link-dark px-2">재료</a></li>
+<!--                    <li class="nav-item"><a href="#" class="nav-link link-dark px-2" onclick="alert('해당 서비스는 아직 준비중입니다.')">FAQs</a></li>-->
                 </ul>
                 <ul class="nav me-auto justify-content-end">
                     <!--비로그인도 가능-->
@@ -36,6 +36,16 @@
                             <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/recipes/likes/my">찜한 레시피</a></li>
                             <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/users/my/reviews">나의 리뷰</a></li>
                             <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/orders/my">주문 조회</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown" sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_REJECT', 'ROLE_READY')">
+                        <a class="nav-link dropdown-toggle" href="/users/my" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            마이페이지
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')" href="/seller/my">회원 정보</a></li>
+                            <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_SELLER')" href="/seller/my/items">상품 관리</a></li>
+                            <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_SELLER')" href="/seller/items/create">상품 등록</a></li>
                         </ul>
                     </li>
                     <li class="nav-item" sec:authorize="hasRole('ROLE_USER')"><a href="/carts" class="nav-link link-dark px-2">장바구니</a></li>

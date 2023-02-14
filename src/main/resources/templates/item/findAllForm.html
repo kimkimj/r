@@ -97,8 +97,11 @@
         <div class="inner">
           <!--상품 이미지-->
           <div class="card" style="border: white">
-            <a onclick="location.href='findForm.html'"
+            <a sec:authorize!="hasAnyRole('SELLER')" onclick="location.href='findForm.html'"
                th:onclick="|location.href='@{/items/{id}(id=${item.getId})}'|"
+               style="border: white">
+            <a sec:authorize="hasAnyRole('SELLER')"onclick="location.href='seller/itemFindForm.html'"
+               th:onclick="|location.href='@{seller/items/{id}(id=${item.getId})}'|"
                style="border: white">
               <img style="width: 215px; height: 215px; object-fit: cover; align-content: center; border-radius: 5%; border: 1px solid lightgrey;"
                    th:src="${item.itemImagePath}" class="card-img-top"

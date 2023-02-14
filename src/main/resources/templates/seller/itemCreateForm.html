@@ -26,6 +26,20 @@
       margin-left: auto;
       margin-right: auto;
     }
+
+    .btn {
+      color: #625d55;
+      background-color: white;
+      border-color: #625d55;
+      font-weight: bold;
+    }
+
+    .btn:hover, .btn:active, .btn:visited {
+      border-color: #DBD0C0 !important;
+      outline-color: #DBD0C0 !important;
+      background-color: #DBD0C0 !important;
+      color: black;
+    }
   </style>
   <body>
     <script>
@@ -40,9 +54,11 @@
     <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
     <div class="container">
       <div class="margin-common"></div>
-      <div class="py-5 text-center">
-        <h2>상품 등록 화면</h2>
+      <div th:replace="fragments/mySellerPageNav :: mySellerPageNav"/>
+      <div style="text-align: center;">
+        <h3>|&nbsp;&nbsp;&nbsp;상품 등록&nbsp;&nbsp;&nbsp;|</h3>
       </div>
+      <div class="margin-my"></div>
       <form role="form" th:action="@{/seller/items/create}" th:object="${itemCreateReqDto}" method="post" enctype="multipart/form-data">
         <div th:if="${#fields.hasGlobalErrors()}">
           <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${err}">글로벌 오류 메세지</p>
@@ -51,18 +67,21 @@
           <input type="file" id="img" name="multipartFile">
           <!--      <p class="fieldError" th:if="${#fields.hasErrors('itemImagePath')}" th:errors="*{itemImagePath}">Incorrect name</p>-->
         </div>
+        <br>
         <div>
           <label th:for="name">상품명</label>
           <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명을 입력하세요"
                  th:class="${#fields.hasErrors('itemName')}? 'form-control fieldError' : 'form-control'">
           <p class="fieldError" th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}">Incorrect name</p>
         </div>
+        <br>
         <div>
           <label th:for="itemPrice">상품 가격</label>
           <input type="text" th:field="*{itemPrice}" class="form-control" placeholder="상품 가격을 입력하세요. , 없이 숫자만 입력해 주세요 (예시: 3000)"
                  th:class="${#fields.hasErrors('itemPrice')}? 'form-control fieldError' : 'form-control'">
           <p class="fieldError" th:if="${#fields.hasErrors('itemPrice')}" th:errors="*{itemPrice}">Incorrect price</p>
         </div>
+        <br>
         <div>
           <label th:for="itemStock">총 수량</label>
           <input type="text" th:field="*{itemStock}" class="form-control" placeholder="상품 총 수량을 입력하세요"
@@ -72,7 +91,7 @@
         <hr>
         <div class="button-container">
           <div class="button">
-            <button type="submit" onclick="emptyImg()" class="btn btn-primary">작성완료</button>
+            <button type="submit" onclick="emptyImg()" class="btn">작성완료</button>
           </div>
         </div>
       </form>
