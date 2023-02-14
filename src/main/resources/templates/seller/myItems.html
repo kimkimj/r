@@ -17,8 +17,8 @@
             <div class="margin-common"></div>
             <h3 style="text-align: center">내 상품</h3>
             <div class="margin-my"></div>
-            <th:text th:if="${myItemList.getSize()} < 1">판매중인 상품이 없습니다.</th:text>
-            <th:text th:if="${myItemList.getSize()} > 1"><b>총 상품 개수: [[${myItemList.getSize()}]]</b></th:text>
+            <span th:if="${myItemList.getTotalElements()} < 1">판매중인 상품이 없습니다.</span>
+            <span th:if="${myItemList.getTotalElements()} >= 1"><b>총 상품 개수: [[${myItemList.getTotalElements()}]]</b></span>
             <br><br>
             <table class="table table-hover" style="text-align: center;">
                 <thead>
