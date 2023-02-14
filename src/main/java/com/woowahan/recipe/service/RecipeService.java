@@ -1,6 +1,5 @@
 package com.woowahan.recipe.service;
 
-import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.itemDto.ItemListForRecipeResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.*;
 import com.woowahan.recipe.domain.entity.*;
@@ -10,10 +9,8 @@ import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,7 +34,7 @@ public class RecipeService {
     private final ItemRepository itemRepository;
     private final RecipeItemRepository recipeItemRepository;
     private final ApplicationEventPublisher publisher;
-    private final S3Uploader s3Uploader;
+    private final S3UploadService s3UploadService;
 
     /**
      * @param recipeId
@@ -119,11 +115,13 @@ public class RecipeService {
      **/
     public RecipeUpdateResDto updateRecipe(@RequestParam RecipeUpdateReqDto recipeUpdateReqDto, Long recipeId, String userName) {
         RecipeEntity recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND, ErrorCode.RECIPE_NOT_FOUND.getMessage()));
+        List<RecipeItemEntity> recipeItemEntities = recipeItemRepository.findRecipeItemEntitiesByRecipe(recipe).orElseThrow(() -> new AppException(ErrorCode.RECIPE_ITEM_NOT_FOUND, ErrorCode.RECIPE_ITEM_NOT_FOUND.getMessage()));
         validateWriterAndUserName(userName, recipe); // 동일 유저인지 검증
+
         // TODO: 2023-01-24 를 사용하는 SnakeCase보다는 CamelCase가 Java 프로그래밍에서 권장되는 표기법이라고 합니다 🙂
         recipe.setRecipeTitle(recipeUpdateReqDto.getRecipeTitle());
         recipe.setRecipeBody(recipeUpdateReqDto.getRecipeBody());
-        recipeItemRepository.deleteAll();
+        recipeItemRepository.deleteAll(recipeItemEntities);
         if(recipeUpdateReqDto.getRecipeImagePath() != null) { // 이미지가 있으면 등록
             recipe.setRecipeImagePath(recipeUpdateReqDto.getRecipeImagePath());
         }
@@ -323,7 +321,7 @@ public class RecipeService {
     public String keepRecipe(MultipartFile image, RecipeEntity recipe) throws IOException {
         System.out.println("Recipe service saveRecipe");
         if(!image.isEmpty()) {
-            String storedFileName = s3Uploader.upload(image,"images");
+            String storedFileName = s3UploadService.saveUploadFile(image,"images");
             recipe.setRecipeImagePath(storedFileName);
         }
         RecipeEntity savedRecipe = recipeRepository.save(recipe);

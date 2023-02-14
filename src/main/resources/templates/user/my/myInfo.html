@@ -10,57 +10,57 @@
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 
-<div class="container">
+    <div class="container">
+        <div class="margin-my"></div>
+
+        <!-- 상단 메뉴바 -->
+        <div th:replace="fragments/myPageNav :: myPageFragment"/>
+        <div class="margin-my"></div>
+
+            <div class="" style="width: 460px; border:1px solid;"><!-- border는 위치 잡으시고 지우시면 됩니다. 정-->
+                <h2>회원정보</h2>
+                <form role="form" th:object="${user}" method="get">
+                    <div class="mb-3">
+                        <label th:for="address" th:text="#{label.name}" class="form-label">이름</label>
+                        <input type="text" th:field="*{name}" class="form-control"
+                               th:errorclass="field-error" readonly>
+                        <div class="field-error" th:errors="*{name}">이름 오류</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label th:for="address" th:text="#{label.userName}" class="form-label">아이디</label>
+                        <input type="text" th:field="*{userName}" class="form-control"
+                               th:errorclass="field-error" readonly>
+                        <div class="field-error" th:errors="*{userName}">아이디 오류</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label th:for="address" th:text="#{label.address}" class="form-label">주소</label>
+                        <input type="text" th:field="*{address}" class="form-control"
+                               th:errorclass="field-error" readonly>
+                        <div class="field-error" th:errors="*{address}">주소 오류</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label th:for="email" th:text="#{label.email}" class="form-label">이메일</label>
+                        <input type="text" th:field="*{email}" class="form-control"
+                               th:errorclass="field-error" readonly>
+                        <div class="field-error" th:errors="*{email}">이메일 오류</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label th:for="address" th:text="#{label.phoneNum}" class="form-label">핸드폰번호</label>
+                        <input type="text" th:field="*{phoneNum}" class="form-control"
+                               th:errorclass="field-error" readonly>
+                        <div class="field-error" th:errors="*{phoneNum}">핸드폰 번호 오류</div>
+                    </div>
+                    <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/users/my/update}'|">회원 수정</button>
+                </form>
+            </div>
+        </div>
+
     <div class="margin-my"></div>
-
-    <!-- 상단 메뉴바 -->
-    <div th:replace="fragments/myPageNav :: myPageFragment"/>
-    <div class="margin-my"></div>
-
-    <div class="" style="width: 460px; margin-left: 250px;" >
-        <h2>회원정보</h2>
-        <form role="form" th:object="${user}" method="get">
-            <div class="mb-3">
-                <label th:for="address" th:text="#{label.name}" class="form-label">이름</label>
-                <input type="text" th:field="*{name}" class="form-control"
-                       th:errorclass="field-error" readonly>
-                <div class="field-error" th:errors="*{name}">이름 오류</div>
-            </div>
-
-            <div class="mb-3">
-                <label th:for="address" th:text="#{label.userName}" class="form-label">아이디</label>
-                <input type="text" th:field="*{userName}" class="form-control"
-                       th:errorclass="field-error" readonly>
-                <div class="field-error" th:errors="*{userName}">아이디 오류</div>
-            </div>
-
-            <div class="mb-3">
-                <label th:for="address" th:text="#{label.address}" class="form-label">주소</label>
-                <input type="text" th:field="*{address}" class="form-control"
-                       th:errorclass="field-error" readonly>
-                <div class="field-error" th:errors="*{address}">주소 오류</div>
-            </div>
-
-            <div class="mb-3">
-                <label th:for="email" th:text="#{label.email}" class="form-label">이메일</label>
-                <input type="text" th:field="*{email}" class="form-control"
-                       th:errorclass="field-error" readonly>
-                <div class="field-error" th:errors="*{email}">이메일 오류</div>
-            </div>
-
-            <div class="mb-3">
-                <label th:for="address" th:text="#{label.phoneNum}" class="form-label">핸드폰번호</label>
-                <input type="text" th:field="*{phoneNum}" class="form-control"
-                       th:errorclass="field-error" readonly>
-                <div class="field-error" th:errors="*{phoneNum}">핸드폰 번호 오류</div>
-            </div>
-            <button type="button" style="margin-left: 150px" class="btn btn-primary" th:onclick="|location.href='@{/users/my/update}'|">회원 수정</button>
-        </form>
     </div>
-</div>
-
-<div class="margin-my"></div>
-</div>
-<div th:replace="fragments/footer :: footerFragment"/>
+    <div th:replace="fragments/footer :: footerFragment"/>
 </body>
 </html>

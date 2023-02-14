@@ -1,5 +1,6 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{adminMain}">
 <body>
@@ -20,28 +21,30 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="tr-hover" th:each="user : ${userList}">
-          <th scope="row" th:text="${user.userName}"/>
-          <td th:text="${user.name}"/>
+        <tr class="tr-hover user-info" th:each="user : ${userList}">
+          <th th:text="${user.userName}"/>
+          <td class="user-id" th:text="${user.id}" style="display: none;"/>
+          <td class="username" th:text="${user.name}"/>
           <td th:text="${user.address}"/>
           <td th:text="${user.email}"/>
           <td th:text="${user.phoneNum}"/>
-          <td th:text="${user.userRole}">
-<!--            <select class="form-select">-->
-<!--              <option th:selected="${user.userRole}=='USER'" value="USER">USER</option>-->
-<!--              <option th:selected="${user.userRole}=='ADMIN'" value="ADMIN">ADMIN</option>-->
-<!--            </select>-->
+          <td class="role" th:text="${user.userRole}" />
+          <td sec:authorize="hasRole('ROLE_ADMIN')">
+            <button type="button" class="btn-jelly">
+              삭제
+            </button>
           </td>
-          <td>
-            <button>수정</button>
-            <button>삭제</button>
+          <td class="btn-group-vertical" sec:authorize="hasRole('ROLE_HEAD')">
+            <button type="button" class="btn edit-btn btn-jelly" th:idx="${userStat.index}" onclick="updateRole(this.getAttribute('idx'))">수정</button>
+            <button type="button" class="btn btn-jelly" th:idx="${userStat.index}" onclick="deleteRole(this.getAttribute('idx'))">삭제</button>
           </td>
         </tr>
         </tbody>
       </table>
     </div>
+    <th:block th:if="${userList.totalElements > 0}">
     <!-- pagination -->
-    <div class="py-3 my-4">
+    <div class="py-3 my-4" sec:authorize="hasAnyRole('ROLE_ADMIN')">
       <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
           <li class="page-item" th:classappend="${!userList.hasPrevious} ? 'disabled'">
@@ -59,6 +62,31 @@
         </ul>
       </nav>
     </div>
+    <!-- pagination -->
+    <div class="py-3 my-4" sec:authorize="hasAnyRole('ROLE_HEAD')">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" th:classappend="${!userList.hasPrevious} ? 'disabled'">
+            <a class="page-link" th:href="@{/head/users(page = ${nowPage - 2})}">Previous</a>
+          </li>
+
+          <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+            <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/head/users(page = ${page - 1})}" th:text="${page}">1</a></li>
+            <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
+          </th:block>
+
+          <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
+            <a class="page-link" th:href="@{/head/users(page = ${nowPage})}">Next</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    </th:block>
+    <th:block th:unless="${userList.totalElements} > 0">
+      <div class="text-center">
+        회원이 존재하지 않습니다.
+      </div>
+    </th:block>
   </div>
 </div>
 </body>

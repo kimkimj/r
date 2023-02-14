@@ -113,13 +113,12 @@
                                     data-bs-target="#exampleModal" onclick="searchAndShowItems(document.querySelector('#keyword').value)">
                                 재료 등록
                             </button>
-                            <button type="button" class="btn btn-outline-success" onclick="allRemove();">
+                            <button type="button" class="deleteAll-btn btn btn-outline-success" onclick="allRemove();">
                                 재료 전체삭제
                             </button>
                         </div>
                     </div>
                     <br>
-
 
                     <!-- 레시피 이미지 첨부파일 -->
                     <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
@@ -182,7 +181,6 @@
 
 <!-- footer -->
 <div th:replace="fragments/footer :: footerFragment"/>
-<br><br>
 <script>
     const selectItem = new Set();
     async function searchAndShowItems(keyword) {
@@ -312,6 +310,12 @@
                 return false;
             }
         });
+    });
+
+    // 재료 전체 삭제
+    $(document).on("click", ".deleteAll-btn", function() {
+        alert('재료가 전체 삭제되었습니다.');
+        $('li').remove();
     });
 </script>
 </body>

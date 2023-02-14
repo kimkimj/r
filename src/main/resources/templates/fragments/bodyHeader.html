@@ -6,8 +6,14 @@
 <!--    <p th:text="${#authentication.authenticated}"></p>-->
 <!--    <p sec:authentication="authorities"></p>-->
     <header>
-        <nav class="py-2 bg-light border-bottom">
-            <div class="container d-flex flex-wrap">
+        <div style="background-color: rgb(147,112,98,0.6); color:white; width: 100%; height: 70px;">
+            <h5 style="line-height: 70px; font-weight:bold;">Welcome to woowahan recipe site :)</h5>
+        </div>
+    </header>
+    <br>
+    <header>
+        <nav>
+            <div class="container d-flex flex-wrap" >
                 <ul class="nav me-auto">
                     <li class="nav-item"><a href="/" class="nav-link link-dark px-2 active" aria-current="page">Home</a></li>
                     <li class="nav-item"><a href="/recipes/list" class="nav-link link-dark px-2">레시피 찾기</a></li>
@@ -19,12 +25,12 @@
                     <li class="nav-item" sec:authorize="isAnonymous()"><a href="/login" class="nav-link link-dark px-2">Login</a></li>
                     <li class="nav-item" sec:authorize="isAnonymous()"><a href="/join" class="nav-link link-dark px-2">Sign up</a></li>
                     <!--로그인만 가능-->
-                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                    <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
                         <a class="nav-link dropdown-toggle" href="/users/my" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             마이페이지
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/users/my">회원 정보</a></li>
+                            <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/users/my">회원 정보</a></li>
                             <li><a class="dropdown-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_HEAD')" href="/admin">회원 관리</a></li>
                             <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/recipes/my">나의 레시피</a></li>
                             <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_USER')" href="/recipes/likes/my">찜한 레시피</a></li>
@@ -33,7 +39,7 @@
                         </ul>
                     </li>
                     <li class="nav-item" sec:authorize="hasRole('ROLE_USER')"><a href="/carts" class="nav-link link-dark px-2">장바구니</a></li>
-                    <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/users/logout" class="nav-link link-dark px-2">LogOut</a></li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()"><a href="/user/logout" class="nav-link link-dark px-2">LogOut</a></li>
                 </ul>
             </div>
         </nav>
