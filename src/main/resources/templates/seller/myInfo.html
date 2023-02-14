@@ -10,8 +10,10 @@
 
     .wrapper {
       margin: auto;
+      margin-left: 35%;
       width: 45%;
-      min-height: 450px;
+      min-height: 400px;
+      margin-bottom: 80px;
     }
 
     table {
@@ -34,10 +36,9 @@
     <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
       <div class="container">
         <div class="wrapper">
-          <div class="container_etc mt-5" style="width: 460px">
-            <h2>판매자 정보</h2>
-            <br>
 
+          <div class="container_etc mt-5" style="width: 460px">
+            <h2>판매자 정보</h2> <br>
             <form role="form" th:object="${seller}" method="get">
               <div class="mb-3">
                 <table class="table table-borderless">
@@ -76,10 +77,9 @@
               </div>
             </form>
             </div>
-          </div>
         </div>
+      </div>
     </div>
-  <div th:replace="fragments/footer :: footerFragment"/>
-
+    <div th:replace="fragments/footer :: footerFragment"/>
   </body>
 </html>

@@ -34,7 +34,7 @@
         </div>
         <div>
           <label th:for="itemPrice">상품 가격</label>
-          <input type="text" th:field="*{itemPrice}" class="form-control" placeholder="상품 가격을 입력하세요"
+          <input type="text" th:field="*{itemPrice}" class="form-control" placeholder="상품 가격을 입력하세요. , 없이 숫자만 입력해 주세요 (예시: 3000)"
                  th:class="${#fields.hasErrors('itemPrice')}? 'form-control fieldError' : 'form-control'">
           <p class="fieldError" th:if="${#fields.hasErrors('itemPrice')}" th:errors="*{itemPrice}">Incorrect price</p>
         </div>

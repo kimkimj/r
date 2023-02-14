@@ -38,17 +38,14 @@
         cursor: pointer;
     }
 </style>
-<body>
-<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-<div class="container">
-    <h2 style="text-align: center">판매자 홈페이지</h2>
-</div>
+    <body>
+        <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
 
-<div class="container">
-    <div class="home" style="margin: 100px 0px 100px 0px; background-color: white;">
-        <h1>woowahan recipe</h1>
-    </div>
-</div>
-<div th:replace="fragments/footer :: footerFragment"/>
-</body>
+        <div class="container">
+            <div class="home" style="margin: 100px 0px 100px 0px; background-color: white;">
+                <h1>woowahan recipe</h1>
+            </div>
+        </div>
+        <div th:replace="fragments/footer :: footerFragment"/>
+    </body>
 </html>
