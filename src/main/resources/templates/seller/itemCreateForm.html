@@ -10,6 +10,22 @@
       height: 150px;
       object-fit: cover;
     }
+
+    form {
+      margin: auto;
+      width: 50%;
+    }
+
+    .button-container {
+      margin-top: 50px;
+      height: 50px;
+      text-align: center;
+    }
+
+    .button {
+      margin-left: auto;
+      margin-right: auto;
+    }
   </style>
   <body>
     <script>
@@ -23,6 +39,7 @@
     </script>
     <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
     <div class="container">
+      <div class="margin-common"></div>
       <div class="py-5 text-center">
         <h2>상품 등록 화면</h2>
       </div>
@@ -53,10 +70,14 @@
           <p class="fieldError" th:if="${#fields.hasErrors('itemStock')}" th:errors="*{itemStock}">Incorrect stock</p>
         </div>
         <hr>
-        <button type="submit" onclick="emptyImg()" class="btn btn-primary">작성완료</button>
+        <div class="button-container">
+          <div class="button">
+            <button type="submit" onclick="emptyImg()" class="btn btn-primary">작성완료</button>
+          </div>
+        </div>
       </form>
+      <div class="margin-common"></div>
     </div>
-    <br/>
     <div th:replace="fragments/footer :: footerFragment"/>
   </body>
 </html>
