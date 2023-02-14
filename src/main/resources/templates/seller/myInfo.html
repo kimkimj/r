@@ -1,14 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: headerFragment"/>
-  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-  <title>마이 페이지</title>
+   <title>마이 페이지</title>
 </head>
   <style>
 
-    .wrapper {
+    .wrapper{
       margin: auto;
       margin-left: 35%;
       width: 45%;
@@ -20,6 +16,7 @@
       width: 450px;
     }
 
+
     .button-container {
       margin-top: 50px;
       height: 50px;
@@ -30,14 +27,32 @@
       margin-left: auto;
       margin-right: auto;
     }
+
+    .btn {
+      color: #625d55;
+      background-color: white;
+      border-color: #625d55;
+      font-weight: bold;
+    }
+
+    .btn:hover, .btn:active, .btn:visited {
+      border-color: #DBD0C0 !important;
+      outline-color: #DBD0C0 !important;
+      background-color: #DBD0C0 !important;
+      color: black;
+    }
+
   </style>
   <body>
     <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
       <div class="container">
+        <div class="margin-common"></div>
+        <div style="text-align: center;">
+          <h3>|&nbsp;&nbsp;&nbsp;판매자 정보&nbsp;&nbsp;&nbsp;|</h3>
+        </div>
         <div class="wrapper">
-
           <div class="container_etc mt-5" style="width: 460px">
-            <h2>판매자 정보</h2> <br>
+            <div class="margin-my"></div>
             <form role="form" th:object="${seller}" method="get">
               <div class="mb-3">
                 <table class="table table-borderless">
@@ -79,12 +94,12 @@
               </div>
               <div class="button-container">
                 <div class="button">
-                  <button type="button" th:onclick="|location.href='@{/seller/my/update}'|" class="btn btn-outline-primary">판매자 정보 수정하기</button>
+                  <button type="button" th:onclick="|location.href='@{/seller/my/update}'|" class="btn">판매자 정보 수정하기</button>
                 </div>
               </div>
             </form>
             </div>
-        </div>
+          </div>
       </div>
     </div>
     <div th:replace="fragments/footer :: footerFragment"/>
