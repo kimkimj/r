@@ -103,6 +103,8 @@
                     <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
                         <h5>레시피 재료</h5>
                         <hr>
+                        <p>기존의 재료부터 삭제 후 등록 하거나 혹은 전체삭제 후 등록 해주세요</p>
+                        <hr>
                         <!-- 선택한 재료들이 보이는 부분 -->
                         <td th:if="${recipeUpdateReqDto.getItems().size() == 0}">등록된 재료가 없습니다.</td>
                         <th:block th:unless="${recipeUpdateReqDto.getItems().size() == 0}"
