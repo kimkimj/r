@@ -9,7 +9,7 @@ import com.woowahan.recipe.domain.dto.sellerDto.*;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.service.ItemService;
 import com.woowahan.recipe.service.RecipeService;
-import com.woowahan.recipe.service.S3Uploader;
+import com.woowahan.recipe.service.S3UploadService;
 import com.woowahan.recipe.service.SellerService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,7 +46,9 @@ public class SellerController {
     private final SellerService sellerService;
     private final ItemService itemService;
     private final RecipeService recipeService;
-    private final S3Uploader s3Uploader;
+//    private final S3Uploader s3Uploader;
+
+    private final S3UploadService s3UploadService;
 
     // 판매자 홈페이지
     @GetMapping("/sellerIndex")
@@ -273,9 +275,27 @@ public class SellerController {
         return "seller/itemCreateForm";
     }
 
+//    @PostMapping("/seller/items/create")
+//    public String create(@Valid @ModelAttribute ItemCreateReqDto reqDto, BindingResult bindingResult,
+//                         @RequestPart MultipartFile multipartFile,
+//                         RedirectAttributes redirectAttributes, Authentication authentication) throws IOException {
+//
+//        if (bindingResult.hasErrors()) {
+//            log.info("bindingResult = {}", bindingResult);
+//            return "seller/itemCreateForm";
+//        }
+//
+//        String imgPath = s3Uploader.upload(multipartFile, "item-image");
+//        reqDto.setItemImagePath(imgPath);
+//        ItemCreateResDto resDto = itemService.createItem(reqDto, authentication.getName());
+//        redirectAttributes.addAttribute("id", resDto.getId());
+//
+//        log.info("img주소확인 : {}", imgPath);
+//        return "redirect:/seller/items/{id}";
+//    }
     @PostMapping("/seller/items/create")
     public String create(@Valid @ModelAttribute ItemCreateReqDto reqDto, BindingResult bindingResult,
-                         @RequestPart MultipartFile multipartFile,
+                         @RequestParam MultipartFile multipartFile,
                          RedirectAttributes redirectAttributes, Authentication authentication) throws IOException {
 
         if (bindingResult.hasErrors()) {
@@ -283,7 +303,8 @@ public class SellerController {
             return "seller/itemCreateForm";
         }
 
-        String imgPath = s3Uploader.upload(multipartFile, "item-image");
+//        String imgPath = s3Uploader.upload(multipartFile, "item-image");
+        String imgPath = s3UploadService.saveUploadFile(multipartFile, "item-image");
         reqDto.setItemImagePath(imgPath);
         ItemCreateResDto resDto = itemService.createItem(reqDto, authentication.getName());
         redirectAttributes.addAttribute("id", resDto.getId());
@@ -312,7 +333,8 @@ public class SellerController {
             log.info("bindingResult = {}", bindingResult);
             return "seller/itemUpdateForm";
         }
-        String imgPath = s3Uploader.upload(multipartFile, "item-image");
+//        String imgPath = s3Uploader.upload(multipartFile, "item-image");
+        String imgPath = s3UploadService.saveUploadFile(multipartFile, "item-image");
         reqDto.setItemImagePath(imgPath);
 
         ItemUpdateResDto resDto = itemService.updateItem(id, reqDto, authentication.getName());
