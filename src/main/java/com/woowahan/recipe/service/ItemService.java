@@ -10,9 +10,7 @@ import com.woowahan.recipe.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -45,7 +43,6 @@ public class ItemService {
 
     // 특정 판매자의 재료 전체 조회
     public Page<ItemListResDto> findAllBySeller(String sellerName, Pageable pageable) {
-        pageable = PageRequest.of(0, 20, Sort.by("createdDate").descending());
         // seller가 존재하는지 확인
         SellerEntity seller = sellerRepository.findBySellerName(sellerName)
                 .orElseThrow(() -> new AppException(ErrorCode.SELLER_NOT_FOUND, ErrorCode.SELLER_NOT_FOUND.getMessage()));

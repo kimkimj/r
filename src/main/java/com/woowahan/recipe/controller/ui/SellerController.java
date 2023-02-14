@@ -158,24 +158,47 @@ public class SellerController {
        return "redirect:/seller/my";
     }
 
-    // 내 상품 리스트
-    @GetMapping("/seller/my/items")
-    public String myItems(Model model, Authentication authentication,
-                            @PageableDefault(size = 5) Pageable pageable) {
-        Page<ItemListResDto> itemList = itemService.findAllBySeller(authentication.getName(), pageable);
 
-        int nowPage = itemList.getPageable().getPageNumber() + 1;
+    // 레시피 페이징 중복 코드 정리
+    private String paging(Model model, Page<RecipePageResDto> allRecipes) {
+        int nowPage = allRecipes.getPageable().getPageNumber() + 1;
         int startPage = Math.max(nowPage - 4, 1);
-        int endPage = Math.min(nowPage + 5, itemList.getTotalPages());
-        int lastPage = itemList.getTotalPages();
+        int endPage = Math.min(nowPage + 5, allRecipes.getTotalPages());
+        int lastPage = allRecipes.getTotalPages();
 
-        model.addAttribute("myItemList", itemList);
+        model.addAttribute("allRecipes", allRecipes);
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("lastPage", lastPage);
+        return "seller/recipeList";
+    }
 
+    /**
+     * 내 상품 전체보기 paging
+     */
+    private String pagingItems(Model model, Page<ItemListResDto> items) {
+        int nowPage = items.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4, 1);
+        int endPage = Math.min(nowPage + 5, items.getTotalPages());
+        int lastPage = items.getTotalPages();
+
+        model.addAttribute("myItemList", items);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("lastPage", lastPage);
         return "seller/myItems";
+    }
+    /**
+     * 내 상품 전체 조회
+     */
+    @GetMapping("/seller/my/items")
+    public String myItems(Model model, Authentication authentication,
+                          @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        Page<ItemListResDto> items = itemService.findAllBySeller(authentication.getName(), pageable);
+        return pagingItems(model, items);
     }
 
     // 레시피 단건 조회
@@ -204,21 +227,6 @@ public class SellerController {
         Page<RecipePageResDto> allRecipes = recipeService.findAllRecipes(pageable);
 
         return paging(model, allRecipes);
-    }
-
-    // 레시피 페이징 중복 코드 정리
-    private String paging(Model model, Page<RecipePageResDto> allRecipes) {
-        int nowPage = allRecipes.getPageable().getPageNumber() + 1;
-        int startPage = Math.max(nowPage - 4, 1);
-        int endPage = Math.min(nowPage + 5, allRecipes.getTotalPages());
-        int lastPage = allRecipes.getTotalPages();
-
-        model.addAttribute("allRecipes", allRecipes);
-        model.addAttribute("nowPage", nowPage);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        model.addAttribute("lastPage", lastPage);
-        return "seller/recipeList";
     }
 
     //재료 검색
