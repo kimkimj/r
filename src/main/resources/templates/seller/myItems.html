@@ -7,16 +7,18 @@
 
         /* 테이블 tr 색상 */
         .tr-hover:hover {
-            background-color: #E3F4EA;
+            background-color: #f7f2ebf0;
         }
 
     </style>
     <body>
         <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
         <div class="container">
-            <!-- 상단 메뉴바 -->
             <div th:replace="fragments/mySellerPageNav :: mySellerPageNav"/>
-            <h2 class="py-5 text-center">내 상품</h2>
+            <div class="margin-common"></div>
+            <div style="text-align: center;">
+                <h3>|&nbsp;&nbsp;&nbsp;내 상품&nbsp;&nbsp;&nbsp;|</h3>
+            </div>
             <div class="margin-my"></div>
             <span th:if="${myItemList.getTotalElements()} < 1">판매중인 상품이 없습니다.</span>
             <span th:if="${myItemList.getTotalElements()} >= 1"><b>총 상품 개수: [[${myItemList.getTotalElements()}]]</b></span>

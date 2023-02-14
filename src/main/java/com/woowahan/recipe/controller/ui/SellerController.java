@@ -199,7 +199,7 @@ public class SellerController {
         Page<ItemListResDto> items = itemService.findAllBySeller(authentication.getName(), pageable);
         return pagingItems(model, items);
     }
-
+    /*
     // 레시피 단건 조회
     @GetMapping("/seller/recipes/{recipeId}")
     public String findRecipe(@PathVariable Long recipeId, Model model) {
@@ -249,7 +249,7 @@ public class SellerController {
 
     /**
      * seller - 상품 상세조회
-     */
+
     @GetMapping("/seller/items/{id}")
     public String findSellerForm(Model model, @PathVariable Long id) {
         ItemDetailResDto resDto = itemService.findItem(id);
@@ -258,7 +258,7 @@ public class SellerController {
         model.addAttribute("resDto", resDto); // -> sellerName도 들어있음
         model.addAttribute("cartItemReq", new CartItemReq(id, 1));
         return "seller/itemFindForm";
-    }
+    }*/
 
     /**
      * 상품 등록
