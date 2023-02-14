@@ -95,9 +95,11 @@
             <a onclick="location.href='findForm.html'"
                th:onclick="|location.href='@{/items/{id}(id=${item.getId})}'|"
                style="border: white">
-              <img style="width: 215px; height: 215px; object-fit: cover; align-content: center; border-radius: 5%; border: 1px solid lightgrey;"
-                    th:src="${item.itemImagePath}" alt="이미지 준비중입니다."
-                    th:onerror="this.src='https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/noimage.gif'">
+              <img th:src="${item.itemImagePath}" class="card-img-top" alt="..." th:if="${item.itemImagePath != null}">
+
+<!--              <img style="width: 215px; height: 215px; object-fit: cover; align-content: center; border-radius: 5%; border: 1px solid lightgrey;"-->
+<!--                    th:src="${item.itemImagePath}" alt="이미지 준비중입니다."-->
+<!--                    th:onerror="this.src='https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/noimage.gif'">-->
               <!--상품 이름 & 상품 가격-->
               <div class="card-body">
                 <p class="card-title" th:text="${item.getItemName()}">상품 이름</p>
