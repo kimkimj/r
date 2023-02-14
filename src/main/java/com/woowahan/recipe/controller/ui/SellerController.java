@@ -91,7 +91,7 @@ public class SellerController {
             cookieGenerator.setCookieMaxAge(60 * 60 * 2);
 
         } catch (AppException e) {
-            return "user/loginForm";
+            return "seller/loginForm";
         }
 
         return "redirect:/sellerIndex";

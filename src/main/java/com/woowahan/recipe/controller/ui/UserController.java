@@ -89,16 +89,12 @@ public class UserController {
         }
 
         try {
-            log.info("bbb");
             String token = userService.login(userLoginReqDto.getUserName(), userLoginReqDto.getPassword());
             CookieGenerator cookieGenerator = new CookieGenerator();
-            log.info("makeCookie={}", cookieGenerator.getCookieName());
             cookieGenerator.setCookieName("token");
-            log.info("makeCookie.name={}", cookieGenerator.getCookieName());
             cookieGenerator.setCookieHttpOnly(true);
             cookieGenerator.addCookie(response, token);
             cookieGenerator.setCookieMaxAge(60 * 60 * 2);
-            log.info("controller token={}", cookieGenerator.getCookieName());
 
         } catch (AppException e) {
             return "user/loginForm";
