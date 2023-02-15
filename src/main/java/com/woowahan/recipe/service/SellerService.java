@@ -97,12 +97,6 @@ public class SellerService {
         // seller가 존재하는지 확인
         SellerEntity seller = validateSeller(sellerName);
 
-        /*
-        // 본인이거나 ADMIN이 아니면 에러
-        if (!sellerName.equals(seller.getSellerName()) && seller.getUserRole() != UserRole.ADMIN) {
-            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
-        }*/
-
         // request로 받은 sellerName과 저장되어 있는 sellerName과 다르다면 중복체크를 한다
         if (!sellerUpdateRequest.getSellerName().equals(seller.getSellerName())) {
             sellerRepository.findBySellerName(sellerUpdateRequest.getSellerName())

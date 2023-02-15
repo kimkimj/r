@@ -67,10 +67,6 @@
               deliveryCost: totalCost >= 50000 ? 0 : 3000,
               totalCost: totalCost
           }
-          console.log(orderCreateReqDto.itemId)
-          console.log(orderCreateReqDto.count)
-          console.log(orderCreateReqDto.deliveryCost)
-          console.log(orderCreateReqDto.totalCost)
           sessionStorage.setItem("orderCreateReqDto", JSON.stringify(orderCreateReqDto));
           window.location.href = "/items/" + [[${id}]] + "/order"
       }
@@ -85,8 +81,6 @@
   </div>
 
   <div class="container" style="border: 1px solid white">
-  <!--  <div th:if="${resDto.getSellerName() == #authentication.getPrincipal()}">-->
-  <!--  </div>-->
     <div class="margin-common"></div>
     <div style="text-align: center;">
       <h3>|&nbsp;&nbsp;&nbsp;OUR INGREDIENTS&nbsp;&nbsp;&nbsp;|</h3>
