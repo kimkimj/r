@@ -22,25 +22,6 @@
         height: 40px;
     }
 
-    .button-container {
-        margin-top: 50px;
-        height: 50px;
-        text-align: center;
-    }
-
-    .btn {
-        color: #625d55;
-        background-color: white;
-        border-color: #625d55;
-        font-weight: bold;
-    }
-
-    .btn:hover, .btn:active, .btn:visited {
-        border-color: #DBD0C0 !important;
-        outline-color: #DBD0C0 !important;
-        background-color: #DBD0C0 !important;
-        color: black;
-    }
 </style>
 <body>
 <!-- Bootstrap Bundle with Popper -->
@@ -48,19 +29,20 @@
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
 
-<!-- 섹션의 전체 틀 div -->
-<div class="recipe-wapper">
-    <!-- bodyHeader -->
-    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-    <div class="container"><br>
-        <div class="margin-my"></div>
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+    <br>
+    <div class="container">
+        <div class="margin-20"></div>
         <!-- 상단 메뉴바 -->
         <div th:replace="fragments/myPageNav :: myPageFragment"/>
-        <div class="margin-my"></div>
-        <br><br>
-        <div>
+        <div class="margin-20"></div>
+        <div style="text-align: center;">
+            <h3>|&nbsp;&nbsp;&nbsp;주문 정보&nbsp;&nbsp;&nbsp;|</h3>
+        </div>
+        <div class="margin-20"></div>
+        <div style="float: right;">
             <form th:object="${orderSearch}" class="form-inline d-flex">
-                <div class="form-group mx-sm-1 mb-2 ">
+                <div class="form-group mx-sm-1 mb-2">
                     <select th:field="*{orderStatus}" class="form-control">
                         <option value="">주문상태</option>
                         <option th:each="status : ${T(com.woowahan.recipe.domain.OrderStatus).values()}"
@@ -87,7 +69,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="order : ${orderList}">
+            <tr class="tr-hover" th:each="order : ${orderList}">
                 <td><a th:href="@{/orders/{orderNum}(orderNum=${order.getOrderNum})}" th:utext="${order.orderNum}"></a>
                 </td>
                 <td th:text="${order.username}"/>
@@ -99,6 +81,7 @@
             </tbody>
         </table>
     </div>
+    <div class="margin-20"></div>
     <th:block th:if="${orderList.totalElements > 0}">
         <!-- pagination -->
         <div class="py-3 my-4">
@@ -106,7 +89,7 @@
                 <ul class="pagination justify-content-center">
                     <!-- 이전 버튼 시작 -->
                     <li class="page-item" th:classappend="${!orderList.hasPrevious} ? 'disabled'">
-                        <a class="page-link" th:href="@{/orders/my(page = ${nowPage - 2})}">Previous</a>
+                        <a class="page-link" th:href="@{/orders/my(page = ${nowPage - 2})}">&nbsp;<&nbsp;</a>
                     </li>
                     <!-- 이전 버튼 끝 -->
 
@@ -116,13 +99,13 @@
                                                                             th:href="@{/orders/my(page = ${page - 1})}"
                                                                             th:text="${page}">1</a></li>
                         <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}"
-                                                                                 style="color: #93bf85;"></strong></li>
+                                                                                 style="background-color: #DBD0C0"></strong></li>
                     </th:block>
                     <!-- 페이지 번호 버튼 끝 -->
 
                     <!-- 다음 버튼 시작 -->
                     <li class="page-item" th:classappend="${!orderList.hasNext} ? 'disabled'">
-                        <a class="page-link" th:href="@{/orders/my(page = ${nowPage})}">Next</a>
+                        <a class="page-link" th:href="@{/orders/my(page = ${nowPage})}">&nbsp;>&nbsp;</a>
                     </li>
                     <!-- 다음 버튼 끝 -->
                 </ul>
@@ -134,12 +117,8 @@
             현재 주문 내역이 없습니다.
         </div>
     </th:block>
-    <div class="margin-my"></div>
-    <div class="margin-my"></div>
-    <div class="margin-my"></div>
-    <br>
-    <!-- footer -->
-    <div th:replace="fragments/footer :: footerFragment"/>
+<div class="margin-my"></div>
 </div>
+<div th:replace="fragments/footer :: footerFragment"/>
 </body>
 </html>
