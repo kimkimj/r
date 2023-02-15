@@ -84,7 +84,6 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     function cancel() {
-        console.log('실행');
         if ([[${order.orderStatus}]] == 'CANCEL') {
             alert('이미 취소된 주문입니다.');
             return false;
@@ -99,7 +98,6 @@
                 totalCost: document.getElementById('sum').innerText,
                 orderId: [[${order.id}]],
             };
-            console.log([[${order.id}]]);
 
             cancelPayment(data);
 
@@ -119,11 +117,8 @@
                             location.replace("/orders/" + [[${order.orderNum}]])
                         })
                 }).fail(function (result) {
-                    console.log(result);
                     var responseText = result.responseText;
-                    console.log(responseText);
                     var message = responseText.split('\"')[13];
-                    console.log(message);
                     alert(message);
                     location.replace("/orders/" + [[${order.id}]])
                 });

@@ -100,9 +100,6 @@
                 var itemCount = orderCreateReqDto.count;
                 var totalPrice = orderCreateReqDto.totalCost;
                 var deliveryCost = orderCreateReqDto.deliveryCost;
-                console.log(typeof itemCount);
-                console.log(typeof totalPrice);
-                console.log(typeof (deliveryCost + totalPrice));
                 document.getElementById("cnt").innerText = itemCount;
                 document.getElementById("cost").innerText = totalPrice;
                 document.getElementById("delivery").innerText = deliveryCost;
@@ -121,15 +118,6 @@
                         itemId: [[${item.itemId}]],
                         count: itemCount
                     }
-                    console.log(orderCreateReqDto.count)
-                    console.log(data.itemName);
-                    console.log(data.orderNum);
-                    console.log(orderCreateReqDto.count);
-                    console.log([[${userResponse.name}]]);
-                    console.log([[${userResponse.phoneNum}]]);
-                    console.log([[${userResponse.email}]]);
-                    console.log([[${userResponse.address}]]);
-
                     paymentCard(data);
                 }
 
@@ -151,7 +139,6 @@
                     }, function (rsp) { // callback
                         if (rsp.success) {
                             // 결제 성공 시 로직,
-                            console.log(rsp.imp_uid);
                             data.imp_uid = rsp.imp_uid; // 고유 ID
                             data.merchant_uid = rsp.merchant_uid; // 거래 ID
                             // 결제 성공 시 검증 로직
@@ -159,7 +146,6 @@
                             paymentComplete(data);
                         } else {
                             var msg = '결제에 실패하였습니다';
-                            console.log(rsp.error_msg);
                             msg += '\n 에러 내용 : ' + rsp.error_msg;
                             alert(msg);
                         }
@@ -184,7 +170,6 @@
                     }).fail(function (result) {
                         var responseText = result.responseText;
                         var message = responseText.split('\"')[13];
-                        console.log(message);
                         alert(message);
 
                         location.replace("/items/" + [[${item.itemId}]] + "/order")

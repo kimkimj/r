@@ -159,7 +159,7 @@ public class RecipeRestController {
      * 장바구니에 재료 담기
      */
     @PostMapping("/carts")
-    public Response<String> addCartItemList(@RequestBody List<CartItemReq> cartItemReqList, Authentication authentication) {
+    public Response<String> addCartItemList(@RequestBody List<CartItemReq> cartItemReqList, Model model, Authentication authentication) throws IOException {
         cartService.addCartItemList(cartItemReqList, authentication.getName());
         return Response.success("장바구니에 상품이 담겼습니다. \n장바구니로 이동하시겠습니까?");
     }

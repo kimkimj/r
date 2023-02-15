@@ -39,11 +39,6 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
     Page<RecipeEntity> findRecipeEntitiesByUser(UserEntity user, Pageable pageable);
     Optional<List<RecipeEntity>> findByUser(UserEntity user);
 
-//    // 레시피 검색
-//    @Query(value = "SELECT re FROM RecipeEntity re WHERE re.recipeTitle LIKE %:recipeTitle%",
-//           countQuery = "SELECT COUNT(re.id) FROM RecipeEntity re WHERE re.recipeTitle LIKE %:recipeTitle%")
-//    Page<RecipeEntity> findAllSearch(String recipeTitle, Pageable pageable);
-
     Page<RecipeEntity> findByRecipeTitleContaining(String recipeTitle, Pageable pageable);
     void deleteByUser(UserEntity user);
 }
