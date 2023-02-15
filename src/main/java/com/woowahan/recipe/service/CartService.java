@@ -47,9 +47,7 @@ public class CartService {
 
         CartEntity cart = validateCart(user);
 
-        log.info("cart : {}" , cart.getId());
         Page<CartItemResponse> cartItemPage = cartItemRepository.findByCart(cart, pageable).map(CartItemResponse::from);
-        log.info("cart : {}" , cart.getId());
         for (CartItemResponse cartItem : cartItemPage.getContent()) {
             System.out.println(cartItem.getId());
         }
@@ -165,15 +163,10 @@ public class CartService {
         CartEntity cart = validateCart(user);
 
         for (CheckOrderItemDto dto : checkOrderItemDtoList) {
-            log.info("cartItemEntity 검증");
             CartItemEntity cartItem = validateCartItem(cart, dto.getId());
             boolean dtoCheck = dto.getIsChecked().equals("true")?true:false;
             if(cartItem.isChecked() != dtoCheck) {
-                log.info("cartItemEntity 바꾸기");
-                log.info("cartItem.isChecked : {}", cartItem.isChecked());
-                log.info("dto.isChecked : {}", dtoCheck);
                 cartItem.updateCheckItem();
-                log.info("변경된 cartItem.isChecked : {}", cartItem.isChecked());
             }
         }
     }

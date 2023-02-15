@@ -34,36 +34,6 @@ class CartRestControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    /*@Nested
-    @DisplayName("장바구니 조회 테스트")
-    class findCartList {
-
-        @Test
-        @DisplayName("로그인하지 않은 회원이 접근한 경우")
-        @WithAnonymousUser
-        void notLogin() throws Exception {
-            mockMvc.perform(get("/api/v1/carts")
-                    .with(csrf()))
-                    .andDo(print())
-                    .andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @DisplayName("장바구니 조회 성공")
-        void findCartList() throws Exception {
-            String userName = TestInfoFixture.get().getUserName();;
-
-            mockMvc.perform(get("/api/v1/carts")
-                            .param("page", "0")
-                            .param("size", "10")
-                            .param("sort", "itemName, desc")
-                            .with(csrf()))
-                            .andDo(print())
-                            .andExpect(status().isOk());
-
-        }
-    }*/
-
     @Nested
     @DisplayName("장바구니 아이템 등록 테스트")
     class createCartItemTest {

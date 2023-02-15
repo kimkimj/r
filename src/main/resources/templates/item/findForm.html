@@ -110,10 +110,6 @@
             cartItemCnt: $('#cartItemCnt').val()
         }
 
-        console.log(cartItemReq.cartItemId);
-        console.log(cartItemReq.cartItemCnt);
-        console.log(typeof cartItemReq.cartItemId);
-        console.log(typeof cartItemReq.cartItemCnt);
 
         $.ajax({
             url: "/api/v1/carts",
@@ -134,7 +130,6 @@
                 alert('재고가 부족하여 상품을 장바구니에 담지 못했습니다.');
             }
         }).always(() => {
-            console.log("장바구니 담기 호출 완료");
         })
     }
 
@@ -149,10 +144,6 @@
             deliveryCost: totalCost >= 50000 ? 0 : 3000,
             totalCost: totalCost
         }
-        console.log(orderCreateReqDto.itemId)
-        console.log(orderCreateReqDto.count)
-        console.log(orderCreateReqDto.deliveryCost)
-        console.log(orderCreateReqDto.totalCost)
         sessionStorage.setItem("orderCreateReqDto", JSON.stringify(orderCreateReqDto));
         window.location.href = "/items/" + [[${id}]] + "/order"
     }

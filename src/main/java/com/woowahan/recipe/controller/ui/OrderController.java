@@ -40,9 +40,6 @@ public class OrderController {
     public String orderForm(@PathVariable Long id, Model model, @ModelAttribute OrderCreateReqDto orderCreateReqDto, Authentication authentication) {
         UserResponse userResponse = findService.findUserName(authentication.getName());
         ItemDetailResDto item = findService.findItemName(id);
-        log.info("totalCost={}", orderCreateReqDto.getTotalCost());
-        log.info("deliveryCost={}", orderCreateReqDto.getDeliveryCost());
-        log.info("itemName={}", item.getItemName());
 
         model.addAttribute("item", item);
         model.addAttribute("userResponse", userResponse);
@@ -83,10 +80,8 @@ public class OrderController {
 
     @GetMapping("/orders/{orderNum}")
     public String findOrder(@PathVariable String orderNum, Model model, Authentication authentication) {
-        log.info("orderNum={}", orderNum);
         UserResponse user = findService.findUserName(authentication.getName());
         OrderInfoResponse order = orderService.findOrderByOrderNum(authentication.getName(), orderNum);
-        log.info("controller.id={}", order.getId());
 
         model.addAttribute("user", user);
         model.addAttribute("order", order);

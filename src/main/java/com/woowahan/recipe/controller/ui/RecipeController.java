@@ -39,7 +39,6 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final FindService findService;
     private final ReviewService reviewService;
-//    private final CartService cartService;
     private final S3UploadService s3UploadService;
 
     @GetMapping("/create")
@@ -237,17 +236,8 @@ public class RecipeController {
         return "redirect:/recipes/{recipeId}";
     }
 
-    /*@PostMapping("/cart/{recipeId}")
-    public String addCartItemList(@PathVariable Long recipeId, @ModelAttribute CartItemListReqDto cartItemListReqDto,
-                              Authentication authentication) {
-        cartService.addCartItemList(cartItemListReqDto, authentication.getName());
-
-        return "redirect:/recipes/{recipeId}";
-    }*/
-
     @GetMapping("/{recipeId}")
     public String findRecipe(@PathVariable Long recipeId, Model model) {
-        log.info("삭제 시도");
         recipeService.updateView(recipeId); // 조회수 증가
         RecipeFindResDto recipe = recipeService.findRecipe(recipeId);
         model.addAttribute("reviewCreateRequest", new ReviewCreateRequest());

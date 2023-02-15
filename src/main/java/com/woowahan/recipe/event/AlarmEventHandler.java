@@ -17,9 +17,6 @@ public class AlarmEventHandler {
     @EventListener
     @Async
     public void createAlarm(AlarmEvent e) {
-        log.info("alarm 발생 : type={}", e.getAlarm().getAlarmType());
         alarmRepository.save(e.getAlarm());
-        log.info("Thread : {}", Thread.currentThread().toString());
-        log.info("alarm 생성 완료");
     }
 }

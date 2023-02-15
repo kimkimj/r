@@ -58,9 +58,7 @@ public class PaymentService {
 
         Gson gson = new Gson();
         String response = gson.fromJson(br.readLine(), Map.class).get("response").toString();
-        log.info("gson.response={}", response);
         String token = gson.fromJson(response, Map.class).get("access_token").toString();
-        log.info("gson.token={}", token);
         br.close();
         conn.disconnect();
 
@@ -69,7 +67,6 @@ public class PaymentService {
 
     public int paymentInfo(String imp_Uid, String token) throws IOException {
         HttpsURLConnection conn = null;
-        log.info("imp_Uid={}", imp_Uid);
 
         URL url = new URL("https://api.iamport.kr/payments/" + imp_Uid);
 
@@ -92,11 +89,6 @@ public class PaymentService {
     }
 
     public void paymentCancel(String token, String imp_Uid, int amount, String reason) throws IOException {
-        log.info("paymentService 결제취소");
-        log.info("paymentService token={}", token);
-        log.info("imp_uid={}", imp_Uid);
-        log.info("amount={}", amount);
-        log.info("reason={}", reason);
 
         HttpsURLConnection conn = null;
         URL url = new URL("https://api.iamport.kr/payments/cancel");
