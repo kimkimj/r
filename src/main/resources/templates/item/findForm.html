@@ -104,6 +104,40 @@
       resultCntElement.value = number;
     }
 
+    function addCartItem() {
+        const cartItemReq = {
+            cartItemId: $('#itemId').val(),
+            cartItemCnt: $('#cartItemCnt').val()
+        }
+
+        console.log(cartItemReq.cartItemId);
+        console.log(cartItemReq.cartItemCnt);
+        console.log(typeof cartItemReq.cartItemId);
+        console.log(typeof cartItemReq.cartItemCnt);
+
+        $.ajax({
+            url: "/api/v1/carts",
+            method: "POST",
+            dataType: "json",
+            contentType: 'application/json',
+            data: JSON.stringify(cartItemReq),
+        }).done((data) => {
+            if(data.resultCode != null && data.resultCode === 'SUCCESS'){
+                var answer = confirm(data.result);
+                if(answer) {
+                    location.href = "/carts";
+                }
+            }
+        }).fail((error) => {
+            var error = error.responseJSON.result;
+            if(error === 'NOT_ENOUGH_STOCK, 재고 수량이 없습니다') {
+                alert('재고가 부족하여 상품을 장바구니에 담지 못했습니다.');
+            }
+        }).always(() => {
+            console.log("장바구니 담기 호출 완료");
+        })
+    }
+
     /**
      * 바로 구매
      */
@@ -123,10 +157,6 @@
         window.location.href = "/items/" + [[${id}]] + "/order"
     }
 
-    function cart(){
-      alert('장바구니에 상품이 담겼습니다.');
-
-    }
 
 </script>
 <div sec:authorize="!hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
@@ -146,7 +176,7 @@
     <div class="col" style="padding-top:30px; text-align: center;">
       <div th:align="center">
         <img th:src="${resDto.getItemImagePath()}"
-             th:onerror="this.src='https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/item-image/3731374c-70de-4ea3-b1c6-55972bd18c40.png'">
+             th:onerror="this.src='https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/item-image/3731374c-70de-4ea3-b1c6-55972bd18c40.png'" />
       </div>
     </div>
     <div class="col" style="padding:30px; width: 300px; height: 300px;">
@@ -159,7 +189,7 @@
       <input type="hidden" id="itemPrice" th:value="${resDto.getItemPrice()}"/>
       <input type="hidden" id="itemStock" th:value="${resDto.getItemStock()}"/>
       <input type="hidden" id="itemId" th:value="${resDto.getItemId()}"/>
-      <form sec:authorize="isAuthenticated()" role="form" th:action="@{/items/cart}" th:object="${cartItemReq}" method="post" onsubmit="cart();">
+      <form sec:authorize="isAuthenticated()" role="form" th:action="@{/items/cart}" th:object="${cartItemReq}">
         <input type="hidden" th:field="${cartItemReq.cartItemId}"/>
         <div class="back-ground">
           <!--장바구니 수량 버튼-->
@@ -176,8 +206,10 @@
           <input style="width: 100px; float: right;" class="btn btn-sm"
                  onclick="location.href='findAllForm.html'"
                  th:onclick="|location.href='@{/items}'|" type="button" value="목록으로"/>
-          <input type="submit" value="장바구니" class="btn btn-sm" style="width: 100px; float: right;"/>
+
+          <input type="submit" value="장바구니" class="btn btn-sm" style="width: 100px; float: right;" onclick="addCartItem()"/>
           <input type="button" value="바로구매" class="btn btn-sm" style="width: 100px; float: right;" onclick='order()'/>
+
         </div>
       </form>
 
