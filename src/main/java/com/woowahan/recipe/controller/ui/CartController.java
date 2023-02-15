@@ -30,7 +30,6 @@ public class CartController {
 
     @GetMapping("/order")
     public String orderForm(Model model, @ModelAttribute CartOrderListDto orderDto, Authentication authentication) {
-        System.out.println("들어왔습니다.");
         UserResponse userResponse = findService.findUserName(authentication.getName());
         CartOrderListDto cartOrderListDto = cartService.findCartItemOrder(authentication.getName(), orderDto.getImp_uid());
         List<CartOrderDto> cartOrderDtoList = cartOrderListDto.getCartOrderList();

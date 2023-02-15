@@ -57,8 +57,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         String userName = jwtTokenUtils.getUserName(token, secretKey);
         UserResponse user = findService.findUserName(userName);
-        System.out.println(user.getUserName());
-        System.out.println(user.getUserRole());
 
         // 통과
         UsernamePasswordAuthenticationToken authenticationToken =
