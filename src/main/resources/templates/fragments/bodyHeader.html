@@ -15,15 +15,15 @@
         <nav>
             <div class="container d-flex flex-wrap" >
                 <ul class="nav me-auto">
-                    <li class="nav-item"><a href="/" class="nav-link link-dark px-2 active" aria-current="page">Home</a></li>
-                    <li class="nav-item"><a href="/recipes/list" class="nav-link link-dark px-2">레시피</a></li>
-                    <li class="nav-item"><a href="/items" class="nav-link link-dark px-2">재료</a></li>
+                    <li class="nav-item"><a href="/" class="nav-link link-dark px-2 active ui-visual-focus" aria-current="page">Home</a></li>
+                    <li class="nav-item"><a href="/recipes/list" class="nav-link px-2">레시피</a></li>
+                    <li class="nav-item"><a href="/items" class="nav-link px-2">재료</a></li>
 <!--                    <li class="nav-item"><a href="#" class="nav-link link-dark px-2" onclick="alert('해당 서비스는 아직 준비중입니다.')">FAQs</a></li>-->
                 </ul>
-                <ul class="nav me-auto justify-content-end">
+                <ul class="nav ml-auto me-3">
                     <!--비로그인도 가능-->
-                    <li class="nav-item" sec:authorize="isAnonymous()"><a href="/login" class="nav-link link-dark px-2">Login</a></li>
-                    <li class="nav-item" sec:authorize="isAnonymous()"><a href="/join" class="nav-link link-dark px-2">Sign up</a></li>
+                    <li class="nav-item" sec:authorize="isAnonymous()"><a href="/login" class="nav-link px-2">Login</a></li>
+                    <li class="nav-item" sec:authorize="isAnonymous()"><a href="/join" class="nav-link px-2">Sign up</a></li>
                     <!--로그인만 가능-->
                     <li class="nav-item dropdown" sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_HEAD')">
                         <a class="nav-link dropdown-toggle" href="/users/my" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
