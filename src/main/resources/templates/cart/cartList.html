@@ -2,7 +2,6 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{cartMain}">
-<!--<head th:replace="fragments/header :: headerFragment"/>-->
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 <div class="container" layout:fragment="cartMain">
@@ -11,10 +10,6 @@
         <h3>|&nbsp;&nbsp;&nbsp;CART&nbsp;&nbsp;&nbsp;|</h3>
     </div>
     <div class="margin-my"></div>
-<!--    <div class="border-bottom p-2 my-3">
-        <h2>장바구니 페이지</h2>
-        <div>진행상황 띄우기</div>
-    </div>-->
     <div style="margin-bottom: 20px;">
         <table class="table cart-table text-center align-middle">
             <thead>

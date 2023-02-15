@@ -56,12 +56,7 @@ public class UserService {
 
         return new UserJoinResDto(savedUser.getUserName(), String.format("%s님의 회원가입이 완료되었습니다.", savedUser.getUserName()));
 
-        // 위 코드 다른 로직
-        /*UserJoinResDto dto = userRepository.save(userJoinReqDto.toEntity(
-                encoder.encode(userJoinReqDto.getPassword()))) // userEntity 객체 (이미 정보를 담고있다)
-                .toUserJoinResDto("님의 회원가입이 완료되었습니다.");
 
-        return dto;*/
     }
 
     public String login(String userName, String password) {

@@ -185,55 +185,6 @@ public class SellerController {
         Page<ItemListResDto> items = itemService.findAllBySeller(authentication.getName(), pageable);
         return pagingItems(model, items);
     }
-    /*
-    // 레시피 단건 조회
-    @GetMapping("/seller/recipes/{recipeId}")
-    public String findRecipe(@PathVariable Long recipeId, Model model) {
-        log.info("단건 조회");
-        RecipeFindResDto recipe = recipeService.findRecipe(recipeId);
-        model.addAttribute("recipe", recipe);
-        model.addAttribute("recipeId", recipeId);
-        model.addAttribute("recipe", recipe);
-        return "seller/recipeDetailList";
-    }
-
-    // 레시피 검색
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @GetMapping("/seller/recipes/search")
-    public String search(Model model, @ModelAttribute RecipeSearchReqDto recipeSearchReqDto, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<RecipePageResDto> allRecipes = recipeService.searchRecipes(recipeSearchReqDto.getKeyword(), pageable);
-
-        return paging(model, allRecipes);
-    }
-
-    // 레시피 리스트
-    @GetMapping("/seller/recipes/list")
-    public String list(Model model, @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<RecipePageResDto> allRecipes = recipeService.findAllRecipes(pageable);
-
-        return paging(model, allRecipes);
-    }
-
-    //재료 검색
-    @Getter
-    @AllArgsConstructor
-    class SearchResponse {
-        private final List<String> results;
-    }
-
-    // 레시피를 재료로 검색
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @GetMapping("/seller/recipes/searchItem")
-    @ResponseBody
-    public SearchResponse searchItem(@RequestParam String keyword) {
-        Page<ItemListForRecipeResDto> allItems = recipeService.searchItemPage(keyword, PageRequest.of(0, 100));
-        return new SearchResponse(allItems
-                .stream()
-                .map(ItemListForRecipeResDto::getName)
-                .collect(Collectors.toList()));
-    }
-
-    */
 
     /**
      * seller - 상품 상세조회
@@ -263,7 +214,6 @@ public class SellerController {
                          RedirectAttributes redirectAttributes, Authentication authentication) throws IOException {
 
         if (bindingResult.hasErrors()) {
-            log.info("bindingResult = {}", bindingResult);
             return "seller/itemCreateForm";
         }
 
@@ -276,7 +226,6 @@ public class SellerController {
         ItemCreateResDto resDto = itemService.createItem(reqDto, authentication.getName());
         redirectAttributes.addAttribute("id", resDto.getId());
 
-        log.info("img주소확인 : {}", imgPath);
         return "redirect:/seller/items/{id}";
     }
 
@@ -297,7 +246,6 @@ public class SellerController {
                          RedirectAttributes redirectAttributes, Authentication authentication) throws IOException {
 
         if (bindingResult.hasErrors()) {
-            log.info("bindingResult = {}", bindingResult);
             return "seller/itemUpdateForm";
         }
         if (!multipartFile.isEmpty()) {

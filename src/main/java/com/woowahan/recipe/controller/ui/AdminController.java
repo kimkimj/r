@@ -63,7 +63,6 @@ public class AdminController {
         int startPage = Math.max(nowPage - 4, 1);
         int endPage = Math.min(nowPage + 5, userList.getTotalPages());
         int lastPage = userList.getTotalPages();
-        log.info("userNowPage = {}, userStartPage = {}, userEndPage = {}, userLastPage = {}", nowPage, startPage, endPage, lastPage);
 
         model.addAttribute("userList", userList);
         model.addAttribute("nowPage", nowPage);
@@ -83,7 +82,6 @@ public class AdminController {
         int startPage = Math.max(nowPage - 4, 1);
         int endPage = Math.min(nowPage + 5, userList.getTotalPages());
         int lastPage = userList.getTotalPages();
-        log.info("userNowPage = {}, userStartPage = {}, userEndPage = {}, userLastPage = {}", nowPage, startPage, endPage, lastPage);
 
         model.addAttribute("userList", userList);
         model.addAttribute("nowPage", nowPage);
@@ -102,7 +100,6 @@ public class AdminController {
         int startPage = Math.max(nowPage - 4, 1);
         int endPage = Math.min(nowPage + 5, sellerList.getTotalPages());
         int lastPage = sellerList.getTotalPages();
-        log.info("sellerNowPage = {}, sellerStartPage = {}, sellerEndPage = {}, sellerLastPage = {}", nowPage, startPage, endPage, lastPage);
 
         model.addAttribute("sellerList", sellerList);
         model.addAttribute("nowPage", nowPage);
