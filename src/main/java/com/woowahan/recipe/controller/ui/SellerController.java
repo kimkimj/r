@@ -2,21 +2,16 @@ package com.woowahan.recipe.controller.ui;
 
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
 import com.woowahan.recipe.domain.dto.itemDto.*;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeFindResDto;
 import com.woowahan.recipe.domain.dto.recipeDto.RecipePageResDto;
-import com.woowahan.recipe.domain.dto.recipeDto.RecipeSearchReqDto;
 import com.woowahan.recipe.domain.dto.sellerDto.*;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.service.ItemService;
 import com.woowahan.recipe.service.RecipeService;
 import com.woowahan.recipe.service.S3UploadService;
 import com.woowahan.recipe.service.SellerService;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -29,18 +24,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.CookieGenerator;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-//@RequestMapping("/seller")
 public class SellerController {
 
     private final SellerService sellerService;
@@ -80,10 +70,8 @@ public class SellerController {
 
     @PostMapping("/seller/login")
     public String login(@Valid @ModelAttribute SellerLoginRequest sellerLoginRequest, BindingResult result,
-                        HttpServletRequest httpServletRequest, HttpServletResponse response, Model model){
+                        HttpServletResponse response){
         if (result.hasErrors()) {
-            result.getFieldErrors().stream().forEach(err ->
-                    log.info("field={} value={} msg={}", err.getField(), err.getRejectedValue(), err.getDefaultMessage()));
             return "seller/loginForm";
         }
 
@@ -96,18 +84,16 @@ public class SellerController {
             cookieGenerator.setCookieMaxAge(60 * 60 * 2);
 
         } catch (AppException e) {
-            model.addAttribute("e", e.getMessage());
-            result.reject(e.getMessage());
+            return "seller/loginForm";
         }
 
         return "redirect:/sellerIndex";
     }
 
+
     // 로그아웃
     @GetMapping("/seller/logout")
-    public String logout(HttpSession session, HttpServletResponse response) {
-        /*session.removeAttribute("jwt");
-        session.invalidate();*/
+    public String logout(HttpServletResponse response) {
 
         CookieGenerator cookieGenerator = new CookieGenerator();
         cookieGenerator.setCookieName("token");
@@ -199,7 +185,7 @@ public class SellerController {
         Page<ItemListResDto> items = itemService.findAllBySeller(authentication.getName(), pageable);
         return pagingItems(model, items);
     }
-
+    /*
     // 레시피 단건 조회
     @GetMapping("/seller/recipes/{recipeId}")
     public String findRecipe(@PathVariable Long recipeId, Model model) {
@@ -246,6 +232,8 @@ public class SellerController {
                 .map(ItemListForRecipeResDto::getName)
                 .collect(Collectors.toList()));
     }
+
+    */
 
     /**
      * seller - 상품 상세조회

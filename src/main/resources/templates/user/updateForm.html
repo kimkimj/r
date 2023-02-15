@@ -1,42 +1,81 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: headerFragment"/>
-<body>
-<!-- 섹션의 전체 틀 div -->
-<div class="recipe-wapper">
+    <style>
+        form {
+            margin-left: auto;
+            margin-right: auto;
+            width: 45%;
+            min-height: 450px;
+        }
 
+        .button-container {
+            margin-top: 50px;
+            height: 100px;
+            text-align: center;
+        }
+
+        .button {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            color: #625d55;
+            background-color: white;
+            border-color: #625d55;
+            font-weight: bold;
+        }
+
+        .btn:hover, .btn:active, .btn:visited {
+            border-color: #DBD0C0 !important;
+            outline-color: #DBD0C0 !important;
+            background-color: #DBD0C0 !important;
+            color: black;
+        }
+
+    </style>
+</head>
+<body>
     <!-- bodyHeader -->
     <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 
     <div class="container">
         <!-- 상단 메뉴바 -->
         <div th:replace="fragments/myPageNav :: myPageFragment"/>
-        <br><br>
-        <div class="container" style="width: 460px">
-            <h2>회원정보 수정</h2>
-            <button type="button" class="btn btn-secondary" onclick="location.href='/users/my/update/password'">비밀번호 변경</button>
+        <div class="margin-common"></div>
+        <div style="text-align: center;">
+            <h3>|&nbsp;&nbsp;&nbsp;회원 정보 수정&nbsp;&nbsp;&nbsp;|</h3>
+        </div>
+        <div class="margin-20"></div>
+
+        <form role="form" th:action="@{/users/my/update}" th:object="${user}" method="post">
+            <button type="button" class="btn" onclick="location.href='/users/my/update/password'">비밀번호 변경</button>
             <br><br>
-            <form role="form" th:action="@{/users/my/update}" th:object="${user}" method="post">
-                <div class="mb-3">
-                    <label th:for="address" th:text="#{label.address}" class="form-label">주소</label>
-                    <input type="text" th:field="*{address}" class="form-control"
-                           th:errorclass="field-error">
-                    <div class="field-error" th:errors="*{address}">주소 오류</div>
+            <div class="mb-3">
+                <label th:for="address" th:text="#{label.address}" class="form-label">주소</label>
+                <input type="text" th:field="*{address}" class="form-control"
+                       th:errorclass="field-error">
+                <div class="field-error" th:errors="*{address}">주소 오류</div>
+            </div>
+            <div class="mb-3">
+                <label th:for="email" th:text="#{label.email}" class="form-label">이메일</label>
+                <input type="text" th:field="*{email}" class="form-control"
+                       th:errorclass="field-error">
+                <div class="field-error" th:errors="*{email}">이메일 오류</div>
+            </div>
+            <div class="mb-3">
+                <label th:for="address" th:text="#{label.phoneNum}" class="form-label">핸드폰번호</label>
+                <input type="text" th:field="*{phoneNum}" class="form-control"
+                       th:errorclass="field-error">
+                <div class="field-error" th:errors="*{phoneNum}">핸드폰 번호 오류</div>
+            </div>
+            <div class="button-container">
+                <div class="button">
+                     <button type="submit" class="btn">수정하기</button>
                 </div>
-                <div class="mb-3">
-                    <label th:for="email" th:text="#{label.email}" class="form-label">이메일</label>
-                    <input type="text" th:field="*{email}" class="form-control"
-                           th:errorclass="field-error">
-                    <div class="field-error" th:errors="*{email}">이메일 오류</div>
-                </div>
-                <div class="mb-3">
-                    <label th:for="address" th:text="#{label.phoneNum}" class="form-label">핸드폰번호</label>
-                    <input type="text" th:field="*{phoneNum}" class="form-control"
-                           th:errorclass="field-error">
-                    <div class="field-error" th:errors="*{phoneNum}">핸드폰 번호 오류</div>
-                </div>
-                <button type="submit" class="btn btn-primary">회원 수정</button>
-            </form>
+            </div>
+        </form>
 
         </div>
     </div>

@@ -14,7 +14,21 @@
 
     /* 테이블 tr 색상 */
     .tr-hover:hover {
-        background-color: #E3F4EA;
+        background-color: #f7f2ebf0;
+    }
+
+    .btn {
+        color: #625d55;
+        background-color: white;
+        border-color: #625d55;
+        font-weight: bold;
+    }
+
+    .btn:hover, .btn:active, .btn:visited {
+        border-color: #DBD0C0 !important;
+        outline-color: #DBD0C0 !important;
+        background-color: #DBD0C0 !important;
+        color: black;
     }
 
 </style>
@@ -35,9 +49,9 @@
         <br><br>
         <div>
                 <span style="float: right;">
-                    <button type="button" class="btn btn-outline-success"
+                    <button type="button" class="btn"
                             th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>
-                    <button type="button" class="btn btn-outline-success"
+                    <button type="button" class="btn"
                             th:onclick="|location.href='@{/recipes/list}'|">전체 레시피 보기</button>
                 </span>
         </div>

@@ -128,7 +128,7 @@
     }
 
 </script>
-<div sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_HEAD')">
+<div sec:authorize="!hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
   <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 </div>
 <div sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
@@ -166,18 +166,15 @@
                    name="cartItemCnt" th:value="${cartItemReq.cartItemCnt}"/>
             <input class="pm-btn" style="width: 40px" type='button' onclick='count("plus")' value="+"/>
           </div>
-          <div style="margin-right: 30px; float: right"><span id="totalPrice"
-                                                              th:text="${resDto.getItemPrice()}">0</span>원
+          <div style="margin-right: 30px; float: right"><span id="totalPrice" th:text="${resDto.getItemPrice()}">0</span>원
           </div>
         </div>
         <div style="border: 1px solid;">
           <input style="width: 100px; float: right;"
                  onclick="location.href='findAllForm.html'"
                  th:onclick="|location.href='@{/items}'|" type="button" value="목록으로"/>
-
-            <input type="submit" value="장바구니" style="width: 100px; float: right;"/>
-            <input type="button" value="바로구매" style="width: 100px; float: right;" onclick='order()'/>
-
+          <input type="submit" value="장바구니" style="width: 100px; float: right;"/>
+          <input type="button" value="바로구매" style="width: 100px; float: right;" onclick='order()'/>
         </div>
       </form>
 

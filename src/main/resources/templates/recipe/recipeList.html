@@ -125,14 +125,28 @@
         transform: scale(1.05) translateZ(0);
         cursor: pointer;
     }
+
+    .page-item {
+        color: #4e4a45;
+        background: #DBD0C0;
+    }
+
+    .btn-style2 {
+        color: #625d55;
+        border-color: #625d55;
+        background-color: white;
+        font-weight: bold;
+        float: right;
+    }
+
 </style>
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 <div class="container">
     <div class="margin-common"></div>
     <div style="text-align: center;">
-        <h3>|&nbsp;&nbsp;&nbsp;OUR RECIPES&nbsp;&nbsp;&nbsp;|</h3>
-        <h5>우아한과 함께 맛있는 음식을 만들어 보세요.</h5>
+        <h3>|&nbsp;&nbsp;&nbsp;RECIPES FOR YOU&nbsp;&nbsp;&nbsp;|</h3>
+        <h5>맞춤추천 레시피를 둘러보세요.</h5>
     </div>
     <br>
     <!-- search -->
@@ -143,14 +157,13 @@
                 <button style="border:none;" type="submit"><img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"></button>
             </form>
         </div>
-    </div><br>
-
-    <div>
-<!--            <br><h5>총 <span style="color:#0c4128;" th:text="${#lists.size(allRecipes)}"></span>개의 맛있는 레시피가 있습니다.</h5><hr>-->
-        <span style="float: right; margin: 20px;" sec:authorize="hasRole('ROLE_USER')">
-            <button sec:authorize="isAuthenticated()" type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>
-            <button sec:authorize="isAuthenticated()" type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/recipes/my}'|">내 글 보기</button>
-        </span>
+    </div>
+    <!--            <br><h5>총 <span style="color:#0c4128;" th:text="${#lists.size(allRecipes)}"></span>개의 맛있는 레시피가 있습니다.</h5><hr>-->
+    <div style="margin: 0px 50px 30px 0px;">
+    <span sec:authorize="hasRole('ROLE_USER')" style="">
+        <button sec:authorize="isAuthenticated()" type="button" class="btn btn-style2 btn-sm" th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>&nbsp;&nbsp;
+        <button sec:authorize="isAuthenticated()" type="button" class="btn btn-style2 btn-sm" th:onclick="|location.href='@{/recipes/my}'|">내 레시피</button>
+    </span>
     </div>
 
     <!-- 레시피 리스트 div-->
@@ -179,25 +192,25 @@
     </div><br><br>
 
     <th:block th:if="${allRecipes.totalElements > 0}">
-    <!-- pagination -->
-    <div class="my-4">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
-                    <a class="page-link" th:href="@{/recipes/list(page = ${nowPage - 2})}">Previous</a>
-                </li>
+        <!-- pagination -->
+        <div class="my-4">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
+                        <a class="page-link pageNum" th:href="@{/recipes/list(page = ${nowPage - 2})}">&nbsp;<&nbsp;</a>
+                    </li>
 
-                <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                    <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/recipes/list(page = ${page - 1})}" th:text="${page}">1</a></li>
-                    <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
-                </th:block>
+                    <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                        <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/recipes/list(page = ${page - 1})}" th:text="${page}">1</a></li>
+                        <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="background-color: #DBD0C0"></strong></li>
+                    </th:block>
 
-                <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
-                    <a class="page-link" th:href="@{/recipes/list(page = ${nowPage})}">Next</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+                    <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
+                        <a class="page-link pageNum" th:href="@{/recipes/list(page = ${nowPage})}">&nbsp;>&nbsp;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </th:block>
     <th:block th:unless="${allRecipes.totalElements} > 0">
         <div style="width: 100%; height: 200px; text-align: center;">

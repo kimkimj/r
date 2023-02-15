@@ -67,7 +67,7 @@
       resultElement.innerText = number;
     }
 </script>
-<div sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_HEAD')">
+<div sec:authorize="!hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
   <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 </div>
 <div sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
@@ -97,8 +97,20 @@
         <div class="inner">
           <!--상품 이미지-->
           <div class="card" style="border: white">
-            <a onclick="location.href='findForm.html'"
+            <a sec:authorize="!hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT', 'ROLE_ADMIN', 'ROLE_HEAD')" onclick="location.href='findForm.html'"
                th:onclick="|location.href='@{/items/{id}(id=${item.getId})}'|"
+               style="border: white">
+              <img style="width: 215px; height: 215px; object-fit: cover; align-content: center; border-radius: 5%; border: 1px solid lightgrey;"
+                   th:src="${item.itemImagePath}" class="card-img-top"
+                   th:onerror="this.src='https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/item-image/3731374c-70de-4ea3-b1c6-55972bd18c40.png'">
+              <!--상품 이름 & 상품 가격-->
+              <div class="card-body">
+                <p class="card-title" th:text="${item.getItemName()}">상품 이름</p>
+                <h5 class="card-text" th:text="${item.getPrice()}+원">가격</h5>
+              </div>
+            </a>
+            <a sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT', 'ROLE_ADMIN', 'ROLE_HEAD')" onclick="location.href='seller/itemFindForm.html'"
+               th:onclick="|location.href='@{seller/items/{id}(id=${item.getId})}'|"
                style="border: white">
               <img style="width: 215px; height: 215px; object-fit: cover; align-content: center; border-radius: 5%; border: 1px solid lightgrey;"
                    th:src="${item.itemImagePath}" class="card-img-top"
