@@ -47,7 +47,7 @@ public class CartController {
 
 
     @GetMapping
-    public String cartItemList(Model model, @PageableDefault(sort = "itemName", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+    public String cartItemList(Model model, @PageableDefault(sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
         Page<CartItemResponse> cartList = cartService.findCartItemList(pageable, authentication.getName());
 
         // pagination
