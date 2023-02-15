@@ -97,15 +97,15 @@
         <div class="recipe-title margin-10">
             <div>
                 <span style="float: right;" th:if="${recipe.getUserName() == #authentication.getPrincipal()}">
-                    <button type="button" class="btn btn-outline-success"
+                    <button type="button" class="btn"
                             th:onclick="|location.href='@{/recipes/update/{recipeId} (recipeId=${recipeId})}'|"
                             sec:authorize="isAuthenticated()">레시피 수정</button>
-                    <button type="button" class="btn btn-outline-success recipeDeleteBtn"
+                    <button type="button" class="btn recipeDeleteBtn"
                             th:onclick="|location.href='@{/recipes/delete/{recipeId} (recipeId=${recipeId})}'|"
                             sec:authorize="isAuthenticated()">레시피 삭제</button>
                 </span>
                 <span style="float: right;">
-                    <button type="button" class="btn btn-outline-success"
+                    <button type="button" class="btn "
                             th:onclick="|location.href='@{/recipes/list}'|">전체 레시피 보기</button>
                 </span>
             </div>
@@ -208,20 +208,19 @@
                 </div>
             </div>
         </div>
-        <br><br><br>
 
-        <div style="text-align: center; font-weight: bold;">
+        <div style="text-align: center; font-weight: 500; border: 1px solid rgba(219,208,192,0.45); padding: 20px; border-radius: 10px;">
             <div sec:authorize="!isAuthenticated()">
-                <p>마음에 드는 레시피를 저장하기 위해서는 로그인이 필요합니다.</p>
-                <button class="btn btn-outline-success like-btn" type="button">💗</button>
+                <span>마음에 드는 레시피를 저장하기 위해서는 로그인이 필요합니다.</span> &nbsp;
+                <button class="btn like-btn" type="button" style="border:none; background-color: rgba(219,208,192,0.45);">💗</button>
             </div>
             <div sec:authorize="hasRole('ROLE_USER')">
-                <p>이 레시피가 좋으면 좋아요를 눌러 마이페이지에서 따로 확인하실 수 있습니다.</p>
-                <button class="btn btn-outline-success" type="button"
+                <span>이 레시피가 좋으면 좋아요를 눌러 마이페이지에서 따로 확인하실 수 있습니다.</span> &nbsp;
+                <button class="btn" type="button" style="border:none; background-color: rgba(219,208,192,0.45);"
                         th:onclick="|location.href='@{/recipes/{recipeId}/likes (recipeId=${recipeId})}'|">💗</button>
             </div>
         </div>
-        <br><br>
+        <div class="margin-my"></div>
 
         <!-- 리뷰 -->
         <div>
@@ -232,15 +231,15 @@
                 <!--                <textarea class="form-control" rows="1"></textarea>-->
                 <form role="form" th:action="@{/recipes/{recipeId}/reviews (recipeId=${recipeId})}"
                       th:object="${reviewCreateRequest}" method="post" content>
-                    <!-- 리뷰 내용  -->
+                    <!-- 내용  -->
                     <div class="form-group col">
-                        <label th:for="content">리뷰 내용</label>
+<!--                        <label th:for="content" type="hidden"></label>-->
                         <input type="text" th:field="*{content}" class="form-control" placeholder="리뷰 내용을 입력해주세요"
                                th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">
                         <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
                     </div>
                     <br>
-                    <div style="text-align: center;">
+                    <div style="text-align: right;">
                         <button type="submit" class="btn">리뷰 작성</button>
                     </div>
                     <br>
@@ -263,8 +262,8 @@
             </div>-->
         </div>
         <br>
-        <div class="">
-            <!--                    <div class="card-header">댓글 목록</div>-->
+        <div>
+            <div class="card-header" style="font-weight: bold; background-color: rgba(219,208,192,0.45);">Review 목록</div>
             <table class="table" style="width: 100%;">
                 <thead>
                 <tr>
@@ -309,8 +308,8 @@
             <br>
         </div>
         <br><br>
-        <div style="text-align: center;">
-            <button class="btn btn-outline-success" onclick="location.href='recipeList.html'"
+        <div style="text-align: center; margin-right: 10px;">
+            <button class="btn btn-lg" onclick="location.href='recipeList.html'"
                     th:onclick="|location.href='@{/recipes/list}'|">목록가기
             </button>
         </div>
