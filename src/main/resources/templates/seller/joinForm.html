@@ -43,55 +43,6 @@
         margin-right: auto;
       }
     </style>
-    <script th:inline="javascript">
-      // function check_sellerName() {
-      //   let sellerName = $('#sellerName').val();
-      //   console.log(sellerName)
-      //   if (sellerName.trim().length === 0) {
-      //     return;
-      //   }
-      //   $.ajax({
-      //     url: "/api/v1/seller/check-sellerName",
-      //     method: "GET",
-      //     data: {
-      //       sellerName: sellerName
-      //     },
-      //     success: function (message) {
-      //       if (message == '중복된 아이디 입니다.') {
-      //         alert(message)
-      //       } else if (message == '사용 가능한 아이디 입니다.')
-      //       {
-      //         alert(message)
-      //       }
-      //     }
-      //   })
-      // }
-      //
-      // function check_email() {
-      //   let email = $('#email').val();
-      //   console.log(email)
-      //   if (email.trim().length === 0) {
-      //     return;
-      //   }
-      //   $.ajax({
-      //     url: "/api/v1/seller/check-email",
-      //     method: "GET",
-      //     contentType: 'application/json',
-      //     data: {
-      //       email: email
-      //     },
-      //     success: function (message) {
-      //       if (message == '중복된 이메일 입니다.') {
-      //         alert(message)
-      //       } else if (message == '사용가능한 이메일 입니다.')
-      //       {
-      //         alert(message)
-      //       }
-      //     }
-      //   })
-      // }
-
-    </script>
   <body>
     <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
     <div class="container">
@@ -101,21 +52,18 @@
       </div>
       <div class="margin-20"></div>
       <form role="form" th:object="${sellerJoinRequest}">
-<!--        <div th:if="${#fields.hasGlobalErrors()}">-->
-<!--          <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}">글로벌 오류 메세지</p>-->
-<!--        </div>-->
         <div class="form-group">
           <label th:for="sellerName">아이디</label>
-          <input type="text" th:field="*{sellerName}" id="id-input" class="form-control" placeholder="아이디 입력하세요">
-          <button type="button" class="id-btn">아이디 중복 확인</button>
+          <div class="d-flex">
+            <input type="text" th:field="*{sellerName}" id="id-input" class="form-control" placeholder="아이디 입력하세요">
+            <button type="button" style="width: 25%;" class="btn id-btn">중복 확인</button>
+          </div>
           <div id="id-result"></div>
-<!--          <div class="field-error" th:errors="*{sellerName}">아이디 오류</div>-->
         </div>
         <br/>
         <div class="form-group">
           <label th:for="password">비밀번호</label>
           <input type="password" th:field="*{password}" id="pw-input" class="form-control" placeholder="비밀번호를 입력하세요">
-<!--          <div class="field-error" th:errors="*{password}">비밀번호 오류</div>-->
           <div id="pw-result"></div>
         </div>
         <br/>
@@ -123,34 +71,32 @@
           <label th:for="companyName">업체명</label>
           <input type="text" th:field="*{companyName}" id="name-input" class="form-control" placeholder="업체명을 입력하세요">
           <div id="name-result"></div>
-<!--          <div class="field-error" th:errors="*{companyName}">업체명 오류</div>-->
         </div>
         <br/>
         <div class="form-group">
           <label style="display: block" th:for="address">주소</label>
-          <input type="hidden" th:field="*{address}" id="address-no-input" class="form-control" placeholder="우편번호">
-          <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
-          <input type="text" id="address-input" class="form-control" name="address-input" placeholder="우편번호 찾기를 진행해주세요" readonly style="background-color: white;"><br>
+          <div class="d-flex">
+            <input type="text" id="address-input" class="form-control" name="address-input" placeholder="우편번호 찾기를 진행해주세요" readonly style="background-color: white;"><br>
+            <input type="hidden" th:field="*{address}" id="address-no-input" class="form-control" placeholder="우편번호">
+            <input type="button" style="width: 25%;" class="btn" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
+          </div>
           <input type="text" id="detail-input" class="form-control" placeholder="상세주소">
           <div id="address-result"></div>
-<!--          <input type="text" th:field="*{address}" class="form-control" placeholder="주소 입력하세요"-->
-<!--                 th:errorclass="field-error">-->
-<!--          <div class="field-error" th:errors="*{address}">주소 오류</div>-->
         </div>
         <br/>
         <div class="form-group">
           <label th:for="email" th:text="#{label.email}">이메일</label>
-          <input type="email" th:field="*{email}" id="email-input" class="form-control" placeholder="woowahan@woowahan.com" autocomplete required>
-          <button type="button" class="email-btn">이메일 중복 확인</button>
+          <div class="d-flex">
+            <input type="email" th:field="*{email}" id="email-input" class="form-control" placeholder="woowahan@woowahan.com" autocomplete required>
+            <button type="button" style="width: 25%;" class="btn email-btn">중복 확인</button>
+          </div>
           <div id="email-result"></div>
-<!--          <div class="field-error" th:errors="*{email}">이메일 오류</div>-->
         </div>
         <br/>
         <div class="form-group">
           <label th:for="phoneNum" th:text="#{label.phoneNum}">핸드폰 번호</label>
           <input type="text" th:field="*{phoneNum}" id="phone-input" class="form-control" placeholder="띄어쓰기나 - 없이 숫자만 입력해주세요">
           <div id="phone-result"></div>
-<!--          <div class="field-error" th:errors="*{phoneNum}">핸드폰 번호 오류</div>-->
         </div>
         <br/>
         <div class="form-group">
