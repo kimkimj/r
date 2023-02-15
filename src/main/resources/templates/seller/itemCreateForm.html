@@ -53,12 +53,13 @@
     </script>
     <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
     <div class="container">
-      <div class="margin-common"></div>
+      <div class="margin-20"></div>
       <div th:replace="fragments/mySellerPageNav :: mySellerPageNav"/>
+      <div class="margin-20"></div>
       <div style="text-align: center;">
         <h3>|&nbsp;&nbsp;&nbsp;상품 등록&nbsp;&nbsp;&nbsp;|</h3>
       </div>
-      <div class="margin-my"></div>
+      <div class="margin-20"></div>
       <form role="form" th:action="@{/seller/items/create}" th:object="${itemCreateReqDto}" method="post" enctype="multipart/form-data">
         <div th:if="${#fields.hasGlobalErrors()}">
           <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${err}">글로벌 오류 메세지</p>
@@ -88,14 +89,13 @@
                  th:class="${#fields.hasErrors('itemStock')}? 'form-control fieldError' : 'form-control'">
           <p class="fieldError" th:if="${#fields.hasErrors('itemStock')}" th:errors="*{itemStock}">Incorrect stock</p>
         </div>
-        <hr>
         <div class="button-container">
           <div class="button">
             <button type="submit" onclick="emptyImg()" class="btn">작성완료</button>
           </div>
         </div>
       </form>
-      <div class="margin-common"></div>
+    <div class="margin-my"></div>
     </div>
     <div th:replace="fragments/footer :: footerFragment"/>
   </body>

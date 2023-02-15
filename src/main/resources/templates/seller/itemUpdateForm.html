@@ -76,7 +76,7 @@
                  th:class="${#fields.hasErrors('itemStock')}? 'form-control fieldError' : 'form-control'" onfocus="this.value=''; return true;">
           <p class="fieldError" th:if="${#fields.hasErrors('itemStock')}" th:errors="*{itemStock}">Incorrect stock</p>
         </div>
-        <hr>
+
         <div class="button-container">
           <div class="button">
             <button type="submit" class="btn">수정완료</button>
@@ -85,7 +85,7 @@
       </form>
       </div>
     </div>
-    <br/>
+    <div class="margin-my"></div>
     <div th:replace="fragments/footer :: footerFragment"/>
   </body>
 </html>
