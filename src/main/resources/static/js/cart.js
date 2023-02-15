@@ -157,7 +157,7 @@ function saveOrder() {
         location.href = "/carts/order";
     }).fail((error) => {
         console.log(error);
-        if(error.result === 'NOT_ENOUGH_STOCK, 재고 수량이 없습니다') {
+        if(error.responseJSON.result === 'NOT_ENOUGH_STOCK, 재고 수량이 없습니다') {
             alert('재고 수량이 부족한 상품이 있습니다 \n 상품의 재고 수량을 확인해주세요');
         }
     }).always(() => {
