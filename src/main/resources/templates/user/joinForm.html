@@ -81,7 +81,7 @@
               <label style="display: block" th:for="address" th:text="#{label.address}">주소</label>
               <input type="hidden" th:field="*{address}" id="address-no-input" class="form-control" placeholder="우편번호">
               <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
-              <input type="text" id="address-input" class="form-control" name="address-input" placeholder="우편번호 찾기를 진행해주세요"><br>
+              <input type="text" id="address-input" class="form-control" name="address-input" placeholder="우편번호 찾기를 진행해주세요" readonly style="background-color: white;"><br>
               <input type="text" id="detail-input" class="form-control" placeholder="상세주소">
 <!--              <input type="text" id="sample6_extraAddress" placeholder="참고항목">-->
               <div id="address-result"></div>
@@ -136,7 +136,7 @@
 <div class="margin-my"></div>
 </div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script type="text/javascript" src="/js/join.js"></script>
+<script type="text/javascript" src="/js/userJoin.js"></script>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>
 <!--<script th:inline="javascript">-->
