@@ -163,7 +163,6 @@
             </form>
         </div>
     </div>
-    <!--            <br><h5>총 <span style="color:#0c4128;" th:text="${#lists.size(allRecipes)}"></span>개의 맛있는 레시피가 있습니다.</h5><hr>-->
     <div style="margin: 0px 70px 20px 0px; float: right;">
     <span sec:authorize="hasRole('ROLE_USER')" style="">
         <button sec:authorize="isAuthenticated()" type="button" class="btn" th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>&nbsp;&nbsp;
@@ -181,7 +180,6 @@
                     <img src="https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/noimage.gif" class="card-img-top" alt="..." th:if="${recipe.recipeImagePath == null}">
                 </a>
                 <div class="flex-container">
-                    <!--<span th:text="'ID : ' + ${recipe.getRecipeId}"></span>-->
                     <div class="flex-item1" th:text="${recipe.getUserName()}"></div>
                     <div class="flex-item2" th:text="'total ' + ${recipe.getRecipeView}"></div>
                     <div class="flex-item3" th:text="'❤︎ ' + ${recipe.getRecipeLike()}"></div>

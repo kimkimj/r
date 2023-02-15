@@ -125,7 +125,6 @@ public class UserController {
     // 회원 정보 수정
     @GetMapping("/users/my/update")
     public String updateForm(Model model, Authentication authentication) {
-        log.info("user22={}", authentication.getName());
         UserResponse user = findService.findUserName(authentication.getName());
         model.addAttribute("user", user);
         // 로그인이 되어있는 유저의 id와 수정페이지에 접속하는 id가 같아야 함
@@ -176,7 +175,7 @@ public class UserController {
 
     // 리뷰 수정
     @GetMapping("/update/{recipeId}/{reviewId}")
-    public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model, Authentication authentication) {
+    public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model) {
         ReviewGetResponse review = reviewService.findReviewById(reviewId);
         model.addAttribute("review", review);
         model.addAttribute("recipeId", recipeId);

@@ -41,7 +41,6 @@
             <tr>
                 <th style="width: 50px">ID</th>
                 <th style="width: 250px">제목</th>
-<!--                <th style="width: 250px">내용</th>-->
                 <th style="width: 100px">작성자</th>
                 <th style="width: 50px">좋아요</th>
                 <th style="width: 50px">조회수</th>
@@ -51,8 +50,6 @@
             <tr class="tr-hover" th:each="recipe : ${myLikeRecipeList}">
                 <td><a th:href="@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}" th:utext="${recipe.recipeId}"></a></td>
                 <td><a th:href="@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}" th:utext="${recipe.recipeTitle}"></a></td>
-                <!--                <td th:text="${recipe.recipeTitle}"/>-->
-<!--                <td th:text="${recipe.recipeBody}"/>-->
                 <td th:text="${recipe.userName}"/>
                 <td th:text="${recipe.recipeLike}"/>
                 <td th:text="${recipe.recipeView}"/>

@@ -1,7 +1,8 @@
 package com.woowahan.recipe.domain.entity;
 
 
-import com.woowahan.recipe.exception.NotEnoughStockException;
+import com.woowahan.recipe.exception.AppException;
+import com.woowahan.recipe.exception.ErrorCode;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -64,7 +65,7 @@ public class ItemEntity extends BaseEntity{
     public void decreaseStock(int quantity) {
          int restStock = this.itemStock -= quantity;
          if (restStock < 0) {
-             throw new NotEnoughStockException("재고 수량이 없습니다.");
+             throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
          }
         this.itemStock = restStock;
     }
