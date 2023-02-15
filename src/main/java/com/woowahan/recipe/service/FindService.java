@@ -32,9 +32,6 @@ public class FindService {
     private final RecipeCustomRepository recipeCustomRepository;
 
     public UserResponse findUserName(String userName) {
-//        UserEntity user = userRepository.findByUserName(userName).orElseThrow(() -> {
-//            throw new AppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage());
-//        });
         Optional<UserEntity> user = userRepository.findByUserName(userName);
         UserResponse userResponse;
         if(user.isPresent()) {

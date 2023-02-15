@@ -247,7 +247,6 @@ public class RecipeController {
 
     @GetMapping("/{recipeId}")
     public String findRecipe(@PathVariable Long recipeId, Model model) {
-        log.info("삭제 시도");
         recipeService.updateView(recipeId); // 조회수 증가
         RecipeFindResDto recipe = recipeService.findRecipe(recipeId);
         model.addAttribute("reviewCreateRequest", new ReviewCreateRequest());

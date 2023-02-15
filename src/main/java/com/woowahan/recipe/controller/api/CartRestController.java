@@ -48,10 +48,6 @@ public class CartRestController {
     @PostMapping("/checkOrder")
     public Response<String> updateCheckItem (@RequestBody List<CheckOrderItemDto> checkCartItemDto, Authentication authentication) {
         String userName = authentication.getName();
-        for (CheckOrderItemDto itemDto : checkCartItemDto) {
-            log.info("item id = {}", itemDto.getId());
-            log.info("item isChecked = {}", itemDto.getIsChecked());
-        }
         cartService.updateCheckItem(checkCartItemDto, userName);
         return Response.success("장바구니 상품 체크 완료");
     }
@@ -59,32 +55,23 @@ public class CartRestController {
 
     @PostMapping("/orders")
     public Response<OrderCreateResDto> orderCartItem(@RequestBody CartOrderListDto cartOrderListDto, Authentication authentication) {
-//        List<CartOrderDto> cartOrderList = cartOrderListDto.getGetCartOrderList();
         OrderCreateResDto orderCreateResDto = cartService.orderCartItem(cartOrderListDto, authentication.getName());
         return Response.success(orderCreateResDto);
     }
 
     @PostMapping("/orders/payment/complete")
     public Response<?> paymentComplete(@RequestBody CartOrderListDto cartOrderListDto, Authentication authentication) throws IOException {
-        log.info("orderDto.getImpUid={}", cartOrderListDto.getImp_uid());
         String token = paymentService.getToken();
-        log.info("iamport token={}", token);
         int amount = paymentService.paymentInfo(cartOrderListDto.getImp_uid(), token);
-        log.info("amount={}", amount);
         try {
             if (amount != cartOrderListDto.getTotalCost()) {
                 paymentService.paymentCancel(token, cartOrderListDto.getImp_uid(), amount, "결제 금액 불일치");
                 return Response.error(new ErrorResult(ErrorCode.MISMATCH_AMOUNT, ErrorCode.MISMATCH_AMOUNT.getMessage()));
             }
-            log.info("장바구니 컨트롤러 주문중");
             OrderCreateResDto orderResponse = cartService.orderCartItem(cartOrderListDto, authentication.getName());
-            log.info("장바구니 컨트롤러 주문성공했습니다.");
             return Response.success(orderResponse);
         } catch (Exception e) {
             paymentService.paymentCancel(token, cartOrderListDto.getImp_uid(), amount, "장바구니 결제 에러");
-            log.warn("메세지={}", e.getMessage());
-            log.warn("추적={}", e.getStackTrace());
-            log.info("장바구니 컨트롤러 결제 에러입니다.");
             return Response.error(new ErrorResult(ErrorCode.INVALID_ORDER, ErrorCode.INVALID_ORDER.getMessage()));
         }
     }
@@ -92,7 +79,6 @@ public class CartRestController {
     @PutMapping
     public Response<String> updateCartItem (@RequestBody CartItemReq cartItemUpdateReq, Authentication authentication) {
         String userName = authentication.getName();
-        log.info("cartItemId = {}", cartItemUpdateReq.getCartItemId());
         Integer cnt = cartService.updateCartItem(cartItemUpdateReq, userName);
         return Response.success(cnt + "개로 수량이 수정되었습니다.");
     }

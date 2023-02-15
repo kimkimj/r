@@ -5,7 +5,6 @@ import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
 import com.woowahan.recipe.domain.entity.*;
 import com.woowahan.recipe.exception.ErrorCode;
-import com.woowahan.recipe.exception.NotEnoughStockException;
 import com.woowahan.recipe.repository.ItemRepository;
 import com.woowahan.recipe.repository.OrderCustomRepository;
 import com.woowahan.recipe.repository.OrderRepository;

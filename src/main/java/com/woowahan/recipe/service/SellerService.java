@@ -76,7 +76,6 @@ public class SellerService {
     }
 
     public String login(String sellerName , String password) {
-        log.info("로그인 입력");
         // userName(ID)가 없는 경우
         SellerEntity seller = sellerRepository.findBySellerName(sellerName)
                 .orElseThrow(() -> new AppException(ErrorCode.SELLER_NOT_FOUND, ErrorCode.SELLER_NOT_FOUND.getMessage()));

@@ -34,13 +34,9 @@ public class CartController {
         UserResponse userResponse = findService.findUserName(authentication.getName());
         CartOrderListDto cartOrderListDto = cartService.findCartItemOrder(authentication.getName(), orderDto.getImp_uid());
         List<CartOrderDto> cartOrderDtoList = cartOrderListDto.getCartOrderList();
-        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
-            log.info("cartItemName={}", cartOrderDto.getName());
-            log.info("cartItemCnt={}", cartOrderDto.getCnt());
-        }
+
         String firstItem = cartOrderDtoList.get(0).getName();
 
-        log.info("firstItem = {}", firstItem);
         model.addAttribute("userResponse", userResponse);
         model.addAttribute("cartOrderDtoList", cartOrderDtoList);
         model.addAttribute("cartOrderListDto", cartOrderListDto);
@@ -51,7 +47,6 @@ public class CartController {
 
     @GetMapping
     public String cartItemList(Model model, @PageableDefault(sort = "itemName", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
-        log.debug("cartItemList() 실행");
         Page<CartItemResponse> cartList = cartService.findCartItemList(pageable, authentication.getName());
 
         // pagination
@@ -71,7 +66,6 @@ public class CartController {
 
     @PostMapping("/{itemId}")
     public String deleteCartItem(@PathVariable Long itemId, Authentication authentication) {
-        log.info("itemId : {}", itemId);
         cartService.deleteCartItem(itemId, authentication.getName());
         return "redirect:/carts";
     }

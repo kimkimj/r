@@ -25,7 +25,6 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-            // null 이기에 값을 읽을 수 없음
         } catch (ExpiredJwtException e) {
             // 토큰의 유효기간이 만료되었을 경우
             sendErrorResponse(response, INVALID_TOKEN.getMessage());
