@@ -185,7 +185,6 @@
 <script>
     const selectItem = new Set();
     async function searchAndShowItems(keyword) {
-        // <ul id="search-list" ...> 가져온다.
         let itemList = document.querySelector("#search-list")
 
         let items = await searchKeyword(keyword);
@@ -200,26 +199,21 @@
             if(!selectItem.has(item)) {
                 let itemElement = document.createElement("li");
 
-                // text 추가
                 itemElement.appendChild(document.createTextNode(item))
 
-                // button 추가
                 let addItemButton = document.createElement("button");
                 addItemButton.className += 'list-tag';
 
-                // button style
                 addItemButton.innerHTML = "&nbsp;&nbsp;선택&nbsp;&nbsp;";
 
                 addItemButton.onclick = () => {
 
-                    console.log('selectItem에 item을 담을 수 있습니다.' + item);
                     addItem(item);
                     addFormItem(item);
-                    itemElement.remove();  // 선택된 Element 제거
+                    itemElement.remove();
                 };
                 itemElement.appendChild(addItemButton);
 
-                // search list 에 추가
                 itemList.appendChild(itemElement);
             }
         }
@@ -228,15 +222,12 @@
     function addFormItem(item) {
         let recipeFormList = document.querySelector("#recipe-form-list");
 
-        // input 태그 생성
         let itemElement = document.createElement("input");
         itemElement.type = "text";
         itemElement.name = "items[]";
         itemElement.value = item;
-        console.log(itemElement.value);
         itemElement.hidden = true;
 
-        // input 태그 추가
         recipeFormList.appendChild(itemElement);
     }
 
@@ -254,7 +245,6 @@
     }
 
     function addItem(item) {
-        console.log('addItem');
         let itemList = document.querySelector("#item-list");
         let itemElement = document.createElement("li");
         itemElement.className += 'itemTag';
@@ -263,32 +253,22 @@
             <button type="button" class="delete-btn mx-2">x</button>
         `;
 
-        // const deleteBtn = document.createElement('button');
-        // deleteBtn.innerHTML = 'x';
         const doc = new DOMParser().parseFromString(btnElement, 'text/html');
         const deleteBtn = doc.body.firstChild;
-        console.log(deleteBtn);
         itemElement.appendChild(deleteBtn);
         itemList.appendChild(itemElement);
         selectItem.add(item);
-        console.log('selectItem에 item이 추가되었습니다.' + selectItem);
     }
 
     $(document).on("click", ".delete-btn", function() {
-        console.log("아이템 삭제");
         var index = $('.delete-btn').index(this);
-        console.log("몇번째 요소인가요?" + index);
-        document.getElementsByClassName('itemTag')[index].remove();
-        document.getElementsByName('items[]')[index].remove();
     });
 
     function allRemove() {
-        console.log("삭제 버튼 누르기");
         let recipeFormList = document.querySelector("#recipe-form-list");
         let itemList = document.querySelector("#item-list");
         recipeFormList.innerHTML = "";
         itemList.innerHTML = "";
-        console.log('선택한 Item을 모두 지웁니다. selectItem.clear()' + selectItem.clear());
     }
 
     $(document).ready(function () {
@@ -313,7 +293,6 @@
         });
     });
 
-    // 재료 전체 삭제
     $(document).on("click", ".deleteAll-btn", function() {
         alert('재료가 전체 삭제되었습니다.');
         $('li').remove();

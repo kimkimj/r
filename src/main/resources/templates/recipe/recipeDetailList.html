@@ -341,9 +341,7 @@
             // alert($('#chk').val()); // 장바구니담기 버튼을 누르면 어떤 값을 보냈는지 값 출력
             // alert($("input[type=checkbox][name=chk]:checked").val());
 
-            console.log('장바구니 담기 실행');
             var total = $("input[name=chk]:checked").length;
-            console.log(total);  // 0인지 확인 (선택한 상품이 있는지 check)
             if (total == 0) {
                 alert("상품을 1개 이상 선택해주세요");
                 return;
@@ -351,18 +349,11 @@
 
             var items = $("input[name=chk]:checked");
             var orderItems = [];
-            console.log(items);
             for (var [idx, selectElement] of Object.entries(items)) {
-                console.log(idx);
-                console.log(isNaN(idx));
                 const itemId = $(selectElement).attr("itemId");
                 const itemCnt = $(selectElement).attr("itemCnt");
                 const checked = selectElement.checked;
-                console.log(typeof itemId);
-                console.log(typeof itemCnt);
-                console.log("장바구니에 담을거니?" + checked);
                 if (!isNaN(idx)) {
-                    console.log("orderItems에 push합니다");
                     orderItems.push({
                         cartItemId: parseInt(itemId),
                         cartItemCnt: itemCnt
@@ -382,18 +373,15 @@
             contentType: 'application/json;charset=utf-8',
             data: JSON.stringify(orderItems)
         }).done((data) => {
-            console.log(data);
             var answer = confirm('장바구니에 상품이 담겼습니다.\n장바구니로 이동하시겠습니까?');
             if (answer) {
                 location.href = "/carts";
             }
         }).fail((error) => {
-            console.log(error);
             if (error.result) {
                 alert(error.result);
             }
         }).always(() => {
-            console.log("장바구니 담기 ajax 실행 완료");
         })
     }
 

@@ -21,8 +21,4 @@ public class RecipeCreateReqDto {
     private List<String> items;
     private String recipeImagePath;
 
-    // 레시피 수정을 위한 set메서드
-    public void setFilePath(String recipeImagePath) {
-        this.recipeImagePath = recipeImagePath;
-    }
 }

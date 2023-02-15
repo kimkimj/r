@@ -158,13 +158,6 @@
                         itemName: [[${firstItem}]],
                         cartOrderList: [[${cartOrderDtoList}]]
                     }
-                    console.log(data.orderNum);
-                    console.log(data.totalCost);
-                    console.log([[${userResponse.name}]]);
-                    console.log([[${userResponse.phoneNum}]]);
-                    console.log([[${userResponse.email}]]);
-                    console.log([[${userResponse.address}]]);
-                    console.log(data.itemName)
 
                     paymentCard(data);
                 }
@@ -186,14 +179,12 @@
                     }, function (rsp) { // callback
                         if (rsp.success) {
                             // 결제 성공 시 로직,
-                            console.log(rsp.imp_uid);
                             data.imp_uid = rsp.imp_uid; // 고유 ID
                             data.merchant_uid = rsp.merchant_uid; // 거래 ID
                             // 결제 성공 시 검증 로직
                             paymentComplete(data);
                         } else {
                             var msg = '결제에 실패하였습니다';
-                            console.log(rsp.error_msg);
                             msg += '\n 에러 내용 : ' + rsp.error_msg;
                             alert(msg);
                         }
@@ -218,7 +209,6 @@
                     }).fail(function (result) {
                         var responseText = result.responseText;
                         var message = responseText.split('\"')[13];
-                        console.log(message);
                         alert(message);
 
                         location.replace("/carts/order")

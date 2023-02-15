@@ -108,7 +108,6 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, POST_PERMIT).permitAll()
                 .antMatchers(HttpMethod.GET, GET_AUTHENTICATED).permitAll()
                 .antMatchers(HttpMethod.GET).permitAll()
-//                .antMatchers(HttpMethod.GET, "/api/v1/users/**", "seller/**").authenticated() //추가
                 .antMatchers(HttpMethod.POST).authenticated()
                 .antMatchers(HttpMethod.PUT).authenticated()
                 .antMatchers(HttpMethod.PATCH).authenticated()
