@@ -231,9 +231,24 @@
     function addItem(item) {
         let itemList = document.querySelector("#item-list");
         let itemElement = document.createElement("li");
+        itemElement.className += 'itemTag';
         itemElement.appendChild(document.createTextNode(item));
+        const btnElement = `
+        <button type="button" class="delete-btn mx-2">x</button>
+            `;
+        const doc = new DOMParser().parseFromString(btnElement, 'text/html');
+        const deleteBtn = doc.body.firstChild;
+        itemElement.appendChild(deleteBtn);
         itemList.appendChild(itemElement);
+        selectItem.add(item);
+
     }
+
+    $(document).on("click", ".delete-btn", function() {
+        var index = $('.delete-btn').index(this);
+        document.getElementsByClassName('itemTag')[index].remove();
+        document.getElementsByName('items[]')[index].remove();
+    });
 
     $(document).ready(function () {
         $("#submit-btn").click(function () {
