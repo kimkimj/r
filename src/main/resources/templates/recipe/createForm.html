@@ -102,7 +102,7 @@
                                     data-bs-target="#exampleModal" onclick="searchAndShowItems(document.querySelector('#keyword').value)">
                                 재료 등록
                             </button>
-                            <button type="button" class="deleteAll-btn btn" onclick="allRemove();">
+                            <button type="button" class="deleteAll-btn btn">
                                 재료 전체삭제
                             </button>
                         </div>
@@ -231,28 +231,8 @@
     function addItem(item) {
         let itemList = document.querySelector("#item-list");
         let itemElement = document.createElement("li");
-        itemElement.className += 'itemTag';
         itemElement.appendChild(document.createTextNode(item));
-        const btnElement = `
-            <button type="button" class="delete-btn mx-2">x</button>
-        `;
-
-        const doc = new DOMParser().parseFromString(btnElement, 'text/html');
-        const deleteBtn = doc.body.firstChild;
-        itemElement.appendChild(deleteBtn);
         itemList.appendChild(itemElement);
-        selectItem.add(item);
-    }
-
-    $(document).on("click", ".delete-btn", function() {
-        var index = $('.delete-btn').index(this);
-    });
-
-    function allRemove() {
-        let recipeFormList = document.querySelector("#recipe-form-list");
-        let itemList = document.querySelector("#item-list");
-        recipeFormList.innerHTML = "";
-        itemList.innerHTML = "";
     }
 
     $(document).ready(function () {
