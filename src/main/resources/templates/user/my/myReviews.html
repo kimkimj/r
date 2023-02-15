@@ -10,65 +10,82 @@
 
         /* 테이블 tr 색상 */
         .tr-hover:hover {
-            background-color: #E3F4EA;
+            background-color: #f7f2ebf0;
         }
 
-    </style>
-    <body>
-        <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-        <div class="container"><br>
-            <!-- 상단 메뉴바 -->
-            <div th:replace="fragments/myPageNav :: myPageFragment"/>
-            <br><br>
-            <div>
-                <h4>내가 작성한 리뷰</h4>
-            </div><br><br>
+        .btn {
+            color: #625d55;
+            background-color: white;
+            border-color: #625d55;
+            font-weight: bold;
+        }
 
-            <table class="table table-hover" style="text-align: center;">
-                <thead>
-                <tr class="header">
-                    <th scope="col" style="width: 300px">레시피</th>
-                    <th scope="col" style="width:20%">작성일</th>
-                    <th scope="col" style="width:20%">수정일</th>
-                    <th scope="col" style="width:300px">내용</th>
-                    <th scope="col" style="width:80px">수정</th>
-                    <th scope="col" style="width:80px">삭제</th>
+        .btn:hover {
+            background-color: #DBD0C0 !important;
+            color: black;
+        }
 
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="tr-hover" th:each="review : ${allMyReviews}">
-                    <td><a th:href="@{/recipes/{recipeId}(recipeId=${review.recipeId})}" th:utext="${review.recipeTitle}">레시피</a></td>
-                    <td style="width: 160px"><span th:text="${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm')}"></span> </td>
-                    <td style="width: 160px"><span th:text="${review.lastModified ==null}? ${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm')}:${#temporals.format(review.lastModified, 'yyyy-MM-dd HH:mm')}"></span> </td>
-                    <td style="width: 300px">[[${review.content}]]</td>
-                    <td>
-                        <button type="button" class="btn btn-outline-primary" th:onclick="|location.href='@{/update/{recipeId}/{reviewId}(recipeId=${review.recipeId}, reviewId=${review.reviewId})}'|">수정</button>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-outline-danger" th:onclick="|location.href=' @{/delete/{recipeId}/{reviewId}(recipeId=${review.recipeId}, reviewId=${review.reviewId})}'|">삭제</button>
-                    </td>
+</style>
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<br>
+<div class="container">
+    <div class="margin-20"></div>
 
-                </tr>
-                </tbody>
-            </table>
-        </div>
+    <!-- 상단 메뉴바 -->
+    <div th:replace="fragments/myPageNav :: myPageFragment"/>
+    <div class="margin-20"></div>
+    <div style="text-align: center;">
+        <h3>|&nbsp;&nbsp;&nbsp;리뷰 정보&nbsp;&nbsp;&nbsp;|</h3>
+    </div>
+    <div class="margin-20"></div>
+
+        <table class="table table-hover" style="text-align: center;">
+            <thead>
+            <tr class="header">
+                <th scope="col" style="width: 300px">레시피</th>
+                <th scope="col" style="width:20%">작성일</th>
+                <th scope="col" style="width:20%">수정일</th>
+                <th scope="col" style="width:300px">내용</th>
+                <th scope="col" style="width:80px">수정</th>
+                <th scope="col" style="width:80px">삭제</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="tr-hover" th:each="review : ${allMyReviews}">
+                <td><a th:href="@{/recipes/{recipeId}(recipeId=${review.recipeId})}" th:utext="${review.recipeTitle}">레시피</a></td>
+                <td style="width: 160px"><span th:text="${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm')}"></span> </td>
+                <td style="width: 160px"><span th:text="${review.lastModified ==null}? ${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm')}:${#temporals.format(review.lastModified, 'yyyy-MM-dd HH:mm')}"></span> </td>
+                <td style="width: 300px">[[${review.content}]]</td>
+                <td>
+                    <button type="button" class="btn btn-outline-primary" th:onclick="|location.href='@{/update/{recipeId}/{reviewId}(recipeId=${review.recipeId}, reviewId=${review.reviewId})}'|">수정</button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline-danger" th:onclick="|location.href=' @{/delete/{recipeId}/{reviewId}(recipeId=${review.recipeId}, reviewId=${review.reviewId})}'|">삭제</button>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="margin-20"></div>
         <th:block th:if="${allMyReviews.totalElements > 0}">
         <!-- pagination -->
         <div class="py-3 my-4">
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
                     <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
-                        <a class="page-link" th:href="@{/users/my/reviews(page = ${nowPage - 2})}">Previous</a>
+                        <a class="page-link" th:href="@{/users/my/reviews(page = ${nowPage - 2})}">&nbsp;<&nbsp;</a>
                     </li>
 
                     <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
                         <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/users/my/reviews(page = ${page - 1})}" th:text="${page}">1</a></li>
-                        <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
+                        <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="background-color: #DBD0C0"></strong></li>
                     </th:block>
 
                     <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
-                        <a class="page-link" th:href="@{/users/my/reviews(page = ${nowPage})}">Next</a>
+                    <a class="page-link" th:href="@{/users/my/reviews(page = ${nowPage})}">&nbsp;>&nbsp;</a>
                     </li>
                 </ul>
             </nav>
@@ -79,6 +96,8 @@
                 현재 등록한 리뷰가 없습니다.
             </div>
         </th:block>
-        <div th:replace="fragments/footer :: footerFragment"/>
-    </body>
+<div class="margin-my"></div>
+</div>
+<div th:replace="fragments/footer :: footerFragment"/>
+</body>
 </html>

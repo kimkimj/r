@@ -1,82 +1,262 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="fragments/header :: headerFragment"/>
 <style>
-    .home {
-        width: 100%;
-        height: 1000px;
-        text-align: center;
-        border: 1px solid;
+    .carousel {
+        margin-left: 15%;
+        margin-right: 15%;
     }
 
-    .home>h1 {
-        line-height:1000px;"
-    }
-    .parent{
-        width: 70%;
-        margin: 10px auto;
-    }
-
-    .icon1 {
-        border: 1px solid red;
-        float: left;
-        width:30%;
-        box-sizing: border-box;
-    }
-    .icon2 {
-        border: 1px solid green;
-        float: left;
-        margin-left: 5%;
-        width:30%;
-        box-sizing: border-box;
-    }
-    .icon3 {
-        border: 1px solid blue;
-        float: right;
-        width:30%;
-        box-sizing: border-box;
-    }
-    .fCBSwg {
+    ul.slides {
+        display: block;
         position: relative;
-        width: 48px;
-        height: 48px;
-        display: flex;
-        -webkit-box-align: center;
-        align-items: center;
-        -webkit-box-pack: center;
-        justify-content: center;
+        height: 600px;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        list-style: none;
     }
 
-    .gXfCDw {
-        display: flex;
-        -webkit-box-align: center;
-        align-items: center;
-        -webkit-box-pack: center;
-        justify-content: center;
+    .slides * {
+        user-select: none;
+        -ms-user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+    }
+
+    ul.slides input {
+        display: none;
+    }
+
+
+    .slide-container {
+        display: block;
+    }
+
+    .slide-image {
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        opacity: 0;
+        transition: all .7s ease-in-out;
+    }
+
+    .slide-image img {
+        width: auto;
+        min-width: 100%;
+        height: 100%;
+        border-radius: 10px;
+    }
+
+    .carousel-controls {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        font-size: 100px;
+        line-height: 600px;
+        color: #fff;
+    }
+
+    .carousel-controls label {
+        display: none;
+        position: absolute;
+        padding: 0 20px;
+        opacity: 0;
+        transition: opacity .2s;
         cursor: pointer;
     }
+
+    .slide-image:hover + .carousel-controls label{
+        opacity: 0.5;
+    }
+
+    .carousel-controls label:hover {
+        opacity: 1;
+    }
+
+    .carousel-controls .prev-slide {
+        width: 49%;
+        text-align: left;
+        left: 0;
+    }
+
+    .carousel-controls .next-slide {
+        width: 49%;
+        text-align: right;
+        right: 0;
+    }
+
+    .carousel-dots {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 20px;
+        z-index: 999;
+        text-align: center;
+    }
+
+    .carousel-dots .carousel-dot {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: #fff;
+        opacity: 0.5;
+        margin: 10px;
+    }
+
+    input:checked + .slide-container .slide-image {
+        opacity: 1;
+        transform: scale(1);
+        transition: opacity 1s ease-in-out;
+    }
+
+    input:checked + .slide-container .carousel-controls label {
+        display: block;
+    }
+
+    input#img-1:checked ~ .carousel-dots label#img-dot-1,
+    input#img-2:checked ~ .carousel-dots label#img-dot-2,
+    input#img-3:checked ~ .carousel-dots label#img-dot-3,
+    input#img-4:checked ~ .carousel-dots label#img-dot-4,
+    input#img-5:checked ~ .carousel-dots label#img-dot-5,
+    input#img-6:checked ~ .carousel-dots label#img-dot-6
+    input#img-7:checked ~ .carousel-dots label#img-dot-7 {
+        opacity: 1;
+    }
+
+    input:checked + .slide-container .nav label { display: block; }
+
 </style>
 <body>
-<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-<div class="container">
-    <div class="parent" style="border: 1px solid;">
-        <span><a href=""></a></span>
-        <span>
-            <span class="styles__UserActionIcon-s29m5c-8 fCBSwg icon1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m12.997 12.995 7.071 7.07M13.221 3.74a6.704 6.704 0 1 1-9.48 9.482 6.704 6.704 0 0 1 9.48-9.482Z" stroke="#616161" stroke-width="2"></path></svg></span>
-            <span class="styles__UserActionIcon-s29m5c-8 fCBSwg icon2"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 7.5H5.875L7.2 12.625H20L22 7.5Z" fill="#616161" stroke="#616161"></path><path d="M10 19a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM19 19a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" fill="#616161"></path><path d="M10 19a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM19 19a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" stroke="#616161"></path><path d="M2 4h3l3 12h12" stroke="#616161" stroke-width="2"></path></svg></span>
-            <span style="margin-left:16px" class="styles__UserAction-s29m5c-7 gXfCDw user_icon icon3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 7A5 5 0 1 1 7 7a5 5 0 0 1 10 0ZM7.39 12.5s1.766 1.816 4.61 1.816c2.844 0 4.61-1.816 4.61-1.816l.242.234c1.515 1.461 2.66 3.271 3.135 7.253.13 1.09-.705 2.013-1.741 2.013H5.753c-1.036 0-1.87-.923-1.74-2.013.475-3.982.698-5.485 3.21-7.366.064-.048.166-.121.166-.121Z" fill="#616161"></path></svg>
-                <span class="styles__UserActionText-s29m5c-9 eJzlAX">로그인</span>
-            </span>
-        </span>
-    </div>
+<div sec:authorize="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_HEAD')">
+    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 </div>
-
+<div sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
+    <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+</div>
 <div class="container">
-    <div class="margin-40"></div>
-        <div class="home" style="margin: 100px 0px 100px 0px; background-color: white;">
-            <h1>woowahan recipe</h1>
+    <div class="margin-20"></div>
+    <div>
+        <div class="carousel">
+            <ul class="slides">
+                <input type="radio" name="radio-buttons" id="img-1" checked />
+                <li class="slide-container">
+                    <div class="slide-image">
+                        <img src="https://static.wtable.co.kr/image/production/service/product/6268/754d5906-bd90-4d6c-bdf5-4522ee4d17da.jpg">
+                    </div>
+                    <div class="carousel-controls">
+                        <label for="img-7" class="prev-slide">
+                            <span>&lsaquo;</span>
+                        </label>
+                        <label for="img-2" class="next-slide">
+                            <span>&rsaquo;</span>
+                        </label>
+                    </div>
+                </li>
+                <input type="radio" name="radio-buttons" id="img-2" />
+                <li class="slide-container">
+                    <div class="slide-image">
+                        <img src="https://static.wtable.co.kr/image/production/service/recipe/1017/53569f82-47c0-48c3-a626-49122e800a49.jpg">
+                    </div>
+                    <div class="carousel-controls">
+                        <label for="img-1" class="prev-slide">
+                            <span>&lsaquo;</span>
+                        </label>
+                        <label for="img-3" class="next-slide">
+                            <span>&rsaquo;</span>
+                        </label>
+                    </div>
+                </li>
+                <input type="radio" name="radio-buttons" id="img-3" />
+                <li class="slide-container">
+                    <div class="slide-image">
+                        <img src="https://static.wtable.co.kr/image/production/service/product/6268/65248d6e-51db-4012-9cd1-3a3fc4c3f223.jpg">
+                    </div>
+                    <div class="carousel-controls">
+                        <label for="img-2" class="prev-slide">
+                            <span>&lsaquo;</span>
+                        </label>
+                        <label for="img-4" class="next-slide">
+                            <span>&rsaquo;</span>
+                        </label>
+                    </div>
+                </li>
+                <input type="radio" name="radio-buttons" id="img-4" />
+                <li class="slide-container">
+                    <div class="slide-image">
+                        <img src="https://static.wtable.co.kr/image/production/service/recipe/2181/a8443046-8cfa-4560-8292-8fc644a6a1eb.jpg">
+                    </div>
+                    <div class="carousel-controls">
+                        <label for="img-3" class="prev-slide">
+                            <span>&lsaquo;</span>
+                        </label>
+                        <label for="img-5" class="next-slide">
+                            <span>&rsaquo;</span>
+                        </label>
+                    </div>
+                </li>
+                <input type="radio" name="radio-buttons" id="img-5" />
+                <li class="slide-container">
+                    <div class="slide-image">
+                        <img src="https://static.wtable.co.kr/image/production/service/product/6128/cafbc068-8422-4440-a974-a9b4cf6b00af.jpg">
+                    </div>
+                    <div class="carousel-controls">
+                        <label for="img-4" class="prev-slide">
+                            <span>&lsaquo;</span>
+                        </label>
+                        <label for="img-6" class="next-slide">
+                            <span>&rsaquo;</span>
+                        </label>
+                    </div>
+                </li>
+                <input type="radio" name="radio-buttons" id="img-6" />
+                <li class="slide-container">
+                    <div class="slide-image">
+                        <img src="https://static.wtable.co.kr/image/production/service/product/6268/a0313463-0989-4fbd-b47f-a64deee873db.jpg">
+                    </div>
+                    <div class="carousel-controls">
+                        <label for="img-5" class="prev-slide">
+                            <span>&lsaquo;</span>
+                        </label>
+                        <label for="img-7" class="next-slide">
+                            <span>&rsaquo;</span>
+                        </label>
+                    </div>
+                </li>
+                <input type="radio" name="radio-buttons" id="img-7" />
+                <li class="slide-container">
+                    <div class="slide-image">
+                        <img src="https://static.wtable.co.kr/image/production/service/recipe/1820/791f502d-842a-4aaf-9e63-091a60b93b96.jpg?size=1024x1024">
+                    </div>
+                    <div class="carousel-controls">
+                        <label for="img-6" class="prev-slide">
+                            <span>&lsaquo;</span>
+                        </label>
+                        <label for="img-1" class="next-slide">
+                            <span>&rsaquo;</span>
+                        </label>
+                    </div>
+                </li>
+                <div class="carousel-dots">
+                    <label for="img-1" class="carousel-dot" id="img-dot-1"></label>
+                    <label for="img-2" class="carousel-dot" id="img-dot-2"></label>
+                    <label for="img-3" class="carousel-dot" id="img-dot-3"></label>
+                    <label for="img-4" class="carousel-dot" id="img-dot-4"></label>
+                    <label for="img-5" class="carousel-dot" id="img-dot-5"></label>
+                    <label for="img-6" class="carousel-dot" id="img-dot-6"></label>
+                    <label for="img-7" class="carousel-dot" id="img-dot-7"></label>
+                </div>
+            </ul>
         </div>
-    <div class="margin-40"></div>
+    </div>
+    <div class="margin-common"></div>
 </div>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>

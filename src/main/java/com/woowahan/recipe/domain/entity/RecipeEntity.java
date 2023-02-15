@@ -23,6 +23,7 @@ public class RecipeEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String recipeTitle;
+    @Column(columnDefinition = "TEXT")
     private String recipeBody;
     // 조회수의 기본 값을 0으로 지정, null 불가 처리 -> null 불가능하니까 int형으로
     @Column(columnDefinition = "integer default 0", nullable = false)

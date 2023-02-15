@@ -1,7 +1,11 @@
 package com.woowahan.recipe.domain.dto.sellerDto;
 
+import com.woowahan.recipe.domain.UserRole;
 import com.woowahan.recipe.domain.entity.SellerEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
@@ -14,6 +18,7 @@ public class SellerResponse {
     private String email;
     private String phoneNum;
     private String businessRegNum;
+    private UserRole status;
     private String message;
 
 
@@ -25,6 +30,7 @@ public class SellerResponse {
                 .email(seller.getEmail())
                 .phoneNum(seller.getPhoneNum())
                 .businessRegNum(seller.getBusinessRegNum())
+                .status(seller.getUserRole())
                 .message("수정이 완료되었습니다.")
                 .build();
     }

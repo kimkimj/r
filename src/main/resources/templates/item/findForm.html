@@ -3,13 +3,15 @@
 <head th:replace="fragments/header :: headerFragment"/>
 <style>
     .back-ground {
-        background-color: #cccccc;
+        border: 1px solid #DBD0C0;
+        /*background-color: #F9CF93;*/
         border-radius: 10px;
         height: 65px;
-        margin-top: 220px;
+        margin-top: 210px;
         margin-bottom: 10px;
         padding-top: 20px;
         padding-left: 20px;
+        width: 450px;
     }
     button {
         padding: 10px 30px;
@@ -19,6 +21,18 @@
       height: 400px;
       object-fit: cover;
       border-radius: 5%;
+      border: 1px solid #DBD0C0;
+    }
+    .item-wrapper {
+      margin-top: 80px;
+      /*border: 10px solid #FAEEE0;*/
+      border-radius: 10px;
+
+    }
+    .pm-btn {
+      background-color: #DBD0C0;
+      font-weight: bold;
+      border-radius: 5px;
     }
 </style>
 <body>
@@ -35,13 +49,13 @@
 
         const resultCntElement = document.getElementById('cartItemCnt');
         const itemPrice = document.getElementById('itemPrice').value;
-
+        const itemStock = document.getElementById('itemStock').value;
         let number = parseInt(resultCntElement.value);
 
         // 더하기/빼기
         if (type === 'plus') {
-            if (number >= 10) {
-                alert("수량은 10개 이하이어야 합니다.");
+            if (number >= itemStock) {
+                alert("재고가 부족합니다.");
                 return;
             }
             number += 1;
@@ -66,13 +80,14 @@
 
       const resultCntElement = document.getElementById('cartItemCnt2');
       const itemPrice = document.getElementById('itemPrice').value;
+      const itemStock = document.getElementById('itemStock').value;
 
       let number = parseInt(resultCntElement.value);
 
       // 더하기/빼기
       if (type === 'plus') {
-        if (number >= 10) {
-          alert("수량은 10개 이하이어야 합니다.");
+        if (number >= itemStock) {
+          alert("재고가 부족합니다.");
           return;
         }
         number += 1;
@@ -87,6 +102,40 @@
       document.getElementById('totalPrice2').innerText = (itemPrice * number).toString();
       // 결과 출력
       resultCntElement.value = number;
+    }
+
+    function addCartItem() {
+        const cartItemReq = {
+            cartItemId: $('#itemId').val(),
+            cartItemCnt: $('#cartItemCnt').val()
+        }
+
+        console.log(cartItemReq.cartItemId);
+        console.log(cartItemReq.cartItemCnt);
+        console.log(typeof cartItemReq.cartItemId);
+        console.log(typeof cartItemReq.cartItemCnt);
+
+        $.ajax({
+            url: "/api/v1/carts",
+            method: "POST",
+            dataType: "json",
+            contentType: 'application/json',
+            data: JSON.stringify(cartItemReq),
+        }).done((data) => {
+            if(data.resultCode != null && data.resultCode === 'SUCCESS'){
+                var answer = confirm(data.result);
+                if(answer) {
+                    location.href = "/carts";
+                }
+            }
+        }).fail((error) => {
+            var error = error.responseJSON.result;
+            if(error === 'NOT_ENOUGH_STOCK, 재고 수량이 없습니다') {
+                alert('재고가 부족하여 상품을 장바구니에 담지 못했습니다.');
+            }
+        }).always(() => {
+            console.log("장바구니 담기 호출 완료");
+        })
     }
 
     /**
@@ -108,47 +157,59 @@
         window.location.href = "/items/" + [[${id}]] + "/order"
     }
 
-    function cart(){
-      alert('장바구니에 상품이 담겼습니다.');
-
-    }
 
 </script>
-<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div sec:authorize="!hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
+  <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+</div>
+<div sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
+  <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+</div>
 <div class="container" style="border: 1px solid white">
-  <div style="margin-top: 120px; border: 1px solid white" class="row">
-    <div class="col">
-      <p th:align="center"><img th:src="${resDto.getItemImagePath()}" alt="이미지 준비중입니다.">
-    </div>
-    <div class="col">
-      <div>
-        <h1 th:text="${resDto.getItemName()}">상품명</h1>
+  <div class="margin-common"></div>
+  <div style="text-align: center;">
+    <h3>|&nbsp;&nbsp;&nbsp;OUR INGREDIENTS&nbsp;&nbsp;&nbsp;|</h3>
+    <h5>신선한 재료를 우아한에서 간편하게 주문해 보세요.</h5>
+  </div>
+
+  <div class="row item-wrapper">
+    <div class="col" style="padding-top:30px; text-align: center;">
+      <div th:align="center">
+        <img th:src="${resDto.getItemImagePath()}"
+             th:onerror="this.src='https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/item-image/3731374c-70de-4ea3-b1c6-55972bd18c40.png'" />
       </div>
-      <div>
+    </div>
+    <div class="col" style="padding:30px; width: 300px; height: 300px;">
+      <div style="color:#645f53; margin-top: 10px;">
+        <h2 th:text="${resDto.getItemName()}">상품명</h2>
+      </div>
+      <div style="color:#645f53;">
         <h3><span th:text="${resDto.getItemPrice()}">상품 가격</span>원</h3>
       </div>
-      <input type="hidden" th:field="${cartItemReq.cartItemId}"/>
       <input type="hidden" id="itemPrice" th:value="${resDto.getItemPrice()}"/>
-      <form sec:authorize="isAuthenticated()" role="form" th:action="@{/items/cart}" th:object="${cartItemReq}" method="post" onsubmit="cart();">
+      <input type="hidden" id="itemStock" th:value="${resDto.getItemStock()}"/>
+      <input type="hidden" id="itemId" th:value="${resDto.getItemId()}"/>
+      <form sec:authorize="isAuthenticated()" role="form" th:action="@{/items/cart}" th:object="${cartItemReq}">
+        <input type="hidden" th:field="${cartItemReq.cartItemId}"/>
         <div class="back-ground">
           <!--장바구니 수량 버튼-->
           <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-            <input style="width: 40px" type='button' onclick='count("minus")' value="-"/>
+            <input class="pm-btn" style="width: 40px" type='button' onclick='count("minus")' value="-"/>
             <input style="width: 100px; border:1px solid; text-align: center; background-color: white" id='cartItemCnt'
                    name="cartItemCnt" th:value="${cartItemReq.cartItemCnt}"/>
-            <input style="width: 40px" type='button' onclick='count("plus")' value="+"/>
+            <input class="pm-btn" style="width: 40px" type='button' onclick='count("plus")' value="+"/>
           </div>
-          <div style="margin-right: 30px; float: right"><span id="totalPrice"
-                                                              th:text="${resDto.getItemPrice()}">0</span>원
+          <div style="margin-right: 30px; float: right"><span id="totalPrice" th:text="${resDto.getItemPrice()}">0</span>원
           </div>
         </div>
-        <div style="border: 1px solid;">
-          <input style="width: 100px; float: right;"
+        <div style="margin-right: 150px;">
+          <input style="width: 100px; float: right;" class="btn btn-sm"
                  onclick="location.href='findAllForm.html'"
                  th:onclick="|location.href='@{/items}'|" type="button" value="목록으로"/>
 
-            <input type="submit" value="장바구니" style="width: 100px; float: right;"/>
-            <input type="button" value="바로구매" style="width: 100px; float: right;" onclick='order()'/>
+          <input type="submit" value="장바구니" class="btn btn-sm" style="width: 100px; float: right;" onclick="addCartItem()"/>
+          <input type="button" value="바로구매" class="btn btn-sm" style="width: 100px; float: right;" onclick='order()'/>
+
         </div>
       </form>
 
@@ -157,29 +218,29 @@
           <!--장바구니 수량 버튼-->
           <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
             <input style="width: 40px" type='button' onclick='count2("minus")' value="-"/>
-            <input style="width: 100px; border:1px solid; text-align: center; background-color: white" id='cartItemCnt2'
+            <input style="width: 80px; border:1px solid; text-align: center; background-color: white" id='cartItemCnt2'
                    name="cartItemCnt" value="1"/>
             <input style="width: 40px" type='button' onclick='count2("plus")' value="+"/>
           </div>
-          <div style="margin-right: 30px; float: right"><span id="totalPrice2"
-                                                              th:text="${resDto.getItemPrice()}">0</span>원
+          <div style="margin-right: 30px; float: right">
+            <span id="totalPrice2" th:text="${resDto.getItemPrice()}">0</span>원
           </div>
         </div>
-        <div>
-          <input style="width: 100px; float: right;"
+        <div style="width:450px;">
+          <input style="width: 100px; float: right;" class="btn btn-sm"
                  onclick="location.href='findAllForm.html'"
                  th:onclick="|location.href='@{/items}'|" type="button" value="목록으로"/>
-          <input type="submit" value="장바구니" style="width: 100px; float: right;"
+          <input type="submit" value="장바구니" style="width: 100px; float: right;" class="btn btn-sm"
                  onclick="login()"/>
-          <input type="button" value="바로구매" style="width: 100px; float: right;"
+          <input type="button" value="바로구매" style="width: 100px; float: right;" class="btn btn-sm"
                  onclick="login()"/>
         </div>
       </div>
     </div>
   </div>
-  <hr>
-
+  <div class="margin-common"></div>
 </div>
+<div class="margin-common"></div>
 </div>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>

@@ -98,6 +98,8 @@ public class AdminService {
         }
 
         targetSeller.updateToSeller(req.getStatus());
+        sellerRepository.flush();
+        log.info("판매자 변경된 권한 : {}", targetSeller.getUserRole());
         return AdminResponse.toAdminResponse(targetSeller);
     }
 

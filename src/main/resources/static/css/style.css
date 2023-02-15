@@ -36,7 +36,7 @@ ul, ol {
     color: black;
     font-weight: 600;
     font-size: 15px;
-    background-color: #e6f3e5;
+    background-color: #dbd0c075;
     border-style: none;
     border-radius: 15px;
 }
@@ -45,6 +45,16 @@ ul, ol {
 a, a:visited, a:hover, a:active {
     text-decoration: none !important;
     color: black;
+}
+
+.nav-link {
+    font-size: 20px;
+}
+.nav-link:focus {
+    color: #BEA9A1;
+}
+.nav-item {
+    margin: 0 1em;
 }
 
 /* header */
@@ -131,10 +141,10 @@ input[type="number"]::-webkit-inner-spin-button {
 
 /* 공통 위아래 마진 */
 .margin-common {
-    margin: 50px 0px 50px 0px;
+    margin: 40px 0px 40px 0px;
     border: 1px solid white;
     width: 100%;
-    height: 50px;
+    height: 20px;
 }
 
 /* 마이페이지 전용 마진 */
@@ -143,4 +153,38 @@ input[type="number"]::-webkit-inner-spin-button {
     border: 1px solid white;
     width: 100%;
     height: 30px;
+}
+
+.margin-20 {
+    margin: 20px 0px 20px 0px;
+    border: 1px solid white;
+    width: 100%;
+    height: 20px;
+}
+
+.form-check-input:checked {
+    background-color: #F9E4C8;
+    border-color: #F9E4C8;
+}
+
+/* 말줄임표 */
+.ellipsis {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn {
+    color: #625d55;
+    background-color: white;
+    border-color: #625d55;
+    font-weight: bold;
+}
+
+.btn:hover, .btn:active, .btn:visited {
+    border-color: #DBD0C0 !important;
+    outline-color: #DBD0C0 !important;
+    background-color: #DBD0C0 !important;
+    color: black;
 }

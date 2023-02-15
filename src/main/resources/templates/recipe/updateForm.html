@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <head th:replace="fragments/header :: headerFragment"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/recipe.css}"/>
@@ -34,47 +34,35 @@
     }
 </style>
 <body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous"></script>
-<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<div sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_HEAD')">
+    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+</div>
+<div sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
+    <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+</div>
 <div class="container">
-    <br><br><br>
-    <div class="margin-20" style="text-align: center;">
+    <div class="margin-common"></div>
+    <div style="text-align: center;">
         <h3>|&nbsp;&nbsp;&nbsp;EDITE TO RECIPE&nbsp;&nbsp;&nbsp;|</h3>
         <h5>레시피 수정 페이지</h5>
     </div>
-    <div>
-        <button type="button" class="btn btn-outline-success" style="float: right;"
-                th:onclick="|location.href='@{/recipes/list}'|">목록가기
-        </button>
-    </div>
-    <br><br>
-
-    <!--        &lt;!&ndash; 카테고리 선택 &ndash;&gt;-->
-    <!--        <div>-->
-    <!--            <h5>레시피 카테고리</h5>-->
-    <!--            <select class="form-select" aria-label="Default select example" style="width: 550px;">-->
-    <!--                <option selected>카테고리를 선택해주세요.</option>-->
-    <!--                <option value="1">메인요리</option>-->
-    <!--                <option value="2">간단요리</option>-->
-    <!--                <option value="3">초대요리</option>-->
-    <!--                <option value="4">안주요리</option>-->
-    <!--                <option value="5">분식</option>-->
-    <!--                <option value="6">간식</option>-->
-    <!--            </select>-->
-    <!--        </div>-->
-
-    <!--        <br>-->
+    <div class="margin-20"></div>
 
     <!-- 레시피 수정하는 곳 -->
     <div class="px-4">
         <div class="row gx-5">
+            <div>
+                <button type="button" class="btn" style="float: right; margin:0px -20px 20px 0px;"
+                        th:onclick="|location.href='@{/recipes/list}'|">목록가기
+                </button>
+            </div>
             <!-- 내용 -->
-            <div class="p-3 border bg-light">
-                <h5>레시피 수정</h5>
-                <h6>제목, 내용, 재료 중 하나라도 입력되지 않으면 레시피가 등록되지 않습니다.</h6>
-                <hr>
+            <div class="p-3 border" style="background-color: #dbd0c01f; border-radius: 10px;">
+                <div style="margin: 10px 0px 30px 0px; text-align:center;">
+                    <h5>레시피 수정</h5>
+                    <h6>제목, 내용, 재료 중 하나라도 입력되지 않으면 레시피가 등록되지 않습니다.</h6>
+                </div><br><br>
                 <form role="form" th:action="@{/recipes/update/{recipeId} (recipeId=${recipeId})}"
                       th:object="${recipeUpdateReqDto}" method="post" enctype="multipart/form-data">
                     <!-- 레시피 제목  -->
@@ -100,8 +88,8 @@
                     <br>
 
                     <!-- 재료 목록 -->
-                    <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
-                        <h5>레시피 재료</h5>
+                    <div class="p-3 border" style="margin-top: 20px; border-radius:10px; background-color: rgba(219,208,192,0.24)">
+                        <h6>레시피 재료</h6>
                         <hr>
                         <p>기존의 재료부터 삭제 후 등록 하거나 혹은 전체삭제 후 등록 해주세요</p>
                         <hr>
@@ -124,12 +112,12 @@
                         </ul>
                         <!-- 재료 등록 버튼(modal), 등록한 재료 전체삭제 버튼 -->
                         <div style="text-align: right;">
-                            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                            <button type="button" class="btn" data-bs-toggle="modal"
                                     data-bs-target="#exampleModal"
                                     onclick="searchAndShowItems(document.querySelector('#keyword').value)">
                                 재료 등록
                             </button>
-                            <button type="button" class="deleteAll-btn btn btn-outline-success">
+                            <button type="button" class="deleteAll-btn btn">
                                 재료 전체삭제
                             </button>
                         </div>
@@ -137,8 +125,8 @@
                     <br>
 
                     <!-- 레시피 이미지 첨부파일 -->
-                    <div class="p-3 border bg-light" style="margin-top: 20px;">
-                        <h5>레시피 이미지</h5>
+                    <div class="p-3 border" style="margin-top: 20px; border-radius:10px; background-color: rgba(219,208,192,0.24)">
+                        <h6>레시피 이미지</h6>
                         <hr>
                         <div>
                             파일 : <input type="file" name="file"><br><br>
@@ -147,7 +135,7 @@
                     <br><br>
 
                     <div style="text-align: center;">
-                        <button id="submit-btn" type="submit" class="btn btn-outline-success">레시피 수정완료</button>
+                        <button id="submit-btn" type="submit" class="btn">레시피 수정완료</button>
                     </div>
                     <br>
                 </form>
@@ -187,7 +175,9 @@
         </div>
     </div>
 </div>
-<br><br><br>
+<div class="margin-common"></div>
+<div class="margin-common"></div>
+</div>
 <div th:replace="fragments/footer :: footerFragment"/>
 <script>
     const selectItem = new Set();
@@ -220,7 +210,7 @@
                 addItemButton.style.color = 'black';
                 addItemButton.style.fontWeight = '600';
                 addItemButton.style.fontSize = '15px';
-                addItemButton.style.backgroundColor = '#e6f3e5';
+                addItemButton.style.backgroundColor = '#dbd0c075';
                 addItemButton.style.borderStyle = 'none';
                 addItemButton.style.borderRadius = '15px';
 

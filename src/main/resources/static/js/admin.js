@@ -72,7 +72,8 @@ function updateSeller(idx, status) {
     console.log(typeof id);
     console.log(typeof company);
     console.log(typeof status);
-    console.log("이 판매자의 등록을 " + status + "하겠습니다");
+    var message = status === 'ok' ? 'SELLER' : 'REJECT'
+    console.log("해당 판매자의 등록을 " + message + "로 변경했습니다");
     const seller = {
         id: parseInt(id),
         status: status

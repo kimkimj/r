@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <head th:replace="fragments/header :: headerFragment"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/recipe.css}" />
@@ -32,27 +32,26 @@
         right: 12px;
         margin: 0;
     }
+
+    .recipe-outer {
+        border-radius: 10px;
+    }
 </style>
 <body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous"></script>
-
-<!-- bodyHeader -->
-<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-
-<div class="container"><br>
-
-    <div>
-        <h1>레시피 등록 페이지</h1>
-        <hr>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<div sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_HEAD')">
+    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+</div>
+<div sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
+    <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+</div>
+<div class="container">
+    <div class="margin-common"></div>
+    <div style="text-align: center;">
+        <h3>|&nbsp;&nbsp;&nbsp;OUR RECIPES&nbsp;&nbsp;&nbsp;|</h3>
+        <h5>우아한과 함께 맛있는 음식을 만들어 보세요.</h5>
     </div>
-    <div>
-        <button type="button" class="btn btn-outline-success" style="float: right;"
-                th:onclick="|location.href='@{/recipes/list}'|">목록가기
-        </button>
-    </div>
-    <br><br>
+    <div class="margin-20"></div>
 
     <!--        &lt;!&ndash; 카테고리 선택 &ndash;&gt;-->
     <!--        <div>-->
@@ -71,28 +70,34 @@
     <!--        <br>-->
 
     <!-- 레시피 등록하는 곳 -->
-    <div class="px-4">
+    <div class="px-4 recipe-outer">
         <div class="row gx-5">
+            <div>
+                <button type="button" class="btn btn-style2" style="float: right; margin:0px -20px 20px 0px;"
+                        th:onclick="|location.href='@{/recipes/list}'|">목록가기
+                </button>
+            </div>
             <!-- 내용 -->
-            <div class="p-3 border" style="background-color: #F8FAF9;">
-                <h5>레시피 등록</h5>
-                <h6>제목, 내용, 재료 중 하나라도 입력되지 않으면 레시피가 등록되지 않습니다.</h6>
-                <hr>
+            <div class="p-3 border borderR" style="background-color: #dbd0c01f; border-radius: 10px;">
+                <div style="margin: 10px 0px 30px 0px; text-align:center;">
+                    <h5 >레시피 등록</h5>
+                    <h6>제목, 내용, 재료 중 하나라도 입력되지 않으면 레시피가 등록되지 않습니다.</h6>
+                </div><br><br>
                 <form role="form" th:action="@{/recipes/create}" th:object="${recipeCreateReqDto}" method="post" enctype="multipart/form-data">
                     <!-- 레시피 제목  -->
                     <div class="form-group col">
                         <label th:for="recipeTitle">레시피 제목</label>
-                        <input type="text" th:field="*{recipeTitle}" class="form-control" id="recipeTitle"
+                        <input type="text" th:field="*{recipeTitle}" class="form-control borderR" id="recipeTitle"
                                placeholder="예) 소고기 미역국"
                                th:class="${#fields.hasErrors('recipeTitle')}? 'form-control fieldError' : 'form-control'">
                         <p th:if="${#fields.hasErrors('recipeTitle')}" th:errors="*{recipeTitle}"></p>
                     </div>
                     <br>
                     <!-- 레시피 내용  -->
-                    <div class="form-group mb-3">
+                    <div class="form-group mb-3 borderR">
                         <label th:for="recipeBody" class="form-label">레시피 내용 (음식에 필요한 재료와 단위를 먼저 적어주시면 더 완벽한 레시피가
                             될거에요)</label>
-                        <textarea th:field="*{recipeBody}" class="form-control" id="recipeBody" rows="3" style="height: 300px; resize:none;"
+                        <textarea th:field="*{recipeBody}" class="form-control borderR" id="recipeBody" rows="3" style="height: 300px; resize:none;"
                                   th:class="${#fields.hasErrors('recipeBody')}? 'form-control fieldError' : 'form-control'" placeholder="이 레시피의 내용을 적어주세요.">
                         </textarea>
                         <p th:if="${#fields.hasErrors('recipeBody')}" th:errors="*{recipeBody}" style="white-space:pre;"></p>
@@ -102,18 +107,18 @@
                     </div>
 
                     <!-- 재료 목록 -->
-                    <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
-                        <h5>레시피 재료</h5>
+                    <div class="p-3 border" style="margin-top: 20px; border-radius:10px; background-color: rgba(219,208,192,0.24)">
+                        <h6>레시피 재료</h6>
                         <hr>
                         <!-- 선택한 재료들이 보이는 부분 -->
                         <ul id="item-list"></ul>
                         <!-- 재료 등록 버튼(modal), 등록한 재료 전체삭제 버튼 -->
                         <div style="text-align: right;">
-                            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                            <button type="button" class="btn" data-bs-toggle="modal"
                                     data-bs-target="#exampleModal" onclick="searchAndShowItems(document.querySelector('#keyword').value)">
                                 재료 등록
                             </button>
-                            <button type="button" class="deleteAll-btn btn btn-outline-success" onclick="allRemove();">
+                            <button type="button" class="deleteAll-btn btn" onclick="allRemove();">
                                 재료 전체삭제
                             </button>
                         </div>
@@ -121,8 +126,8 @@
                     <br>
 
                     <!-- 레시피 이미지 첨부파일 -->
-                    <div class="p-3 border" style="margin-top: 20px; background-color: #F8FAF9;">
-                        <h5>레시피 이미지</h5>
+                    <div class="p-3 border" style="margin-top: 20px; border-radius:10px; background-color: rgba(219,208,192,0.24)">
+                        <h6>레시피 이미지</h6>
                         <hr>
                         <div>
                             파일 : <input type="file" name="file"><br><br>
@@ -139,9 +144,7 @@
                 </form>
             </div>
 
-
             <!-- 모달창 부분을 밖으로 빼준 이유는 form태그 안에 있을 경우 재료목록 데이터가 전송이 되지 않아서다. -->
-            <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog">
@@ -175,11 +178,9 @@
         </div>
     </div>
     <i class="fa-solid fa-trash-can"></i>
-    <br><br><br><br>
-
+    <div class="margin-common"></div>
+    <div class="margin-common"></div>
 </div>
-
-<!-- footer -->
 <div th:replace="fragments/footer :: footerFragment"/>
 <script>
     const selectItem = new Set();
