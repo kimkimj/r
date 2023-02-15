@@ -164,6 +164,12 @@ public class CartService {
 
         for (CheckOrderItemDto dto : checkOrderItemDtoList) {
             CartItemEntity cartItem = validateCartItem(cart, dto.getId());
+            ItemEntity item = validateItem(cartItem.getItem().getId());
+
+            if(item.getItemStock() < cartItem.getCartItemCnt()) { //아이템 stock 충분한지 확인
+                throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, ErrorCode.NOT_ENOUGH_STOCK.getMessage());
+            }
+
             boolean dtoCheck = dto.getIsChecked().equals("true")?true:false;
             if(cartItem.isChecked() != dtoCheck) {
                 cartItem.updateCheckItem();

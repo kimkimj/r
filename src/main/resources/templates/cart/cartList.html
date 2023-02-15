@@ -55,9 +55,17 @@
                                      class="rounded" >
                             </div>
                         </td>
-                        <td class="individual_name_input text-truncate" th:idx="${itemStat.index}" th:text="${item.name}"
-                            onclick="location.href='item/findForm.html'"
-                            th:onclick="|location.href='@{/items/{id}(id=${item.itemId})}'|"></td>
+                        <td>
+                            <div class="individual_name_input text-truncate" th:idx="${itemStat.index}" th:text="${item.name}"
+                                 onclick="location.href='item/findForm.html'"
+                                 th:onclick="|location.href='@{/items/{id}(id=${item.itemId})}'|">
+                            </div>
+                            <span style="font-size: small">현재 재고 : </span>
+                            <span th:classappend="${item.stock < 10} ? 'text-danger'" style="font-size: small" th:text="${item.stock}"></span>
+                        </td>
+<!--                        <td class="individual_name_input text-truncate" th:idx="${itemStat.index}" th:text="${item.name}"-->
+<!--                            onclick="location.href='item/findForm.html'"-->
+<!--                            th:onclick="|location.href='@{/items/{id}(id=${item.itemId})}'|"></td>-->
                     <input type="hidden" class="individual_id_input" th:value="${item.id}"/>
                     <input type="hidden" class="individual_stock_input" th:value="${item.stock}"/>
                     <td class="individual_cnt_input d-flex flex-row align-items-center">
