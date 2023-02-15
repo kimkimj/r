@@ -4,9 +4,7 @@ package com.woowahan.recipe.domain.dto.sellerDto;
 import com.woowahan.recipe.domain.UserRole;
 import com.woowahan.recipe.domain.entity.SellerEntity;
 import lombok.*;
-import org.apache.catalina.User;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -44,8 +42,6 @@ public class SellerJoinRequest {
     @NotBlank(message = "사업자 등록번호를 입력해주세요.")
     private String businessRegNum;
 
-    private final UserRole userRole = UserRole.SELLER;
-
 
     public SellerEntity toEntity(String encodedPassword) {
         return SellerEntity.builder()
@@ -56,6 +52,7 @@ public class SellerJoinRequest {
                 .email(email)
                 .phoneNum(phoneNum)
                 .businessRegNum(businessRegNum)
+                .userRole(UserRole.READY)
                 .build();
     }
 
