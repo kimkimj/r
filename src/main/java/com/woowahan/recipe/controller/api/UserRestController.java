@@ -42,15 +42,6 @@ public class UserRestController {
     }
 
     /**
-     * 로그인
-     */
-    @PostMapping("/users/login")
-    public Response<UserLoginResDto> login(@RequestBody UserLoginReqDto userLoginReqDto) {
-        String token = userService.login(userLoginReqDto.getUserName(), userLoginReqDto.getPassword());
-        return Response.success(new UserLoginResDto(token));
-    }
-
-    /**
      * 회원정보 조회
      */
     @GetMapping("/users/{id}")
