@@ -1,5 +1,7 @@
 var duplicateIdCheck = false;
+var availableIdCheck = false;
 var duplicateEmailCheck = false;
+var availableEmailCheck = false;
 $(document).ready(function () {
     const specialRule = /[`~!@#$%^&*()_|+\-=?;:'"<>\{\}\[\]\\\/ ]/gim;
 
@@ -7,17 +9,24 @@ $(document).ready(function () {
         let ckid = $("#id-input").val();
         if (ckid.length <= 0 || ckid.length > 8) {
             $("#id-result").text("아이디는 8자이하여야 합니다").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');
+            availableIdCheck = false;
             duplicateIdCheck = false;
         }else if(specialRule.test(ckid)) {
             $("#id-result").text("아이디는 한글, 영문 대소문자, 숫자로만 이루어져야 합니다").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');
+            availableIdCheck = false;
             duplicateIdCheck = false;
         }else {
             $("#id-result").text("아이디 중복 검사를 해주세요.").removeClass('text-danger').removeClass('text-dark').addClass('text-danger');
+            availableIdCheck = true;
             duplicateIdCheck = false;
         }
     });
 
     $(".id-btn").on("click", function () {
+        if(!availableIdCheck) {
+            alert("아이디 조건에 만족하지 않습니다");
+            return;
+        }
         let username = $('#id-input').val();
         if (username.trim().length == 0) {
             $("#id-result").text("아이디를 입력해주세요").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');
@@ -64,17 +73,24 @@ $(document).ready(function () {
         let ckemail = $("#email-input").val();
         if (ckemail.trim().length < 0) {
             $("#email-result").text("이메일을 입력해주세요").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');
+            availableEmailCheck = false;
             duplicateEmailCheck = false;
         }else if(!emailCheck.test(ckemail)){
             $("#email-result").text("이메일을 올바른 형식으로 적어주세요.").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');
+            availableEmailCheck = false;
             duplicateEmailCheck = false;
         }else {
             $("#email-result").text("이메일 중복검사를 진행해주세요.").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');
+            availableEmailCheck = true;
             duplicateEmailCheck = false;
         }
     });
 
     $(".email-btn").on("click", function () {
+        if(!availableEmailCheck) {
+            alert("이메일 조건에 만족하지 않습니다");
+            return;
+        }
         let emailCheck =new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
         let ckemail = $('#email-input').val();
         if (ckemail.trim().length === 0 || ckemail == 'undefined') {
