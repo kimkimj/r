@@ -1,24 +1,32 @@
 var duplicateIdCheck = false;
+var availableIdCheck = false;
 var duplicateEmailCheck = false;
+var availableEmailCheck = false;
 $(document).ready(function () {
     const specialRule = /[`~!@#$%^&*()_|+\-=?;:'"<>\{\}\[\]\\\/ ]/gim;
 
     $("#id-input").keyup(function () {
-        console.log("id 검사중");
         let ckid = $("#id-input").val();
         if (ckid.length <= 0 || ckid.length > 8) {
             $("#id-result").text("아이디는 8자이하여야 합니다").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');
+            availableIdCheck = false;
             duplicateIdCheck = false;
         }else if(specialRule.test(ckid)) {
             $("#id-result").text("아이디는 한글, 영문 대소문자, 숫자로만 이루어져야 합니다").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');
+            availableIdCheck = false;
             duplicateIdCheck = false;
         }else {
             $("#id-result").text("아이디 중복 검사를 해주세요.").removeClass('text-danger').removeClass('text-dark').addClass('text-danger');
+            availableIdCheck = true;
             duplicateIdCheck = false;
         }
     });
 
     $(".id-btn").on("click", function () {
+        if(!availableIdCheck) {
+            alert("아이디 조건에 만족하지 않습니다");
+            return;
+        }
         let username = $('#id-input').val();
         if (username.trim().length == 0) {
             $("#id-result").text("아이디를 입력해주세요").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');
@@ -41,7 +49,6 @@ $(document).ready(function () {
     })
 
     $("#pw-input").keyup(function () {
-        console.log("pw 검사중");
         let ckpw = $("#pw-input").val();
         if (ckpw.length < 8 || ckpw.length > 24) {
             $("#pw-result").text("비밀번호는 8자이상 24자이하여야 합니다").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');
@@ -53,7 +60,6 @@ $(document).ready(function () {
     });
 
     $("#name-input").keyup(function () {
-        console.log("name 검사중");
         let ckname = $("#name-input").val();
         if (ckname.length < 2 || ckname.length > 16) {
             $("#name-result").text("이름은 2자이상 16자이하여야 합니다").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');
@@ -64,21 +70,27 @@ $(document).ready(function () {
 
     $("#email-input").keyup(function () {
         let emailCheck = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
-        console.log("email 검사중");
         let ckemail = $("#email-input").val();
         if (ckemail.trim().length < 0) {
             $("#email-result").text("이메일을 입력해주세요").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');
+            availableEmailCheck = false;
             duplicateEmailCheck = false;
         }else if(!emailCheck.test(ckemail)){
             $("#email-result").text("이메일을 올바른 형식으로 적어주세요.").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');
+            availableEmailCheck = false;
             duplicateEmailCheck = false;
         }else {
             $("#email-result").text("이메일 중복검사를 진행해주세요.").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');
+            availableEmailCheck = true;
             duplicateEmailCheck = false;
         }
     });
 
     $(".email-btn").on("click", function () {
+        if(!availableEmailCheck) {
+            alert("이메일 조건에 만족하지 않습니다");
+            return;
+        }
         let emailCheck =new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
         let ckemail = $('#email-input').val();
         if (ckemail.trim().length === 0 || ckemail == 'undefined') {
@@ -107,7 +119,6 @@ $(document).ready(function () {
     });
 
     $("#phone-input").keyup(function () {
-        console.log("phone 검사중");
         let ckphone = $("#phone-input").val();
         let phoneCheck =new RegExp('(01[016789])(\\d{3,4})(\\d{4})');
         if (ckphone.length <= 0) {
@@ -127,7 +138,6 @@ $(document).ready(function () {
 
     $("#birth-input").keyup(function () {
         let birthCheck =/^(19[0-9][0-9]|20\d{2})+\.(0[0-9]|1[0-2])+\.(0[1-9]|[1-2][0-9]|3[0-1])$/
-        console.log("birth 검사중");
         let ckbirth = $("#birth-input").val();
         if (ckbirth.trim().length === 0) {
             $("#birth-result").text("출생연도를 입력해주세요").removeClass('text-primary').removeClass('text-dark').addClass('text-danger');
@@ -144,7 +154,6 @@ $(document).ready(function () {
 });
 
 function submitForm() {
-    console.log("submit() 실행");
     const specialRule = /[`~!@#$%^&*()_|+\-=?;:'"<>\{\}\[\]\\\/ ]/gim;
     const emailCheck =new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
     const phoneCheck =new RegExp('(01[016789])(\\d{3,4})(\\d{4})');
@@ -158,16 +167,6 @@ function submitForm() {
     let ckemail = $('#email-input').val();
     let ckphone = $("#phone-input").val();
     let ckbirth = $("#birth-input").val();
-
-    console.log(ckid);
-    console.log(ckpw);
-    console.log(ckname);
-    console.log(ckaddrno);
-    console.log(ckaddress);
-    console.log(ckdetail);
-    console.log(ckemail);
-    console.log(ckphone);
-    console.log(ckbirth);
 
     if (ckid.length <= 0 || ckid.length > 8 || specialRule.test(ckid)) {
         alert("아이디를 다시 확인해주세요");
@@ -188,10 +187,6 @@ function submitForm() {
         alert("상세주소를 다시 확인해주세요");
         return;
     }else if(ckemail.trim().length <= 0 || !emailCheck.test(ckemail)) {
-        console.log(ckaddrno);
-        console.log(ckaddrno.length);
-        console.log(ckdetail);
-        console.log(ckdetail.length);
         alert("이메일을 다시 확인해주세요");
         return;
     } else if(!duplicateEmailCheck) {

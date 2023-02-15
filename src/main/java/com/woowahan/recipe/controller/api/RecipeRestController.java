@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -161,22 +160,8 @@ public class RecipeRestController {
      * 장바구니에 재료 담기
      */
     @PostMapping("/carts")
-    public Response<String> addCartItemList(@RequestBody List<CartItemReq> cartItemReqList, Model model, Authentication authentication) throws IOException {
-
-        for (CartItemReq reqDto:cartItemReqList) {
-            log.info("cartItemReq id = {}", reqDto.getCartItemId());
-            log.info("cartItemReq cnt = {}", reqDto.getCartItemCnt());
-        }
-//        log.info("cartItemReq check = {}", cartItemReq.getIsChecked());
-//        try{
-//            authentication.isAuthenticated();
-//        }catch (NullPointerException e){
-//            return "recipe/alert";
-//        }
-//        model.addAttribute("cartItemReqList", cartItemReqList);
-        log.info("장바구니 아이템 요청");
+    public Response<String> addCartItemList(@RequestBody List<CartItemReq> cartItemReqList, Authentication authentication) {
         cartService.addCartItemList(cartItemReqList, authentication.getName());
-        log.info("장바구니 서비스 다녀옴");
         return Response.success("장바구니에 상품이 담겼습니다. \n장바구니로 이동하시겠습니까?");
     }
 

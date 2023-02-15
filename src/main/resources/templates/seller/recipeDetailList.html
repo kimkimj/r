@@ -83,14 +83,6 @@
                     </span>
           </div>
 
-          <!-- 카테고리 -->
-          <div>
-            <h5>레시피 카테고리</h5><!-- 나중에 삭제-->
-            <!-- ${} 표현식을 사용해서 컨트롤러에서 전달받은 데이터에 접근 -->
-            <div th:text="${data}">메인 요리</div>
-          </div>
-          <br>
-
           <!-- 레시피 제목 -->
           <div>
             <h5>레시피 제목</h5><!-- 나중에 삭제-->
@@ -168,15 +160,10 @@
                   <th scope="col">재료명</th>
                 </tr>
                 </thead>
-                  <!-- th:block -->
                 <td th:if="${recipe.getItems().size() == 0}">등록된 재료가 없습니다.</td>
                 <th:block th:unless="${recipe.getItems().size()== 0}" th:each="num : ${#numbers.sequence(0,recipe.getItems().size()-1)}">
                   <tbody>
                   <tr>
-                    <!--<td>
-                        <input class="form-check-input" name="check" type="checkbox"
-                               value="${recipe.getItems().get(num).item.getName()}">
-                    </td>-->
                   <td th:text="${recipe.getItems().get(num).item.getName()}"/>
                     </tr>
                     </tbody>
@@ -198,7 +185,6 @@
           <h3>Review</h3><hr>
         </div>
         <div class="card">
-          <!--                    <div class="card-header">댓글 목록</div>-->
           <table class="table" style="width: 100%;">
             <thead>
             <tr>

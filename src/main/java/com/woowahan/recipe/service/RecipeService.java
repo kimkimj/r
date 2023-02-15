@@ -317,14 +317,4 @@ public class RecipeService {
         return items.map(ItemListForRecipeResDto::from);
     }
 
-    @Transactional
-    public String keepRecipe(MultipartFile image, RecipeEntity recipe) throws IOException {
-        System.out.println("Recipe service saveRecipe");
-        if(!image.isEmpty()) {
-            String storedFileName = s3UploadService.saveUploadFile(image,"images");
-            recipe.setRecipeImagePath(storedFileName);
-        }
-        RecipeEntity savedRecipe = recipeRepository.save(recipe);
-        return savedRecipe.getRecipeImagePath();
-    }
 }

@@ -34,10 +34,8 @@ public class AdminService {
 
         Page<UserEntity> pages = userRepository.findUserByUserRole(pageable);
         if(user.getUserRole().equals(UserRole.ADMIN)) {
-            log.info("admin 페이지로 조회");
             pages = userRepository.findUserByUserRole(pageable);
         } else if(user.getUserRole().equals(UserRole.HEAD)) {
-            log.info("head 페이지로 조회");
             pages = userRepository.findByUserRoleNot(pageable, user.getUserRole());
         }
         return pages.map(AdminResponse::toAdminResponse);
@@ -56,14 +54,11 @@ public class AdminService {
         }
 
         if(targetUser.getUserRole().equals(UserRole.ADMIN)) {
-            log.info("ADMIN을 USER로 변경합니다.");
             targetUser.updateRole(UserRole.USER);
         } else if(targetUser.getUserRole().equals(UserRole.USER)) {
-            log.info("USER를 ADMIN으로 변경합니다.");
             targetUser.updateRole(UserRole.ADMIN);
         }
         userRepository.flush();
-        log.info("변경된 권한 : {}", targetUser.getUserRole());
 
         return AdminResponse.toAdminResponse(targetUser);
     }
@@ -81,7 +76,6 @@ public class AdminService {
         recipeRepository.deleteByUser(targetUser);
         reviewRepository.deleteByUser(targetUser);
 
-        log.info("사용자를 삭제합니다.");
         userRepository.deleteById(id);
     }
 
@@ -99,7 +93,6 @@ public class AdminService {
 
         targetSeller.updateToSeller(req.getStatus());
         sellerRepository.flush();
-        log.info("판매자 변경된 권한 : {}", targetSeller.getUserRole());
         return AdminResponse.toAdminResponse(targetSeller);
     }
 

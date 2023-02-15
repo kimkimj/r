@@ -34,8 +34,6 @@ public class AdminRestController {
     @PutMapping("/seller")
     public Response<AdminResponse> updateSeller(@RequestBody SellerRoleReq req, Authentication authentication) {
         String userName = authentication.getName();
-        log.info("id : {}", req.getId());
-        log.info("status : {}", req.getStatus());
         AdminResponse res = adminService.updateSeller(req, userName);
         return Response.success(res);
     }

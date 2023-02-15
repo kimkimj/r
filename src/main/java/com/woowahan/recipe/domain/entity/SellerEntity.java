@@ -56,7 +56,6 @@ public class SellerEntity extends BaseEntity {
     }
 
     public void updateToSeller(String status) {
-        System.out.println(status);
         if(status.equals("ok")) {
             this.userRole = UserRole.SELLER;
         } else {

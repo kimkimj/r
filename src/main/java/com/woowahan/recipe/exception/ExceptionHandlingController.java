@@ -32,4 +32,9 @@ public class ExceptionHandlingController implements ErrorController {
         return "error/error";
     }
 
+    @GetMapping("/error/403")
+    public String forbiddenError() {
+        return "error/403";
+    }
+
 }

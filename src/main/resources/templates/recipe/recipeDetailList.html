@@ -110,11 +110,6 @@
                 </span>
             </div>
 
-            <!--<div>
-                <h5>레시피 카테고리</h5>
-                &lt;!&ndash; ${} 표현식을 사용해서 컨트롤러에서 전달받은 데이터에 접근 &ndash;&gt;
-                <div th:text="${data}">메인 요리</div>
-            </div>-->
             <br><br>
 
             <div>
@@ -228,12 +223,10 @@
             <hr>
         <div class="" sec:authorize="hasAnyRole('ROLE_USER')" style="border-radius: 10px; border:1px solid white;">
             <div class="">
-                <!--                <textarea class="form-control" rows="1"></textarea>-->
                 <form role="form" th:action="@{/recipes/{recipeId}/reviews (recipeId=${recipeId})}"
                       th:object="${reviewCreateRequest}" method="post" content>
                     <!-- 내용  -->
                     <div class="form-group col">
-<!--                        <label th:for="content" type="hidden"></label>-->
                         <input type="text" th:field="*{content}" class="form-control" placeholder="리뷰 내용을 입력해주세요"
                                th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">
                         <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
@@ -258,8 +251,6 @@
                     <br>
                 </div>
             </div>
-            <!--<div class="card-footer" style="text-align: right;">
-            </div>-->
         </div>
         <br>
         <div>
@@ -341,9 +332,7 @@
             // alert($('#chk').val()); // 장바구니담기 버튼을 누르면 어떤 값을 보냈는지 값 출력
             // alert($("input[type=checkbox][name=chk]:checked").val());
 
-            console.log('장바구니 담기 실행');
             var total = $("input[name=chk]:checked").length;
-            console.log(total);  // 0인지 확인 (선택한 상품이 있는지 check)
             if (total == 0) {
                 alert("상품을 1개 이상 선택해주세요");
                 return;
@@ -351,18 +340,11 @@
 
             var items = $("input[name=chk]:checked");
             var orderItems = [];
-            console.log(items);
             for (var [idx, selectElement] of Object.entries(items)) {
-                console.log(idx);
-                console.log(isNaN(idx));
                 const itemId = $(selectElement).attr("itemId");
                 const itemCnt = $(selectElement).attr("itemCnt");
                 const checked = selectElement.checked;
-                console.log(typeof itemId);
-                console.log(typeof itemCnt);
-                console.log("장바구니에 담을거니?" + checked);
                 if (!isNaN(idx)) {
-                    console.log("orderItems에 push합니다");
                     orderItems.push({
                         cartItemId: parseInt(itemId),
                         cartItemCnt: itemCnt
@@ -382,18 +364,15 @@
             contentType: 'application/json;charset=utf-8',
             data: JSON.stringify(orderItems)
         }).done((data) => {
-            console.log(data);
             var answer = confirm('장바구니에 상품이 담겼습니다.\n장바구니로 이동하시겠습니까?');
             if (answer) {
                 location.href = "/carts";
             }
         }).fail((error) => {
-            console.log(error);
             if (error.result) {
                 alert(error.result);
             }
         }).always(() => {
-            console.log("장바구니 담기 ajax 실행 완료");
         })
     }
 

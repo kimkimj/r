@@ -110,17 +110,16 @@
             <label th:for="birth" th:text="#{label.birth}">출생연도</label>
             <input type="text" th:field="*{birth}" id="birth-input" class="form-control" placeholder="19xx.xx.xx 형식으로 입력해주세요.">
             <div id="birth-result"></div>
-<!--                <div class="field-error" th:errors="*{birth}">출생연도 오류</div>-->
             </div>
 
 
             <div class="button">
                 <div class="row">
                     <div class="col">
-                        <button class="w-100 btn btn-primary submit-btn" type="button" onclick="javascript:submitForm()">회원가입</button>
+                        <button class="w-100 btn submit-btn" type="button" onclick="javascript:submitForm()">회원가입</button>
                     </div>
                     <div class="col">
-                        <button class="w-100 btn btn-secondary"
+                        <button class="w-100 btn"
                                 th:onclick="|location.href='@{/}'|"
                                 type="button" th:text="#{button.cancel}">취소
                         </button>

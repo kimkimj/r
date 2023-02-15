@@ -44,7 +44,7 @@
 <div class="container">
     <div class="margin-common"></div>
     <div style="text-align: center;">
-        <h3>|&nbsp;&nbsp;&nbsp;EDITE TO RECIPE&nbsp;&nbsp;&nbsp;|</h3>
+        <h3>|&nbsp;&nbsp;&nbsp;EDIT YOUR RECIPE&nbsp;&nbsp;&nbsp;|</h3>
         <h5>레시피 수정 페이지</h5>
     </div>
     <div class="margin-20"></div>
@@ -183,7 +183,6 @@
     const selectItem = new Set();
 
     async function searchAndShowItems(keyword) {
-        // <ul id="search-list" ...> 가져온다.
         let itemList = document.querySelector("#search-list")
 
         let items = await searchKeyword(keyword);
@@ -198,14 +197,11 @@
             if (!selectItem.has(item)) {
                 let itemElement = document.createElement("li");
 
-                // text 추가
                 itemElement.appendChild(document.createTextNode(item))
 
-                // button 추가
                 let addItemButton = document.createElement("button");
                 addItemButton.className += 'item-add-btn';
 
-                // button style
                 addItemButton.innerHTML = "&nbsp;&nbsp;선택&nbsp;&nbsp;";
                 addItemButton.style.color = 'black';
                 addItemButton.style.fontWeight = '600';
@@ -216,14 +212,12 @@
 
                 addItemButton.onclick = () => {
 
-                    console.log('selectItem에 item을 담을 수 있습니다.' + item);
                     addFormItem(item);
                     addItem(item);
-                    itemElement.remove();  // 선택된 Element 제거
+                    itemElement.remove();
                 };
                 itemElement.appendChild(addItemButton);
 
-                // search list 에 추가
                 itemList.appendChild(itemElement);
             }
         }
@@ -232,15 +226,12 @@
     function addFormItem(item) {
         let recipeFormList = document.querySelector("#recipe-form-list");
 
-        // input 태그 생성
         let itemElement = document.createElement("input");
         itemElement.type = "text";
         itemElement.name = "items[]";
         itemElement.value = item;
-        console.log(itemElement.value);
         itemElement.hidden = true;
 
-        // input 태그 추가
         recipeFormList.appendChild(itemElement);
     }
 
@@ -258,45 +249,18 @@
     }
 
     function addItem(item) {
-        console.log('addItem');
         let itemList = document.querySelector("#item-list");
         let itemElement = document.createElement("li");
         itemElement.className += 'itemTag';
         itemElement.appendChild(document.createTextNode(item));
-        // const btnElement = `
-        //     <button type="button" class="delete-btn mx-2">x</button>
-        // `;
-
-        // const deleteBtn = document.createElement('button');
-        // deleteBtn.innerHTML = 'x';
-        // const doc = new DOMParser().parseFromString(btnElement, 'text/html');
-        // const deleteBtn = doc.body.firstChild;
-        // console.log(deleteBtn);
-        // itemElement.appendChild(deleteBtn);
         itemList.appendChild(itemElement);
-        // selectItem.add(item);
-        // console.log('selectItem에 item이 추가되었습니다.' + selectItem);
     }
 
-    // 이미 등록되어 있던 재료 삭제
     $(document).on("click", ".delete-btn2", function () {
-        console.log("등록되어 있던 아이템 삭제");
         var index = $('.delete-btn2').index(this);
-        console.log("몇번째 요소인가요?" + index);
         document.getElementsByClassName('itemTag')[index].remove();
-        // document.getElementsByName('items[]')[index].remove();
     });
 
-    // // 새로 등록한 재료 삭제
-    // $(document).on("click", ".delete-btn", function () {
-    //     console.log("아이템 삭제");
-    //     var index = $('.delete-btn').index(this);
-    //     console.log("몇번째 요소인가요?" + index);
-    //     document.getElementsByClassName('itemTag')[index].remove();
-    //     document.getElementsByName('items[]')[index].remove();
-    // });
-
-    // 재료 전체 삭제
     $(document).on("click", ".deleteAll-btn", function () {
         alert('재료가 전체 삭제되었습니다.');
         $('li').remove();
@@ -316,9 +280,9 @@
                 $("#updateBody").focus();
                 return false;
             }
-            if ($(".itemTag").input().find("li").length == 0) {
+            if ($("#item-list").find("li").length == 0) {
                 alert("재료를 입력해주세요.");
-                $(".itemTag").focus();
+                $("#item-list").focus();
                 return false;
             }
         });

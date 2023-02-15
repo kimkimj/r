@@ -60,7 +60,6 @@ public class OrderEntity extends BaseEntity{
     /* 연관관계 메서드 */
     public void addUser(UserEntity user) {
         this.user = user;
-//        user.getOrders().add(this);
     }
 
     public void addOrderItem(OrderItemEntity orderItem) {

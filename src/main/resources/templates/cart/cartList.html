@@ -2,7 +2,6 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{cartMain}">
-<!--<head th:replace="fragments/header :: headerFragment"/>-->
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 <div class="container" layout:fragment="cartMain">
@@ -11,10 +10,6 @@
         <h3>|&nbsp;&nbsp;&nbsp;CART&nbsp;&nbsp;&nbsp;|</h3>
     </div>
     <div class="margin-my"></div>
-<!--    <div class="border-bottom p-2 my-3">
-        <h2>장바구니 페이지</h2>
-        <div>진행상황 띄우기</div>
-    </div>-->
     <div style="margin-bottom: 20px;">
         <table class="table cart-table text-center align-middle">
             <thead>
@@ -55,9 +50,15 @@
                                      class="rounded" >
                             </div>
                         </td>
-                        <td class="individual_name_input text-truncate" th:idx="${itemStat.index}" th:text="${item.name}"
-                            onclick="location.href='item/findForm.html'"
-                            th:onclick="|location.href='@{/items/{id}(id=${item.itemId})}'|"></td>
+                        <td>
+                            <div class="individual_name_input text-truncate" th:idx="${itemStat.index}" th:text="${item.name}"
+                                 onclick="location.href='item/findForm.html'"
+                                 th:onclick="|location.href='@{/items/{id}(id=${item.itemId})}'|">
+                            </div>
+                            <span style="font-size: small">현재 재고 : </span>
+                            <span th:classappend="${item.stock < 10} ? 'text-danger'" style="font-size: small" th:text="${item.stock}"></span>
+                        </td>
+
                     <input type="hidden" class="individual_id_input" th:value="${item.id}"/>
                     <input type="hidden" class="individual_stock_input" th:value="${item.stock}"/>
                     <td class="individual_cnt_input d-flex flex-row align-items-center">

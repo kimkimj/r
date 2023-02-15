@@ -4,8 +4,8 @@ import com.woowahan.recipe.domain.OrderStatus;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateReqDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
 import com.woowahan.recipe.domain.entity.*;
+import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
-import com.woowahan.recipe.exception.NotEnoughStockException;
 import com.woowahan.recipe.repository.ItemRepository;
 import com.woowahan.recipe.repository.OrderCustomRepository;
 import com.woowahan.recipe.repository.OrderRepository;
@@ -85,7 +85,7 @@ class OrderServiceTest {
                 .count(20)
                 .build();
         // when
-        NotEnoughStockException notEnoughStockException = assertThrows(NotEnoughStockException.class, () -> {
+        AppException notEnoughStockException = assertThrows(AppException.class, () -> {
             OrderItemEntity.createOrderItem(givenItem, reqDto.getCount());
         });
         // then
