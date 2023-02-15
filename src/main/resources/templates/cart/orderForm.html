@@ -13,6 +13,9 @@
 </head>
 
 <style>
+    .container {
+        width: 80%;
+    }
 
     .main {
         width: 60%;
@@ -50,6 +53,13 @@
         margin-left: auto;
         margin-right: auto;
     }
+
+    .btn {
+        color: #625d55;
+        background-color: white;
+        border-color: #625d55;
+        font-weight: bold;
+    }
 </style>
 
 <body>
@@ -61,8 +71,12 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-<div class="ord-title"><h3>주문/결제</h3></div>
-<div class=container>
+<div class="container">
+    <div class="margin-common"></div>
+    <div style="text-align: center;">
+        <h3>|&nbsp;&nbsp;&nbsp;PAYMENT&nbsp;&nbsp;&nbsp;|</h3>
+        <h5>결제하기</h5>
+    </div>
     <div class="box">
         <div class="customer__h2"><h4>주문자 정보</h4></div>
         <table class="order-table">
@@ -81,10 +95,10 @@
         </table>
     </div>
 
-    <br><br>
+    <div class="margin-my"></div>
 
-    <div class="customer__h2"><h4>받는사람 정보</h4></div>
     <div class="box">
+        <div class="customer__h2"><h4>받는사람 정보</h4></div>
         <table class="order-table">
             <tr>
                 <td class="customer__col--1">이름</td>
@@ -101,7 +115,7 @@
         </table>
     </div>
 
-    <br><br>
+    <div class="margin-my"></div>
 
     <div class="box">
         <div class="customer__h2"><h4>상품 정보</h4></div>
@@ -119,7 +133,7 @@
         </form>
     </div>
 
-    <br><br>
+    <div class="margin-my"></div>
 
     <div class="box">
         <div class="customer__h2"><h4>결제 정보</h4></div>
@@ -140,7 +154,7 @@
     </div>
     <div class="button-container d-flex">
         <div class="button">
-            <button type="submit" class="btn btn-outline-primary" onclick="requestPay()">결제하기</button>
+            <button type="submit" class="btn" onclick="requestPay()">결제하기</button>
             <script th:inline="javascript">
                 /*<![CDATA[*/
                 // 결제 금액, 구매자의 이름, 이메일
@@ -237,8 +251,7 @@
         </div>
     </div>
 </div>
-<br>
-</div>
+<div class="margin-common"></div>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>
 </html>
