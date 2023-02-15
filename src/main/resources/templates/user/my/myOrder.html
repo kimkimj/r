@@ -14,12 +14,32 @@
 
     /* 테이블 tr 색상 */
     .tr-hover:hover {
-        background-color: #E3F4EA;
+        background-color: #f7f2ebf0;
     }
 
     .form-control {
         width: 100px;
         height: 40px;
+    }
+
+    .button-container {
+        margin-top: 50px;
+        height: 50px;
+        text-align: center;
+    }
+
+    .btn {
+        color: #625d55;
+        background-color: white;
+        border-color: #625d55;
+        font-weight: bold;
+    }
+
+    .btn:hover, .btn:active, .btn:visited {
+        border-color: #DBD0C0 !important;
+        outline-color: #DBD0C0 !important;
+        background-color: #DBD0C0 !important;
+        color: black;
     }
 </style>
 <body>
@@ -50,7 +70,7 @@
                     </select>
                 </div>
                 <div>
-                    <button type="submit" class="btn btn-primary mb-2">검색</button>
+                    <button type="submit" class="btn">검색</button>
                 </div>
             </form>
         </div>
