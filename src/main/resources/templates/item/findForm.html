@@ -49,13 +49,13 @@
 
         const resultCntElement = document.getElementById('cartItemCnt');
         const itemPrice = document.getElementById('itemPrice').value;
-
+        const itemStock = document.getElementById('itemStock').value;
         let number = parseInt(resultCntElement.value);
 
         // 더하기/빼기
         if (type === 'plus') {
-            if (number >= 10) {
-                alert("수량은 10개 이하이어야 합니다.");
+            if (number >= itemStock) {
+                alert("재고가 부족합니다.");
                 return;
             }
             number += 1;
@@ -80,13 +80,14 @@
 
       const resultCntElement = document.getElementById('cartItemCnt2');
       const itemPrice = document.getElementById('itemPrice').value;
+      const itemStock = document.getElementById('itemStock').value;
 
       let number = parseInt(resultCntElement.value);
 
       // 더하기/빼기
       if (type === 'plus') {
-        if (number >= 10) {
-          alert("수량은 10개 이하이어야 합니다.");
+        if (number >= itemStock) {
+          alert("재고가 부족합니다.");
           return;
         }
         number += 1;
@@ -156,6 +157,8 @@
         <h3><span th:text="${resDto.getItemPrice()}">상품 가격</span>원</h3>
       </div>
       <input type="hidden" id="itemPrice" th:value="${resDto.getItemPrice()}"/>
+      <input type="hidden" id="itemStock" th:value="${resDto.getItemStock()}"/>
+      <input type="hidden" id="itemId" th:value="${resDto.getItemId()}"/>
       <form sec:authorize="isAuthenticated()" role="form" th:action="@{/items/cart}" th:object="${cartItemReq}" method="post" onsubmit="cart();">
         <input type="hidden" th:field="${cartItemReq.cartItemId}"/>
         <div class="back-ground">
