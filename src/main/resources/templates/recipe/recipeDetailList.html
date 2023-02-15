@@ -61,6 +61,20 @@
         background-color: #dbd0c01f;
     }
 
+    button {
+        color: #625d55;
+        background-color: white;
+        border-color: #625d55;
+        font-weight: bold;
+    }
+
+    button:hover, button:active, button:visited {
+        border-color: #DBD0C0 !important;
+        outline-color: #DBD0C0 !important;
+        background-color: #DBD0C0 !important;
+        color: black;
+    }
+
 </style>
 <body>
 <div sec:authorize="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_HEAD')">
@@ -279,7 +293,7 @@
                                    th:value="${review.content}" readonly></td>
                         <td th:text="${review.user.userName}"/>
                         <td sec:authorize="hasRole('ROLE_USER')" th:if="${review.user.getUserName() == #authentication.getPrincipal()}">
-                            <button type="button" class="edit-btn btn-jelly" th:idx="${reviewStat.index}"
+                            <button type="button" class="edibtn btn-jelly" style="width: 50px" th:idx="${reviewStat.index}"
                                         onclick="updateReview(this.getAttribute('idx'))">
                                 수정
                             </button>
