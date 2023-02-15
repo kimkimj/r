@@ -172,12 +172,12 @@
           <div style="margin-right: 30px; float: right"><span id="totalPrice" th:text="${resDto.getItemPrice()}">0</span>원
           </div>
         </div>
-        <div style="border: 1px solid;">
-          <input style="width: 100px; float: right;"
+        <div style="margin-right: 150px;">
+          <input style="width: 100px; float: right;" class="btn btn-sm"
                  onclick="location.href='findAllForm.html'"
                  th:onclick="|location.href='@{/items}'|" type="button" value="목록으로"/>
-          <input type="submit" value="장바구니" style="width: 100px; float: right;"/>
-          <input type="button" value="바로구매" style="width: 100px; float: right;" onclick='order()'/>
+          <input type="submit" value="장바구니" class="btn btn-sm" style="width: 100px; float: right;"/>
+          <input type="button" value="바로구매" class="btn btn-sm" style="width: 100px; float: right;" onclick='order()'/>
         </div>
       </form>
 
@@ -195,12 +195,12 @@
           </div>
         </div>
         <div style="width:450px;">
-          <input style="width: 100px; float: right;"
+          <input style="width: 100px; float: right;" class="btn btn-sm"
                  onclick="location.href='findAllForm.html'"
                  th:onclick="|location.href='@{/items}'|" type="button" value="목록으로"/>
-          <input type="submit" value="장바구니" style="width: 100px; float: right;"
+          <input type="submit" value="장바구니" style="width: 100px; float: right;" class="btn btn-sm"
                  onclick="login()"/>
-          <input type="button" value="바로구매" style="width: 100px; float: right;"
+          <input type="button" value="바로구매" style="width: 100px; float: right;" class="btn btn-sm"
                  onclick="login()"/>
         </div>
       </div>

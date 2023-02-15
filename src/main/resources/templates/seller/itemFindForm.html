@@ -87,6 +87,11 @@
   <div class="container" style="border: 1px solid white">
   <!--  <div th:if="${resDto.getSellerName() == #authentication.getPrincipal()}">-->
   <!--  </div>-->
+    <div class="margin-common"></div>
+    <div style="text-align: center;">
+      <h3>|&nbsp;&nbsp;&nbsp;OUR INGREDIENTS&nbsp;&nbsp;&nbsp;|</h3>
+      <h5>신선한 재료를 우아한에서 간편하게 주문해 보세요.</h5>
+    </div>
       <div style="margin-top: 120px; border: 1px solid white" class="row">
         <div class="col">
           <p th:align="center"><img th:src="${resDto.getItemImagePath()}" alt="이미지 준비중입니다.">
@@ -98,22 +103,26 @@
           <div>
             <h3><span th:text="${resDto.getItemPrice()}">상품 가격</span>원</h3>
           </div>
-          <div style="margin-top: 310px">
-            <input style="width: 100px; float: right;"
-                   onclick="location.href='myItems.html'"
-                   th:onclick="|location.href='@{/seller/my/items}'|" type="button" value="목록으로"/>
+          <div style="margin-top: 270px;">
             <div th:if="${resDto.getSellerName() == #authentication.getPrincipal()}">
-              <input style="width: 100px; float: right;"
+              <input style="width: 100px;" class="btn btn-sm"
                      th:onclick="|location.href='@{/seller/items/delete/{id}(id=${id})}'|" type="button" value="상품 삭제"/>
-              <input style="width: 100px; float: right;"
+              <input style="width: 100px;" class="btn btn-sm"
                      onclick="location.href='itemUpdateForm.html'"
                      th:onclick="|location.href='@{/seller/items/update/{id}(id=${id})}'|" type="button" value="상품 수정"/>
             </div>
           </div>
         </div>
-      </div>
+      </div><br>
       <hr>
-    </div>
-    <div th:replace="fragments/footer :: footerFragment"/>
+      <div class="margin-20"></div>
+      <div style="text-align: center;">
+        <input  style="width: 100px;" onclick="location.href='myItems.html'" class="btn btn-sm"
+                th:onclick="|location.href='@{/seller/my/items}'|" type="button" value="목록으로"/>
+      </div>
+
+    <div class="margin-common"></div>
+  </div>
+  <div th:replace="fragments/footer :: footerFragment"/>
   </body>
 </html>
