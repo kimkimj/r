@@ -34,8 +34,7 @@ public class CartController {
         UserResponse userResponse = findService.findUserName(authentication.getName());
         CartOrderListDto cartOrderListDto = cartService.findCartItemOrder(authentication.getName(), orderDto.getImp_uid());
         List<CartOrderDto> cartOrderDtoList = cartOrderListDto.getCartOrderList();
-        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
-        }
+
         String firstItem = cartOrderDtoList.get(0).getName();
 
         model.addAttribute("userResponse", userResponse);

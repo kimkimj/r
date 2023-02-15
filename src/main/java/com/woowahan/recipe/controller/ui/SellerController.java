@@ -6,7 +6,6 @@ import com.woowahan.recipe.domain.dto.recipeDto.RecipePageResDto;
 import com.woowahan.recipe.domain.dto.sellerDto.*;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.service.ItemService;
-import com.woowahan.recipe.service.RecipeService;
 import com.woowahan.recipe.service.S3UploadService;
 import com.woowahan.recipe.service.SellerService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +34,6 @@ public class SellerController {
 
     private final SellerService sellerService;
     private final ItemService itemService;
-    private final RecipeService recipeService;
     private final S3UploadService s3UploadService;
 
     // 판매자 홈페이지

@@ -175,7 +175,7 @@ public class UserController {
 
     // 리뷰 수정
     @GetMapping("/update/{recipeId}/{reviewId}")
-    public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model, Authentication authentication) {
+    public String updateReview(@PathVariable Long recipeId, @PathVariable Long reviewId, Model model) {
         ReviewGetResponse review = reviewService.findReviewById(reviewId);
         model.addAttribute("review", review);
         model.addAttribute("recipeId", recipeId);

@@ -23,7 +23,7 @@ public class UserService {
     @Value("${jwt.token.secret}")
     private String secretKey;
 
-    private long expiredTimeMs = 60 * 60 * 1000; // 토큰 유효시간: 1시간
+    private long expiredTimeMs = 2 * 60 * 60 * 1000; // 토큰 유효시간: 2시간
 
 
     /**

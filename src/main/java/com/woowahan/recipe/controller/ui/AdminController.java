@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.util.CookieGenerator;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 
 @Controller
@@ -35,7 +34,7 @@ public class AdminController {
 
     // logout
     @GetMapping("/admin/logout")
-    public String logout(HttpSession session, HttpServletResponse response) {
+    public String logout( HttpServletResponse response) {
         CookieGenerator cookieGenerator = new CookieGenerator();
         cookieGenerator.setCookieName("token");
         cookieGenerator.addCookie(response, "deleted");
@@ -45,7 +44,7 @@ public class AdminController {
     }
 
     @GetMapping("/head/logout")
-    public String headLogout(HttpSession session, HttpServletResponse response) {
+    public String headLogout(HttpServletResponse response) {
         CookieGenerator cookieGenerator = new CookieGenerator();
         cookieGenerator.setCookieName("token");
         cookieGenerator.addCookie(response, "deleted");
