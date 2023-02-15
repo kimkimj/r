@@ -65,6 +65,9 @@ public class SecurityConfig {
             "/users/my",
             "/users/my/**",
             "/users/logout",
+            "/admin",
+            "/admin/**",
+            "/api/v1/admin/**",
             // /api/v1/users/ 관련 부분 수정필요
             "/api/v1/users/**",
             // SellerController
@@ -101,19 +104,19 @@ public class SecurityConfig {
         httpSecurity
                 .httpBasic().disable()
                 .csrf().disable()
-                .cors().and();
+                .cors();
 
         httpSecurity.authorizeHttpRequests()
                 .antMatchers(SWAGGER).permitAll()
                 .antMatchers(HttpMethod.POST, POST_PERMIT).permitAll()
-                .antMatchers(HttpMethod.GET, GET_AUTHENTICATED).permitAll()
+                .antMatchers("/admin", "/admin/**").hasAnyRole(UserRole.ADMIN.getValue(), UserRole.HEAD.getValue())
+                .antMatchers("/seller/**").hasRole(UserRole.SELLER.getValue())
+                .antMatchers(HttpMethod.GET, GET_AUTHENTICATED).authenticated()
                 .antMatchers(HttpMethod.GET).permitAll()
                 .antMatchers(HttpMethod.POST).authenticated()
                 .antMatchers(HttpMethod.PUT).authenticated()
                 .antMatchers(HttpMethod.PATCH).authenticated()
-                .antMatchers(HttpMethod.DELETE).authenticated()
-                .antMatchers("/seller/**").hasRole(UserRole.SELLER.getValue())
-                .antMatchers("/admin/**").hasAuthority(UserRole.ADMIN.getValue());
+                .antMatchers(HttpMethod.DELETE).authenticated();
 
         httpSecurity
                 .sessionManagement()
@@ -129,6 +132,7 @@ public class SecurityConfig {
                 .authenticationEntryPoint(new AuthenticationEntryPoint() {
                     @Override
                     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+                        response.sendRedirect("/login");
                         makeErrorResponse(response, INVALID_PERMISSION);
                     }
                 })
@@ -136,6 +140,7 @@ public class SecurityConfig {
                 .accessDeniedHandler(new AccessDeniedHandler() {
                     @Override
                     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
+                        response.sendRedirect("/error/403");
                         makeErrorResponse(response, ROLE_FORBIDDEN);
                     }
                 });
