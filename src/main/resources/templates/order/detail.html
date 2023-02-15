@@ -12,7 +12,17 @@
     <!-- custom css -->
     <link rel="stylesheet" th:href="@{/css/order.css}">
 </head>
-
+<style>
+    .container {
+        width: 80%;
+    }
+    .btn {
+        color: #625d55;
+        background-color: white;
+        border-color: #625d55;
+        font-weight: bold;
+    }
+</style>
 <body>
 <!-- jQuery -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
@@ -23,6 +33,11 @@
 
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 <div class="container">
+    <div class="margin-common"></div>
+    <div style="text-align: center;">
+        <h3>|&nbsp;&nbsp;&nbsp;ORDER DETAIL&nbsp;&nbsp;&nbsp;|</h3>
+        <h5>주문 내역</h5>
+    </div>
     <div class="customer__h2"><h4>주문 상세</h4></div>
     <table class="order-table">
         <tr>
@@ -71,12 +86,13 @@
 </div>
 <div class="button-container d-flex">
     <div class="button">
-        <button class="btn btn-warning" onclick="cancel()">취소하기</button>
+        <button class="btn" onclick="cancel()">취소하기</button>
     </div>
     <div class="button">
-        <button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/orders/my}'|">주문 목록</button>
+        <button type="button" class="btn" th:onclick="|location.href='@{/orders/my}'|">주문 목록</button>
     </div>
 </div>
+<div class="margin-common"></div>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>
 </html>
