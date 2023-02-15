@@ -48,9 +48,6 @@ public class CartService {
         CartEntity cart = validateCart(user);
 
         Page<CartItemResponse> cartItemPage = cartItemRepository.findByCart(cart, pageable).map(CartItemResponse::from);
-        for (CartItemResponse cartItem : cartItemPage.getContent()) {
-            System.out.println(cartItem.getId());
-        }
 
         return cartItemPage;
     }

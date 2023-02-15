@@ -70,7 +70,7 @@ public class ReviewService {
         }
 
         // 리뷰 저장
-        ReviewEntity review = reviewRepository.save(reviewCreateRequest.toEntity(user, recipe, reviewCreateRequest.getContent()));
+        reviewRepository.save(reviewCreateRequest.toEntity(user, recipe, reviewCreateRequest.getContent()));
 
         // 리뷰 작성자와 레시피 작성자가 일치하지 않다면 알람 등록
         if(!user.equals(recipe.getUser())) {
@@ -83,10 +83,10 @@ public class ReviewService {
     // 리뷰 수정
     public ReviewUpdateResponse updateReview(Long recipeId, Long reviewId, ReviewCreateRequest reviewCreateRequest, String username) {
         // 유저가 존재하는지 확인
-        UserEntity user = validateUser(username);
+        validateUser(username);
 
         // 레시피가 존재하는지 확인
-        RecipeEntity recipe = validateRecipe(recipeId);
+        validateRecipe(recipeId);
 
         // 리뷰가 존재하는지 확인
         ReviewEntity review = validateReview(reviewId);
@@ -104,7 +104,7 @@ public class ReviewService {
         review.update(reviewCreateRequest.getContent());
 
         // 저장
-        ReviewEntity savedReview = reviewRepository.save(review);
+        reviewRepository.save(review);
         return new ReviewUpdateResponse(review.getReviewId(), review.getContent(), "댓글이 수정되었습니다");
     }
 
@@ -114,7 +114,7 @@ public class ReviewService {
        UserEntity user = validateUser(username);
 
        // 레시피가 존재하는지 확인
-       RecipeEntity recipe = validateRecipe(recipeId);
+       validateRecipe(recipeId);
 
        // 리뷰가 존재하는지 확인
        ReviewEntity review = validateReview(reviewId);

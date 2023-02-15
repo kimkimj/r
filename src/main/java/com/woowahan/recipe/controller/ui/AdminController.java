@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.util.CookieGenerator;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 
 @Controller
@@ -35,7 +34,7 @@ public class AdminController {
 
     // logout
     @GetMapping("/admin/logout")
-    public String logout(HttpSession session, HttpServletResponse response) {
+    public String logout( HttpServletResponse response) {
         CookieGenerator cookieGenerator = new CookieGenerator();
         cookieGenerator.setCookieName("token");
         cookieGenerator.addCookie(response, "deleted");
@@ -45,7 +44,7 @@ public class AdminController {
     }
 
     @GetMapping("/head/logout")
-    public String headLogout(HttpSession session, HttpServletResponse response) {
+    public String headLogout(HttpServletResponse response) {
         CookieGenerator cookieGenerator = new CookieGenerator();
         cookieGenerator.setCookieName("token");
         cookieGenerator.addCookie(response, "deleted");
@@ -63,7 +62,6 @@ public class AdminController {
         int startPage = Math.max(nowPage - 4, 1);
         int endPage = Math.min(nowPage + 5, userList.getTotalPages());
         int lastPage = userList.getTotalPages();
-        log.info("userNowPage = {}, userStartPage = {}, userEndPage = {}, userLastPage = {}", nowPage, startPage, endPage, lastPage);
 
         model.addAttribute("userList", userList);
         model.addAttribute("nowPage", nowPage);
@@ -83,7 +81,6 @@ public class AdminController {
         int startPage = Math.max(nowPage - 4, 1);
         int endPage = Math.min(nowPage + 5, userList.getTotalPages());
         int lastPage = userList.getTotalPages();
-        log.info("userNowPage = {}, userStartPage = {}, userEndPage = {}, userLastPage = {}", nowPage, startPage, endPage, lastPage);
 
         model.addAttribute("userList", userList);
         model.addAttribute("nowPage", nowPage);
@@ -102,7 +99,6 @@ public class AdminController {
         int startPage = Math.max(nowPage - 4, 1);
         int endPage = Math.min(nowPage + 5, sellerList.getTotalPages());
         int lastPage = sellerList.getTotalPages();
-        log.info("sellerNowPage = {}, sellerStartPage = {}, sellerEndPage = {}, sellerLastPage = {}", nowPage, startPage, endPage, lastPage);
 
         model.addAttribute("sellerList", sellerList);
         model.addAttribute("nowPage", nowPage);
