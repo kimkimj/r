@@ -17,16 +17,12 @@
     }
 
 
-    .button-container {
-      margin-top: 50px;
-      height: 50px;
-      text-align: center;
-    }
 
     .button {
-      margin-left: auto;
-      margin-right: auto;
+      margin-top: 60px;
+      margin-left: 80px;
     }
+
 
     .btn {
       color: #625d55;
@@ -93,11 +89,11 @@
                   </tbody>
                 </table>
               </div>
-              <div class="button-container">
-                <div class="button">
-                  <button type="button" th:onclick="|location.href='@{/seller/my/update}'|" class="btn">판매자 정보 수정하기</button>
-                </div>
+
+              <div class="button">
+                <button type="button" th:onclick="|location.href='@{/seller/my/update}'|" class="btn">판매자 정보 수정하기</button>
               </div>
+
             </form>
             </div>
           </div>
