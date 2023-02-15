@@ -131,14 +131,19 @@
         background: #DBD0C0;
     }
 
-    .btn-style2 {
+    .btn {
         color: #625d55;
-        border-color: #625d55;
         background-color: white;
+        border-color: #625d55;
         font-weight: bold;
-        float: right;
     }
 
+    .btn:hover, .btn:active, .btn:visited {
+        border-color: #DBD0C0 !important;
+        outline-color: #DBD0C0 !important;
+        background-color: #DBD0C0 !important;
+        color: black;
+    }
 </style>
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
@@ -159,10 +164,10 @@
         </div>
     </div>
     <!--            <br><h5>총 <span style="color:#0c4128;" th:text="${#lists.size(allRecipes)}"></span>개의 맛있는 레시피가 있습니다.</h5><hr>-->
-    <div style="margin: 0px 50px 30px 0px;">
+    <div style="margin: 0px 70px 20px 0px; float: right;">
     <span sec:authorize="hasRole('ROLE_USER')" style="">
-        <button sec:authorize="isAuthenticated()" type="button" class="btn btn-style2 btn-sm" th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>&nbsp;&nbsp;
-        <button sec:authorize="isAuthenticated()" type="button" class="btn btn-style2 btn-sm" th:onclick="|location.href='@{/recipes/my}'|">내 레시피</button>
+        <button sec:authorize="isAuthenticated()" type="button" class="btn btn-sm" th:onclick="|location.href='@{/recipes/create}'|">레시피 등록</button>&nbsp;&nbsp;
+        <button sec:authorize="isAuthenticated()" type="button" class="btn btn-sm" th:onclick="|location.href='@{/recipes/my}'|">내 레시피</button>
     </span>
     </div>
 
