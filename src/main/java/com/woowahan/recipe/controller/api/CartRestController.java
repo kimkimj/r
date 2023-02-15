@@ -2,7 +2,6 @@ package com.woowahan.recipe.controller.api;
 
 import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.domain.dto.cartDto.CartItemReq;
-import com.woowahan.recipe.domain.dto.cartDto.CartItemResponse;
 import com.woowahan.recipe.domain.dto.cartDto.CartOrderListDto;
 import com.woowahan.recipe.domain.dto.cartDto.CheckOrderItemDto;
 import com.woowahan.recipe.domain.dto.orderDto.OrderCreateResDto;
@@ -12,10 +11,6 @@ import com.woowahan.recipe.service.CartService;
 import com.woowahan.recipe.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,13 +25,6 @@ public class CartRestController {
 
     private final CartService cartService;
     private final PaymentService paymentService;
-
-    @GetMapping
-    public Response<Page<CartItemResponse>> findCartList(@PageableDefault(sort = "itemName", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
-        String userName = authentication.getName();
-        Page<CartItemResponse> cartInfoResponsePage = cartService.findCartItemList(pageable, userName);
-        return Response.success(cartInfoResponsePage);
-    }
 
     @PostMapping
     public Response<String> createCartItem (@RequestBody CartItemReq cartItemCreateReq, Authentication authentication) {
