@@ -18,7 +18,6 @@ public class AspectOrder {
         @Around("com.woowahan.recipe.aop.PointCuts.all()")
         public Object doLog(ProceedingJoinPoint joinPoint) throws Throwable {
             long startTime = System.currentTimeMillis();
-            log.info("[logging START] {}", joinPoint.getSignature());
             try {
                 return joinPoint.proceed();
             } catch (AppException e) {
@@ -26,7 +25,6 @@ public class AspectOrder {
                 return joinPoint.proceed();
             }finally {
                 long endTime = System.currentTimeMillis();
-                log.info("[logging END] {} ({}ms)", joinPoint.getSignature(), endTime-startTime);
             }
         }
     }
