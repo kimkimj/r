@@ -9,14 +9,14 @@
   <br>
   <header>
     <nav>
-      <div class="container d-flex flex-wrap" >
+      <div class="container d-flex flex-wrap justify-content-between" >
         <ul class="nav me-auto">
-          <li class="nav-item"><a href="/sellerIndex" class="nav-link link-dark px-2 active" aria-current="page">Home</a></li>
-          <li class="nav-item"><a href="/recipes/list" class="nav-link link-dark px-2">레시피 찾기</a></li>
-          <li class="nav-item"><a href="/items" class="nav-link link-dark px-2">재료 구매</a></li>
-          <li class="nav-item"><a href="#" class="nav-link link-dark px-2" onclick="alert('해당 서비스는 아직 준비중입니다.')">FAQs</a></li>
+          <li class="nav-item"><a href="/" class="nav-link link-dark px-2 active" aria-current="page">Home</a></li>
+          <li class="nav-item"><a href="/recipes/list" class="nav-link link-dark px-2">레시피</a></li>
+          <li class="nav-item"><a href="/items" class="nav-link link-dark px-2">재료</a></li>
+<!--          <li class="nav-item"><a href="#" class="nav-link link-dark px-2" onclick="alert('해당 서비스는 아직 준비중입니다.')">FAQs</a></li>-->
         </ul>
-        <ul class="nav me-auto justify-content-end">
+        <ul class="nav ml-auto me-3">
            <!--로그인만 가능-->
           <li class="nav-item dropdown" sec:authorize="hasAnyRole('ROLE_SELLER', 'ROLE_READY', 'ROLE_REJECT')">
             <a class="nav-link dropdown-toggle" href="/seller/my" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

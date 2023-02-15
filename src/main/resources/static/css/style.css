@@ -36,15 +36,31 @@ ul, ol {
     color: black;
     font-weight: 600;
     font-size: 15px;
-    background-color: #e6f3e5;
+    background-color: #dbd0c075;
     border-style: none;
     border-radius: 15px;
 }
 
 /* a태그 */
-a, a:visited, a:hover, a:active {
+a, a:visited {
     text-decoration: none !important;
-    color: black;
+    color: inherit;
+}
+
+a:focus, a:hover, a:active {
+    text-decoration: none !important;
+    color: #BEA9A1 !important;
+    font-weight: bold;
+}
+
+.nav-link {
+    font-size: 20px;
+}
+.nav-link:focus {
+    color: #BEA9A1;
+}
+.nav-item {
+    margin: 0 1em;
 }
 
 /* header */
