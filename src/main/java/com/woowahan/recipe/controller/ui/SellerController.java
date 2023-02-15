@@ -87,7 +87,7 @@ public class SellerController {
             return "seller/loginForm";
         }
 
-        return "redirect:/sellerIndex";
+        return "redirect:/";
     }
 
 
