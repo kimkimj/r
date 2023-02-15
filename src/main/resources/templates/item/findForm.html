@@ -123,7 +123,7 @@
             data: JSON.stringify(cartItemReq),
         }).done((data) => {
             if(data.resultCode != null && data.resultCode === 'SUCCESS'){
-                var answer = confirm(data.result);
+                var answer = confirm(data.result + "\n장바구니로 이동하시겠습니까?");
                 if(answer) {
                     location.href = "/carts";
                 }
@@ -189,7 +189,7 @@
       <input type="hidden" id="itemPrice" th:value="${resDto.getItemPrice()}"/>
       <input type="hidden" id="itemStock" th:value="${resDto.getItemStock()}"/>
       <input type="hidden" id="itemId" th:value="${resDto.getItemId()}"/>
-      <form sec:authorize="isAuthenticated()" role="form" th:action="@{/items/cart}" th:object="${cartItemReq}">
+      <form sec:authorize="isAuthenticated()" role="form" th:object="${cartItemReq}">
         <input type="hidden" th:field="${cartItemReq.cartItemId}"/>
         <div class="back-ground">
           <!--장바구니 수량 버튼-->
@@ -207,7 +207,7 @@
                  onclick="location.href='findAllForm.html'"
                  th:onclick="|location.href='@{/items}'|" type="button" value="목록으로"/>
 
-          <input type="submit" value="장바구니" class="btn btn-sm" style="width: 100px; float: right;" onclick="addCartItem()"/>
+          <input type="button" value="장바구니" class="btn btn-sm" style="width: 100px; float: right;" onclick="addCartItem()"/>
           <input type="button" value="바로구매" class="btn btn-sm" style="width: 100px; float: right;" onclick='order()'/>
 
         </div>
@@ -230,7 +230,7 @@
           <input style="width: 100px; float: right;" class="btn btn-sm"
                  onclick="location.href='findAllForm.html'"
                  th:onclick="|location.href='@{/items}'|" type="button" value="목록으로"/>
-          <input type="submit" value="장바구니" style="width: 100px; float: right;" class="btn btn-sm"
+          <input type="button" value="장바구니" style="width: 100px; float: right;" class="btn btn-sm"
                  onclick="login()"/>
           <input type="button" value="바로구매" style="width: 100px; float: right;" class="btn btn-sm"
                  onclick="login()"/>
