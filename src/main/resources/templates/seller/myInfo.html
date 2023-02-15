@@ -6,7 +6,7 @@
 
     .wrapper {
       margin: auto;
-      margin-left: 35%;
+      /*margin-left: 35%;*/
       width: 45%;
       min-height: 400px;
       margin-bottom: 93px;
@@ -42,14 +42,16 @@
   <body>
     <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
       <div class="container">
+        <div class="margin-20"></div>
         <div th:replace="fragments/mySellerPageNav :: mySellerPageNav"/>
-        <div class="margin-common"></div>
+        <div class="margin-20"></div>
         <div style="text-align: center;">
           <h3>|&nbsp;&nbsp;&nbsp;판매자 정보&nbsp;&nbsp;&nbsp;|</h3>
         </div>
+        <div class="margin-20"></div>
         <div class="wrapper">
-          <div class="container_etc mt-5" style="width: 460px">
-            <div class="margin-my"></div>
+          <div class="mt-5" style="text-align: center;">
+<!--            <div class="margin-my"></div>-->
             <form role="form" th:object="${seller}" method="get">
               <div class="mb-3">
                 <table class="table table-borderless">
@@ -98,6 +100,7 @@
             </div>
           </div>
       </div>
+<!--    <div class="margin-my"></div>-->
     </div>
     <div th:replace="fragments/footer :: footerFragment"/>
   </body>

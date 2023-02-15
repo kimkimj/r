@@ -42,15 +42,9 @@ ul, ol {
 }
 
 /* a태그 */
-a, a:visited {
+a, a:visited, a:hover, a:active {
     text-decoration: none !important;
-    color: inherit;
-}
-
-a:focus, a:hover, a:active {
-    text-decoration: none !important;
-    color: #BEA9A1 !important;
-    font-weight: bold;
+    color: black;
 }
 
 .nav-link {
