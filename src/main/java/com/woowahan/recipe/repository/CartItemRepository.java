@@ -2,6 +2,7 @@ package com.woowahan.recipe.repository;
 
 import com.woowahan.recipe.domain.entity.CartEntity;
 import com.woowahan.recipe.domain.entity.CartItemEntity;
+import com.woowahan.recipe.domain.entity.ItemEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,8 @@ public interface CartItemRepository extends JpaRepository<CartItemEntity, Long> 
 
     @Query("select i from CartItemEntity i where i.id = :id and i.isChecked = true")
     Optional<CartItemEntity> findByIdAndChecked(@Param("id") Long id);
+
+    Optional<CartItemEntity> findByItem(ItemEntity item);
+
+    void deleteByItem(ItemEntity item);
 }
