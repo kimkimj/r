@@ -41,6 +41,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
         } catch (Exception e) {
             filterChain.doFilter(request, response);
+            return;
         }
 
         if (token == null || token.equals("deleted")) {

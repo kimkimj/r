@@ -1,30 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    <head th:replace="fragments/header :: headerFragment"/>
-    <style>
-        a { text-decoration:none !important; color:black; }
-        a:hover { text-decoration:none !important; color:black;}
+<head th:replace="fragments/header :: headerFragment"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<style>
+    a { text-decoration:none !important; color:black; }
+    a:hover { text-decoration:none !important; color:black;}
 
-        /* 테이블 tr 색상 */
-        .tr-hover:hover {
-            background-color: #f7f2ebf0;
-        }
+    /* 테이블 tr 색상 */
+    .tr-hover:hover {
+        background-color: #f7f2ebf0;
+    }
 
-        .btn {
-            color: #625d55;
-            background-color: white;
-            border-color: #625d55;
-            font-weight: bold;
-        }
+    .btn {
+        color: #625d55;
+        background-color: white;
+        border-color: #625d55;
+        font-weight: bold;
+    }
 
-        .btn:hover {
-            background-color: #DBD0C0 !important;
-            color: black;
-        }
-
+    .btn:hover {
+        background-color: #DBD0C0 !important;
+        color: black;
+    }
 </style>
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
@@ -40,63 +37,63 @@
     </div>
     <div class="margin-20"></div>
 
-        <table class="table table-hover" style="text-align: center;">
-            <thead>
-            <tr class="header">
-                <th scope="col" style="width: 300px">레시피</th>
-                <th scope="col" style="width:20%">작성일</th>
-                <th scope="col" style="width:20%">수정일</th>
-                <th scope="col" style="width:300px">내용</th>
-                <th scope="col" style="width:80px">수정</th>
-                <th scope="col" style="width:80px">삭제</th>
+    <table class="table table-hover" style="text-align: center;">
+        <thead>
+        <tr class="header">
+            <th scope="col" style="width: 300px">레시피</th>
+            <th scope="col" style="width:20%">작성일</th>
+            <th scope="col" style="width:20%">수정일</th>
+            <th scope="col" style="width:300px">내용</th>
+            <th scope="col" style="width:80px">수정</th>
+            <th scope="col" style="width:80px">삭제</th>
 
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="tr-hover" th:each="review : ${allMyReviews}">
-                <td><a th:href="@{/recipes/{recipeId}(recipeId=${review.recipeId})}" th:utext="${review.recipeTitle}">레시피</a></td>
-                <td style="width: 160px"><span th:text="${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm')}"></span> </td>
-                <td style="width: 160px"><span th:text="${review.lastModified ==null}? ${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm')}:${#temporals.format(review.lastModified, 'yyyy-MM-dd HH:mm')}"></span> </td>
-                <td style="width: 300px">[[${review.content}]]</td>
-                <td>
-                    <button type="button" class="btn btn-outline-primary" th:onclick="|location.href='@{/update/{recipeId}/{reviewId}(recipeId=${review.recipeId}, reviewId=${review.reviewId})}'|">수정</button>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-outline-danger" th:onclick="|location.href=' @{/delete/{recipeId}/{reviewId}(recipeId=${review.recipeId}, reviewId=${review.reviewId})}'|">삭제</button>
-                </td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="tr-hover" th:each="review : ${allMyReviews}">
+            <td><a th:href="@{/recipes/{recipeId}(recipeId=${review.recipeId})}" th:utext="${review.recipeTitle}">레시피</a></td>
+            <td style="width: 160px"><span th:text="${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm')}"></span> </td>
+            <td style="width: 160px"><span th:text="${review.lastModified ==null}? ${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm')}:${#temporals.format(review.lastModified, 'yyyy-MM-dd HH:mm')}"></span> </td>
+            <td style="width: 300px">[[${review.content}]]</td>
+            <td>
+                <button type="button" class="btn btn-outline-primary" th:onclick="|location.href='@{/update/{recipeId}/{reviewId}(recipeId=${review.recipeId}, reviewId=${review.reviewId})}'|">수정</button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-outline-danger" th:onclick="|location.href=' @{/delete/{recipeId}/{reviewId}(recipeId=${review.recipeId}, reviewId=${review.reviewId})}'|">삭제</button>
+            </td>
 
-            </tr>
-            </tbody>
-        </table>
+        </tr>
+        </tbody>
+    </table>
 
-        <div class="margin-20"></div>
-        <th:block th:if="${allMyReviews.totalElements > 0}">
-        <!-- pagination -->
-        <div class="py-3 my-4">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
-                        <a class="page-link" th:href="@{/users/my/reviews(page = ${nowPage - 2})}">&nbsp;<&nbsp;</a>
-                    </li>
+    <div class="margin-20"></div>
+    <th:block th:if="${allMyReviews.totalElements > 0}">
+    <!-- pagination -->
+    <div class="py-3 my-4">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
+                    <a class="page-link" th:href="@{/users/my/reviews(page = ${nowPage - 2})}">&nbsp;<&nbsp;</a>
+                </li>
 
-                    <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                        <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/users/my/reviews(page = ${page - 1})}" th:text="${page}">1</a></li>
-                        <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="background-color: #DBD0C0"></strong></li>
-                    </th:block>
+                <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                    <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/users/my/reviews(page = ${page - 1})}" th:text="${page}">1</a></li>
+                    <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="background-color: #DBD0C0"></strong></li>
+                </th:block>
 
-                    <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
-                    <a class="page-link" th:href="@{/users/my/reviews(page = ${nowPage})}">&nbsp;>&nbsp;</a>
-                    </li>
-                </ul>
-            </nav>
+                <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
+                <a class="page-link" th:href="@{/users/my/reviews(page = ${nowPage})}">&nbsp;>&nbsp;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    </th:block>
+    <th:block th:unless="${allMyReviews.totalElements} > 0">
+        <div class="text-center">
+            현재 등록한 리뷰가 없습니다.
         </div>
-        </th:block>
-        <th:block th:unless="${allMyReviews.totalElements} > 0">
-            <div class="text-center">
-                현재 등록한 리뷰가 없습니다.
-            </div>
-        </th:block>
-<div class="margin-my"></div>
+    </th:block>
+    <div class="margin-my"></div>
 </div>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>

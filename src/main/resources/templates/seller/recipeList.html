@@ -1,187 +1,184 @@
 <!DOCTYPE html>
-    <head th:replace="fragments/header :: headerFragment"/>
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
+<head th:replace="fragments/header :: headerFragment"/>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-            body {
-                width: 100%;
-                display: flex;
-                align-items: center;
-            }
+    body {
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
 
-            div.recipe-wapper {
-                width: 100%;
-                /* text-align: left; */
-                min-height: 300px;
-                margin: 0 auto;
-            }
+    div.recipe-wapper {
+        width: 100%;
+        /* text-align: left; */
+        min-height: 300px;
+        margin: 0 auto;
+    }
 
-            .recipe-list-wrapper {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                align-items: center; /* 세로 가운데 맞춤 */
-                justify-content: center; /* 가로 */
-            }
+    .recipe-list-wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center; /* 세로 가운데 맞춤 */
+        justify-content: center; /* 가로 */
+    }
 
-            /* 리스트 중에 한개의 박스 div */
-            .recipe-list-div {
-                margin: 5px;
-                padding: 5px;
-                text-decoration: none;
-                color: #646464;
-            }
+    /* 리스트 중에 한개의 박스 div */
+    .recipe-list-div {
+        margin: 5px;
+        padding: 5px;
+        text-decoration: none;
+        color: #646464;
+    }
 
-            a { text-decoration:none !important }
-            a:hover { text-decoration:none !important }
+    a { text-decoration:none !important }
+    a:hover { text-decoration:none !important }
 
-            /* 제목 구분 */
-            .card-title span {
-                color:black;
-                font-weight: bold;
-                cursor:pointer;
-            }
+    /* 제목 구분 */
+    .card-title span {
+        color:black;
+        font-weight: bold;
+        cursor:pointer;
+    }
 
-            /* pagination 색상 변경 */
-            .page-link {
-                color: #000;
-                background-color: #fff;
-                border: 1px solid #ccc;
-            }
+    /* pagination 색상 변경 */
+    .page-link {
+        color: #000;
+        background-color: #fff;
+        border: 1px solid #ccc;
+    }
 
-            .page-item.active .page-link {
-                z-index: 1;
-                color: #555;
-                font-weight:bold;
-                background-color: #f1f1f1;
-                border-color: #ccc;
+    .page-item.active .page-link {
+        z-index: 1;
+        color: #555;
+        font-weight:bold;
+        background-color: #f1f1f1;
+        border-color: #ccc;
 
-            }
+    }
 
-            .page-link:focus, .page-link:hover {
-                color: #000;
-                background-color: #fafafa;
-                border-color: #ccc;
-            }
+    .page-link:focus, .page-link:hover {
+        color: #000;
+        background-color: #fafafa;
+        border-color: #ccc;
+    }
 
-            /* 검색창 감싸는 div (out)*/
-            .search-wrapper {
-                width: 100%;
-                margin:0 auto;
-                text-align: center;
-            }
+    /* 검색창 감싸는 div (out)*/
+    .search-wrapper {
+        width: 100%;
+        margin:0 auto;
+        text-align: center;
+    }
 
-            /* search (in)*/
-            .recipe-search {
-                position: relative;
-                width: 500px;
-                display: inline-block;
-            }
+    /* search (in)*/
+    .recipe-search {
+        position: relative;
+        width: 500px;
+        display: inline-block;
+    }
 
-            .recipe-search input {
-                width: 100%;
-                border: 1px solid #bbb;
-                border-radius: 8px;
-                padding: 10px 12px;
-                font-size: 14px;
-            }
+    .recipe-search input {
+        width: 100%;
+        border: 1px solid #bbb;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 14px;
+    }
 
-            .recipe-search input:focus {
-                outline: 1px solid gray;
-            }
+    .recipe-search input:focus {
+        outline: 1px solid gray;
+    }
 
-            .recipe-search img {
-                position : absolute;
-                width: 19px;
-                height: 22px;
-                top: 10px;
-                right: 12px;
-                margin: 0;
-            }
-        </style>
-    <body>
+    .recipe-search img {
+        position : absolute;
+        width: 19px;
+        height: 22px;
+        top: 10px;
+        right: 12px;
+        margin: 0;
+    }
+</style>
+<body>
+    <div class="recipe-wapper">
 
-        <div class="recipe-wapper">
+        <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
 
-            <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+        <!-- 기본 컨테이너 -->
+        <div class="container">
+            <div>
+                <br><h1>전체 레시피 리스트</h1><hr>
+            </div><br><br>
 
-            <!-- 기본 컨테이너 -->
-            <div class="container">
-                <div>
-                    <br><h1>전체 레시피 리스트</h1><hr>
-                </div><br><br>
-
-                <!-- search -->
-                <div class="search-wrapper">
-                    <div class="recipe-search">
-                        <form th:action="@{/seller/recipes/search}" method="get">
-                            <input type="text" name="keyword" placeholder="검색어 입력">
-                            <button style="border:none;" type="submit"><img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"></button>
-                        </form>
-                    </div>
-                </div><br>
+            <!-- search -->
+            <div class="search-wrapper">
+                <div class="recipe-search">
+                    <form th:action="@{/seller/recipes/search}" method="get">
+                        <input type="text" name="keyword" placeholder="검색어 입력" />
+                        <button style="border:none;" type="submit"><img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"></button>
+                    </form>
+                </div>
+            </div><br>
 
 
-                <!-- 레시피 리스트 div-->
-                <div class="recipe-list-wrapper">
-                    <!-- th:block -->
-                    <th:block th:each="recipe : ${allRecipes}">
-                        <div class="card recipe-list-div" style="width: 18rem;">
+            <!-- 레시피 리스트 div-->
+            <div class="recipe-list-wrapper">
+                <!-- th:block -->
+                <th:block th:each="recipe : ${allRecipes}">
+                    <div class="card recipe-list-div" style="width: 18rem;">
+                        <a th:onclick="|location.href='@{/seller/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|" class="card-link">
+                            <img th:src="${recipe.recipeImagePath}" class="card-img-top" alt="..." th:if="${recipe.recipeImagePath != null}">
+                            <img src="https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/noimage.gif" class="card-img-top" alt="..." th:if="${recipe.recipeImagePath == null}">
+                        </a>
+                        <div class="card-body">
                             <a th:onclick="|location.href='@{/seller/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|" class="card-link">
-                                <img th:src="${recipe.recipeImagePath}" class="card-img-top" alt="..." th:if="${recipe.recipeImagePath != null}">
-                                <img src="https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/noimage.gif" class="card-img-top" alt="..." th:if="${recipe.recipeImagePath == null}">
-                            </a>
-                            <div class="card-body">
-                                <a th:onclick="|location.href='@{/seller/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|" class="card-link">
-                                    <div class="card-title" style="text-align: center;">
-                                        <span th:text="${recipe.getRecipeTitle()}"></span>
-                                    </div>
-                                </a>
-
-                                <br>
-
-                                <div class="list-group list-group-flush">
-                                    <span th:text="'ID : ' + ${recipe.getRecipeId}"></span>
-                                    <span th:text="'조회수 : ' + ${recipe.getRecipeView}"></span>
-                                    <span th:text="'좋아요 : ' + ${recipe.getRecipeLike()}"></span>
-                                    <span th:text="'작성자 : ' + ${recipe.getUserName()}"></span>
+                                <div class="card-title" style="text-align: center;">
+                                    <span th:text="${recipe.getRecipeTitle()}"></span>
                                 </div>
+                            </a>
+                            <br>
+                            <div class="list-group list-group-flush">
+                                <span th:text="'ID : ' + ${recipe.getRecipeId}"></span>
+                                <span th:text="'조회수 : ' + ${recipe.getRecipeView}"></span>
+                                <span th:text="'좋아요 : ' + ${recipe.getRecipeLike()}"></span>
+                                <span th:text="'작성자 : ' + ${recipe.getUserName()}"></span>
                             </div>
                         </div>
-                    </th:block>
-                </div><br><br><br><br>
+                    </div>
+                </th:block>
+            </div><br><br><br><br>
 
-                <!-- pagination -->
-                <div class="py-3 my-4">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
-                                <a class="page-link" th:href="@{/seller/recipes/list(page = ${nowPage - 2})}">Previous</a>
-                            </li>
+            <!-- pagination -->
+            <div class="py-3 my-4">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
+                            <a class="page-link" th:href="@{/seller/recipes/list(page = ${nowPage - 2})}">Previous</a>
+                        </li>
 
-                            <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                                <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/seller/recipes/list(page = ${page - 1})}" th:text="${page}">1</a></li>
-                                <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
-                            </th:block>
+                        <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                            <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/seller/recipes/list(page = ${page - 1})}" th:text="${page}">1</a></li>
+                            <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
+                        </th:block>
 
-                            <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
-                                <a class="page-link" th:href="@{/seller/recipes/list(page = ${nowPage})}">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-
+                        <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
+                            <a class="page-link" th:href="@{/seller/recipes/list(page = ${nowPage})}">Next</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
 
-            <br>
-            <!-- footer -->
-            <div th:replace="fragments/footer :: footerFragment"/>
-            <br><br>
-            <!-- 전체 틀 섹션 div 끝 태그 -->
         </div>
-    </body>
+
+        <br>
+        <!-- footer -->
+        <div th:replace="fragments/footer :: footerFragment"/>
+        <br><br>
+        <!-- 전체 틀 섹션 div 끝 태그 -->
+    </div>
+</body>
 </html>

@@ -1,60 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
-<html xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: headerFragment"/>
-    </head>
-    <style>
-        .wrapper {
-            margin: auto;
-            width: 40%;
-            min-height: 49vh;
-        }
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: headerFragment"/>
+<style>
+    .wrapper {
+        margin: auto;
+        width: 40%;
+        min-height: 49vh;
+    }
 
-        .button-container {
-            width: 80%;
-            margin: auto;
-            height: 50px;
-            text-align: center;
-        }
+    .button-container {
+        width: 80%;
+        margin: auto;
+        height: 50px;
+        text-align: center;
+    }
 
-        .button {
-            margin-top: 40%;
-            padding: 30px;
-            justify-content: center;
-            align-items: center;
-        }
+    .button {
+        margin-top: 40%;
+        padding: 30px;
+        justify-content: center;
+        align-items: center;
+    }
 
-        .btn {
-            color: #625d55;
-            background-color: white;
-            border-color: #625d55;
-            font-weight: bold;
-        }
+    .btn {
+        color: #625d55;
+        background-color: white;
+        border-color: #625d55;
+        font-weight: bold;
+    }
 
-        .btn:hover, .btn:active, .btn:visited {
-            border-color: #DBD0C0 !important;
-            outline-color: #DBD0C0 !important;
-            background-color: #DBD0C0 !important;
-            color: black;
-        }
-    </style>
-    <body>
-    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-    <div class="wrapper">
-        <div class="button-container">
-            <div class="button">
-                <button class="w-100 btn btn-lg"
-                        th:onclick="|location.href='@{/users/login}'|"
-                        type="button" >회원 로그인
-                </button>
-                <br><br>
-                <button class="w-100 btn btn-lg"
-                        th:onclick="|location.href='@{/seller/login}'|"
-                        type="button">판매자 로그인
-                </button>
-            </div>
+    .btn:hover, .btn:active, .btn:visited {
+        border-color: #DBD0C0 !important;
+        outline-color: #DBD0C0 !important;
+        background-color: #DBD0C0 !important;
+        color: black;
+    }
+</style>
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div class="wrapper">
+    <div class="button-container">
+        <div class="button">
+            <button class="w-100 btn btn-lg"
+                    th:onclick="|location.href='@{/users/login}'|"
+                    type="button" >회원 로그인
+            </button>
+            <br><br>
+            <button class="w-100 btn btn-lg"
+                    th:onclick="|location.href='@{/seller/login}'|"
+                    type="button">판매자 로그인
+            </button>
         </div>
     </div>
-    <div th:replace="fragments/footer :: footerFragment"/>
-    </body>
+</div>
+<div th:replace="fragments/footer :: footerFragment"/>
+</body>
 </html>

@@ -1,127 +1,127 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="fragments/header :: headerFragment"/>
-    <style>
-      .container {
-        margin: auto;
-        width: 600px
-      }
+<head th:replace="fragments/header :: headerFragment"/>
+<style>
+  .container {
+    margin: auto;
+    width: 600px
+  }
 
-      h2 {
-        margin-top: 10px;
-        text-align: center;
-      }
+  h2 {
+    margin-top: 10px;
+    text-align: center;
+  }
 
-      .button {
-        margin: auto;
-        margin-top: 50px;
-        width: 60%;
-      }
+  .button {
+    margin: auto;
+    margin-top: 50px;
+    width: 60%;
+  }
 
-      .btn {
-        color: #625d55;
-        background-color: white;
-        border-color: #625d55;
-        font-weight: bold;
-      }
+  .btn {
+    color: #625d55;
+    background-color: white;
+    border-color: #625d55;
+    font-weight: bold;
+  }
 
-      .btn:hover, .btn:active, .btn:visited {
-        border-color: #DBD0C0 !important;
-        outline-color: #DBD0C0 !important;
-        background-color: #DBD0C0 !important;
-        color: black;
-      }
+  .btn:hover, .btn:active, .btn:visited {
+    border-color: #DBD0C0 !important;
+    outline-color: #DBD0C0 !important;
+    background-color: #DBD0C0 !important;
+    color: black;
+  }
 
-      .row {
-        margin-top: 35px;
-        height: 50px;
-        text-align: center;
-      }
+  .row {
+    margin-top: 35px;
+    height: 50px;
+    text-align: center;
+  }
 
-      .col {
-        margin-left: auto;
-        margin-right: auto;
-      }
-    </style>
-  <body>
-    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-    <div class="container">
-      <div class="margin-my"></div>
-      <div style="text-align: center;">
-        <h3>|&nbsp;&nbsp;판매자 회원가입 &nbsp;|</h3>
-      </div>
-      <div class="margin-20"></div>
-      <form role="form" th:object="${sellerJoinRequest}">
-        <div class="form-group">
-          <label th:for="sellerName">아이디</label>
-          <div class="d-flex">
-            <input type="text" th:field="*{sellerName}" id="id-input" class="form-control" placeholder="아이디 입력하세요">
-            <button type="button" style="width: 25%;" class="btn id-btn">중복 확인</button>
-          </div>
-          <div id="id-result"></div>
-        </div>
-        <br/>
-        <div class="form-group">
-          <label th:for="password">비밀번호</label>
-          <input type="password" th:field="*{password}" id="pw-input" class="form-control" placeholder="비밀번호를 입력하세요">
-          <div id="pw-result"></div>
-        </div>
-        <br/>
-        <div class="form-group">
-          <label th:for="companyName">업체명</label>
-          <input type="text" th:field="*{companyName}" id="name-input" class="form-control" placeholder="업체명을 입력하세요">
-          <div id="name-result"></div>
-        </div>
-        <br/>
-        <div class="form-group">
-          <label style="display: block" th:for="address">주소</label>
-          <div class="d-flex">
-            <input type="text" id="address-input" class="form-control" name="address-input" placeholder="우편번호 찾기를 진행해주세요" readonly style="background-color: white;"><br>
-            <input type="hidden" th:field="*{address}" id="address-no-input" class="form-control" placeholder="우편번호">
-            <input type="button" style="width: 25%;" class="btn" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
-          </div>
-          <input type="text" id="detail-input" class="form-control" placeholder="상세주소">
-          <div id="address-result"></div>
-        </div>
-        <br/>
-        <div class="form-group">
-          <label th:for="email" th:text="#{label.email}">이메일</label>
-          <div class="d-flex">
-            <input type="email" th:field="*{email}" id="email-input" class="form-control" placeholder="woowahan@woowahan.com" autocomplete required>
-            <button type="button" style="width: 25%;" class="btn email-btn">중복 확인</button>
-          </div>
-          <div id="email-result"></div>
-        </div>
-        <br/>
-        <div class="form-group">
-          <label th:for="phoneNum" th:text="#{label.phoneNum}">핸드폰 번호</label>
-          <input type="text" th:field="*{phoneNum}" id="phone-input" class="form-control" placeholder="띄어쓰기나 - 없이 숫자만 입력해주세요">
-          <div id="phone-result"></div>
-        </div>
-        <br/>
-        <div class="form-group">
-          <label th:for="businessRegNum">사업자등록번호</label>
-          <input type="text" th:field="*{businessRegNum}" id="businessnum-input" class="form-control" placeholder="사업자등록번호를 입력하세요">
-          <div id="businessnum-result"></div>
-        </div>
-        <div class="button">
-          <div class="row">
-            <div class="col">
-              <button class="w-100 btn btn-primary" type="button" onclick="javascript:submitForm()">회원가입</button>
-            </div>
-            <div class="col">
-              <button class="w-100 btn btn-secondary"
-                      th:onclick="|location.href='@{/}'|"
-                      type="button" th:text="#{button.cancel}">취소
-              </button>
-            </div>
-          </div>
-        </div>
-      </form>
-      <div class="margin-common"></div>
+  .col {
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
+<body>
+  <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+  <div class="container">
+    <div class="margin-my"></div>
+    <div style="text-align: center;">
+      <h3>|&nbsp;&nbsp;판매자 회원가입 &nbsp;|</h3>
     </div>
-    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script type="text/javascript" src="/js/sellerJoin.js"></script>
-    <div th:replace="fragments/footer :: footerFragment"/>
-  </body>
+    <div class="margin-20"></div>
+    <form role="form" th:object="${sellerJoinRequest}">
+      <div class="form-group">
+        <label th:for="sellerName">아이디</label>
+        <div class="d-flex">
+          <input type="text" th:field="*{sellerName}" id="id-input" class="form-control" placeholder="아이디 입력하세요">
+          <button type="button" style="width: 25%;" class="btn id-btn">중복 확인</button>
+        </div>
+        <div id="id-result"></div>
+      </div>
+      <br/>
+      <div class="form-group">
+        <label th:for="password">비밀번호</label>
+        <input type="password" th:field="*{password}" id="pw-input" class="form-control" placeholder="비밀번호를 입력하세요">
+        <div id="pw-result"></div>
+      </div>
+      <br/>
+      <div class="form-group">
+        <label th:for="companyName">업체명</label>
+        <input type="text" th:field="*{companyName}" id="name-input" class="form-control" placeholder="업체명을 입력하세요">
+        <div id="name-result"></div>
+      </div>
+      <br/>
+      <div class="form-group">
+        <label style="display: block" th:for="address">주소</label>
+        <div class="d-flex">
+          <input type="text" id="address-input" class="form-control" name="address-input" placeholder="우편번호 찾기를 진행해주세요" readonly style="background-color: white;"><br>
+          <input type="hidden" th:field="*{address}" id="address-no-input" class="form-control" placeholder="우편번호">
+          <input type="button" style="width: 25%;" class="btn" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
+        </div>
+        <input type="text" id="detail-input" class="form-control" placeholder="상세주소">
+        <div id="address-result"></div>
+      </div>
+      <br/>
+      <div class="form-group">
+        <label th:for="email" th:text="#{label.email}">이메일</label>
+        <div class="d-flex">
+          <input type="email" th:field="*{email}" id="email-input" class="form-control" placeholder="woowahan@woowahan.com" autocomplete required>
+          <button type="button" style="width: 25%;" class="btn email-btn">중복 확인</button>
+        </div>
+        <div id="email-result"></div>
+      </div>
+      <br/>
+      <div class="form-group">
+        <label th:for="phoneNum" th:text="#{label.phoneNum}">핸드폰 번호</label>
+        <input type="text" th:field="*{phoneNum}" id="phone-input" class="form-control" placeholder="띄어쓰기나 - 없이 숫자만 입력해주세요">
+        <div id="phone-result"></div>
+      </div>
+      <br/>
+      <div class="form-group">
+        <label th:for="businessRegNum">사업자등록번호</label>
+        <input type="text" th:field="*{businessRegNum}" id="businessnum-input" class="form-control" placeholder="사업자등록번호를 입력하세요">
+        <div id="businessnum-result"></div>
+      </div>
+      <div class="button">
+        <div class="row">
+          <div class="col">
+            <button class="w-100 btn btn-primary" type="button" onclick="javascript:submitForm()">회원가입</button>
+          </div>
+          <div class="col">
+            <button class="w-100 btn btn-secondary"
+                    th:onclick="|location.href='@{/}'|"
+                    type="button" th:text="#{button.cancel}">취소
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="margin-common"></div>
+  </div>
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script type="text/javascript" src="/js/sellerJoin.js"></script>
+  <div th:replace="fragments/footer :: footerFragment"/>
+</body>
 </html>
