@@ -1,105 +1,103 @@
 <!DOCTYPE html>
 <head th:replace="fragments/header :: headerFragment"/>
-   <title>마이 페이지</title>
-</head>
-  <style>
+<title>마이 페이지</title>
+<style>
 
-    .wrapper {
-      margin: auto;
-      /*margin-left: 35%;*/
-      width: 45%;
-      min-height: 400px;
-      margin-bottom: 93px;
-    }
+  .wrapper {
+    margin: auto;
+    /*margin-left: 35%;*/
+    width: 45%;
+    min-height: 400px;
+    margin-bottom: 93px;
+  }
 
-    table {
-      width: 450px;
-    }
-
+  table {
+    width: 450px;
+  }
 
 
-    .button {
-      margin-top: 60px;
-      margin-left: 80px;
-    }
+
+  .button {
+    margin-top: 60px;
+    margin-left: 80px;
+  }
 
 
-    .btn {
-      color: #625d55;
-      background-color: white;
-      border-color: #625d55;
-      font-weight: bold;
-    }
+  .btn {
+    color: #625d55;
+    background-color: white;
+    border-color: #625d55;
+    font-weight: bold;
+  }
 
-    .btn:hover, .btn:active, .btn:visited {
-      border-color: #DBD0C0 !important;
-      outline-color: #DBD0C0 !important;
-      background-color: #DBD0C0 !important;
-      color: black;
-    }
+  .btn:hover, .btn:active, .btn:visited {
+    border-color: #DBD0C0 !important;
+    outline-color: #DBD0C0 !important;
+    background-color: #DBD0C0 !important;
+    color: black;
+  }
 
-  </style>
-  <body>
-    <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
-      <div class="container">
-        <div class="margin-20"></div>
-        <div th:replace="fragments/mySellerPageNav :: mySellerPageNav"/>
-        <div class="margin-20"></div>
-        <div style="text-align: center;">
-          <h3>|&nbsp;&nbsp;&nbsp;판매자 정보&nbsp;&nbsp;&nbsp;|</h3>
-        </div>
-        <div class="margin-20"></div>
-        <div class="wrapper">
-          <div class="mt-5" style="text-align: center;">
-            <form role="form" th:object="${seller}" method="get">
-              <div class="mb-3">
-                <table class="table table-borderless">
-                  <tbody>
-                    <tr>
-                      <td>아이디</td>
-                      <td>[[${seller.sellerName}]]</td>
-                    </tr>
-                    <tr>
-                      <td>업체명</td>
-                      <td>[[${seller.companyName}]]</td>
-                    </tr>
-                    <tr>
-                      <td>주소</td>
-                      <td>[[${seller.address}]]</td>
-                    </tr>
-                    <tr>
-                      <td>이메일</td>
-                      <td>[[${seller.email}]]</td>
-                    </tr>
-                    <tr>
-                      <td>핸드폰 번호</td>
-                      <td>[[${seller.phoneNum}]]</td>
-                    </tr>
-                    <tr>
-                      <td>사업자등록번호</td>
-                      <td>[[${seller.businessRegNum}]]</td>
-                    </tr>
-                    <tr>
-                      <td>판매자 등록 여부</td>
-                      <td th:switch="${seller.status}">
-                        <span th:case="${T(com.woowahan.recipe.domain.UserRole).READY}">등록 대기</span>
-                        <span th:case="${T(com.woowahan.recipe.domain.UserRole).REJECT}">등록 반려</span>
-                        <span th:case="${T(com.woowahan.recipe.domain.UserRole).SELLER}">등록 완료</span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="button">
-                <button type="button" th:onclick="|location.href='@{/seller/my/update}'|" class="btn">판매자 정보 수정하기</button>
-              </div>
-
-            </form>
+</style>
+<body>
+  <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+    <div class="container">
+      <div class="margin-20"></div>
+      <div th:replace="fragments/mySellerPageNav :: mySellerPageNav"/>
+      <div class="margin-20"></div>
+      <div style="text-align: center;">
+        <h3>|&nbsp;&nbsp;&nbsp;판매자 정보&nbsp;&nbsp;&nbsp;|</h3>
+      </div>
+      <div class="margin-20"></div>
+      <div class="wrapper">
+        <div class="mt-5" style="text-align: center;">
+          <form role="form" th:object="${seller}" method="get">
+            <div class="mb-3">
+              <table class="table table-borderless">
+                <tbody>
+                  <tr>
+                    <td>아이디</td>
+                    <td>[[${seller.sellerName}]]</td>
+                  </tr>
+                  <tr>
+                    <td>업체명</td>
+                    <td>[[${seller.companyName}]]</td>
+                  </tr>
+                  <tr>
+                    <td>주소</td>
+                    <td>[[${seller.address}]]</td>
+                  </tr>
+                  <tr>
+                    <td>이메일</td>
+                    <td>[[${seller.email}]]</td>
+                  </tr>
+                  <tr>
+                    <td>핸드폰 번호</td>
+                    <td>[[${seller.phoneNum}]]</td>
+                  </tr>
+                  <tr>
+                    <td>사업자등록번호</td>
+                    <td>[[${seller.businessRegNum}]]</td>
+                  </tr>
+                  <tr>
+                    <td>판매자 등록 여부</td>
+                    <td th:switch="${seller.status}">
+                      <span th:case="${T(com.woowahan.recipe.domain.UserRole).READY}">등록 대기</span>
+                      <span th:case="${T(com.woowahan.recipe.domain.UserRole).REJECT}">등록 반려</span>
+                      <span th:case="${T(com.woowahan.recipe.domain.UserRole).SELLER}">등록 완료</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          </div>
+
+            <div class="button">
+              <button type="button" th:onclick="|location.href='@{/seller/my/update}'|" class="btn">판매자 정보 수정하기</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-    <div th:replace="fragments/footer :: footerFragment"/>
-  </body>
+  </div>
+  <div th:replace="fragments/footer :: footerFragment"/>
+</body>
 </html>

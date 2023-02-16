@@ -1,7 +1,6 @@
 package com.woowahan.recipe.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowahan.recipe.domain.UserRole;
 import com.woowahan.recipe.domain.dto.Response;
 import com.woowahan.recipe.exception.ErrorCode;
 import com.woowahan.recipe.security.JwtTokenFilter;
@@ -109,8 +108,10 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests()
                 .antMatchers(SWAGGER).permitAll()
                 .antMatchers(HttpMethod.POST, POST_PERMIT).permitAll()
-                .antMatchers("/admin", "/admin/**").hasAnyRole(UserRole.ADMIN.getValue(), UserRole.HEAD.getValue())
-                .antMatchers("/seller/**").hasRole(UserRole.SELLER.getValue())
+                .antMatchers("/seller/login", "/seller/join").permitAll()
+                .antMatchers("/admin", "/admin/**").hasAnyRole("ADMIN", "HEAD")
+                .antMatchers("/head/**").hasRole("HEAD")
+                .antMatchers("/seller/**").hasRole("SELLER")
                 .antMatchers(HttpMethod.GET, GET_AUTHENTICATED).authenticated()
                 .antMatchers(HttpMethod.GET).permitAll()
                 .antMatchers(HttpMethod.POST).authenticated()

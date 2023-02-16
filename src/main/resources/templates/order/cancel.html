@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:replace="fragments/header :: headerFragment"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <title>주문 취소 페이지</title>
@@ -9,10 +9,26 @@
     <!-- custom css -->
     <link rel="stylesheet" th:href="@{/css/order.css}">
 </head>
+<style>
+    .container {
+        width: 80%;
+    }
+    .btn {
+        color: #625d55;
+        background-color: white;
+        border-color: #625d55;
+        font-weight: bold;
+    }
+</style>
 <body>
-
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 <div class="container">
+    <div class="margin-common"></div>
+    <div style="text-align: center;">
+        <h3>|&nbsp;&nbsp;&nbsp;ORDER CANCEL&nbsp;&nbsp;&nbsp;|</h3>
+        <h5>취소 내역</h5>
+    </div>
+    <div class="margin-20"></div>
     <div class="customer__h2"><h4>주문 취소 정보</h4></div>
     <table class="order-table">
         <tr>
@@ -46,9 +62,10 @@
     <br>
     <div class="button-container">
         <div class="button">
-            <button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/orders/my}'|">주문 목록</button>
+            <button type="button" class="btn" th:onclick="|location.href='@{/orders/my}'|">주문 목록</button>
         </div>
     </div>
+<div class="margin-20"></div>
 </div>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>

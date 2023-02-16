@@ -5,8 +5,14 @@
       layout:decorate="~{adminMain}">
 <body>
 <div layout:fragment="adminMain" class="container">
+  <div class="margin-20"></div>
+  <!-- 상단 메뉴바 -->
   <div>
-    <h1>판매자</h1>
+  <div th:replace="fragments/myPageNav :: myPageFragment"/>
+    <div class="margin-20"></div>
+    <div style="text-align: center;">
+      <h3>| 판매자 |</h3>
+    </div>
     <div>
       <table class="table table-hover" style="text-align: center;">
         <thead>

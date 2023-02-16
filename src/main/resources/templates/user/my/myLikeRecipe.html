@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: headerFragment"/>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
 <style>
     a {
         text-decoration: none !important;
@@ -19,15 +22,10 @@
 
 </style>
 <body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous"></script>
-
 <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 <br>
 <div class="container">
     <div class="margin-20"></div>
-
         <!-- 상단 메뉴바 -->
         <div th:replace="fragments/myPageNav :: myPageFragment"/>
         <div class="margin-20"></div>
@@ -38,22 +36,22 @@
 
         <table class="table table-hover" style="text-align: center;">
             <thead>
-            <tr>
-                <th style="width: 50px">ID</th>
-                <th style="width: 250px">제목</th>
-                <th style="width: 100px">작성자</th>
-                <th style="width: 50px">좋아요</th>
-                <th style="width: 50px">조회수</th>
-            </tr>
+                <tr>
+                    <th style="width: 50px">ID</th>
+                    <th style="width: 250px">제목</th>
+                    <th style="width: 100px">작성자</th>
+                    <th style="width: 50px">좋아요</th>
+                    <th style="width: 50px">조회수</th>
+                </tr>
             </thead>
             <tbody>
-            <tr class="tr-hover" th:each="recipe : ${myLikeRecipeList}">
-                <td><a th:href="@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}" th:utext="${recipe.recipeId}"></a></td>
-                <td><a th:href="@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}" th:utext="${recipe.recipeTitle}"></a></td>
-                <td th:text="${recipe.userName}"/>
-                <td th:text="${recipe.recipeLike}"/>
-                <td th:text="${recipe.recipeView}"/>
-            </tr>
+                <tr class="tr-hover" th:each="recipe : ${myLikeRecipeList}">
+                    <td><a th:href="@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}" th:utext="${recipe.recipeId}"></a></td>
+                    <td><a th:href="@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}" th:utext="${recipe.recipeTitle}"></a></td>
+                    <td th:text="${recipe.userName}"/>
+                    <td th:text="${recipe.recipeLike}"/>
+                    <td th:text="${recipe.recipeView}"/>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -83,12 +81,11 @@
     </div>
     </th:block>
     <th:block th:unless="${myLikeRecipeList.totalElements} > 0">
-        <div class="text-center">
-            좋아요를 누른 레시피가 없습니다.
-        </div>
+    <div class="text-center">
+        좋아요를 누른 레시피가 없습니다.
+    </div>
     </th:block>
-
-<div class="margin-my"></div>
+    <div class="margin-my"></div>
 </div>
 <div th:replace="fragments/footer :: footerFragment"/>
 </body>
