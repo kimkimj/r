@@ -18,6 +18,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class S3UploadService {
 
     private final AmazonS3Client amazonS3Client;
@@ -26,7 +27,6 @@ public class S3UploadService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Transactional
     public String saveUploadFile(MultipartFile multipartFile, String dirName) throws IOException {
 
         ObjectMetadata objectMetadata = new ObjectMetadata();

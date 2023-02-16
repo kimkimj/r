@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 @Service
 @Slf4j
+@Transactional
 public class PaymentService {
 
     @Value("${IMP_KEY}")
