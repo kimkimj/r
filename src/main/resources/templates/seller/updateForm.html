@@ -1,90 +1,89 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: headerFragment"/>
-        <style>
-            .wrapper {
-                margin-left: auto;
-                margin-right: auto;
-                width: 45%;
-                min-height: 450px;
-            }
+<head th:replace="fragments/header :: headerFragment"/>
+<style>
+    .wrapper {
+        margin-left: auto;
+        margin-right: auto;
+        width: 45%;
+        min-height: 450px;
+    }
 
-            .button-container {
-                margin-top: 50px;
-                height: 100px;
-                text-align: center;
-            }
+    .button-container {
+        margin-top: 50px;
+        height: 100px;
+        text-align: center;
+    }
 
-            .button {
-                margin-left: auto;
-                margin-right: auto;
-            }
+    .button {
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-            .btn {
-                color: #625d55;
-                background-color: white;
-                border-color: #625d55;
-                font-weight: bold;
-            }
+    .btn {
+        color: #625d55;
+        background-color: white;
+        border-color: #625d55;
+        font-weight: bold;
+    }
 
-            .btn:hover, .btn:active, .btn:visited {
-                border-color: #DBD0C0 !important;
-                outline-color: #DBD0C0 !important;
-                background-color: #DBD0C0 !important;
-                color: black;
-            }
+    .btn:hover, .btn:active, .btn:visited {
+        border-color: #DBD0C0 !important;
+        outline-color: #DBD0C0 !important;
+        background-color: #DBD0C0 !important;
+        color: black;
+    }
 
-        </style>
-    </head>
-    <body>
-        <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+</style>
+<body>
+    <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
 
-        <div class="wrapper">
-            <div class="container"><br>
-                <div class="container_etc mt-5" style="width: 460px">
-                    <div style="text-align: center;">
-                        <h3>|&nbsp;&nbsp;&nbsp;UPDATE INFO&nbsp;&nbsp;&nbsp;|</h3>
-                    </div>
-                    <div class="margin-20"></div>
-                    <form role="form" th:action="@{/seller/my/update}" th:object="${seller}" method="post">
-                        <div class="mb-3">
-                            <p>비밀번호</p>
-                            <button type="button" th:onclick="|location.href='@{/seller/my/password}'|" class="btn btn-outline-primary">비밀번호 변경하기</button>
-                        </div>
-                        <br>
-                        <div class="mb-3">
-                            <label th:for="sellerName" class="form-label">아이디</label>
-                            <input type="text" th:field="*{sellerName}" class="form-control">
-                        </div>
-
-                        <div class="mb-3">
-                            <label th:for="companyName" class="form-label">업체명</label>
-                            <input type="text" th:field="*{companyName}" class="form-control">
-                        </div>
-
-                        <div class="mb-3">
-                            <label th:for="address" class="form-label">주소</label>
-                            <input type="text" th:field="*{address}" class="form-control">
-                        </div>
-
-                        <div class="mb-3">
-                            <label th:for="email" class="form-label">이메일</label>
-                            <input type="text" th:field="*{email}" class="form-control">
-                        </div>
-
-                        <div class="mb-3">
-                            <label th:for="phoneNum" class="form-label">핸드폰번호</label>
-                            <input type="text" th:field="*{phoneNum}" class="form-control">
-                        </div>
-                        <div class="button-container">
-                            <div class="button">
-                                <button type="submit" class="btn" style="width: 100px">수정하기</button>
-                            </div>
-                        </div>
-                    </form>
+    <div class="wrapper">
+        <div class="container"><br>
+            <div class="container_etc mt-5" style="width: 460px">
+                <div style="text-align: center;">
+                    <h3>|&nbsp;&nbsp;&nbsp;UPDATE INFO&nbsp;&nbsp;&nbsp;|</h3>
                 </div>
+                <div class="margin-20"></div>
+                <form role="form" th:action="@{/seller/my/update}" th:object="${seller}" method="post">
+                    <div class="mb-3">
+                        <p>비밀번호</p>
+                        <button type="button" th:onclick="|location.href='@{/seller/my/password}'|" class="btn btn-outline-primary">비밀번호 변경하기</button>
+                    </div>
+                    <br>
+                    <div class="mb-3">
+                        <label th:for="sellerName" class="form-label">아이디</label>
+                        <input type="text" th:field="*{sellerName}" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label th:for="companyName" class="form-label">업체명</label>
+                        <input type="text" th:field="*{companyName}" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label th:for="address" class="form-label">주소</label>
+                        <input type="text" th:field="*{address}" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label th:for="email" class="form-label">이메일</label>
+                        <input type="text" th:field="*{email}" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label th:for="phoneNum" class="form-label">핸드폰번호</label>
+                        <input type="text" th:field="*{phoneNum}" class="form-control">
+                    </div>
+                    <div class="button-container">
+                        <div class="button">
+                            <button type="submit" class="btn" style="width: 100px">수정하기</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-        <div th:replace="fragments/footer :: footerFragment"/>
-    </body>
+    </div>
+    <div th:replace="fragments/footer :: footerFragment"/>
+</body>
 </html>

@@ -1,232 +1,226 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 
-  <head th:replace="fragments/header :: headerFragment"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/recipe.css}" />
-    <script type="text/javascript" th:src="@{/js/review.js}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-            crossorigin="anonymous"></script>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+<head th:replace="fragments/header :: headerFragment"/>
+<link rel="stylesheet" type="text/css" th:href="@{/css/recipe.css}" />
+<script type="text/javascript" th:src="@{/js/review.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-      body {
-        width: 100%;
-        display: flex;
-        align-items: center;
-      }
+  body {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
 
-      div.recipe-wapper {
-        width: 100%;
-        /* text-align: left; */
-        margin: 0 auto;
-      }
+  div.recipe-wapper {
+    width: 100%;
+    /* text-align: left; */
+    margin: 0 auto;
+  }
 
-      /* 레시피 정보 box */
-      .recipe-write-content {
-        align-items: center;
-        text-align: center;
-      }
+  /* 레시피 정보 box */
+  .recipe-write-content {
+    align-items: center;
+    text-align: center;
+  }
 
-      /* 레시피 제목 */
-      .title-box {
-        background-color: #DFE7E8;
-        padding: 8px;
-        border-radius: 5px;
-        font-size: large;
-        margin-bottom: 5px;
-      }
+  /* 레시피 제목 */
+  .title-box {
+    background-color: #DFE7E8;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: large;
+    margin-bottom: 5px;
+  }
 
-      .detail-box {
-        border: 1px solid #DFE7E8;
-        padding: 8px;
-        border-radius: 5px;
-        font-size: large;
-        margin-bottom: 5px;
-      }
+  .detail-box {
+    border: 1px solid #DFE7E8;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: large;
+    margin-bottom: 5px;
+  }
 
-      .margin-10 {
-        margin-bottom: 10px;
-      }
+  .margin-10 {
+    margin-bottom: 10px;
+  }
 
-    </style>
-  </head>
-  <body>
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <!-- 이 곳에 있던 SCRIPT SRC를 위로 옮김  -->
+</style>
+<body>
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <!-- 이 곳에 있던 SCRIPT SRC를 위로 옮김  -->
 
-    <!-- 섹션의 전체 틀 div -->
-    <div class="recipe-wapper">
+  <!-- 섹션의 전체 틀 div -->
+  <div class="recipe-wapper">
 
-      <!-- bodyHeader -->
-      <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
+    <!-- bodyHeader -->
+    <div th:replace="fragments/sellerBodyHeader :: sellerBodyHeaderFragment"/>
 
-      <!-- 기본 컨테이너 -->
-      <div class="container"><br>
-        <div class="margin-10">
-          <h1>레시피 상세보기 페이지</h1>
+    <!-- 기본 컨테이너 -->
+    <div class="container"><br>
+      <div class="margin-10">
+        <h1>레시피 상세보기 페이지</h1>
+      </div>
+      <br>
+
+      <!-- 레시피 등록하는 곳 타이틀 -->
+      <div class="recipe-title margin-10">
+        <div>
+          <h3>Recipe</h3>
+          <hr>
+          <span style="float: right;">
+            <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/seller/recipes/list}'|">전체 레시피 보기</button>
+          </span>
+        </div>
+
+        <!-- 레시피 제목 -->
+        <div>
+          <h5>레시피 제목</h5><!-- 나중에 삭제-->
+          <div class="col">
+            <div class="title-box" th:text="${recipe.recipeTitle}"></div>
+          </div>
         </div>
         <br>
 
-        <!-- 레시피 등록하는 곳 타이틀 -->
-        <div class="recipe-title margin-10">
-          <div>
-            <h3>Recipe</h3>
-            <hr>
-            <span style="float: right;">
-                        <button type="button" class="btn btn-outline-success"
-                                th:onclick="|location.href='@{/seller/recipes/list}'|">전체 레시피 보기</button>
-                    </span>
-          </div>
+        <!-- 레시피 작성자 이름, 날짜 -->
+        <!-- 작성자, 날짜 부분과 입력 받은 부분을 분리해야 한다. -->
 
-          <!-- 레시피 제목 -->
-          <div>
-            <h5>레시피 제목</h5><!-- 나중에 삭제-->
+        <div class="recipe-write-content">
+          <div class="row">
+
             <div class="col">
-              <div class="title-box" th:text="${recipe.recipeTitle}"></div>
-            </div>
-          </div>
-          <br>
-
-          <!-- 레시피 작성자 이름, 날짜 -->
-          <!-- 작성자, 날짜 부분과 입력 받은 부분을 분리해야 한다. -->
-
-          <div class="recipe-write-content">
-            <div class="row">
-
-              <div class="col">
-                <div>
-                  <div class="detail-box">레시피 정보 ID : <span id="recipe-id" th:text="${recipe.getRecipeId()}">ID</span></div>
-                  <div class="detail-box">작성자 : &nbsp;<span th:text="${recipe.getUserName()}">작성자</span></div>
-                </div>
-              </div>
-
-              <div class="col">
-                <div>
-                  <div class="detail-box">작성시간 : <span th:text="${recipe.getCreatedDate()}">작성시간</span></div>
-                  <div class="detail-box">수정시간 : <span th:text="${recipe.getLastModifiedDate()}">수정시간</span>
-                  </div>
-
-                </div>
-              </div>
-
-              <div class="col">
-                <div>
-                  <div class="detail-box">조회수 : <span th:text="${recipe.recipeView}">조회수</span></div>
-                  <div class="detail-box">좋아요💗: <span th:text="${recipe.recipeLike}">좋아요</span></div>
-                </div>
-
-                <!-- 영역을 만들 수 있는 태그
-                <span class="col">
-                </span>
-                -->
+              <div>
+                <div class="detail-box">레시피 정보 ID : <span id="recipe-id" th:text="${recipe.getRecipeId()}">ID</span></div>
+                <div class="detail-box">작성자 : &nbsp;<span th:text="${recipe.getUserName()}">작성자</span></div>
               </div>
             </div>
-          </div>
 
+            <div class="col">
+              <div>
+                <div class="detail-box">작성시간 : <span th:text="${recipe.getCreatedDate()}">작성시간</span></div>
+                <div class="detail-box">수정시간 : <span th:text="${recipe.getLastModifiedDate()}">수정시간</span></div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div>
+                <div class="detail-box">조회수 : <span th:text="${recipe.recipeView}">조회수</span></div>
+                <div class="detail-box">좋아요💗: <span th:text="${recipe.recipeLike}">좋아요</span></div>
+              </div>
+
+              <!-- 영역을 만들 수 있는 태그
+              <span class="col">
+              </span>
+              -->
+            </div>
+          </div>
         </div>
-        <br>
 
-        <div class="row gx-5">
-          <div class="">
-            <div class="p-3 border bg-light margin-10">
-              <h5>레시피 이미지</h5><hr><br>
-              <img th:src="${recipe.recipeImagePath}" class="img-fluid" alt="..." th:if="${recipe.recipeImagePath != null}">
-              <img src="https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/noimage.gif" class="img-fluid" alt="..." th:if="${recipe.recipeImagePath == null}">
+      </div>
+      <br>
+
+      <div class="row gx-5">
+        <div>
+          <div class="p-3 border bg-light margin-10">
+            <h5>레시피 이미지</h5><hr><br>
+            <img th:src="${recipe.recipeImagePath}" class="img-fluid" alt="..." th:if="${recipe.recipeImagePath != null}">
+            <img src="https://woowahan-recipe-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/noimage.gif" class="img-fluid" alt="..." th:if="${recipe.recipeImagePath == null}">
+          </div>
+
+          <div class="p-3 border bg-light margin-10" style="margin-top: 20px;">
+            <h5>레시피</h5>
+            <hr>
+            <!-- 레시피 제목 -->
+            <div class="mb-3">
+              <div style="font-weight: bold; font-size: 18px;" th:text="${recipe.recipeTitle}">제목</div>
             </div>
-
-            <div class="p-3 border bg-light margin-10" style="margin-top: 20px;">
-              <h5>레시피</h5>
-              <hr>
-              <!-- 레시피 제목 -->
-              <div class="mb-3">
-                <div style="font-weight: bold; font-size: 18px;" th:text="${recipe.recipeTitle}">제목</div>
-              </div>
-              <!-- 레시피 내용 -->
-              <div class="mb-3">
-                <div th:text="${recipe.getRecipeBody()}">레시피 내용</div>
-              </div>
+            <!-- 레시피 내용 -->
+            <div class="mb-3">
+              <div th:text="${recipe.getRecipeBody()}">레시피 내용</div>
             </div>
+          </div>
 
-            <div class="p-3 border bg-light margin-10" style="margin-top: 20px;">
-              <h5>레시피 재료</h5><hr>
-              <table class="table" style="width: 250px; text-align: center;">
-                <thead>
+          <div class="p-3 border bg-light margin-10" style="margin-top: 20px;">
+            <h5>레시피 재료</h5><hr>
+            <table class="table" style="width: 250px; text-align: center;">
+              <thead>
                 <tr>
                   <th scope="col">재료명</th>
                 </tr>
-                </thead>
-                <td th:if="${recipe.getItems().size() == 0}">등록된 재료가 없습니다.</td>
-                <th:block th:unless="${recipe.getItems().size()== 0}" th:each="num : ${#numbers.sequence(0,recipe.getItems().size()-1)}">
-                  <tbody>
-                  <tr>
+              </thead>
+              <td th:if="${recipe.getItems().size() == 0}">등록된 재료가 없습니다.</td>
+              <th:block th:unless="${recipe.getItems().size()== 0}" th:each="num : ${#numbers.sequence(0,recipe.getItems().size()-1)}">
+              <tbody>
+                <tr>
                   <td th:text="${recipe.getItems().get(num).item.getName()}"/>
-                    </tr>
-                    </tbody>
-                  </th:block>
-                </table>
+                </tr>
+              </tbody>
+              </th:block>
+            </table>
 
-                <!-- 재료 리스트 -->
-                <div id="item-form-list"></div>
-                <br>
-
-              </form>
-            </div>
+              <!-- 재료 리스트 -->
+            <div id="item-form-list"></div>
+            <br>
           </div>
         </div>
-        <br><br>
-
-        <!-- 리뷰 -->
-        <div>
-          <h3>Review</h3><hr>
-        </div>
-        <div class="card">
-          <table class="table" style="width: 100%;">
-            <thead>
-            <tr>
-              <colgroup>
-                <col style="width: 5%" />
-                <col style="width: 70%" />
-                <col style="width: 15%" />
-                <col style="width: 5%" />
-                <col style="width: 5%" />
-              </colgroup>
-              <th scpoe="col">ID</th>
-              <th scope="col" style="width: 50%">내용</th>
-              <th scope="col">작성자명</th>
-              <th scope="col"></th>
-              <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <th:block th:if="${#lists.size(recipe.reviews) == 0}">
-              <td colspan="5" class="text-center" style="border: none;">댓글이 없습니다.</td>
-            </th:block>
-            <th:block th:unless="${#lists.size(recipe.reviews) == 0}">
-              <tr th:each="review : ${recipe.reviews}">
-                <td class="individual-review-id" th:text="${review.reviewId}"/>
-                <td><input class="individual-content-input" placeholder="수정할 리뷰내용 입력" th:value="${review.content}" readonly></td>
-                <td th:text="${review.user.userName}"/>
-              </tr>
-            </th:block>
-            </tbody>
-          </table>
-          <br>
-        </div>
-        <br><br>
-        <div style="text-align: center;">
-          <button class="btn btn-outline-success" onclick="location.href='recipeList.html'"
-                  th:onclick="|location.href='@{/seller/recipes/list}'|">목록가기
-          </button>
-        </div>
       </div>
-      <br><br><br>
+      <br><br>
+
+      <!-- 리뷰 -->
+      <div>
+        <h3>Review</h3><hr>
+      </div>
+      <div class="card">
+        <table class="table" style="width: 100%;">
+          <thead>
+          <tr>
+            <colgroup>
+              <col style="width: 5%" />
+              <col style="width: 70%" />
+              <col style="width: 15%" />
+              <col style="width: 5%" />
+              <col style="width: 5%" />
+            </colgroup>
+            <th scpoe="col">ID</th>
+            <th scope="col" style="width: 50%">내용</th>
+            <th scope="col">작성자명</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <th:block th:if="${#lists.size(recipe.reviews) == 0}">
+            <td colspan="5" class="text-center" style="border: none;">댓글이 없습니다.</td>
+          </th:block>
+          <th:block th:unless="${#lists.size(recipe.reviews) == 0}">
+            <tr th:each="review : ${recipe.reviews}">
+              <td class="individual-review-id" th:text="${review.reviewId}"/>
+              <td><input class="individual-content-input" placeholder="수정할 리뷰내용 입력" th:value="${review.content}" readonly></td>
+              <td th:text="${review.user.userName}"/>
+            </tr>
+          </th:block>
+          </tbody>
+        </table>
+        <br>
+      </div>
+      <br><br>
+      <div style="text-align: center;">
+        <button class="btn btn-outline-success" onclick="location.href='recipeList.html'"
+                th:onclick="|location.href='@{/seller/recipes/list}'|">목록가기
+        </button>
+      </div>
     </div>
-    <!-- footer -->
-    <div th:replace="fragments/footer :: footerFragment"/>
-  </body>
+    <br><br><br>
+  </div>
+  <!-- footer -->
+  <div th:replace="fragments/footer :: footerFragment"/>
+</body>
 </html>

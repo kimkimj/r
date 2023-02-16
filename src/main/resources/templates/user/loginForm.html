@@ -1,82 +1,81 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: headerFragment"/>
+<head th:replace="fragments/header :: headerFragment"/>
+<style>
 
-        <style>
+    h2 {
+        text-align: center;
+    }
 
-            h2 {
-                text-align: center;
-            }
+    .button-container {
+        margin-top: 50px;
+        height: 50px;
+        text-align: center;
+    }
 
-            .button-container {
-                margin-top: 50px;
-                height: 50px;
-                text-align: center;
-            }
+    .button {
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-            .button {
-                margin-left: auto;
-                margin-right: auto;
-            }
+    .btn {
+        color: #625d55;
+        background-color: white;
+        border-color: #625d55;
+        font-weight: bold;
+    }
 
-            .btn {
-                color: #625d55;
-                background-color: white;
-                border-color: #625d55;
-                font-weight: bold;
-            }
+    .btn:hover, .btn:active, .btn:visited {
+        border-color: #DBD0C0 !important;
+        outline-color: #DBD0C0 !important;
+        background-color: #DBD0C0 !important;
+        color: black;
+    }
 
-            .btn:hover, .btn:active, .btn:visited {
-                border-color: #DBD0C0 !important;
-                outline-color: #DBD0C0 !important;
-                background-color: #DBD0C0 !important;
-                color: black;
-            }
+    .login-wrapper {
+        width: 350px;
+        margin: 0 auto;
+        min-height: 46vh;
+    }
+</style>
 
-            .login-wrapper {
-                width: 350px;
-                margin: 0 auto;
-                min-height: 46vh;
-            }
-        </style>
-
-    <body  style="margin-bottom:0px;">
-    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
-        <div class="container">
-            <div class="margin-my"></div>
-            <div style="text-align: center;">
-                <h3>|&nbsp;&nbsp;&nbsp;LOGIN&nbsp;&nbsp;&nbsp;|</h3>
-            </div>
-            <div class="margin-20"></div>
-            <div class="login-wrapper">
-
-                <form role="form" th:action="@{/users/login}" th:object="${userLoginReqDto}" method="post">
-                    <div th:if="${#fields.hasGlobalErrors()}">
-                        <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${e}">글로벌 오류 메세지</p>
-                    </div>
-
-                    <div class="mb-3">
-                        <label th:for="userName" th:text="#{label.userName}" class="form-label">아이디</label>
-                        <input type="text" th:field="*{userName}" class="form-control" placeholder="아이디를 입력해주세요"
-                               th:errorclass="field-error">
-                        <div class="field-error" th:errors="*{userName}">아이디 오류</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">비밀번호</label>
-                        <input type="password" th:field="*{password}" class="form-control" id="exampleInputPassword1"
-                               placeholder="비밀번호를 입력해주세요"
-                               th:errorclass="field-error">
-                        <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
-                    </div>
-                    <div class="button-container">
-                        <div class="button">
-                            <button type="submit" class="btn">로그인</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="margin-my"></div>
+<body  style="margin-bottom:0px;">
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+    <div class="container">
+        <div class="margin-my"></div>
+        <div style="text-align: center;">
+            <h3>|&nbsp;&nbsp;&nbsp;LOGIN&nbsp;&nbsp;&nbsp;|</h3>
         </div>
-    <div th:replace="fragments/footer :: footerFragment"/>
-    </body>
+        <div class="margin-20"></div>
+        <div class="login-wrapper">
+
+            <form role="form" th:action="@{/users/login}" th:object="${userLoginReqDto}" method="post">
+                <div th:if="${#fields.hasGlobalErrors()}">
+                    <p class="field-error" th:each="err : ${#fields.hasGlobalErrors()}" th:text="${e}">글로벌 오류 메세지</p>
+                </div>
+
+                <div class="mb-3">
+                    <label th:for="userName" th:text="#{label.userName}" class="form-label">아이디</label>
+                    <input type="text" th:field="*{userName}" class="form-control" placeholder="아이디를 입력해주세요"
+                           th:errorclass="field-error"/>
+                    <div class="field-error" th:errors="*{userName}">아이디 오류</div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">비밀번호</label>
+                    <input type="password" th:field="*{password}" class="form-control" id="exampleInputPassword1"
+                           placeholder="비밀번호를 입력해주세요"
+                           th:errorclass="field-error"/>
+                    <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
+                </div>
+                <div class="button-container">
+                    <div class="button">
+                        <button type="submit" class="btn">로그인</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="margin-my"></div>
+    </div>
+<div th:replace="fragments/footer :: footerFragment"/>
+</body>
 </html>

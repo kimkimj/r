@@ -46,25 +46,25 @@
 
         <table class="table table-hover" style="text-align: center;">
             <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col" style="width: 350px">레시피 제목</th>
-                <th scope="col">작성일</th>
-                <th scope="col">수정일</th>
-                <th scope="col" style="width: 100px">조회수</th>
-                <th scope="col" style="width: 100px">좋아요</th>
-            </tr>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col" style="width: 350px">레시피 제목</th>
+                    <th scope="col">작성일</th>
+                    <th scope="col">수정일</th>
+                    <th scope="col" style="width: 100px">조회수</th>
+                    <th scope="col" style="width: 100px">좋아요</th>
+                </tr>
             </thead>
             <tbody>
-            <tr class="tr-hover" th:each="recipe : ${myRecipes}"
-                th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|">
-                <th scope="row" th:text="${recipe.getRecipeId()}"/>
-                <td th:text="${recipe.getRecipeTitle}"/>
-                <td><span th:text="${#temporals.format(recipe.createdDate, 'yyyy-MM-dd HH:mm')}"></span></td>
-                <td><span th:text="${#temporals.format(recipe.lastModifiedDate, 'yyyy-MM-dd HH:mm')}"></span></td>
-                <td th:text="${recipe.getRecipeView}"/>
-                <td th:text="${recipe.getRecipeLike}"/>
-            </tr>
+                <tr class="tr-hover" th:each="recipe : ${myRecipes}"
+                    th:onclick="|location.href='@{/recipes/{recipeId}(recipeId=${recipe.getRecipeId})}'|">
+                    <th scope="row" th:text="${recipe.getRecipeId()}"/>
+                    <td th:text="${recipe.getRecipeTitle}"/>
+                    <td><span th:text="${#temporals.format(recipe.createdDate, 'yyyy-MM-dd HH:mm')}"></span></td>
+                    <td><span th:text="${#temporals.format(recipe.lastModifiedDate, 'yyyy-MM-dd HH:mm')}"></span></td>
+                    <td th:text="${recipe.getRecipeView}"/>
+                    <td th:text="${recipe.getRecipeLike}"/>
+                </tr>
             </tbody>
         </table>
     </div>
