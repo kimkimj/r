@@ -1,10 +1,12 @@
 package com.woowahan.recipe.service;
 
 import com.woowahan.recipe.domain.dto.itemDto.*;
+import com.woowahan.recipe.domain.entity.CartItemEntity;
 import com.woowahan.recipe.domain.entity.ItemEntity;
 import com.woowahan.recipe.domain.entity.SellerEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
+import com.woowahan.recipe.repository.CartItemRepository;
 import com.woowahan.recipe.repository.ItemRepository;
 import com.woowahan.recipe.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -21,6 +26,7 @@ public class ItemService {
 
     private final SellerRepository sellerRepository;
     private final ItemRepository itemRepository;
+    private final CartItemRepository cartItemRepository;
 
     //[중복 로직] item 존재 확인 + 가져오기
     public ItemEntity validateItem(Long itemId) {
@@ -102,11 +108,17 @@ public class ItemService {
     /**
      * 재료 삭제(관리자)
      */
+    @Transactional
     public ItemDeleteResDto deleteItem(Long id, String userName) {
         SellerEntity seller = validateSeller(userName); //user 존재 확인+가져오기
         ItemEntity item = validateItem(id); //item 존재 확인+가져오기
         if(!item.getSeller().equals(seller)) {  // 현재 수정하고자 하는 item을 등록한 판매자와 로그인한 회원이 동일한지
             throw new AppException(ErrorCode.ROLE_FORBIDDEN, ErrorCode.ROLE_FORBIDDEN.getMessage());
+        }
+
+        Optional<CartItemEntity> cartItem = cartItemRepository.findByItem(item);
+        if(cartItem.isPresent()) {
+            cartItemRepository.deleteByItem(item);
         }
 
         itemRepository.delete(item);
