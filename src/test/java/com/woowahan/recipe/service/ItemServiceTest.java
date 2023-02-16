@@ -7,6 +7,7 @@ import com.woowahan.recipe.domain.entity.ItemEntity;
 import com.woowahan.recipe.domain.entity.SellerEntity;
 import com.woowahan.recipe.exception.AppException;
 import com.woowahan.recipe.exception.ErrorCode;
+import com.woowahan.recipe.repository.CartItemRepository;
 import com.woowahan.recipe.repository.ItemRepository;
 import com.woowahan.recipe.repository.SellerRepository;
 import org.junit.jupiter.api.*;
@@ -23,6 +24,7 @@ class ItemServiceTest {
 
     ItemRepository itemRepository = Mockito.mock(ItemRepository.class);
     SellerRepository sellerRepository = Mockito.mock(SellerRepository.class);
+    CartItemRepository cartItemRepository = Mockito.mock(CartItemRepository.class);
     ItemService itemService;
     SellerEntity seller1;
     SellerEntity seller2;
@@ -32,7 +34,7 @@ class ItemServiceTest {
 
     @BeforeEach
     void setUp() {
-        itemService = new ItemService(sellerRepository, itemRepository);
+        itemService = new ItemService(sellerRepository, itemRepository, cartItemRepository);
         seller1 = SellerEntity.builder()
                 .sellerName("user id1")
                 .password("password1")

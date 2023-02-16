@@ -18,10 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-
 @RequiredArgsConstructor
 @Service
 @Slf4j
+@Transactional
 public class ItemService {
 
     private final SellerRepository sellerRepository;
