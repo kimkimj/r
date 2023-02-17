@@ -36,48 +36,69 @@
 
 </style>
 <body>
-    <!-- bodyHeader -->
-    <div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
+<div th:replace="fragments/bodyHeader :: bodyHeaderFragment"/>
 
-    <div class="container">
-        <!-- 상단 메뉴바 -->
-        <div th:replace="fragments/myPageNav :: myPageFragment"/>
-        <div class="margin-common"></div>
-        <div style="text-align: center;">
-            <h3>|&nbsp;&nbsp;&nbsp;회원 정보 수정&nbsp;&nbsp;&nbsp;|</h3>
-        </div>
-        <div class="margin-20"></div>
+<div class="container">
+    <div class="margin-20"></div>
+
+    <!-- 상단 메뉴바 -->
+    <div th:replace="fragments/myPageNav :: myPageFragment"/>
+    <div class="margin-20"></div>
+    <div style="text-align: center;">
+        <h3>|&nbsp;&nbsp;&nbsp;회원 정보 수정&nbsp;&nbsp;&nbsp;|</h3>
+    </div>
+    <div class="margin-20"></div>
 
         <form role="form" th:action="@{/users/my/update}" th:object="${user}" method="post">
             <button type="button" class="btn" onclick="location.href='/users/my/update/password'">비밀번호 변경</button>
             <br><br>
             <div class="mb-3">
                 <label th:for="address" th:text="#{label.address}" class="form-label">주소</label>
-                <input type="text" th:field="*{address}" class="form-control"
+                <input type="text" th:field="*{address}" class="form-control" id="address-btn"
                        th:errorclass="field-error">
                 <div class="field-error" th:errors="*{address}">주소 오류</div>
             </div>
             <div class="mb-3">
                 <label th:for="email" th:text="#{label.email}" class="form-label">이메일</label>
-                <input type="text" th:field="*{email}" class="form-control"
+                <input type="text" th:field="*{email}" class="form-control" id="email-btn"
                        th:errorclass="field-error">
                 <div class="field-error" th:errors="*{email}">이메일 오류</div>
             </div>
             <div class="mb-3">
-                <label th:for="address" th:text="#{label.phoneNum}" class="form-label">핸드폰번호</label>
-                <input type="text" th:field="*{phoneNum}" class="form-control"
+                <label th:for="address" th:text="#{label.phoneNum}" class="form-label">핸드폰 번호</label>
+                <input type="text" th:field="*{phoneNum}" class="form-control" id="phone-btn"
                        th:errorclass="field-error">
                 <div class="field-error" th:errors="*{phoneNum}">핸드폰 번호 오류</div>
             </div>
             <div class="button-container">
                 <div class="button">
-                     <button type="submit" class="btn">수정하기</button>
+                     <button type="submit" id="submit-btn" class="btn">수정하기</button>
                 </div>
             </div>
         </form>
-        <br/>
-    </div>
-    <div th:replace="fragments/footer :: footerFragment"/>
+    <div class="margin-common"></div>
+</div>
+<div th:replace="fragments/footer :: footerFragment"/>
 </body>
-
+<script>
+    $(document).ready(function () {
+        $("#submit-btn").click(function () {
+            if ($("#address-btn").val().length == 0) {
+                alert("주소를 입력해주세요.");
+                    $("#address-btn").focus();
+                return false;
+            }
+            if ($("#email-btn").val().length == 0) {
+                alert("이메일을 입력해주세요.");
+                $("#email-btn").focus();
+                return false;
+            }
+            if ($("#phone-btn").val().length == 0) {
+                alert("핸드폰 번호를 입력해주세요.");
+                $("#phone-btn").focus();
+                return false;
+            }
+        });
+    });
+</script>
 </html>
