@@ -227,13 +227,13 @@
                       th:object="${reviewCreateRequest}" method="post" content>
                     <!-- 내용  -->
                     <div class="form-group col">
-                        <input type="text" th:field="*{content}" class="form-control" placeholder="리뷰 내용을 입력해주세요"
+                        <input type="text" id="review-content" th:field="*{content}" class="form-control" placeholder="리뷰 내용을 입력해주세요"
                                th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">
                         <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
                     </div>
                     <br>
                     <div style="text-align: right;">
-                        <button type="submit" class="btn">리뷰 작성</button>
+                        <button type="submit" id="review-btn" class="btn" onclick="reviewContent();">리뷰 작성</button>
                     </div>
                     <br>
                 </form>
@@ -396,6 +396,17 @@
         window.location.href = "http://woowahan.store:8080/login";
     }
 
+    $(document).ready(function () {
+        $("#review-btn").click(function () {
+            if ($("#review-content").val().length == 0) {
+                alert("리뷰 내용을 입력해주세요.");
+                setTimeout(function () {
+                    $("#review-content").focus();
+                }, 1);
+                return false;
+            }
+        });
+    });
 </script>
 </body>
 </html>
