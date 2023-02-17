@@ -111,6 +111,7 @@ public class SecurityConfig {
                 .antMatchers("/seller/login", "/seller/join").permitAll()
                 .antMatchers("/admin", "/admin/**").hasAnyRole("ADMIN", "HEAD")
                 .antMatchers("/head/**").hasRole("HEAD")
+                .antMatchers("/seller/my", "/seller/my/update", "/seller/my/password", "/seller/logout").hasAnyRole("SELLER", "READY", "REJECT")
                 .antMatchers("/seller/**").hasRole("SELLER")
                 .antMatchers(HttpMethod.GET, GET_AUTHENTICATED).authenticated()
                 .antMatchers(HttpMethod.GET).permitAll()
