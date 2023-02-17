@@ -5,7 +5,7 @@
       layout:decorate="~{adminMain}">
 <body>
 <div layout:fragment="adminMain" class="container">
-  <div class="margin-20"></div>
+  <div class="margin-my"></div>
   <!-- 상단 메뉴바 -->
   <div>
   <div th:replace="fragments/myPageNav :: myPageFragment"/>
@@ -13,6 +13,7 @@
     <div style="text-align: center;">
       <h3>| 일반 회원 |</h3>
     </div>
+    <div class="margin-20"></div>
     <div>
       <table class="table table-hover" style="text-align: center;">
         <thead>
@@ -49,40 +50,43 @@
       </table>
     </div>
     <th:block th:if="${userList.totalElements > 0}">
+      <div class="margin-20"></div>
     <!-- pagination -->
     <div class="py-3 my-4" sec:authorize="hasAnyRole('ROLE_ADMIN')">
       <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
           <li class="page-item" th:classappend="${!userList.hasPrevious} ? 'disabled'">
-            <a class="page-link" th:href="@{/admin/users(page = ${nowPage - 2})}">Previous</a>
+            <a class="page-link" th:href="@{/admin/users(page = ${nowPage - 2})}">&nbsp;<&nbsp;</a>
           </li>
 
           <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
             <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/admin/users(page = ${page - 1})}" th:text="${page}">1</a></li>
-            <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
+            <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="background-color: #DBD0C0"></strong></li>
           </th:block>
 
           <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
-            <a class="page-link" th:href="@{/admin/users(page = ${nowPage})}">Next</a>
+            <a class="page-link" th:href="@{/admin/users(page = ${nowPage})}">&nbsp;>&nbsp;</a>
+          </li>
           </li>
         </ul>
       </nav>
     </div>
+      <div class="margin-20"></div>
     <!-- pagination -->
     <div class="py-3 my-4" sec:authorize="hasAnyRole('ROLE_HEAD')">
       <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
           <li class="page-item" th:classappend="${!userList.hasPrevious} ? 'disabled'">
-            <a class="page-link" th:href="@{/head/users(page = ${nowPage - 2})}">Previous</a>
+            <a class="page-link" th:href="@{/head/users(page = ${nowPage - 2})}">&nbsp;<&nbsp;</a>
           </li>
 
           <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
             <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/head/users(page = ${page - 1})}" th:text="${page}">1</a></li>
-            <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: #93bf85;"></strong></li>
+            <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="background-color: #DBD0C0"></strong></li>
           </th:block>
 
           <li class="page-item" th:classappend="${nowPage == endPage} ? 'disabled'">
-            <a class="page-link" th:href="@{/head/users(page = ${nowPage})}">Next</a>
+            <a class="page-link" th:href="@{/head/users(page = ${nowPage})}">&nbsp;>&nbsp;</a>
           </li>
         </ul>
       </nav>
@@ -93,7 +97,9 @@
         회원이 존재하지 않습니다.
       </div>
     </th:block>
+    <div class="margin-my"></div>
   </div>
 </div>
+<div class="margin-my"></div>
 </body>
 </html>
